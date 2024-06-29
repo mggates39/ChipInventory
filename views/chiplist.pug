@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  table.table.table-striped
+    tr
+      th ID
+      th Number
+      th Family
+      th Package
+      th Pins
+      th Description
+
+    each n in chips
+      tr
+        td= n.id
+        td= n.chip_number
+        td= n.family
+        td= n.package
+        td= n.pin_count
+        td= n.description

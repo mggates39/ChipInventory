@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1= chip.chip_number
+  p Welcome to #{chip.description}
+  table.table.table-striped
+    tr
+      th Pin
+      th Symbol
+      th Description
+
+    each n in pins
+      tr
+        td= n.pin_number
+        td= n.pin_symbol
+        td= n.pin_description
