@@ -13,7 +13,7 @@ router.get('/:id', async function(req, res, next) {
     const id = req.params.id
     const chip = await getChip(id);
     const pins = await getPins(id);
-  res.render('chipdetail', { chip: chip, pins: pins });
+  res.render('chipdetail', { title: chip.chip_number, chip: chip, pins: pins });
 });
 
 module.exports = router;

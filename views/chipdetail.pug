@@ -2,7 +2,10 @@ extends layout
 
 block content
   h1= chip.chip_number
-  p Welcome to #{chip.description}
+  p #[strong Description] #{chip.description}
+  p #[strong Package] #{chip.package}
+  p #[strong Pin Count] #{chip.pin_count}
+  p
   table.table.table-striped
     tr
       th Pin
