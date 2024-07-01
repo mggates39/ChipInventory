@@ -67,6 +67,15 @@ async function getSpecs(id) {
   return rows
 }
 
+async function getNotes(id) {
+  const [rows] = await pool.query(`
+  SELECT * 
+  FROM notes
+  WHERE chip_id = ?
+  `, [id])
+  return rows
+}
+
 async function createNote(title, contents) {
   const [result] = await pool.query(`
   INSERT INTO notes (title, contents)
@@ -76,5 +85,5 @@ async function createNote(title, contents) {
   return getNote(id)/*  */
 }
 
-module.exports = {getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs }
+module.exports = {getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes }
 

@@ -55,3 +55,10 @@ block content
           td= n.parameter
           td(style="text-align:right;") !{n.value}
           td !{n.unit}
+
+  br
+  div(id='notes')
+    h3 Notes
+    ul
+      each n in notes
+        li !{n.note}
