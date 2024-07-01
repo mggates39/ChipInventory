@@ -2,7 +2,7 @@ extends layout
 
 block content
   h1= chip.chip_number
-  p #[strong Description] #{chip.description}
+  h3= chip.description
   p #[strong Package] #{chip.package}
   p #[strong Pin Count] #{chip.pin_count}
   p 
@@ -41,24 +41,26 @@ block content
           td !{n.pin_symbol}
           td !{n.pin_description}
 
-  div(id='dspecs')
-    h3 Specifications
-    span.spcaption (typical values under recommended operating conditions, unless specified)
-    table.specstable
-      tr
-        th(style="min-width:300px;") Parameter
-        th Value
-        th(style="min-width:70px;") Unit
-
-      each n in specs
+  if (specs.length)
+    div(id='dspecs')
+      h3 Specifications
+      span.spcaption (typical values under recommended operating conditions, unless specified)
+      table.specstable
         tr
-          td= n.parameter
-          td(style="text-align:right;") !{n.value}
-          td !{n.unit}
+          th(style="min-width:300px;") Parameter
+          th Value
+          th(style="min-width:70px;") Unit
 
-  br
-  div(id='notes')
-    h3 Notes
-    ul
-      each n in notes
-        li !{n.note}
+        each n in specs
+          tr
+            td= n.parameter
+            td(style="text-align:right;") !{n.value}
+            td !{n.unit}
+
+  if (notes.length)
+    br
+    div(id='notes')
+      h3 Notes
+      ul
+        each n in notes
+          li !{n.note}
