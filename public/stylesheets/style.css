@@ -107,23 +107,13 @@ h1
 #dpindiagram
 {
   float: left;
-  /*border: 1px solid red;*/
- /* padding: 10px 2% 10px 2%;*/
- /*	margin: 20px 1% 20px 2%;*/
   width: 40%;
-  voice-family: "\"}\"";
-  voice-family: inherit;
   width: 40%;
 }
 
 html>body #dpindiagram
 {
   width: 40%;
-}
-
-
-#dpindiagramwide
-{
 }
 
 #dspecs, #dnotes
@@ -136,10 +126,6 @@ html>body #dpindiagram
 {
   font-style: italic;
   font-size: 80%;
-}
-
-.specstable
-{
 }
 
 .neg
