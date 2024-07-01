@@ -34,6 +34,30 @@ async function getPins(id) {
   return rows
 }
 
+async function getLeftPins(id) {
+  const [rows] = await pool.query(`
+  select chips.chip_number, chips.pin_count, pinleft.pin_number, pinleft.pin_symbol
+from chips
+join pins pinleft on pinleft.chip_id = chips.id
+where chips.id = ?
+  and pinleft.pin_number <= (chips.pin_count/2)
+order by cast(pin_number as signed);
+  `, [id])
+  return rows
+}
+
+async function getRightPins(id) {
+  const [rows] = await pool.query(`
+  select chips.chip_number, chips.pin_count, pinright.pin_number, pinright.pin_symbol
+from chips
+join pins pinright on pinright.chip_id = chips.id
+where chips.id = ?
+  and pinright.pin_number > (chips.pin_count/2)
+order by cast(pin_number as signed) desc;
+  `, [id])
+  return rows
+}
+
 async function createNote(title, contents) {
   const [result] = await pool.query(`
   INSERT INTO notes (title, contents)
@@ -43,5 +67,5 @@ async function createNote(title, contents) {
   return getNote(id)/*  */
 }
 
-module.exports = {getChips, getChip, getPins }
+module.exports = {getChips, getChip, getPins, getLeftPins, getRightPins }
 

@@ -35,3 +35,4 @@ VALUES
 (1, 'SN74LS299N', 1),
 (2, 'MC74AC174N', 1);
 
+select chips.chip_number, pins.* from chips join pins on pins.chip_id = chips.id where pins.pin_symbol like '%\_\_%';

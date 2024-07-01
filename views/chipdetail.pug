@@ -5,15 +5,36 @@ block content
   p #[strong Description] #{chip.description}
   p #[strong Package] #{chip.package}
   p #[strong Pin Count] #{chip.pin_count}
-  p
-  table.table.table-striped
-    tr
-      th Pin
-      th Symbol
-      th Description
-
-    each n in pins
+  div(id='dpindiagram')
+    table.pindiagram
       tr
-        td= n.pin_number
-        td= n.pin_symbol
-        td= n.pin_description
+        th(class="leftpinsym") &nbsp;
+        th(class="lefttoppinnum") &nbsp;
+        th(class="righttoppinnum") &nbsp;
+        th(class="rightpinsym") &nbsp;
+
+      each n, index in layout_pins
+        tr
+          td(class="leftpinsym") !{n.left_sym}
+          td(class="leftpinnum") #{n.left_pin} !{n.bull}
+          td(class="rightpinnum") #{n.right_pin}
+          td(class="rightpinsym") !{n.right_sym}
+
+      tr
+        td(class="leftpinsym") &nbsp;
+        td(class="leftbottompinnum") &nbsp;
+        td(class="rightbottompinnum") &nbsp;
+        td(class="rightpinsym") &nbsp;
+
+  div(id='dpintable')
+    table.pintable
+      tr
+        th(style="min-width:50px;") Pin
+        th(style="min-width:100px;") Symbol
+        th(style="min-width:250px;") Description
+
+      each n in pins
+        tr
+          td= n.pin_number
+          td !{n.pin_symbol}
+          td !{n.pin_description}

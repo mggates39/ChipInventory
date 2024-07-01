@@ -1,8 +1,149 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+body
+{
+  background: white;
+  color: black;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12pt;
 }
 
-a {
-  color: #00B7FF;
+a:link, a:visited { color: #0000CC; }
+a:hover { color: #6666CC; }
+
+h1, h2, h3
+{
+  margin: 0px;
 }
+
+h1
+{
+  font-size: 300%;
+}
+
+#super {
+  vertical-align: super;
+  font-size: medium
+}
+
+#sub {
+  vertical-align: sub;
+  font-size: medium
+}
+
+.pintable, .specstable
+{
+  border-collapse: collapse;
+}
+
+.pintable td, .specstable td
+{
+  border: 1px solid black;
+  padding: 3px;
+  vertical-align: top;
+}
+
+.pintable th, .specstable th
+{
+  border: 1px solid black;
+  border-bottom: 3px solid black;
+  padding: 3px;
+}
+
+.pindiagram
+{
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+.leftpinsym
+{
+  padding-right: 5px;
+}
+
+.rightpinsym
+{
+  padding-left: 5px;
+}
+
+.leftpinsym, .rightpinnum, .righttoppinnum, .rightbottompinnum
+{
+  text-align: right;
+}
+
+.rightpinsym, .leftpinnum, .lefttoppinnum, leftbottompinnum
+{
+  text-align: left;
+}
+
+.leftpinnum, .rightpinnum
+{
+  min-width: 50px;
+  padding: 5px;
+}
+
+.leftpinnum
+{
+  border: 0;
+  border-left: 1px solid black;
+}
+
+.rightpinnum
+{
+  border: 0;
+  border-right: 1px solid black;
+}
+
+.lefttoppinnum, .righttoppinnum
+{
+  border: 0;
+  border-bottom: 1px solid black;
+}
+
+.leftbottompinnum, .rightbottompinnum
+{
+  border: 0;
+  border-top: 1px solid black;
+}
+
+#dpindiagram
+{
+  float: left;
+  /*border: 1px solid red;*/
+ /* padding: 10px 2% 10px 2%;*/
+ /*	margin: 20px 1% 20px 2%;*/
+  width: 40%;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  width: 40%;
+}
+
+html>body #dpindiagram
+{
+  width: 40%;
+}
+
+
+#dpindiagramwide
+{
+}
+
+#dspecs, #dnotes
+{
+  clear: both;
+  margin-top: 10px;
+}
+
+.spcaption, .note
+{
+  font-style: italic;
+  font-size: 80%;
+}
+
+.specstable
+{
+}
+
+.neg
+{
+  text-decoration: overline;
+}
+
