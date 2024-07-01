@@ -5,6 +5,8 @@ block content
   p #[strong Description] #{chip.description}
   p #[strong Package] #{chip.package}
   p #[strong Pin Count] #{chip.pin_count}
+  p 
+    a(target='_blank' href= chip.datasheet) Datasheet PDF
   div(id='dpindiagram')
     table.pindiagram
       tr
@@ -38,3 +40,18 @@ block content
           td= n.pin_number
           td !{n.pin_symbol}
           td !{n.pin_description}
+
+  div(id='dspecs')
+    h3 Specifications
+    span.spcaption (typical values under recommended operating conditions, unless specified)
+    table.specstable
+      tr
+        th(style="min-width:300px;") Parameter
+        th Value
+        th(style="min-width:70px;") Unit
+
+      each n in specs
+        tr
+          td= n.parameter
+          td(style="text-align:right;") !{n.value}
+          td !{n.unit}

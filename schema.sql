@@ -5,17 +5,32 @@ CREATE TABLE chips (
   id integer PRIMARY KEY AUTO_INCREMENT,
   chip_number VARCHAR(32) NOT NULL,
   family VARCHAR(32) NOT NULL,
-  description TEXT NOT NULL,
   pin_count integer NOT NULL,
-  package varchar(16) not null
+  package varchar(16) not null,
+  datasheet varchar(256) NULL,
+  description TEXT NOT NULL
 );
 
 CREATE TABLE pins (
-    id integer PRIMARY KEY AUTO_INCREMENT,
-    chip_id integer NOT NULL,
-    pin_number integer NOT NULL,
-    pin_description TEXT NOT NULL,
-    pin_symbol VARCHAR(64) NOT NULL
+  id integer PRIMARY KEY AUTO_INCREMENT,
+  chip_id integer NOT NULL,
+  pin_number integer NOT NULL,
+  pin_description TEXT NOT NULL,
+  pin_symbol VARCHAR(64) NOT NULL
+);
+
+CREATE TABLE notes (
+  id integer PRIMARY KEY AUTO_INCREMENT,
+  chip_id integer not null,
+  note TEXT not NULL
+);
+
+create table specs (
+  id integer PRIMARY KEY AUTO_INCREMENT,
+  chip_id integer NOT NULL,
+  parameter VARCHAR(128) NOT NULL,
+  unit VARCHAR(32) NOT NULL,
+  value TEXT NOT NULL
 );
 
 CREATE TABLE inventory (

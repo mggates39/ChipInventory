@@ -11,7 +11,7 @@ const pool = mysql.createPool({
 }).promise()
 
 async function getChips() {
-  const [rows] = await pool.query("SELECT * FROM chips order by family, chip_number")
+  const [rows] = await pool.query("SELECT * FROM chips order by chip_number")
   return rows
 }
 
@@ -58,6 +58,15 @@ order by cast(pin_number as signed) desc;
   return rows
 }
 
+async function getSpecs(id) {
+  const [rows] = await pool.query(`
+  SELECT * 
+  FROM specs
+  WHERE chip_id = ?
+  `, [id])
+  return rows
+}
+
 async function createNote(title, contents) {
   const [result] = await pool.query(`
   INSERT INTO notes (title, contents)
@@ -67,5 +76,5 @@ async function createNote(title, contents) {
   return getNote(id)/*  */
 }
 
-module.exports = {getChips, getChip, getPins, getLeftPins, getRightPins }
+module.exports = {getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs }
 
