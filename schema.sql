@@ -40,6 +40,13 @@ CREATE TABLE inventory (
     quantity integer not null
 );
 
+CREATE TABLE inventory_dates {
+  id integer PRIMARY KEY AUTO_INCREMENT,
+  inventory_id integer NOT NULL,
+  date_code VARCHAR(16) NOT NULL,
+  quantity integer NOT NULL
+};/*                                                                      */
+
 INSERT INTO chips (chip_number, family, description, pin_count, package)
 VALUES 
 ('74299', '7400', '8-bit bidirectional universal shift/storage register; 3-state', 20, 'DIP'),

@@ -86,9 +86,19 @@ async function getInventoryList() {
 
 async function getInventory(id) {
   const [rows] = await pool.query(`
+  SELECT inventory.id, chip_id, full_number, quantity, chip_number, description 
+    from inventory
+    join chips on chips.id = inventory.chip_id
+  WHERE inventory.id = ?
+  `, [id])
+  return rows[0]
+}
+
+async function getInventoryDates(id) {
+  const [rows] = await pool.query(`
   SELECT * 
-  FROM notes
-  WHERE chip_id = ?
+  FROM inventory_dates
+  WHERE inventory_id = ?
   `, [id])
   return rows
 }
@@ -102,5 +112,5 @@ async function createNote(title, contents) {
   return getNote(id)/*  */
 }
 
-module.exports = {getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryList }
+module.exports = {getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryList, getInventory, getInventoryDates }
 

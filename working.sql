@@ -3,8 +3,8 @@ truncate table chips;
 truncate table pins;
 truncate table notes;
 truncate table specs;
-
-runcate table inventory;
+truncate table inventory;
+truncate table inventory_dates;
 
 INSERT INTO inventory ( chip_id, full_number, quantity)
 VALUES
@@ -12,6 +12,22 @@ VALUES
 (218, 'AM27C128', 2),
 (131, 'AM27C512', 2)
 ;
+
+Insert into inventory_dates (inventory_id, date_code, quantity)
+values
+(1, '92B509', 3),
+(1, '57AT', 1),
+(1, '34AF', 1),
+(2, '9225', 2),
+(3, '9313', 1),
+(3, '9442', 1);
+
+select count(*) ni from chips;
+
+
+
+
+
 
 select inventory.id, chip_id, full_number, quantity, chip_number, description from inventory
 join chips on chips.id = inventory.chip_id;
@@ -40,3 +56,12 @@ order by cast(pin_number as signed);
 
 select * from notes;
 select * from specs;
+
+CREATE TABLE inventory_dates (
+  id integer PRIMARY KEY AUTO_INCREMENT,
+  inventory_id integer NOT NULL,
+  date_code VARCHAR(16) NOT NULL,
+  quantity integer NOT NULL
+);
+
+select * from inventory_dates;

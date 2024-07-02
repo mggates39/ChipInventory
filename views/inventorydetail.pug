@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  h1= title
+  h3= inventory.description
+  p= inventory.full_number + ' - ' + inventory.chip_number
+  p
+  table
+    tr
+      th Date Code
+      th Quantity
+
+    each n in inventory_dates
+      tr
+        td= n.date_code
+        td= n.quantity
+
+    tr
+      td Total
+      td= inventory.quantity
