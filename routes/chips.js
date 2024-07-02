@@ -61,7 +61,7 @@ function parse_symbol(symbol)
         if (seen == 2) {
           newsym += '<sub>';
         }
-      } else if (symbol[i] == '/' && seen == 2) {
+      } else if ((symbol[i] == '/' || symbol[i] == ' ') && seen == 2) {
         newsym += '</sub>';
         seen = 0;
         newsym += symbol[i];
