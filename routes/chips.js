@@ -37,9 +37,16 @@ router.get('/:id', async function(req, res, next) {
         {'left_pin': pin.pin_number, 'bull': bull, 'right_pin': right_pins[i].pin_number, 
         'left_sym': parse_symbol(pin.pin_symbol), 'right_sym': parse_symbol(right_pins[i].pin_symbol)});
       i++;
-    }); 
+    });
 
-    res.render('chipdetail', { title: chip.chip_number + '-' + chip.description, chip: chip, pins: fixed_pins, layout_pins: layout_pins, specs: specs, notes: notes });
+    clean_specs = [];
+    specs.forEach(function(spec) {
+      clean_specs.push(
+        {parameter: parse_symbol(spec.parameter), unit: spec.unit, value: spec.value}
+      )
+    })
+
+    res.render('chipdetail', { title: chip.chip_number + '-' + chip.description, chip: chip, pins: fixed_pins, layout_pins: layout_pins, specs: clean_specs, notes: notes });
 });
 
 function parse_symbol(symbol)
