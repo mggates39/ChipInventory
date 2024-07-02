@@ -76,6 +76,23 @@ async function getNotes(id) {
   return rows
 }
 
+async function getInventoryList() {
+  const [rows] = await pool.query(`select inventory.id, chip_id, full_number, quantity, chip_number, description 
+    from inventory
+    join chips on chips.id = inventory.chip_id
+    order by chip_number, full_number`)
+  return rows
+}
+
+async function getInventory(id) {
+  const [rows] = await pool.query(`
+  SELECT * 
+  FROM notes
+  WHERE chip_id = ?
+  `, [id])
+  return rows
+}
+
 async function createNote(title, contents) {
   const [result] = await pool.query(`
   INSERT INTO notes (title, contents)
@@ -85,5 +102,5 @@ async function createNote(title, contents) {
   return getNote(id)/*  */
 }
 
-module.exports = {getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes }
+module.exports = {getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryList }
 
