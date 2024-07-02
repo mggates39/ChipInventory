@@ -6,8 +6,9 @@ body
   font-size: 12pt;
 }
 
-a:link, a:visited { color: #0000CC; }
-a:hover { color: #6666CC; }
+a:link { color: #0000CC; }
+a:visited { color: #6666CC; }
+a:hover { color: #444466; }
 
 h1, h2, h3
 {
