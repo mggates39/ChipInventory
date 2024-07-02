@@ -112,8 +112,16 @@ h1
   width: 40%;
 }
 
-html>body #dpindiagram
+#dpindiagramwide
 {
+}
+
+.specstable
+{
+}
+
+html>body #dpindiagram
+{`
   width: 40%;
 }
 

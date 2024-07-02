@@ -10,7 +10,7 @@ router.get('/', async function(req, res, next) {
 
 /* GET chip detail page. */
 router.get('/:id', async function(req, res, next) {
-    const id = req.params.id
+    const id = req.params.id;
     const chip = await getChip(id);
     const pins = await getPins(id);
     const left_pins = await getLeftPins(id);
@@ -19,9 +19,13 @@ router.get('/:id', async function(req, res, next) {
     const notes = await getNotes(id);
 
     fixed_pins = [];
+    iswide = 'dpindiagram';
     pins.forEach(function(pin) {
+      if (pin.pin_description.length > 100) {
+         iswide = 'dpindiagramwide';
+      }
       fixed_pins.push(
-        {pin_number: pin.pin_number, pin_symbol: parse_symbol(pin.pin_symbol), pin_description: pin.pin_description}
+        {pin_number: pin.pin_number, pin_symbol: parse_symbol(pin.pin_symbol), pin_description: pin.pin_description, iswide: iswide}
       )
     });
 
