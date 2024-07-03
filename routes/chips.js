@@ -5,7 +5,7 @@ var router = express.Router();
 /* GET chip list page. */
 router.get('/', async function(req, res, next) {
     const chips = await getChips();
-  res.render('chiplist', { title: 'Chip List', chips: chips });
+  res.render('chiplist', { title: 'Chip Master File', chips: chips });
 });
 
 /* GET chip detail page. */
