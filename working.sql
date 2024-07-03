@@ -24,7 +24,7 @@ values
 
 select count(*) ni from chips;
 
-
+select * from chips where id = 159;
 
 
 
@@ -65,3 +65,8 @@ CREATE TABLE inventory_dates (
 );
 
 select * from inventory_dates;
+
+  SELECT inventory.id, chip_id, full_number, quantity, chip_number, description 
+    from inventory
+    join chips on chips.id = inventory.chip_id
+  WHERE inventory.id = 2;
