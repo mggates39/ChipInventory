@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-
+const bootstrap = require('bootstrap') 
 var app = require('../app');
 var debug = require('debug')('chipinventory:server');
 var http = require('http');
