@@ -5,8 +5,9 @@ block content
   h3= chip.description
   p #[strong Package] #{chip.package}
   p #[strong Pin Count] #{chip.pin_count}
-  p 
-    a(target='_blank' href= chip.datasheet) Datasheet PDF
+  if chip.datasheet
+    p 
+      a(target='_blank' href= chip.datasheet) Datasheet PDF
 
   div(id=iswide)
     table.pindiagram
