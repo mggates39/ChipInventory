@@ -1,5 +1,5 @@
 var express = require('express');
-const { getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes } = require('../database');
+const { getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryByChipList } = require('../database');
 var router = express.Router();
 
 /* GET chip list page. */
@@ -17,6 +17,7 @@ router.get('/:id', async function(req, res, next) {
     const right_pins = await getRightPins(id);
     const specs = await getSpecs(id);
     const notes = await getNotes(id);
+    const inventory = await getInventoryByChipList(id);
 
     fixed_pins = [];
     iswide = 'dpindiagram';
@@ -50,7 +51,7 @@ router.get('/:id', async function(req, res, next) {
       )
     })
 
-    res.render('chipdetail', { title: chip.chip_number + '-' + chip.description, chip: chip, pins: fixed_pins, layout_pins: layout_pins, specs: clean_specs, notes: notes });
+    res.render('chipdetail', { title: chip.chip_number + '-' + chip.description, chip: chip, pins: fixed_pins, layout_pins: layout_pins, specs: clean_specs, notes: notes, inventory: inventory });
 });
 
 function parse_symbol(symbol)
