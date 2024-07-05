@@ -108,6 +108,7 @@ async function getInventoryDates(id) {
   SELECT * 
   FROM inventory_dates
   WHERE inventory_id = ?
+  order by date_code
   `, [id])
   return rows
 }
@@ -121,5 +122,5 @@ async function createNote(title, contents) {
   return getNote(id)/*  */
 }
 
-module.exports = {getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryList, getInventory, getInventoryDates }
+module.exports = {getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryList, getInventory, getInventoryDates, getInventoryByChipList }
 
