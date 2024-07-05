@@ -7,18 +7,24 @@ truncate table aliases;
 truncate table inventory;
 truncate table inventory_dates;
 
-INSERT INTO inventory ( chip_id, full_number, quantity)
+
+INSERT INTO inventory ( chip_id, full_number, mfg_code_id, quantity)
 VALUES
-(70, 'LF353N', 5),
-(218, 'AM27C128', 2),
-(131, 'AM27C512', 2),
-(119, '74ATC823', 9),
-(224, '74ATC821', 4),
-(62, 'SN74HC374N', 1),
-(62, 'SN74LS374N', 3),
-(62, 'SN74LS374NB', 10),
-(181, 'MC68B09P', 1)
-;
+(70, 'LF353N', 287, 5),
+(218, 'AM27C128', 25, 2),
+(131, 'AM27C512', 25, 2),
+(119, '74ATC823', 422, 9),
+(224, '74ATC821', 422, 4),
+(62, 'SN74HC374N', 422, 1),
+(62, 'SN74LS374N', 422, 3),
+(62, 'SN74LS374NB', 422, 10),
+(181, 'MC68B09P', 210, 1);
+
+select mfg_codes.id, name, mfg_code
+from manufacturer
+join mfg_codes on mfg_codes.manufacturer_id = manufacturer.id
+where mfg_code = 'ST'
+order by name, mfg_code;
 
 Insert into inventory_dates (inventory_id, date_code, quantity)
 values
@@ -51,8 +57,10 @@ select * from chips where id = 159;
 
 
 
-select inventory.id, chip_id, full_number, quantity, chip_number, description from inventory
-join chips on chips.id = inventory.chip_id;
+select inventory.id, chip_id, full_number, quantity, chip_number, mfg_code, name, description from inventory
+join chips on chips.id = inventory.chip_id
+join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+join manufacturer on manufacturer.id = mfg_codes.manufacturer_id;
 
 select chips.chip_number, pins.* from chips join pins on pins.chip_id = chips.id where pins.pin_symbol like '%\_\_%';
 
@@ -84,7 +92,17 @@ select * from specs;
 
 select * from aliases;
 
-  SELECT inventory.id, chip_id, full_number, quantity, chip_number, description 
-    from inventory
-    join chips on chips.id = inventory.chip_id
-  WHERE inventory.id = 2;
+SELECT inventory.id, chip_id, full_number, quantity, chip_number, description 
+from inventory
+join chips on chips.id = inventory.chip_id
+WHERE inventory.id = 2;
+
+select count(*) ni from manufacturer;
+select count(*) ni from mfg_codes;
+
+select mfg_codes.id, name, mfg_code
+from manufacturer
+join mfg_codes on mfg_codes.manufacturer_id = manufacturer.id
+where mfg_code = 'TMS'
+order by name, mfg_code;
+

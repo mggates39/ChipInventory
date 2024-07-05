@@ -25,7 +25,7 @@ CREATE TABLE notes (
   note TEXT not NULL
 );
 
-create table specs (
+CREATE TABLE specs (
   id integer PRIMARY KEY AUTO_INCREMENT,
   chip_id integer NOT NULL,
   parameter VARCHAR(128) NOT NULL,
@@ -36,12 +36,13 @@ create table specs (
 CREATE TABLE aliases (
   id integer PRIMARY KEY AUTO_INCREMENT,
   chip_id integer NOT NULL,
-  alias_chip_numberVARCHAR(32) NOT NULL
+  alias_chip_number VARCHAR(32) NOT NULL
 );
 
 CREATE TABLE inventory (
     id integer PRIMARY KEY AUTO_INCREMENT,
     chip_id integer not null,
+    mfg_code_id integer not null,
     full_number VARCHAR(64) NOT NULL,
     quantity integer not null
 );
@@ -51,7 +52,18 @@ CREATE TABLE inventory_dates {
   inventory_id integer NOT NULL,
   date_code VARCHAR(16) NOT NULL,
   quantity integer NOT NULL
-};/*                                                                      */
+};
+
+CREATE TABLE manufacturer (
+	id integer primary key auto_increment,
+	name integer(128) NOT NULL
+);
+
+CREATE TABLE mfg_codes (
+	id integer primary key auto_increment,
+	manufacturer_id integer NOT NULL,
+	mfg_code VARCHAR(16) NOT NULL
+);                                                                      */
 
 INSERT INTO chips (chip_number, family, description, pin_count, package)
 VALUES 
