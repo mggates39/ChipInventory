@@ -10,16 +10,6 @@ a:link { color: #0000CC; }
 a:visited { color: #6666CC; }
 a:hover { color: #444466; }
 
-h1, h2, h3
-{
-  margin: 0px;
-}
-
-h1
-{
-  font-size: 300%;
-}
-
 #super {
   vertical-align: super;
   font-size: medium
