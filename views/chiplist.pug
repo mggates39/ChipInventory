@@ -1,7 +1,24 @@
 extends layout
 
+block navigation
+  nav.navbar.navbar-expand-lg.navbar-light.bg-light
+    a.navbar-brand(href="/") Lab
+    button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
+      span.navbar-toggler-icon
+    div.collapse.navbar-collapse(id="navbarNav")
+      ul.navbar-nav
+        li.nav-item.active
+          a.nav-link(href='/chips' active) Chip Master File 
+            span(class="sr-only") *
+        li.nav-item
+          a.nav-link(href='/inventory') Chip Inventory 
+        li.nav-item
+          a.nav-link(href='/projects') My Projects 
+
 block content
   p Welcome to #{title}
+  div.search
+  
   table.table.table-striped
     tr
       th Number
