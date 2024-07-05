@@ -77,15 +77,17 @@ async function getNotes(id) {
 }
 
 async function getInventoryList() {
-  const [rows] = await pool.query(`select inventory.id, chip_id, full_number, quantity, chip_number, description 
+  const [rows] = await pool.query(`select inventory.id, chip_id, full_number, quantity, chip_number, description, description, mfg_code, name 
     from inventory
     join chips on chips.id = inventory.chip_id
+    join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+    join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
     order by chip_number, full_number`)
   return rows
 }
 
 async function getInventoryByChipList(chip_id) {
-  const [rows] = await pool.query(`select inventory.id, chip_id, full_number, quantity, chip_number, description 
+  const [rows] = await pool.query(`select inventory.id, chip_id, full_number, quantity, chip_number 
     from inventory
     join chips on chips.id = inventory.chip_id
     where inventory.chip_id = ?
@@ -95,9 +97,11 @@ async function getInventoryByChipList(chip_id) {
 
 async function getInventory(id) {
   const [rows] = await pool.query(`
-  SELECT inventory.id, chip_id, full_number, quantity, chip_number, description 
+  SELECT inventory.id, chip_id, full_number, quantity, chip_number, description, description, mfg_code, name  
     from inventory
     join chips on chips.id = inventory.chip_id
+    join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+    join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
   WHERE inventory.id = ?
   `, [id])
   return rows[0]
