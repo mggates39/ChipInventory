@@ -84,6 +84,15 @@ async function getInventoryList() {
   return rows
 }
 
+async function getInventoryByChipList(chip_id) {
+  const [rows] = await pool.query(`select inventory.id, chip_id, full_number, quantity, chip_number, description 
+    from inventory
+    join chips on chips.id = inventory.chip_id
+    where inventory.chip_id = ?
+    order by full_number`, [chip_id])
+  return rows
+}
+
 async function getInventory(id) {
   const [rows] = await pool.query(`
   SELECT inventory.id, chip_id, full_number, quantity, chip_number, description 

@@ -1,13 +1,26 @@
 extends layout
 
 block content
-  h1= chip.chip_number
   h3= chip.description
   p #[strong Package] #{chip.package}
   p #[strong Pin Count] #{chip.pin_count}
   if chip.datasheet
     p 
       a(target='_blank' href= chip.datasheet) Datasheet PDF
+
+  if (inventory.length)
+    div(id='inventory')
+      h4 Available Chips
+      table.available 
+        tr 
+          th Chip Number 
+          th Quantity 
+
+        each n in inventory 
+          tr 
+            td
+              a(href="/inventory/" + n.id target="_blank") #{n.full_number}
+            td= n.quantity 
 
   div(id=iswide)
     table.pindiagram
