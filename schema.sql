@@ -33,6 +33,12 @@ create table specs (
   value TEXT NOT NULL
 );
 
+CREATE TABLE aliases (
+  id integer PRIMARY KEY AUTO_INCREMENT,
+  chip_id integer NOT NULL,
+  alias_chip_numberVARCHAR(32) NOT NULL
+);
+
 CREATE TABLE inventory (
     id integer PRIMARY KEY AUTO_INCREMENT,
     chip_id integer not null,
