@@ -1,11 +1,12 @@
 use chip_data;
-truncate table chips;
+
 truncate table pins;
 truncate table notes;
 truncate table specs;
 truncate table aliases;
-truncate table inventory;
+truncate table chips;
 truncate table inventory_dates;
+truncate table inventory;
 
 
 INSERT INTO inventory ( chip_id, full_number, mfg_code_id, quantity)
@@ -47,6 +48,9 @@ values
 (8, '6813', 5),
 (9, '8815', 1)
 ;
+
+select * from inventory;
+select * from inventory_dates;
 
 select count(*) ni from chips;
 

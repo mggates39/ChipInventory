@@ -1,3 +1,5 @@
+DROP DATABASE chip_data;
+
 CREATE DATABASE chip_data;
 USE chip_data;
 
@@ -47,32 +49,41 @@ CREATE TABLE inventory (
     quantity integer not null
 );
 
-CREATE TABLE inventory_dates {
+CREATE TABLE inventory_dates (
   id integer PRIMARY KEY AUTO_INCREMENT,
   inventory_id integer NOT NULL,
   date_code VARCHAR(16) NOT NULL,
   quantity integer NOT NULL
-};
+);
 
 CREATE TABLE manufacturer (
 	id integer primary key auto_increment,
-	name integer(128) NOT NULL
+	name VARCHAR(128) NOT NULL
 );
 
 CREATE TABLE mfg_codes (
 	id integer primary key auto_increment,
 	manufacturer_id integer NOT NULL,
 	mfg_code VARCHAR(16) NOT NULL
-);                                                                      */
+);
 
-INSERT INTO chips (chip_number, family, description, pin_count, package)
-VALUES 
-('74299', '7400', '8-bit bidirectional universal shift/storage register; 3-state', 20, 'DIP'),
-('74174', '7400', 'Hex D-type flip-flop with reset; positive-edge trigger', 16, 'DIP');
+create index mfg_idx on mfg_codes(manufacturer_id);
+alter table  mfg_codes add FOREIGN KEY mfg_codes_mfg_idfk (manufacturer_id) REFERENCES manufacturer(id);
 
-INSERT INTO inventory ( chip_id, full_number, quantity)
-VALUES
-(1, 'SN74LS299N', 1),
-(2, 'MC74AC174N', 1);
+create index chip_idx on pins (chip_id);
+alter table  pins add FOREIGN KEY pins_chip_idfk (chip_id) REFERENCES chips(id);
 
-select chips.chip_number, pins.* from chips join pins on pins.chip_id = chips.id where pins.pin_symbol like '%\_\_%';
+create index chip_idx on notes (chip_id);
+alter table  notes add FOREIGN KEY notes_chip_idfk (chip_id) REFERENCES chips(id);
+
+create index chip_idx on specs (chip_id);
+alter table  specs add FOREIGN KEY specs_chip_idfk (chip_id) REFERENCES chips(id);
+
+create index chip_idx on aliases (chip_id);
+alter table  aliases add FOREIGN KEY aliases_chip_idfk (chip_id) REFERENCES chips(id);
+
+create index chip_idx on inventory (chip_id);
+alter table  inventory add FOREIGN KEY inventory_chip_idfk (chip_id) REFERENCES chips(id);
+
+create index mfg_code_idx on inventory (mfg_code_id);
+alter table  inventory add FOREIGN KEY mfg_code_idfk (mfg_code_id) REFERENCES mfg_code(id);
