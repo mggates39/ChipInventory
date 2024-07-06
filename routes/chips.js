@@ -1,11 +1,25 @@
 var express = require('express');
-const { getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryByChipList } = require('../database');
+const { searchChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryByChipList } = require('../database');
 var router = express.Router();
 
 /* GET chip list page. */
 router.get('/', async function(req, res, next) {
-    const chips = await getChips();
-  res.render('chiplist', { title: 'Chip Master File', chips: chips });
+  const search_query = req.query.q;
+  const search_type = req.query.w;
+  var part_search = true;
+  var key_search = false;
+  var searched = ''
+  var search_by = 'p';
+  if (search_type == 'k') {
+    part_search = false;
+    key_search = true;
+    search_by = 'k';
+  }
+  searched = search_query;
+  
+  const chips = await searchChips(searched, search_by);
+  console.log(search_query, search_type, searched, search_by);
+  res.render('chiplist', { title: 'Chip Master File', chips: chips, searched: searched, part_search: part_search, key_search: key_search });
 });
 
 /* GET chip detail page. */

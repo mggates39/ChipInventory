@@ -10,8 +10,22 @@ const pool = mysql.createPool({
   database: process.env.MYSQL_DATABASE
 }).promise()
 
-async function getChips() {
-  const [rows] = await pool.query("SELECT * FROM chips order by chip_number")
+async function searchChips(query, type) {
+  if (query) {
+    value = ['%' + query + '%']
+    if (type == 'p') {
+      sql = "SELECT * FROM chips WHERE chip_number LIKE ? ORDER BY chip_number";
+    } else if (type == 'k') {
+      sql = "SELECT * FROM chips WHERE description LIKE ? ORDER BY chip_number";
+    } else {
+      sql = "SELECT * FROM chips order by chip_number";
+    }
+  } else {
+    sql = "SELECT * FROM chips order by chip_number";
+    value = []
+  }
+  console.log(sql, value);
+  const [rows] = await pool.query(sql, value);
   return rows
 }
 
@@ -125,8 +139,8 @@ async function createNote(title, contents) {
   VALUES (?, ?)
   `, [title, contents])
   const id = result.insertId
-  return getNote(id)/*  */
+  return getNote(id)
 }
 
-module.exports = {getChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryList, getInventory, getInventoryDates, getInventoryByChipList }
+module.exports = { searchChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryList, getInventory, getInventoryDates, getInventoryByChipList }
 

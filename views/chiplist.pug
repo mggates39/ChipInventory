@@ -16,8 +16,17 @@ block navigation
           a.nav-link(href='/projects') My Projects 
 
 block content
-  p Welcome to #{title}
-  div.search
+  p This is a searchable list of all the chip types in this database.
+  div.searchdiv
+    form.searchbox()
+      INPUT.mb-3(TYPE="text" NAME="q" VALUE=searched SIZE="20" MAXLENGTH="32")
+      div.form-check.form-check-inline
+        INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="p" id="part" checked=part_search) 
+        label.form-check-label(for="part") Part number
+      div.form-check.form-check-inline
+        INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="k" id="keyword" checked=key_search) 
+        label.form-check-label(for="keyword") Keyword
+      INPUT.btn.btn-primary.mb-3(TYPE="submit" VALUE="Search")
   
   table.table.table-striped
     tr
