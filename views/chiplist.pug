@@ -44,3 +44,8 @@ block content
         td= n.package
         td= n.pin_count
         td= n.description
+
+    if chips.length == 0
+      tr
+        td(span=5) No chips found &nbsp;
+          input.btn.btn-primary(Type="submit" value="New Chip")
