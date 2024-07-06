@@ -30,12 +30,14 @@ block content
       table.available 
         tr 
           th Chip Number 
+          th Manufacturer
           th Quantity 
 
         each n in inventory 
           tr 
             td
               a(href="/inventory/" + n.id target="_blank") #{n.full_number}
+            td= n.name
             td= n.quantity 
 
   div(id=iswide)
