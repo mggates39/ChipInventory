@@ -14,14 +14,14 @@ async function searchChips(query, type) {
   if (query) {
     value = ['%' + query + '%']
     if (type == 'p') {
-      sql = "SELECT * FROM chips WHERE chip_number LIKE ? ORDER BY chip_number";
+      sql = "SELECT * FROM chip_aliases WHERE chip_number LIKE ? ORDER BY chip_number, description";
     } else if (type == 'k') {
-      sql = "SELECT * FROM chips WHERE description LIKE ? ORDER BY chip_number";
+      sql = "SELECT * FROM chip_aliases WHERE description LIKE ? ORDER BY chip_number, description";
     } else {
-      sql = "SELECT * FROM chips order by chip_number";
+      sql = "SELECT * FROM chip_aliases order by chip_number, description";
     }
   } else {
-    sql = "SELECT * FROM chips order by chip_number";
+    sql = "SELECT * FROM chip_aliases order by chip_number, description";
     value = []
   }
   console.log(sql, value);

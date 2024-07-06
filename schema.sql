@@ -67,6 +67,14 @@ CREATE TABLE mfg_codes (
 	mfg_code VARCHAR(16) NOT NULL
 );
 
+CREATE VIEW chip_aliases AS
+SELECT id, chip_number, family, package, pin_count, description 
+FROM chips
+UNION ALL
+SELECT chip_id as id, alias_chip_number as chip_number,  '' family, '' package, '' pin_count, concat("See <a href='/chips/", a.chip_id,"'>", x.chip_number, "</a>") as description
+FROM aliases a
+JOIN chips x ON x.id = a.chip_id;
+
 create index mfg_idx on mfg_codes(manufacturer_id);
 alter table  mfg_codes add FOREIGN KEY mfg_codes_mfg_idfk (manufacturer_id) REFERENCES manufacturer(id);
 
