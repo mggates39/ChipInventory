@@ -132,3 +132,22 @@ html>body #dpindiagram
   text-decoration: overline;
 }
 
+.searchdiv
+{
+  text-align: center;
+  margin: 20px;
+  display: block;
+}
+
+.searchbox
+{
+  padding: 10px;
+  text-align: center;
+}
+
+.searchbox input
+{
+  font-size: 12pt;
+  margin-left: 5px;
+  margin-right: 5px;
+}
