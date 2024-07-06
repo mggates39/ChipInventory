@@ -43,7 +43,7 @@ block content
         td= n.family
         td= n.package
         td= n.pin_count
-        td= n.description
+        td !{n.description}
 
     if chips.length == 0
       tr
