@@ -95,3 +95,6 @@ alter table  inventory add FOREIGN KEY inventory_chip_idfk (chip_id) REFERENCES 
 
 create index mfg_code_idx on inventory (mfg_code_id);
 alter table  inventory add FOREIGN KEY mfg_code_idfk (mfg_code_id) REFERENCES mfg_code(id);
+
+CREATE INDEX inv_idx on inventory_dates(inventory_id);
+ALTER TABLE inventory_dates ADD FOREIGN KEY inv_idfk (inventory_id) REFERENCES inventory(id);
