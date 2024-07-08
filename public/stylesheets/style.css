@@ -6,9 +6,9 @@ body
   font-size: 12pt;
 }
 
-a:link { color: #0000CC; }
+/* a:link { color: #0000CC; }
 a:visited { color: #6666CC; }
-a:hover { color: #444466; }
+a:hover { color: #444466; } */
 
 #super {
   vertical-align: super;

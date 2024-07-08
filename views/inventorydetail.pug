@@ -1,19 +1,19 @@
 extends layout
 
 block navigation
-  nav.navbar.navbar-expand-lg.navbar-light.bg-light
-    a.navbar-brand(href="/") Lab
-    button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
-      span.navbar-toggler-icon
-    div.collapse.navbar-collapse(id="navbarNav")
-      ul.navbar-nav
-        li.nav-item.active
-          a.nav-link(href='/chips') Chip Master File 
-        li.nav-item
-          a.nav-link(href='/inventory' active) Chip Inventory 
-            span(class="sr-only") *
-        li.nav-item
-          a.nav-link(href='/projects') My Projects 
+  nav.navbar.navbar-expand-lg.bg-body-tertiary
+    div.container-fluid
+      a.navbar-brand(href="/") Lab
+      button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
+        span.navbar-toggler-icon
+      div.collapse.navbar-collapse(id="navbarNav")
+        ul.navbar-nav.me-auto.mb-2.mb-lg-0
+          li.nav-item
+            a.nav-link(href='/chips') Chip Master File 
+          li.nav-item
+            a.nav-link.active(href='/inventory') Chip Inventory 
+          li.nav-item
+            a.nav-link(href='/projects') My Projects 
 
 block content
   h3= inventory.description
