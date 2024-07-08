@@ -8,18 +8,15 @@ router.get('/', async function(req, res, next) {
   const search_type = req.query.w;
   var part_search = true;
   var key_search = false;
-  var searched = ''
   var search_by = 'p';
   if (search_type == 'k') {
     part_search = false;
     key_search = true;
     search_by = 'k';
   }
-  searched = search_query;
   
-  const chips = await searchChips(searched, search_by);
-  console.log(search_query, search_type, searched, search_by);
-  res.render('chiplist', { title: 'Chip Master File', chips: chips, searched: searched, part_search: part_search, key_search: key_search });
+  const chips = await searchChips(search_query, search_by);
+  res.render('chiplist', { title: 'Chip Master File', chips: chips, searched: search_query, part_search: part_search, key_search: key_search });
 });
 
 /* GET chip detail page. */
