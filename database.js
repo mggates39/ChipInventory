@@ -133,14 +133,46 @@ async function getInventoryDates(id) {
   return rows
 }
 
-async function createNote(title, contents) {
+async function createChip(chip_number, family, pin_count, package, datasheet, description) {
   const [result] = await pool.query(`
-  INSERT INTO notes (title, contents)
-  VALUES (?, ?)
-  `, [title, contents])
+  INSERT INTO chips (chip_number, family, pin_count, package, datasheet, description)
+  VALUES (?, ?, ?, ?, ?, ?)
+  `, [chip_number, family, pin_count, package, datasheet, description])
   const id = result.insertId
   return getNote(id)
 }
 
-module.exports = { searchChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryList, getInventory, getInventoryDates, getInventoryByChipList }
+async function updateChip(id, chip_number, family, pin_count, package, datasheet, description) {
+  const [result] = await pool.query(`
+  UPDATE chips SET
+    chip_number = ?, 
+    family = ?, 
+    pin_count = ?, 
+    package = ?, 
+    datasheet = ?, 
+    description = ?
+  WHERE id = ?
+  `, [chip_number, family, pin_count, package, datasheet, description, id])
+  return getNote(id)
+}
+
+async function deleteChip(id) {
+  await pool.query('DELETE FROM aliases WHERE chip_id = ?', [id]);
+  await pool.query('DELETE FROM nodes WHERE chip_id = ?', [id]);
+  await pool.query('DELETE FROM specs WHERE chip_id = ?', [id]);
+  await pool.query('DELETE FROM pins WHERE chip_id = ?', [id]);
+  await pool.query('DELETE FROM chips WHERE id = ?', [id]);
+  
+}
+
+async function createPin(chip_id, pin_number, pin_description, pin_symbol) {
+  const [result] = await pool.query(`
+  INSERT INTO pins (chip_id, pin_number, pin_description, pin_symbol)
+  VALUES (?, ?, ?, ?)
+  `, [chip_id, pin_number, pin_description, pin_symbol])
+  const id = result.insertId
+  return getNote(id)
+}
+
+module.exports = { searchChips, getChip, createChip, updateChip, deleteChip, getPins, createPin, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryList, getInventory, getInventoryDates, getInventoryByChipList }
 
