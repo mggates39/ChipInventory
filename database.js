@@ -24,7 +24,6 @@ async function searchChips(query, type) {
     sql = "SELECT * FROM chip_aliases order by chip_number, description";
     value = []
   }
-  console.log(sql, value);
   const [rows] = await pool.query(sql, value);
   return rows
 }
