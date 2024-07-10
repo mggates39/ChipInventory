@@ -1,0 +1,40 @@
+extends layout
+
+block navigation
+  nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+    div.container-fluid
+      a.navbar-brand(href="/") My Lab
+      button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
+        span.navbar-toggler-icon
+      div.collapse.navbar-collapse(id="navbarNav")
+        ul.navbar-nav.me-auto.mb-2.mb-lg-0
+          li.nav-item
+            a.nav-link.active(href='/chips') Chip Master File 
+          li.nav-item
+            a.nav-link(href='/inventory') Chip Inventory 
+          li.nav-item
+            a.nav-link(href='/projects') My Projects 
+
+block content
+  p Enter the new chip defintion
+  form(action="/chips/chipnew/" method="POST")
+    div.form-group
+      label(for="chip_number") Chip Number:
+      input.form-control( type="text" id="chip_number" placeholder="Ex) 7425" name="chip_number")
+    div.form-group
+      label( for="family") family:
+      input.form-control(type="text" id="family" placeholder="Ex) 7400" name="family")
+    div.form-group
+      label( for="pin_count") Pin Count:
+      input.form-control(type="text" id="pin_count" placeholder="Ex) 14,18, 20" name="pin_count")
+    div.form-group
+      label( for="package") Package:
+      input.form-control(type="text" id="package" placeholder="Ex) DIP" name="package")
+    div.form-group
+      label( for="datasheet") Datasheet:
+      input.form-control(type="text" id="datasheet" placeholder="URL to datasheet" name="datasheet")
+    div.form-group
+      label( for="description") Description:
+      textarea.form-control(rows="5" id="description" placeholder="Summary of what the chip does" name="description")
+    button.btn.btn-default.btn-primary(type="submit") Submit
+

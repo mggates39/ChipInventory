@@ -19,6 +19,11 @@ router.get('/', async function(req, res, next) {
   res.render('chiplist', { title: 'Chip Master File', chips: chips, searched: search_query, part_search: part_search, key_search: key_search });
 });
 
+/* GET new chip entry page */
+router.get('/chipnew', function(req, res, next) {
+  res.render('chipnew', {title: 'New Chip Definition'});
+});
+
 /* GET chip detail page. */
 router.get('/:id', async function(req, res, next) {
     const id = req.params.id;
@@ -58,7 +63,7 @@ router.get('/:id', async function(req, res, next) {
     clean_specs = [];
     specs.forEach(function(spec) {
       clean_specs.push(
-        {parameter: parse_symbol(spec.parameter), unit: spec.unit, value: spec.value}
+        {parameter: parse_symbol(spec.parameter), unit: parse_symbol(spec.unit), value: parse_symbol(spec.value)}
       )
     })
 
