@@ -21,7 +21,14 @@ router.get('/', async function(req, res, next) {
 
 /* GET new chip entry page */
 router.get('/chipnew', function(req, res, next) {
-  res.render('chipnew', {title: 'New Chip Definition'});
+  data = {chip_number: '',
+    family: '',
+    package: '',
+    pin_count: '',
+    data_sheet: '',
+    description: ''
+  }
+  res.render('chipnew', {title: 'New Chip Definition', data: data});
 });
 
 /* GET chip detail page. */
