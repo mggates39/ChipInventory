@@ -53,22 +53,20 @@ router.post('/chipnew', async function(req, res) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  console.log(data);
   if (descr[req.body.pin_count-1]) {
-    // const chip = await createChip(data.chip_number, data.family, data.pin_count, data.package, data.datasheet, data.description);
-    // chip_id = chip.id;
-    // console.log(chip);
-    // for (var i = 0; i < req.body.pin_count; i++) {
-    //   await createPin(chip_id, pin[i], sym[i], descr[i]);
-    // }
-    chip_id = 248;
+    const chip = await createChip(data.chip_number, data.family, data.pin_count, data.package, data.datasheet, data.description);
+    chip_id = chip.id;
+
+    for (var i = 0; i < req.body.pin_count; i++) {
+      await createPin(chip_id, pin[i], sym[i], descr[i]);
+    }
+
     aliases = data.aliases.split(',');
     for( const alias of aliases) {
       await createAlias(chip_id, alias);
     }
 
     res.redirect('/chips/'+chip_id);
-
   } else {
     res.render('chipnew', {title: 'New Chip Definition', data: data});
   }
@@ -85,8 +83,6 @@ router.get('/:id', async function(req, res, next) {
     const notes = await getNotes(id);
     const inventory = await getInventoryByChipList(id);
     const aliases = await getAliases(id);
-
-    console.log(aliases);
 
     fixed_pins = [];
     iswide = 'dpindiagram';
