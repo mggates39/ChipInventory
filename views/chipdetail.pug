@@ -17,6 +17,13 @@ block navigation
 
 block content
   h3 !{chip.description}
+  if (aliases.length) 
+  - var sep = ''
+    p #[strong Aliases] 
+      each alias in aliases
+        = sep + alias.alias_chip_number 
+        - sep = ', '
+
   p #[strong Package] #{chip.package}
   p #[strong Pin Count] #{chip.pin_count}
   if chip.datasheet

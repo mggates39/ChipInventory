@@ -47,6 +47,16 @@ async function getPins(id) {
   return rows
 }
 
+async function getPin(id) {
+  const [rows] = await pool.query(`
+  SELECT * 
+  FROM pins
+  WHERE id = ?
+  ORDER BY pin_number
+  `, [id])
+  return rows[0]
+}
+
 async function getLeftPins(id) {
   const [rows] = await pool.query(`
   select chips.chip_number, chips.pin_count, pinleft.pin_number, pinleft.pin_symbol
@@ -138,7 +148,7 @@ async function createChip(chip_number, family, pin_count, package, datasheet, de
   VALUES (?, ?, ?, ?, ?, ?)
   `, [chip_number, family, pin_count, package, datasheet, description])
   const id = result.insertId
-  return getNote(id)
+  return getChip(id)
 }
 
 async function updateChip(id, chip_number, family, pin_count, package, datasheet, description) {
@@ -152,7 +162,7 @@ async function updateChip(id, chip_number, family, pin_count, package, datasheet
     description = ?
   WHERE id = ?
   `, [chip_number, family, pin_count, package, datasheet, description, id])
-  return getNote(id)
+  return getChip(id)
 }
 
 async function deleteChip(id) {
@@ -164,14 +174,40 @@ async function deleteChip(id) {
   
 }
 
-async function createPin(chip_id, pin_number, pin_description, pin_symbol) {
+async function createPin(chip_id, pin_number, pin_symbol, pin_description) {
   const [result] = await pool.query(`
-  INSERT INTO pins (chip_id, pin_number, pin_description, pin_symbol)
+  INSERT INTO pins (chip_id, pin_number, pin_symbol, pin_description)
   VALUES (?, ?, ?, ?)
-  `, [chip_id, pin_number, pin_description, pin_symbol])
+  `, [chip_id, pin_number, pin_symbol, pin_description])
   const id = result.insertId
-  return getNote(id)
+  return getPin(id)
 }
 
-module.exports = { searchChips, getChip, createChip, updateChip, deleteChip, getPins, createPin, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryList, getInventory, getInventoryDates, getInventoryByChipList }
+async function createAlias(chip_id, alias_number) {
+  const [result] = await pool.query("INSERT INTO aliases (chip_id, alias_chip_number) VALUES (?, ?)", [chip_id, alias_number])
+  const id = result.insertId
+  return getAlias(id)
+}
+
+async function getAliases(chip_id) {
+  const [rows] = await pool.query(`
+  SELECT * 
+  FROM aliases
+  WHERE chip_id = ?
+  `, [chip_id])
+  return rows
+}
+
+async function getAlias(id) {
+  const [rows] = await pool.query(`
+  SELECT * 
+  FROM specs
+  WHERE id = ?
+  `, [id])
+  return rows[0]
+}
+
+
+
+module.exports = { searchChips, getChip, createChip, updateChip, deleteChip, getPins, createPin, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryList, getInventory, getInventoryDates, getInventoryByChipList, createAlias, getAliases }
 
