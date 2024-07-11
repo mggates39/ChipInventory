@@ -1,13 +1,13 @@
 extends layout
 
-block navigationxed-
+block navigation
   nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
     div.container-fluid
       a.navbar-brand(href="/") My Lab
-      button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
+      button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
         span.navbar-toggler-icon
       div.collapse.navbar-collapse(id="navbarNav")
-        ul.navbar-nav.me-auto.mb-2.mb-lg-0
+        ul.navbar-nav
           li.nav-item
             a.nav-link(href='/chips') Chip Master File 
           li.nav-item
