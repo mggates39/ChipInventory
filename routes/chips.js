@@ -1,5 +1,5 @@
 var express = require('express');
-const { searchChips, getChip, getPins, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryByChipList } = require('../database');
+const { searchChips, getChip, createChip, getPins, createPin, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryByChipList, getAliases, createAlias } = require('../database');
 var router = express.Router();
 
 /* GET chip list page. */
@@ -22,13 +22,56 @@ router.get('/', async function(req, res, next) {
 /* GET new chip entry page */
 router.get('/chipnew', function(req, res, next) {
   data = {chip_number: '',
+    aliases: '',
     family: '',
     package: '',
     pin_count: '',
-    data_sheet: '',
+    datasheet: '',
     description: ''
   }
   res.render('chipnew', {title: 'New Chip Definition', data: data});
+});
+
+router.post('/chipnew', async function(req, res) {
+  data = {chip_number: req.body.chip_number,
+    aliases: req.body.aliases,
+    family: req.body.family,
+    package: req.body.package,
+    pin_count: req.body.pin_count,
+    datasheet: req.body.datasheet,
+    description: req.body.description,
+  }
+  var pin=[];
+  var sym = [];
+  var descr = [];
+  for (var i = 0; i < req.body.pin_count; i++) {
+    pin.push(req.body["pin_"+i]);
+    sym.push(req.body["sym_"+i]);
+    descr.push(req.body["descr_"+i]);
+  }
+  data['pin'] = pin;
+  data['sym'] = sym;
+  data['descr'] = descr;
+
+  console.log(data);
+  if (descr[req.body.pin_count-1]) {
+    // const chip = await createChip(data.chip_number, data.family, data.pin_count, data.package, data.datasheet, data.description);
+    // chip_id = chip.id;
+    // console.log(chip);
+    // for (var i = 0; i < req.body.pin_count; i++) {
+    //   await createPin(chip_id, pin[i], sym[i], descr[i]);
+    // }
+    chip_id = 248;
+    aliases = data.aliases.split(',');
+    for( const alias of aliases) {
+      await createAlias(chip_id, alias);
+    }
+
+    res.redirect('/chips/'+chip_id);
+
+  } else {
+    res.render('chipnew', {title: 'New Chip Definition', data: data});
+  }
 });
 
 /* GET chip detail page. */
@@ -41,6 +84,9 @@ router.get('/:id', async function(req, res, next) {
     const specs = await getSpecs(id);
     const notes = await getNotes(id);
     const inventory = await getInventoryByChipList(id);
+    const aliases = await getAliases(id);
+
+    console.log(aliases);
 
     fixed_pins = [];
     iswide = 'dpindiagram';
@@ -74,7 +120,7 @@ router.get('/:id', async function(req, res, next) {
       )
     })
 
-    res.render('chipdetail', { title: chip.chip_number + ' - ' + chip.description, chip: chip, pins: fixed_pins, layout_pins: layout_pins, specs: clean_specs, notes: notes, inventory: inventory });
+    res.render('chipdetail', { title: chip.chip_number + ' - ' + chip.description, chip: chip, pins: fixed_pins, layout_pins: layout_pins, specs: clean_specs, notes: notes, aliases: aliases, inventory: inventory });
 });
 
 function parse_symbol(symbol)

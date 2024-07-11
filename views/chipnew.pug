@@ -22,7 +22,10 @@ block content
       label(for="chip_number") Chip Number:
       input.form-control( type="text" id="chip_number" placeholder="Ex) 7425" name="chip_number" value=data.chip_number)
     div.form-group
-      label( for="family") family:
+      label( for="aliases") Aliases:
+      input.form-control(type="text" id="aliases" placeholder="Ex) 74HTC25" name="aliases" value=data.aliases)
+    div.form-group
+      label( for="family") Family:
       input.form-control(type="text" id="family" placeholder="Ex) 7400" name="family" value=data.family)
     div.form-group
       label( for="package") Package:
@@ -35,18 +38,18 @@ block content
       input.form-control(type="text" id="datasheet" placeholder="URL to datasheet" name="datasheet" value=data.datasheet)
     div.form-group
       label( for="description") Description:
-      textarea.form-control(rows="5" id="description" placeholder="Summary of what the chip does" name="description" value=data.description)
+      textarea.form-control(rows="5" id="description" placeholder="Summary of what the chip does" name="description")= data.description
     br
     h4 Pins 
     - var n = 0
     - while (n < data.pin_count)
       div.row 
         div.col 
-          input.form-control(ype="text" id="pin_"+n name="pin_"+n value=(n+1))
+          input.form-control(type="text" id="pin_"+n name="pin_"+n value=(n+1))
         div.col 
-          input.form-control(ype="text" id="sym_"+n name="sym_"+n placeholder="Symbol")
+          input.form-control(type="text" id="sym_"+n name="sym_"+n placeholder="Symbol" value=data.sym[n])
         div.col 
-          input.form-control(ype="text" id="descr_"+n name="descr_"+n placeholder="Description")
+          input.form-control(type="text" id="descr_"+n name="descr_"+n placeholder="Description" value=data.descr[n])
 
       - n++
 
