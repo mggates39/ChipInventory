@@ -120,9 +120,19 @@ async function getInventoryByChipList(chip_id) {
   return rows
 }
 
+async function lookupInventory(chip_id, full_number, mfg_code_id) {
+  const [rows] = await pool.query(`select *   
+    from inventory
+    where inventory.chip_id = ?
+      and full_number = ?
+      and mfg_code_id = ?
+    order by full_number`, [chip_id, full_number, mfg_code_id]);
+  return rows
+}
+
 async function getInventory(id) {
   const [rows] = await pool.query(`
-  SELECT inventory.id, chip_id, full_number, quantity, chip_number, description, description, mfg_code, name  
+  SELECT inventory.id, chip_id, full_number, quantity, chip_number, description, description, mfg_code, name 
     from inventory
     join chips on chips.id = inventory.chip_id
     join mfg_codes on mfg_codes.id = inventory.mfg_code_id
@@ -132,14 +142,60 @@ async function getInventory(id) {
   return rows[0]
 }
 
-async function getInventoryDates(id) {
+async function createInventory(chip_id, full_chip_number, mfg_code_id, quantity) {
+  const [result] = await pool.query(`
+    INSERT INTO inventory (chip_id, full_number, mfg_code_id, quantity)
+    VALUES (?, ?, ?, ?)
+    `, [chip_id, full_chip_number, mfg_code_id, quantity])
+  const id = result.insertId
+  return getInventory(id)
+}
+
+async function getInventoryDates(inventory_id) {
   const [rows] = await pool.query(`
-  SELECT * 
-  FROM inventory_dates
-  WHERE inventory_id = ?
-  order by date_code
-  `, [id])
+    SELECT * 
+    FROM inventory_dates
+    WHERE inventory_id = ?
+    order by date_code
+    `, [inventory_id])
+    return rows
+}
+
+async function getInventoryDate(id) {
+  const [rows] = await pool.query(`
+    SELECT * 
+    FROM inventory_dates
+    WHERE id = ?
+    `, [id])
   return rows
+}
+
+
+async function createInventoryDate(inventory_id, date_code, quantity) {
+  const [result] = await pool.query(`
+    INSERT INTO inventory_dates (inventory_id, date_code, quantity)
+    VALUES (?, ?, ?)
+    `, [inventory_id, date_code, quantity])
+  const id = result.insertId
+  return getInventoryDate(id)
+}
+
+
+async function getManufacturers() {
+  const [rows] = await pool.query(`
+    SELECT * 
+    FROM manufacturer
+    order by name`);
+  return rows;
+}
+
+async function getMfgCodes() {
+  const [rows] = await pool.query(`
+    select mfg_codes.id, concat(mfg_code, ' (', name, ')') display_name
+    from manufacturer
+    join mfg_codes on mfg_codes.manufacturer_id = manufacturer.id
+    order by mfg_code, name`);
+  return rows;
 }
 
 async function createChip(chip_number, family, pin_count, package, datasheet, description) {
@@ -209,5 +265,8 @@ async function getAlias(id) {
 
 
 
-module.exports = { searchChips, getChip, createChip, updateChip, deleteChip, getPins, createPin, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryList, getInventory, getInventoryDates, getInventoryByChipList, createAlias, getAliases }
+module.exports = { searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
+  createPin, getLeftPins, getRightPins, getSpecs, getNotes, 
+  getInventoryList, getInventory, getInventoryDates, getInventoryByChipList, lookupInventory, createInventory, createInventoryDate, 
+  createAlias, getAliases, getManufacturers, getMfgCodes }
 

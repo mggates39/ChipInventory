@@ -34,3 +34,9 @@ block content
         td= n.name
         td= n.quantity
         td= n.description
+
+    if inventory.length == 0
+      tr
+        td(span=5) No inventory found &nbsp;
+  
+  a.btn.btn-primary(href="./inventory/inventorynew/", role="button") New Inventory
