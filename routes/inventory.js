@@ -20,11 +20,12 @@ router.post('/inventorynew', async function(req, res) {
   const inv = await lookupInventory(data.chip_id, data.full_chip_number, data.mfg_code_id);
   if (inv.length) {
     inv_id = inv[0].id;
-    // update iventory qty with data.qty
+    // TODO: update iventory qty with data.qty
   } else {
     const new_inv = await createInventory(data.chip_id, data.full_chip_number, data.mfg_code_id, data.quantity);
     inv_id = new_inv.id;
   }
+  // TODO: Add check for existing date code and update qty or
   await createInventoryDate(inv_id, data.date_code, data.quantity) 
 
   res.redirect('/inventory/'+inv_id);
