@@ -51,21 +51,24 @@ order by name, mfg_code;
 -- (10, '8823', 1)
 -- ;
 
-select * from inventory;
-select * from inventory_dates;
+select * from inventory
+where id = 4;
+select * from inventory_dates
+where inventory_id = 5;
 
-update inventory_dates set date_code = '8823' where id =19;
-
-
-update inventory_dates set inventory_id = 10 where id = 19;
-delete from inventory where id = 11;
+-- update inventory_dates set date_code = '8621'
+-- where id = 31;
+-- update inventory set mfg_code_id = 232
+-- where id = 4;
 
 select count(*) ni from chips;
 
 select * from aliases;
+-- update aliases set alias_chip_number = 'SN74H87'
+-- where id =77;
 
-select * from chips where id = 159;
-
+select * from chips where chip_number = '7478';
+-- update chips set chip_number='7487' where id =251;
 
 
 
@@ -95,8 +98,8 @@ select * from pins
 where chip_id = 250
 order by cast(pin_number as signed);
 
-delete from pins where chip_id in (249, 250);
-delete from chips where id in (249, 250);
+-- delete from pins where chip_id in (249, 250);
+-- delete from chips where id in (249, 250);
 
 
 select * from notes;
@@ -107,13 +110,16 @@ select * from specs;
 select * from chips;
 select * from aliases;
 
-SELECT inventory.id, chip_id, full_number, quantity, chip_number, description 
+SELECT inventory.id, chip_id, full_number, quantity, chip_number, description, mfg_code_id 
 from inventory
 join chips on chips.id = inventory.chip_id
-WHERE inventory.id = 2;
+WHERE inventory.id = 18;
+
+
 
 select count(*) ni from manufacturer;
 select count(*) ni from mfg_codes;
+select * from mfg_codes;
 
 select mfg_codes.id, name, mfg_code, concat(mfg_code, ' (', name, ')') display_name
 from manufacturer
@@ -136,18 +142,23 @@ from aliases a
 join chips as x on x.id = a.chip_id
 order by 2, 3;
 
-drop view chip_aliases;
 
-CREATE VIEW chip_aliases AS
-SELECT id, chip_number, family, package, pin_count, description 
-FROM chips
-UNION ALL
-SELECT chip_id as id, alias_chip_number as chip_number,  '' family, '' package, '' pin_count, concat("See <a href='/chips/", a.chip_id,"'>", x.chip_number, "</a>") as description
-FROM aliases a
-JOIN chips x ON x.id = a.chip_id;
 
 select * from chip_aliases
 order by 2,3;
 
 select * from manufacturer;
+-- insert into manufacturer (name) values ('Signetics Corporation (NPX)');
+-- 138
+select * from mfg_codes
+where manufacturer_id = 75;
 
+-- insert into mfg_codes (manufacturer_id, mfg_code) values ( 138, 'S');
+-- commit;
+
+
+select c.chip_number, c.description, sum(i.quantity) on_hand
+from chips c
+join inventory i on i.chip_id = c.id
+group by c.chip_number, c.description
+order by c.chip_number;
