@@ -116,7 +116,8 @@ router.get('/:id', async function(req, res, next) {
       )
     })
 
-    res.render('chipdetail', { title: chip.chip_number + ' - ' + chip.description, chip: chip, pins: fixed_pins, layout_pins: layout_pins, specs: clean_specs, notes: notes, aliases: aliases, inventory: inventory });
+    res.render('chipdetail', { title: chip.chip_number + ' - ' + chip.description, chip: chip, pins: fixed_pins, layout_pins: layout_pins, 
+      specs: clean_specs, notes: notes, aliases: aliases, inventory: inventory });
 });
 
 function parse_symbol(symbol)
