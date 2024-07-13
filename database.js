@@ -132,7 +132,7 @@ async function lookupInventory(chip_id, full_number, mfg_code_id) {
 
 async function getInventory(id) {
   const [rows] = await pool.query(`
-  SELECT inventory.id, chip_id, full_number, quantity, chip_number, description, description, mfg_code, name 
+  SELECT inventory.id, chip_id, full_number, mfg_code_id, quantity, chip_number, description, description, mfg_code, name 
     from inventory
     join chips on chips.id = inventory.chip_id
     join mfg_codes on mfg_codes.id = inventory.mfg_code_id
@@ -147,8 +147,20 @@ async function createInventory(chip_id, full_chip_number, mfg_code_id, quantity)
     INSERT INTO inventory (chip_id, full_number, mfg_code_id, quantity)
     VALUES (?, ?, ?, ?)
     `, [chip_id, full_chip_number, mfg_code_id, quantity])
-  const id = result.insertId
+  const id = result.insertId;
   return getInventory(id)
+}
+
+async function updateInventory(id, chip_id, full_chip_number, mfg_code_id, quantity) {
+  const [result] = await pool.query(`
+    UPDATE inventory SET
+      chip_id = ?, 
+      full_number = ?, 
+      mfg_code_id = ?, 
+      quantity = ?
+    WHERE id = ?
+    `, [chip_id, full_chip_number, mfg_code_id, quantity, id])
+  return getInventory(id);  
 }
 
 async function getInventoryDates(inventory_id) {
@@ -158,6 +170,16 @@ async function getInventoryDates(inventory_id) {
     WHERE inventory_id = ?
     order by date_code
     `, [inventory_id])
+    return rows
+}
+
+async function lookupInventoryDate(inventory_id, date_code) {
+  const [rows] = await pool.query(`
+    SELECT * 
+    FROM inventory_dates
+    WHERE inventory_id = ?
+      AND date_code = ?
+    `, [inventory_id, date_code])
     return rows
 }
 
@@ -177,6 +199,17 @@ async function createInventoryDate(inventory_id, date_code, quantity) {
     VALUES (?, ?, ?)
     `, [inventory_id, date_code, quantity])
   const id = result.insertId
+  return getInventoryDate(id)
+}
+
+async function updateInventoryDate(id, inventory_id, date_code, quantity) {
+  const [result] = await pool.query(`
+    UPDATE inventory_dates SET
+      inventory_id = ?, 
+      date_code = ?, 
+      quantity = ?
+    WHERE id = ?
+    `, [inventory_id, date_code, quantity, id]);
   return getInventoryDate(id)
 }
 
@@ -267,6 +300,7 @@ async function getAlias(id) {
 
 module.exports = { searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
   createPin, getLeftPins, getRightPins, getSpecs, getNotes, 
-  getInventoryList, getInventory, getInventoryDates, getInventoryByChipList, lookupInventory, createInventory, createInventoryDate, 
+  getInventoryList, getInventory, getInventoryByChipList, lookupInventory, createInventory, updateInventory,
+  createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, getManufacturers, getMfgCodes }
 
