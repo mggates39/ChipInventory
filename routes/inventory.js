@@ -45,7 +45,32 @@ router.post('/inventorynew', async function(req, res) {
   }
 
   res.redirect('/inventory/'+inv_id);
-})
+});
+
+router.get('/:id/newdate', async function(req, res, next) {
+  const id = req.params.id;
+  const inventory = await getInventory(id);
+  res.render('inventorydatenew', { title: inventory.full_number, inventory: inventory });
+});
+
+router.post('/:id/newdate', async function(req, res, next) {
+  const inv_id = req.params.id;
+  const data = req.body;
+  var new_qty = parseInt(data.quantity);
+  var old_qty = 0;
+  const inv = await getInventory(inv_id);
+  old_qty = parseInt(inv.quantity)
+  await updateInventory(inv_id, inv.chip_id, inv.full_number, inv.mfg_code_id, (old_qty + new_qty))
+  const inv_date = await lookupInventoryDate(inv_id, data.date_code);
+  if (inv_date.length) {
+    old_qty = parseInt(inv_date[0].quantity)
+    await updateInventoryDate(inv_date[0].id, inv_date[0].inventory_id, inv_date[0].date_code, (old_qty + new_qty))
+  } else {
+    await createInventoryDate(inv_id, data.date_code, data.quantity) 
+  }
+
+  res.redirect('/inventory/'+inv_id);
+});
 
 router.get('/:id', async function(req, res, next) {
   const id = req.params.id;
