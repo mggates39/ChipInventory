@@ -31,7 +31,7 @@ block content
           a(href="/inventory/"+n.id) #{n.full_number}
         td 
           a(href="/chips/"+n.chip_id target='_blank') #{n.chip_number}
-        td= n.name
+        td= n.mfg_code+' ('+n.name+')'
         td= n.quantity
         td= n.description
 
@@ -39,4 +39,4 @@ block content
       tr
         td(span=5) No inventory found &nbsp;
   
-  a.btn.btn-primary(href="./inventory/inventorynew/", role="button") New Inventory
+  a.btn.btn-primary(href="/inventory/inventorynew/", role="button") New Inventory

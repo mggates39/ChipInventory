@@ -18,7 +18,7 @@ block navigation
 block content
   h3= inventory.description
   p= inventory.full_number + ' - ' + inventory.chip_number
-  p Manufacture: #{inventory.name}
+  p Manufacture: #{inventory.mfg_code + ' (' + inventory.name + ')'}
   table
     tr
       th Date Code

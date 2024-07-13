@@ -30,7 +30,7 @@ block content
     p 
       a(target='_blank' href= chip.datasheet) Datasheet PDF
 
-  button.btn.btn-primary(value='inventory') Add Inventory
+  a.btn.btn-primary(href="/inventory/inventorynew/", role="button") Add Inventory
 
   if (inventory.length)
     div(id='inventory')
@@ -45,9 +45,11 @@ block content
           tr 
             td
               a(href="/inventory/" + n.id target="_blank") #{n.full_number}
-            td= n.name
+            td= n.mfg_code+' ('+n.name+')'
             td= n.quantity 
-
+  else
+    br
+    
   div(id=iswide)
     table.pindiagram
       tr
