@@ -14,6 +14,17 @@ block navigation
             a.nav-link.active(href='/inventory') Chip Inventory 
           li.nav-item
             a.nav-link(href='/projects') My Projects 
+          li.nav-item.dropdown
+            a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") Settings
+            ul.dropdown-menu
+              li
+                a.dropdown-item(href="/manufcaturers/") Manufacturers
+              li
+                a.dropdown-item(href="#") Another action
+              li
+                hr.dropdown-divider
+              li
+                a.dropdown-item(href="#") Something else here
 
 block content
   h3= inventory.description
