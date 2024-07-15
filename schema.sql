@@ -68,10 +68,10 @@ CREATE TABLE mfg_codes (
 );
 
 CREATE VIEW chip_aliases AS
-SELECT id, chip_number, family, package, pin_count, description 
-FROM chips
+SELECT id, chip_number, family, package, pin_count, description, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand
+FROM chips c
 UNION ALL
-SELECT chip_id as id, alias_chip_number as chip_number,  '' family, '' package, '' pin_count, concat("See <a href='/chips/", a.chip_id,"'>", x.chip_number, "</a>") as description
+SELECT chip_id as id, alias_chip_number as chip_number,  '' family, '' package, '' pin_count, concat("See <a href='/chips/", a.chip_id,"'>", x.chip_number, "</a>") as description, '' on_hand
 FROM aliases a
 JOIN chips x ON x.id = a.chip_id;
 
