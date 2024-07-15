@@ -6,10 +6,6 @@ body
   font-size: 12pt;
 }
 
-/* a:link { color: #0000CC; }
-a:visited { color: #6666CC; }
-a:hover { color: #444466; } */
-
 #super {
   vertical-align: super;
   font-size: medium
@@ -99,7 +95,7 @@ a:hover { color: #444466; } */
 {
   float: left;
   width: 40%;
-  width: 40%;
+
 }
 
 #dpindiagramwide
