@@ -18,7 +18,7 @@ block navigation
             a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") Settings
             ul.dropdown-menu
               li
-                a.dropdown-item(href="/manufcaturers/") Manufacturers
+                a.dropdown-item(href="/manufacturers/") Manufacturers
               li
                 a.dropdown-item(href="#") Another action
               li
@@ -45,6 +45,7 @@ block content
       th Package
       th Pins
       th Description
+      th On Hand
 
     each n in chips
       tr
@@ -54,6 +55,7 @@ block content
         td= n.package
         td= n.pin_count
         td !{n.description}
+        td= n.on_hand
 
     if chips.length == 0
       tr
