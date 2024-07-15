@@ -28,3 +28,15 @@ block navigation
 
 block content
   p This is my hardware development lab management system
+
+  div.card(style="width: 25rem;")
+  h5.card-header Definitions
+  div.card-body
+    h5.card-title Chip Defintions
+    p.card-text= data.chips
+
+  div.card(style="width: 25rem;")
+  h5.card-header On Hand
+  div.card-body
+    h5.card-title Chips On Hand
+    p.card-text= data.on_hand

@@ -10,6 +10,14 @@ const pool = mysql.createPool({
   database: process.env.MYSQL_DATABASE
 }).promise()
 
+async function getSystemData() {
+  const [rows] = await pool.query(`
+    select (SELECT count(*) from chips ) chips,
+      (select sum(quantity) from inventory) on_hand
+    `)
+  return rows[0]
+}
+
 async function searchChips(query, type) {
   if (query) {
     value = ['%' + query + '%']
@@ -298,7 +306,7 @@ async function getAlias(id) {
 
 
 
-module.exports = { searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
+module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
   createPin, getLeftPins, getRightPins, getSpecs, getNotes, 
   getInventoryList, getInventory, getInventoryByChipList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
