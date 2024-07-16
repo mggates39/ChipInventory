@@ -30,18 +30,18 @@ block content
   h3 Current Inventory
   table.table.table-striped
     tr
+      th Base
       th Number
-      th Family
       th Manufacturer
       th Quantity
       th Description
 
     each n in inventory
       tr
-        td
-          a(href="/inventory/"+n.id) #{n.full_number}
         td 
           a(href="/chips/"+n.chip_id target='_blank') #{n.chip_number}
+        td
+          a(href="/inventory/"+n.id) #{n.full_number}
         td= n.mfg_code+' ('+n.name+')'
         td= n.quantity
         td= n.description
