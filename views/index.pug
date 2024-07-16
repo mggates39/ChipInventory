@@ -29,14 +29,25 @@ block navigation
 block content
   p This is my hardware development lab management system
 
-  div.card(style="width: 25rem;")
-  h5.card-header Definitions
-  div.card-body
-    h5.card-title Chip Defintions
-    p.card-text= data.chips
+  div.row 
+    div.col-sm-3
+      div.card.text-center.mb-3
+        h5.card-header Definitions
+        div.card-body
+          p.card-title Chip Definitions
+          p.card-text= data.chips+data.aliases
 
-  div.card(style="width: 25rem;")
-  h5.card-header On Hand
-  div.card-body
-    h5.card-title Chips On Hand
-    p.card-text= data.on_hand
+    div.col-sm-3 
+      div.card.text-center.mb-3
+        h5.card-header On Hand
+        div.card-body
+          p.card-title Chips On Hand
+          p.card-text= data.on_hand
+
+    div.col-sm-3 
+      div.card.text-center.mb-3
+        h5.card-header Date Range
+        div.card-body
+          p.card-title Chip Dates
+          p.card-text Oldest: #{data.min_date}
+          p.card-text Newest: #{data.max_date}

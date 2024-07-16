@@ -13,7 +13,10 @@ const pool = mysql.createPool({
 async function getSystemData() {
   const [rows] = await pool.query(`
     select (SELECT count(*) from chips ) chips,
-      (select sum(quantity) from inventory) on_hand
+      (select count(*) from aliases) aliases,
+      (select sum(quantity) from inventory) on_hand,
+      (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') min_date,
+      (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') max_date
     `)
   return rows[0]
 }
