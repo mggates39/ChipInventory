@@ -1,0 +1,17 @@
+*DS 8921N (1) National Semiconductor P26AB
+*# MM 74HC4078N (2) National Semiconductor P8812F
+MM 74HC4046 (1) National Semiconductor B8812F
+*# DM 74S182N (1) National Semiconductor I8616A https://www.ti.com/lit/ds/symlink/sn54s182.pdf
+MC 34051P (1) Motorola KKSS8817
+MC 14174BCP (1) Motorola FFKF8827
+P 28F512-200 (1) Intel  U4470189
+P 28F512-200 (1) Intel U12505P2
+SN 74AS885NT (1) Texas Instraments 63CL44K
+MAX 172BCNG (1) Maxim 9136
+2011AN2C (1) Raytheon 9423HD
+29FCT 520AP delta (1) Intragal YH9606P
+*SN 74S381N (3) Texas Instraments 605BT
+QS 74FCT2541ATP (2) Q? 9446 (SA275113, SA137902)
+CY 74FCT2245TOC (2) C? 9433 310008
+
+ 
