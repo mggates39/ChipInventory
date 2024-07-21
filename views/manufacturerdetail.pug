@@ -1,0 +1,42 @@
+extends layout
+
+block navigation
+  nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+    div.container-fluid
+      a.navbar-brand(href="/") My Lab
+      button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
+        span.navbar-toggler-icon
+      div.collapse.navbar-collapse(id="navbarNav")
+        ul.navbar-nav.me-auto.mb-2.mb-lg-0
+          li.nav-item
+            a.nav-link(href='/chips') Chip Master File 
+          li.nav-item
+            a.nav-link(href='/inventory') Chip Inventory 
+          li.nav-item
+            a.nav-link(href='/projects') My Projects 
+          li.nav-item.dropdown
+            a.nav-link.dropdown-toggle.active(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") Settings
+            ul.dropdown-menu
+              li
+                a.dropdown-item.active(href="/manufacturers/") Manufacturers
+              li
+                a.dropdown-item(href="#") Another action
+              li
+                hr.dropdown-divider
+              li
+                a.dropdown-item(href="#") Something else here
+
+block content
+  h3 !{mfg.name}
+
+  div(id='codes')
+    table.available 
+      tr 
+        th Code
+          each n in codes 
+            tr 
+              td
+                a(href="/manufacturer/code/" + n.id target="_blank") #{n.mfg_code}
+
+  a.btn.btn-primary(href="/manufacturers/codenew/"+mfg.id, role="button") Add Code
+

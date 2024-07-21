@@ -242,6 +242,31 @@ async function getMfgCodes() {
   return rows;
 }
 
+async function getManufacturer(id) {
+  const [rows] = await pool.query(`
+    select *
+    from manufacturer
+    where id = ?`, [id]);
+  return rows[0];
+}
+
+async function getMfgCodesForMfg(id) {
+  const [rows] = await pool.query(`
+    select *
+    from mfg_codes
+    where manufacturer_id = ?
+    order by mfg_code`, [id]);
+  return rows;
+}
+
+async function getManufacturerList() {
+  const [rows] = await pool.query(`select m.id, m.name, 
+    (select group_concat( ' ', mfg_code) from mfg_codes mc where mc.manufacturer_id = m.id) mfg_codes
+    from manufacturer m
+    order by m.name`);
+  return rows;
+}
+
 async function createChip(chip_number, family, pin_count, package, datasheet, description) {
   const [result] = await pool.query(`
   INSERT INTO chips (chip_number, family, pin_count, package, datasheet, description)
@@ -313,5 +338,5 @@ module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, 
   createPin, getLeftPins, getRightPins, getSpecs, getNotes, 
   getInventoryList, getInventory, getInventoryByChipList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
-  createAlias, getAliases, getManufacturers, getMfgCodes }
+  createAlias, getAliases, getManufacturers, getMfgCodes, getManufacturerList, getMfgCodesForMfg, getManufacturer }
 
