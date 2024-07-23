@@ -31,25 +31,25 @@ block content
   form(action="/chips/chipnew/" method="POST")
     div.form-group
       label(for="chip_number") Chip Number:
-      input.form-control( type="text" id="chip_number" placeholder="Ex) 7425" name="chip_number" value=data.chip_number)
+      input#chip_number.form-control( type="text" placeholder="Ex) 7425" name="chip_number" value=data.chip_number)
     div.form-group
       label( for="aliases") Aliases:
-      input.form-control(type="text" id="aliases" placeholder="Ex) 74HTC25" name="aliases" value=data.aliases)
+      input#aliases.form-control(type="text" placeholder="Ex) 74HTC25, 74LS25" name="aliases" value=data.aliases)
     div.form-group
       label( for="family") Family:
-      input.form-control(type="text" id="family" placeholder="Ex) 7400" name="family" value=data.family)
+      input#family.form-control(type="text" placeholder="Ex) 7400" name="family" value=data.family)
     div.form-group
       label( for="package") Package:
-      input.form-control(type="text" id="package" placeholder="Ex) DIP" name="package" value=data.package)
+      input#package.form-control(type="text" placeholder="Ex) DIP" name="package" value=data.package)
     div.form-group
       label( for="pin_count") Pin Count:
-      input.form-control(type="text" id="pin_count" placeholder="Ex) 14,18, 20" name="pin_count" value=data.pin_count)
+      input#pin_count.form-control(type="text" placeholder="Ex) 14,18, 20" name="pin_count" value=data.pin_count)
     div.form-group
       label( for="datasheet") Datasheet:
-      input.form-control(type="text" id="datasheet" placeholder="URL to datasheet" name="datasheet" value=data.datasheet)
+      input#datasheet.form-control(type="text" placeholder="URL to datasheet" name="datasheet" value=data.datasheet)
     div.form-group
       label( for="description") Description:
-      textarea.form-control(rows="5" id="description" placeholder="Summary of what the chip does" name="description")= data.description
+      textarea#description.form-control(rows="5" placeholder="Summary of what the chip does" name="description")= data.description
     br
     h4 Pins 
     - var n = 0
