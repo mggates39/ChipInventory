@@ -294,7 +294,7 @@ async function updateChip(id, chip_number, family, pin_count, package, datasheet
 
 async function deleteChip(id) {
   await pool.query('DELETE FROM aliases WHERE chip_id = ?', [id]);
-  await pool.query('DELETE FROM nodes WHERE chip_id = ?', [id]);
+  await pool.query('DELETE FROM notes WHERE chip_id = ?', [id]);
   await pool.query('DELETE FROM specs WHERE chip_id = ?', [id]);
   await pool.query('DELETE FROM pins WHERE chip_id = ?', [id]);
   await pool.query('DELETE FROM chips WHERE id = ?', [id]);
