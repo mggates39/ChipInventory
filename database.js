@@ -16,7 +16,9 @@ async function getSystemData() {
       (select count(*) from aliases) aliases,
       (select sum(quantity) from inventory) on_hand,
       (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') min_date,
-      (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') max_date
+      (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') max_date,
+      (select count(*) from manufacturer) mfgs,
+      (select count(*) from mfg_codes) codes
     `)
   return rows[0]
 }
