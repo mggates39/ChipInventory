@@ -110,11 +110,44 @@ block content
             td !{n.parameter}
             td(style="text-align:right;") !{n.value}
             td !{n.unit}
+  else
+    button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#specModal") Add specifications
 
+  br
   if (notes.length)
-    br
     div(id='notes')
       h3 Notes
       ul
         each n in notes
           li !{n.note}
+  else
+    button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#noteModal") Add notes
+
+
+  //- Specification Modal
+  div#specModal.modal.fade(tabindex="-1" aria-labelledby="specModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        div.modal-header
+          h5#specModalLabel.modal-title Add a Specification
+          button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+        div.modal-body
+          Dummy data in the modal
+
+        div.modal-footer
+          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
+          button.btn.btn-primary(type="button" ) Save changes
+
+  //- Note Modal
+  div#noteModal.modal.fade(tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        div.modal-header
+          h5#noteModalLabel.modal-title Add a Note
+          button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+        div.modal-body
+          Dummy data in the modal
+
+        div.modal-footer
+          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
+          button.btn.btn-primary(type="button" ) Save changes          
