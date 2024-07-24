@@ -8,6 +8,9 @@ use chip_data;
 -- truncate table inventory_dates;
 -- truncate table inventory;
 
+--  INSERT INTO inventory ( chip_id, full_number, mfg_code_id, quantity)
+--  VALUES
+--  (70, 'LF353N', 241, 2);
 
 -- INSERT INTO inventory ( chip_id, full_number, mfg_code_id, quantity)
 -- VALUES
@@ -25,7 +28,7 @@ use chip_data;
 select mfg_codes.id, name, mfg_code
 from manufacturer
 join mfg_codes on mfg_codes.manufacturer_id = manufacturer.id
-where mfg_code = 'ST'
+ where mfg_code = 'ST'
 order by name, mfg_code;
 
 -- Insert into inventory_dates (inventory_id, date_code, quantity)
@@ -52,24 +55,41 @@ order by name, mfg_code;
 -- ;
 
 select * from inventory
-where id = 4;
+where id in (1,77);
 select * from inventory_dates
-where inventory_id = 5;
+where inventory_id in (1,77);
 
--- update inventory_dates set date_code = '8621'
--- where id = 31;
--- update inventory set mfg_code_id = 232
--- where id = 4;
+-- update inventory set quantity = 3 where id = 1;
+
+-- update inventory_dates
+-- set inventory_id = 77
+-- where id in (2,3);
+
+-- update inventory_dates set date_code = 'M57AT'
+-- where id = 2;
+-- update inventory_dates set date_code = 'M34AF'
+-- where id = 3;
+-- update inventory set full_number = 'SN74S244NB'
+-- where id = 70;
 
 select count(*) ni from chips;
 
-select * from aliases;
+
 -- update aliases set alias_chip_number = 'SN74H87'
 -- where id =77;
 
 select * from chips where chip_number = '7478';
--- update chips set chip_number='7487' where id =251;
+-- update chips set description='4-bit arithmetic logic unit/function generator' where id =253;
 
+select c.*, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand
+from chips c;
+
+select * from notes;
+
+select * from chips where id = 256;
+-- update chips set chip_number = '744078' where id=256;
+select * from aliases where chip_id = 256;
+-- update aliases set alias_chip_number = 'MC74HC4078' where id = 88;
 
 
 select inventory.id, chip_id, full_number, quantity, chip_number, mfg_code, name, description from inventory
@@ -153,6 +173,11 @@ select * from manufacturer;
 select * from mfg_codes
 where manufacturer_id = 75;
 
+select *, (select group_concat( ' ', mfg_code) from mfg_codes mc where mc.manufacturer_id = m.id) mfg_codes
+from manufacturer m
+order by m.name;
+
+
 -- insert into mfg_codes (manufacturer_id, mfg_code) values ( 138, 'S');
 -- commit;
 
@@ -162,3 +187,42 @@ from chips c
 join inventory i on i.chip_id = c.id
 group by c.chip_number, c.description
 order by c.chip_number;
+
+    select (SELECT count(*) from chips ) chips,
+      (select sum(quantity) from inventory) items;
+      
+      
+-- drop view chip_aliases;
+
+-- CREATE VIEW chip_aliases AS
+-- SELECT id, chip_number, family, package, pin_count, description, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand
+-- FROM chips c
+-- UNION ALL
+-- SELECT chip_id as id, alias_chip_number as chip_number,  '' family, '' package, '' pin_count, concat("See <a href='/chips/", a.chip_id,"'>", x.chip_number, "</a>") as description, '' on_hand
+-- FROM aliases a
+-- JOIN chips x ON x.id = a.chip_id;
+
+select * from chip_aliases
+order by chip_number;
+
+select * from inventory
+where chip_id = 70;
+
+select * from inventory_dates
+where inventory_id in (1, 77, 81,82);
+
+delete from inventory where id in (81,82);
+
+select sum(quantity) inv_count from inventory;
+select sum(quantity) date_count from inventory_dates;
+
+select min(date_code) min, max(date_code) max
+from inventory_dates
+where date_code REGEXP '^[0-9]+$';
+
+    select (SELECT count(*) from chips ) chips,
+      (select count(*) from aliases) aliases,
+      (select sum(quantity) from inventory) on_hand,
+      (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') min_date,
+      (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') max_date
+
