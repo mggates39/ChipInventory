@@ -112,6 +112,47 @@ async function getNotes(id) {
   return rows
 }
 
+async function searchInventory(query, type) {
+  if (query) {
+    value = ['%' + query + '%']
+    if (type == 'p') {
+      sql = `select inventory.id, chip_id, full_number, quantity, chip_number, description, description, mfg_code, name 
+      from inventory
+      join chips on chips.id = inventory.chip_id
+      join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+      join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+      where full_number like ? or chip_number like ?
+      order by chip_number, full_number`;
+      value = ['%' + query + '%', '%' + query + '%'];
+    } else if (type == 'k') {
+      sql = `select inventory.id, chip_id, full_number, quantity, chip_number, description, description, mfg_code, name 
+      from inventory
+      join chips on chips.id = inventory.chip_id
+      join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+      join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+      where description like ?
+      order by chip_number, full_number`;
+    } else {
+      sql = `select inventory.id, chip_id, full_number, quantity, chip_number, description, description, mfg_code, name 
+    from inventory
+    join chips on chips.id = inventory.chip_id
+    join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+    join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+    order by chip_number, full_number`;
+    }
+  } else {
+    sql = `select inventory.id, chip_id, full_number, quantity, chip_number, description, description, mfg_code, name 
+      from inventory
+      join chips on chips.id = inventory.chip_id
+      join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+      join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+      order by chip_number, full_number`;
+    value = []
+  }
+  const [rows] = await pool.query(sql, value);
+  return rows
+}
+
 async function getInventoryList() {
   const [rows] = await pool.query(`select inventory.id, chip_id, full_number, quantity, chip_number, description, description, mfg_code, name 
     from inventory

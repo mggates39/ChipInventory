@@ -27,7 +27,19 @@ block navigation
                 a.dropdown-item(href="#") Something else here
 
 block content
-  h3 Current Inventory
+  p This is a searchable list of all the chip inventory.
+  div.searchdiv
+  form.searchbox()
+    INPUT(type="search" placeholder="Search" aria-label="Search" NAME="q" VALUE=searched SIZE="20" MAXLENGTH="32")
+    div.form-check.form-check-inline
+      INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="p" id="part" checked=part_search) 
+      label.form-check-label(for="part") Part number
+    div.form-check.form-check-inline
+      INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="k" id="keyword" checked=key_search) 
+      label.form-check-label(for="keyword") Keyword
+    INPUT.btn.btn-primary.mb-3(TYPE="submit" VALUE="Search")
+  
+
   table.table.table-striped
     tr
       th Base

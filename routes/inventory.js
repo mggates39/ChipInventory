@@ -1,12 +1,23 @@
 var express = require('express');
-const { getInventoryList, getInventory, getInventoryDates, getChip, searchChips, getMfgCodes, 
+const { searchInventory, getInventory, getInventoryDates, getChip, searchChips, getMfgCodes, 
   lookupInventory, createInventory, updateInventory, createInventoryDate, updateInventoryDate, lookupInventoryDate } = require('../database');
 var router = express.Router();
 
 /* GET Inventory list page. */
 router.get('/', async function(req, res, next) {
-  const inventory = await getInventoryList();
-  res.render('inventorylist', { title: 'Chip Inventory', inventory: inventory });
+  const search_query = req.query.q;
+  const search_type = req.query.w;
+  var part_search = true;
+  var key_search = false;
+  var search_by = 'p';
+  if (search_type == 'k') {
+    part_search = false;
+    key_search = true;
+    search_by = 'k';
+  }
+  
+  const inventory = await searchInventory(search_query, search_by);
+  res.render('inventorylist', { title: 'Chip Inventory', inventory: inventory, searched: search_query, part_search: part_search, key_search: key_search  });
 });
 
 router.get('/inventorynew/:chip_id', async function(req, res, next) {
