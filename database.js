@@ -154,7 +154,7 @@ async function searchInventory(query, type) {
 }
 
 async function getInventoryList() {
-  const [rows] = await pool.query(`select inventory.id, chip_id, full_number, quantity, chip_number, description, description, mfg_code, name 
+  const [rows] = await pool.query(`select inventory.id, chip_id, full_number, quantity, chip_number, description, mfg_code, name 
     from inventory
     join chips on chips.id = inventory.chip_id
     join mfg_codes on mfg_codes.id = inventory.mfg_code_id
@@ -293,12 +293,20 @@ async function getManufacturer(id) {
   return rows[0];
 }
 
-async function getMfgCodesForMfg(id) {
+async function getMfgCodesForMfg(mfg_id) {
   const [rows] = await pool.query(`
     select *
     from mfg_codes
     where manufacturer_id = ?
-    order by mfg_code`, [id]);
+    order by mfg_code`, [mfg_id]);
+  return rows;
+}
+
+async function getMfgCode(id) {
+  const [rows] = await pool.query(`
+    select *
+    from mfg_codes
+    where id = ?`, [id]);
   return rows;
 }
 
@@ -308,6 +316,24 @@ async function getManufacturerList() {
     from manufacturer m
     order by m.name`);
   return rows;
+}
+
+async function createManufacturer(manufacture_name) {
+  const [result] = await pool.query(`
+    INSERT INTO manuracturer (name)
+    VALUES (?)
+    `, [manufacture_name])
+    const id = result.insertId;
+    return getManufacturer(id)   
+}
+
+async function createManufacturerCode(mfg_id, code) {
+  const [result] = await pool.query(`
+    INSERT INTO mfg_codes (manufacturer_id, mfg_code)
+    VALUES (?, ?)
+    `, [mfg_id, code])
+    const id = result.insertId;
+    return getMfgCode(id)   
 }
 
 async function createChip(chip_number, family, pin_count, package, datasheet, description) {
@@ -379,7 +405,8 @@ async function getAlias(id) {
 
 module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
   createPin, getLeftPins, getRightPins, getSpecs, getNotes, 
-  getInventoryList, getInventory, getInventoryByChipList, lookupInventory, createInventory, updateInventory,
+  searchInventory, getInventoryList, getInventory, getInventoryByChipList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
-  createAlias, getAliases, getManufacturers, getMfgCodes, getManufacturerList, getMfgCodesForMfg, getManufacturer }
+  createAlias, getAliases, getManufacturers, createManufacturer, getManufacturerList, getManufacturer,
+  getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode}
 
