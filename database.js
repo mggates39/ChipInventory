@@ -368,6 +368,24 @@ async function deleteChip(id) {
   
 }
 
+async function createSpec(chip_id, parameter, value, units) {
+  const [result] = await pool.query(`
+  INSERT INTO specs (chip_id, parameter, value, unit)
+  VALUES (?, ?, ?, ?)
+  `, [chip_id, parameter, value, units])
+  const id = result.insertId
+  return getChip(chip_id)
+}
+
+async function createNote(chip_id, note) {
+  const [result] = await pool.query(`
+  INSERT INTO notes (chip_id, note)
+  VALUES (?, ?)
+  `, [chip_id, note])
+  const id = result.insertId
+  return getChip(chip_id)
+}
+
 async function createPin(chip_id, pin_number, pin_symbol, pin_description) {
   const [result] = await pool.query(`
   INSERT INTO pins (chip_id, pin_number, pin_symbol, pin_description)
@@ -404,7 +422,7 @@ async function getAlias(id) {
 
 
 module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
-  createPin, getLeftPins, getRightPins, getSpecs, getNotes, 
+  createPin, getLeftPins, getRightPins, getSpecs, getNotes, createSpec, createNote,
   searchInventory, getInventoryList, getInventory, getInventoryByChipList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, getManufacturers, createManufacturer, getManufacturerList, getManufacturer,

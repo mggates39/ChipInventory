@@ -110,8 +110,8 @@ block content
             td !{n.parameter}
             td(style="text-align:right;") !{n.value}
             td !{n.unit}
-  else
-    button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#specModal") Add specifications
+  
+  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#specModal") Add specifications
 
   br
   if (notes.length)
@@ -120,34 +120,56 @@ block content
       ul
         each n in notes
           li !{n.note}
-  else
-    button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#noteModal") Add notes
+  
+  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#noteModal") Add notes
 
 
   //- Specification Modal
   div#specModal.modal.fade(tabindex="-1" aria-labelledby="specModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        div.modal-header
-          h5#specModalLabel.modal-title Add a Specification
-          button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
-        div.modal-body
-          Dummy data in the modal
+        form(action="/chips/"+chip.id+"/newspec" method="POST")
+          div.modal-header
+            h5#specModalLabel.modal-title Add a Specification
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
 
-        div.modal-footer
-          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
-          button.btn.btn-primary(type="button" ) Save changes
+          div.modal-body
+            div.container-fluid
+              div.row
+                div.col-md-3.ms-auto 
+                  label( for="param") Parameter
+                div.col-md-3.ms-auto 
+                  label( for="value") Value
+                div.col-md-3.ms-auto 
+                  label( for="units") Units
+              div.row
+                div.col-md-3.ms-auto 
+                  input#param.form-control(type="text" placeholder="Operating Voltage" name="param")
+                div.col-md-3.ms-auto
+                  input#value.form-control(type="text" placeholder="3-7" name="value")
+                div.col-md-3.ms-auto
+                  input#units.form-control(type="text" placeholder="V DC" name="units")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save
 
   //- Note Modal
   div#noteModal.modal.fade(tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        div.modal-header
-          h5#noteModalLabel.modal-title Add a Note
-          button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
-        div.modal-body
-          Dummy data in the modal
+        form(action="/chips/"+chip.id+"/newnote" method="POST")
+          div.modal-header
+            h5#noteModalLabel.modal-title Add a Note
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+          div.modal-body
+              div.row
+                div.col-md-12.ms-auto 
+                  label( for="note") Note
+              div.row
+                div.col-md-12.ms-auto 
+                  input#note.form-control(type="text" placeholder="Note contents" name="note")
 
-        div.modal-footer
-          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
-          button.btn.btn-primary(type="button" ) Save changes          
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save          

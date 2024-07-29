@@ -1,5 +1,6 @@
 var express = require('express');
-const { searchChips, getChip, createChip, getPins, createPin, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryByChipList, getAliases, createAlias } = require('../database');
+const { searchChips, getChip, createChip, getPins, createPin, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryByChipList, 
+  getAliases, createAlias, createSpec, createNote } = require('../database');
 var router = express.Router();
 
 /* GET chip list page. */
@@ -71,6 +72,21 @@ router.post('/chipnew', async function(req, res) {
     res.render('chipnew', {title: 'New Chip Definition', data: data});
   }
 });
+
+/* Add a specification to the selected chip */
+router.post('/:id/newspec', async function(req, res) {
+  const id = req.params.id;
+  await createSpec(id, req.body.param, req.body.value, req.body.units)
+  res.redirect('/chips/'+id);
+});
+
+/* Add a note to the selected chip */
+router.post('/:id/newnote', async function(req, res) {
+  const id = req.params.id;
+  await createNote(id, req.body.note)
+  res.redirect('/chips/'+id);
+});
+
 
 /* GET chip detail page. */
 router.get('/:id', async function(req, res, next) {
