@@ -35,6 +35,8 @@ block content
         = sep + alias.alias_chip_number 
         - sep = ', '
 
+  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#aliasModal") Add alias
+
   p #[strong Package] #{chip.package}
   p #[strong Pin Count] #{chip.pin_count}
   if chip.datasheet
@@ -169,6 +171,26 @@ block content
               div.row
                 div.col-md-12.ms-auto 
                   input#note.form-control(type="text" placeholder="Note contents" name="note")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save
+            
+  //- Alias Modal
+  div#aliasModal.modal.fade(tabindex="-1" aria-labelledby="aliasModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form(action="/chips/"+chip.id+"/newalias" method="POST")
+          div.modal-header
+            h5#aliasModalLabel.modal-title Add an Alias
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+          div.modal-body
+              div.row
+                div.col-md-12.ms-auto 
+                  label( for="alias") Alias
+              div.row
+                div.col-md-12.ms-auto 
+                  input#alias.form-control(type="text" placeholder="Aliases (comma separated)" name="alias")
 
           div.modal-footer
             button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
