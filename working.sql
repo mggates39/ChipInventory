@@ -162,6 +162,19 @@ from aliases a
 join chips as x on x.id = a.chip_id
 order by 2, 3;
 
+select * from notes;
+-- update notes set note = 'Output Drive Capability: 10 LSTTL Loads'
+-- where id = 256;
+-- update notes set note = 'Low Input Current: 1 &micro;A'
+-- where id = 258;
+
+select * from specs;
+
+-- update specs set value = '-55 to +125', unit = '&deg;C'
+-- where id = 606;
+
+-- update specs set value = replace(value, 'V ', 'V: ')
+-- where id = 607;
 
 
 select * from chip_aliases
@@ -224,5 +237,7 @@ where date_code REGEXP '^[0-9]+$';
       (select count(*) from aliases) aliases,
       (select sum(quantity) from inventory) on_hand,
       (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') min_date,
-      (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') max_date
+      (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') max_date,
+      (select count(*) from manufacturer) mfgs,
+      (select count(*) from mfg_codes) codes
 
