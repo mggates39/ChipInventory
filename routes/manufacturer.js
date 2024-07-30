@@ -5,14 +5,14 @@ const { getManufacturer, getManufacturerList, getMfgCodesForMfg} = require('../d
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   const data = await getManufacturerList();
-  res.render('manufacturerlist', { title: 'Manufacturers', manufacturers: data });
+  res.render('manufacturer/list', { title: 'Manufacturers', manufacturers: data });
 });
 
 router.get('/:id', async function(req, res, next) {
     const id = req.params.id;
     const mfg = await getManufacturer(id);
     const codes = await getMfgCodesForMfg(id);
-    res.render('manufacturerdetail', { title: 'Manufacturer Codes', mfg: mfg, codes: codes });
+    res.render('manufacturer/detail', { title: 'Manufacturer Codes', mfg: mfg, codes: codes });
 })
 
 module.exports = router;

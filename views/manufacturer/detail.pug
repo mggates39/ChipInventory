@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 block navigation
   nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
@@ -27,20 +27,16 @@ block navigation
                 a.dropdown-item(href="#") Something else here
 
 block content
-  h3 Maufacturer
-  table.table.table-striped
-    tr
-      th Manufacturer
-      th Codes
+  h3 !{mfg.name}
 
-    each n in manufacturers
-      tr
-        td 
-          a(href="/manufacturers/"+n.id) #{n.name}
-        td= n.mfg_codes
+  div(id='codes')
+    table.available 
+      tr 
+        th Code
+          each n in codes 
+            tr 
+              td
+                a(href="/manufacturer/code/" + n.id target="_blank") #{n.mfg_code}
 
-    if manufacturers.length == 0
-      tr
-        td(span=5) No manufacturers found &nbsp;
-  
-  a.btn.btn-primary(href="/manufacturers/new/", role="button") New Manufacturer
+  a.btn.btn-primary(href="/manufacturers/codenew/"+mfg.id, role="button") Add Code
+
