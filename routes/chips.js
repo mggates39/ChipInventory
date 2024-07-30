@@ -17,7 +17,7 @@ router.get('/', async function(req, res, next) {
   }
   
   const chips = await searchChips(search_query, search_by);
-  res.render('chiplist', { title: 'Chip Master File', chips: chips, searched: search_query, part_search: part_search, key_search: key_search });
+  res.render('chip/list', { title: 'Chip Master File', chips: chips, searched: search_query, part_search: part_search, key_search: key_search });
 });
 
 /* GET new chip entry page */
@@ -30,7 +30,7 @@ router.get('/chipnew', function(req, res, next) {
     datasheet: '',
     description: ''
   }
-  res.render('chipnew', {title: 'New Chip Definition', data: data});
+  res.render('chip/new', {title: 'New Chip Definition', data: data});
 });
 
 router.post('/chipnew', async function(req, res) {
@@ -69,7 +69,7 @@ router.post('/chipnew', async function(req, res) {
 
     res.redirect('/chips/'+chip_id);
   } else {
-    res.render('chipnew', {title: 'New Chip Definition', data: data});
+    res.render('chip/new', {title: 'New Chip Definition', data: data});
   }
 });
 
@@ -141,7 +141,7 @@ router.get('/:id', async function(req, res, next) {
       )
     })
 
-    res.render('chipdetail', { title: chip.chip_number + ' - ' + chip.description, chip: chip, pins: fixed_pins, layout_pins: layout_pins, 
+    res.render('chip/detail', { title: chip.chip_number + ' - ' + chip.description, chip: chip, pins: fixed_pins, layout_pins: layout_pins, 
       specs: clean_specs, notes: notes, aliases: aliases, inventory: inventory });
 });
 
