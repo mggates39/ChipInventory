@@ -17,20 +17,20 @@ router.get('/', async function(req, res, next) {
   }
   
   const inventory = await searchInventory(search_query, search_by);
-  res.render('inventorylist', { title: 'Chip Inventory', inventory: inventory, searched: search_query, part_search: part_search, key_search: key_search  });
+  res.render('inventory/inventorylist', { title: 'Chip Inventory', inventory: inventory, searched: search_query, part_search: part_search, key_search: key_search  });
 });
 
 router.get('/inventorynew/:chip_id', async function(req, res, next) {
   const chip_id = req.params.chip_id;
   const manufacturers = await getMfgCodes();
   const chip = await getChip(chip_id);
-  res.render('inventorynew', {title: 'Add to Chip Inventory', manufacturers: manufacturers, chips: [chip]});
+  res.render('inventory/inventorynew', {title: 'Add to Chip Inventory', manufacturers: manufacturers, chips: [chip]});
 });
 
 router.get('/inventorynew', async function(req, res, next) {
   const manufacturers = await getMfgCodes();
   const chips = await searchChips('', '');
-  res.render('inventorynew', {title: 'Add to Chip Inventory', manufacturers: manufacturers, chips: chips});
+  res.render('inventory/inventorynew', {title: 'Add to Chip Inventory', manufacturers: manufacturers, chips: chips});
 });
 
 router.post('/inventorynew', async function(req, res) {
@@ -61,7 +61,7 @@ router.post('/inventorynew', async function(req, res) {
 router.get('/:id/newdate', async function(req, res, next) {
   const id = req.params.id;
   const inventory = await getInventory(id);
-  res.render('inventorydatenew', { title: inventory.full_number, inventory: inventory });
+  res.render('inventory/inventorydatenew', { title: inventory.full_number, inventory: inventory });
 });
 
 router.post('/:id/newdate', async function(req, res, next) {
@@ -87,7 +87,7 @@ router.get('/:id', async function(req, res, next) {
   const id = req.params.id;
   const inventory = await getInventory(id);
   const inventory_dates = await getInventoryDates(id);
-  res.render('inventorydetail', { title: inventory.full_number, inventory: inventory, inventory_dates: inventory_dates });
+  res.render('inventory/inventorydetail', { title: inventory.full_number, inventory: inventory, inventory_dates: inventory_dates });
 });
 
 module.exports = router;
