@@ -31,6 +31,10 @@ join mfg_codes on mfg_codes.manufacturer_id = manufacturer.id
  where mfg_code = 'ST'
 order by name, mfg_code;
 
+-- insert into component_types ( description, symbol)
+-- values
+-- ('Integrated Circuit', 'IC');
+
 -- Insert into inventory_dates (inventory_id, date_code, quantity)
 -- values
 -- (1, '92B509', 3),

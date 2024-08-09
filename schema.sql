@@ -67,6 +67,12 @@ CREATE TABLE mfg_codes (
 	mfg_code VARCHAR(16) NOT NULL
 );
 
+CREATE TABLE component_types (
+	id integer primary key auto_increment,
+    description VARCHAR(32) NOT NULL,
+    symbol VARCHAR(4) NOT NULL
+);
+
 CREATE VIEW chip_aliases AS
 SELECT id, chip_number, family, package, pin_count, description, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand
 FROM chips c
