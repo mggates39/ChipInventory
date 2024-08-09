@@ -10,6 +10,7 @@ var chipsRouter = require('./routes/chips');
 var inventoryRouter = require('./routes/inventory');
 var projectsRouter = require('./routes/projects');
 var manufacturerRouter = require('./routes/manufacturer');
+var componentsRouter = require('./routes/components');
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use('/chips', chipsRouter);
 app.use('/inventory', inventoryRouter);
 app.use('/projects', projectsRouter);
 app.use('/manufacturers', manufacturerRouter);
+app.use('/component_types', componentsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -419,12 +419,19 @@ async function getAlias(id) {
   return rows[0]
 }
 
-
+async function getComponentTypeList() {
+  const [rows] = await pool.query(`
+    SELECT * 
+    FROM component_types
+    Order by Description`)
+    return rows
+  }
 
 module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
   createPin, getLeftPins, getRightPins, getSpecs, getNotes, createSpec, createNote,
   searchInventory, getInventoryList, getInventory, getInventoryByChipList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, getManufacturers, createManufacturer, getManufacturerList, getManufacturer,
-  getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode}
+  getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
+  getComponentTypeList}
 
