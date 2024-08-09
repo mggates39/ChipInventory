@@ -31,30 +31,30 @@ block content
 
   div.row 
     div.col-sm-3
-      div.card.text-center.mb-3
-        h5.card-header Definitions
+      div.card.text-center.border-dark.mb-3(style="max-width: 18rem;")
+        h5.card-header.border-dark Definitions
         div.card-body
           p.card-title Chip Definitions
           p.card-text= data.chips+data.aliases
 
     div.col-sm-3 
-      div.card.text-center.mb-3
-        h5.card-header On Hand
+      div.card.text-center.border-dark.mb-3(style="max-width: 18rem;")
+        h5.card-header.border-dark On Hand
         div.card-body
           p.card-title Chips On Hand
           p.card-text= data.on_hand
 
     div.col-sm-3 
-      div.card.text-center.mb-3
-        h5.card-header Date Range
+      div.card.text-center.border-dark.mb-3(style="max-width: 18rem;")
+        h5.card-header.border-dark Date Range
         div.card-body
           p.card-title Chip Dates
           p.card-text Oldest: #{data.min_date}
           p.card-text Newest: #{data.max_date}
 
     div.col-sm-3 
-      div.card.text-center.mb-3
-        h5.card-header Manufacturers
+      div.card.text-center.border-dark.mb-3(style="max-width: 18rem;")
+        h5.card-header.border-dark Manufacturers
         div.card-body
           p.card-title Manufacturer Counts
           p.card-text Manufacturers: #{data.mfgs}
