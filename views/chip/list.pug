@@ -13,6 +13,9 @@ block content
         label.form-check-label(for="keyword") Keyword
       INPUT.btn.btn-primary.mb-3(TYPE="submit" VALUE="Search")
   
+  div 
+    a.btn.btn-primary(href="./chips/chipnew/", role="button") New Chip
+
   table.table.table-striped
     tr
       th Number
@@ -35,7 +38,6 @@ block content
     if chips.length == 0
       tr
         td(span=5) No chips found &nbsp;
-          a.btn.btn-primary(href="./chips/chipnew/", role="button") New Chip
 
 block scripts
   script(type="text/javascript").
