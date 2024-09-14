@@ -119,8 +119,13 @@ order by cast(pin_number as signed) desc;
 
 
 select * from pins
-where chip_id = 250
+where chip_id = 261
 order by cast(pin_number as signed);
+
+update pins set pin_description = 'Data Input/Output' where id in (4463, 4484, 4485, 4487, 4488, 4489, 4490, 4491);
+commit;
+update pins set pin_symbol = '~OE~/V__PP' where id = 2384;
+commit;
 
 -- delete from pins where chip_id in (249, 250);
 -- delete from chips where id in (249, 250);
@@ -133,6 +138,11 @@ select * from specs;
 
 select * from chips;
 select * from aliases;
+
+select * from pins where pin_description like '%data%';
+
+select *, replace(pin_symbol, 'DA', 'DA__') newsym from pins where pin_symbol like 'DA_';
+select * from pins where chip_id = 7;
 
 SELECT inventory.id, chip_id, full_number, quantity, chip_number, description, mfg_code_id 
 from inventory
