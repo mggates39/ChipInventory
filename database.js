@@ -409,6 +409,27 @@ async function createNote(chip_id, note) {
   return getChip(chip_id)
 }
 
+async function deleteNote(note_id) {
+  const [result] = await pool.query("DELETE FROM notes WHERE id = ?", [note_id])
+  return true
+}
+
+async function getNote(note_id) {
+  const [rows] = await pool.query("SELECT * FROM notes WHERE id = ?", [note_id]);
+  return rows[0];
+}
+
+async function updateNote(note_id, chip_id, note) {
+  const [result] = await pool.query(`
+    UPDATE notes SET 
+      chip_id = ?, 
+      note = ?
+    WHERE id = ?
+    `, [chip_id, note, note_id])
+    return getNote(note_id)
+  
+}
+
 async function createPin(chip_id, pin_number, pin_symbol, pin_description) {
   const [result] = await pool.query(`
   INSERT INTO pins (chip_id, pin_number, pin_symbol, pin_description)
