@@ -377,6 +377,29 @@ async function createSpec(chip_id, parameter, value, units) {
   return getChip(chip_id)
 }
 
+async function deleteSpec(spec_id) {
+  const [result] = await pool.query("DELETE FROM specs WHERE id = ?", [spec_id])
+  return true
+}
+
+async function getSpec(spec_id) {
+  const [rows] = await pool.query("select * from specs where id = ?", [spec_id]);
+  return rows[0];
+}
+
+async function updateSpec(spec_id, chip_id, parameter, value, units) {
+  const [result] = await pool.query(`
+  UPDATE specs SET
+    chip_id = ?, 
+    parameter = ?, 
+    value = ?, 
+    unit = ?)
+  WHERE id = ?
+  `, [chip_id, parameter, value, units, spec_id])
+  const id = result.insertId
+  return getChip(chip_id)
+}
+
 async function createNote(chip_id, note) {
   const [result] = await pool.query(`
   INSERT INTO notes (chip_id, note)
