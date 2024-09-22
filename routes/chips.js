@@ -1,7 +1,7 @@
 var express = require('express');
 const { searchChips, getChip, createChip, updateChip, getPins, createPin, updatePin, getLeftPins, getRightPins, 
   getSpecs, getNotes, getInventoryByChipList, 
-  getAliases, createAlias, deleteAliases, createSpec, createNote } = require('../database');
+  getAliases, createAlias, deleteAliases, createSpec, deleteSpec, createNote } = require('../database');
 var router = express.Router();
 
 /* GET chip list page. */
@@ -125,6 +125,13 @@ router.post('/:id/newspec', async function(req, res) {
   res.redirect('/chips/'+id);
 });
 
+router.get('/:id/delspec/:spec_id', async function(req, res) {
+  const id = req.params.id;
+  const spec_id = req.params.spec_id;
+  await deleteSpec(spec_id)
+  res.redirect('/chips/'+id);
+})
+
 /* Add a note to the selected chip */
 router.post('/:id/newnote', async function(req, res) {
   const id = req.params.id;
@@ -228,7 +235,7 @@ router.get('/:id', async function(req, res, next) {
     clean_specs = [];
     specs.forEach(function(spec) {
       clean_specs.push(
-        {parameter: parse_symbol(spec.parameter), unit: parse_symbol(spec.unit), value: parse_symbol(spec.value)}
+        {id: spec.id, parameter: parse_symbol(spec.parameter), unit: parse_symbol(spec.unit), value: parse_symbol(spec.value)}
       )
     })
 

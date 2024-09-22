@@ -83,13 +83,18 @@ block content
           th(style="min-width:300px;") Parameter
           th Value
           th(style="min-width:70px;") Unit
+          th Options
 
         each n in specs
           tr
             td !{n.parameter}
             td(style="text-align:right;") !{n.value}
             td !{n.unit}
-  
+            td 
+              button.btn.btn-secondary(type="button") Edit 
+              |  
+              a.btn.btn-secondary(href="/chips/"+chip.id+"/delspec/"+n.id, role="button") Delete 
+  br
   button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#specModal") Add specifications
 
   br
