@@ -52,7 +52,7 @@ body {
   text-align: right;
 }
 
-.rightpinsym, .leftpinnum, .lefttoppinnum, leftbottompinnum
+.rightpinsym, .leftpinnum, .lefttoppinnum, .leftbottompinnum
 {
   text-align: left;
 }
