@@ -253,5 +253,25 @@ where date_code REGEXP '^[0-9]+$';
       (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') min_date,
       (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') max_date,
       (select count(*) from manufacturer) mfgs,
-      (select count(*) from mfg_codes) codes
+      (select count(*) from mfg_codes) codes;
 
+select * from component_types;
+-- update component_types set symbol = 'U' where id = 1;
+
+-- insert into component_types (description, symbol)
+-- values
+-- ("Capacitor", "C"),
+-- ("Capacitor Network", "CN"),
+-- ("Resistor", "R"),
+-- ("Resistor Network", "RN"),
+-- ("Diode" , "D"),
+-- ("Transistor", "Q"),
+-- ("Inductor", "L"),
+-- ("Switch", "SW"),
+-- ("Crystal", "Y"),
+-- ("Connector jack", "J"),
+-- ("Connector plug ", "JP");
+-- commit;
+
+select * from pins where chip_id = 3;
+commit;
