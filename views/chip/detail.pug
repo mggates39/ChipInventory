@@ -20,7 +20,7 @@ block content
     p 
       a(target='_blank' href= chip.datasheet) Datasheet PDF
 
-  a.btn.btn-primary(href="/inventory/inventorynew/"+chip.id, role="button") Add Inventory
+  a.btn.btn-secondary(href="/inventory/inventorynew/"+chip.id, role="button") Add Inventory
 
   if (inventory.length)
     div(id='inventory')
@@ -75,6 +75,7 @@ block content
           td !{n.pin_description}
 
   if (specs.length)
+    br
     div(id='dspecs')
       h3 Specifications
       span.spcaption (typical values under recommended operating conditions, unless specified)
@@ -99,14 +100,15 @@ block content
 
   br
   if (notes.length)
+    br
     div(id='notes')
       h3 Notes
       ul
         each n in notes
           li !{n.note}
-  
+  br
   button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#noteModal") Add notes
-
+  br
 
   //- Specification Modal
   div#specModal.modal.fade(tabindex="-1" aria-labelledby="specModalLabel" aria-hidden="true")
