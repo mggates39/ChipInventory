@@ -1,6 +1,7 @@
 var express = require('express');
-const { searchChips, getChip, createChip, getPins, createPin, getLeftPins, getRightPins, getSpecs, getNotes, getInventoryByChipList, 
-  getAliases, createAlias, createSpec, createNote } = require('../database');
+const { searchChips, getChip, createChip, updateChip, getPins, createPin, updatePin, getLeftPins, getRightPins, 
+  getSpecs, getNotes, getInventoryByChipList, 
+  getAliases, createAlias, deleteAliases, createSpec, createNote } = require('../database');
 var router = express.Router();
 
 /* GET chip list page. */
@@ -19,6 +20,50 @@ router.get('/', async function(req, res, next) {
   const chips = await searchChips(search_query, search_by);
   res.render('chip/list', { title: 'Chip Master File', chips: chips, searched: search_query, part_search: part_search, key_search: key_search });
 });
+
+router.get('/edit/:id', async function(req,res,next) {
+  const chip_id = req.params.id;
+
+  const chip = await getChip(chip_id);
+  const pins = await getPins(chip_id);
+  const aliases = await getAliases(chip_id);
+
+  aliasList = "";
+  sep = "";
+  aliases.forEach(function(alias) {
+    aliasList += (sep + alias.alias_chip_number);
+    sep = ", ";
+  })
+  
+  data = {
+    id: chip_id,
+    chip_number: chip.chip_number,
+    aliases: aliasList,
+    family: chip.family,
+    package: chip.package,
+    pin_count: chip.pin_count,
+    datasheet: chip.datasheet,
+    description: chip.description,
+  }
+
+  var pin_id=[];
+  var pin_num=[];
+  var sym = [];
+  var descr = [];
+  pins.forEach(function(pin) {
+    pin_id.push(pin.id);
+    pin_num.push(pin.pin_number);
+    sym.push(pin.pin_symbol);
+    descr.push(pin.pin_description);
+  });
+
+  data['pin_id'] = pin_id;
+  data['pin'] = pin_num;
+  data['sym'] = sym;
+  data['descr'] = descr;
+
+  res.render('chip/edit', {title: 'Edit Chip Definition', data: data});
+})
 
 /* GET new chip entry page */
 router.get('/chipnew', function(req, res, next) {
@@ -92,8 +137,54 @@ router.post('/:id/newalias', async function(req, res) {
   const id = req.params.id;
   aliases = req.body.alias.split(',');
   for( const alias of aliases) {
-    await createAlias(id, alias);
+    if (alias.length > 0) {
+      await createAlias(chip_id, alias);
+    }
   }
+  res.redirect('/chips/'+id);
+});
+
+router.post('/:id', async function(req, res) {
+  const id = req.params.id;
+  data = {chip_number: req.body.chip_number,
+    aliases: req.body.aliases,
+    family: req.body.family,
+    package: req.body.package,
+    pin_count: req.body.pin_count,
+    datasheet: req.body.datasheet,
+    description: req.body.description,
+  }
+  var pin_id=[];
+  var pin=[];
+  var sym = [];
+  var descr = [];
+  for (var i = 0; i < req.body.pin_count; i++) {
+    pin_id.push(req.body["pin_id_"+i]);
+    pin.push(req.body["pin_"+i]);
+    sym.push(req.body["sym_"+i]);
+    descr.push(req.body["descr_"+i]);
+  }
+  data['pin_id'] = pin_id;
+  data['pin'] = pin;
+  data['sym'] = sym;
+  data['descr'] = descr;
+
+  const chip = await updateChip(id, data.chip_number, data.family, data.pin_count, data.package, data.datasheet, data.description);
+  chip_id = chip.id;
+
+  for (var i = 0; i < req.body.pin_count; i++) {
+    await updatePin(pin_id[i], chip_id, pin[i], sym[i], descr[i]);
+  }
+
+  await deleteAliases(chip_id);
+
+  aliases = data.aliases.split(',');
+  for( const alias of aliases) {
+    if (alias.length > 0) {
+      await createAlias(chip_id, alias);
+    }
+  }
+
   res.redirect('/chips/'+id);
 });
 

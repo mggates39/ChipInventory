@@ -395,10 +395,27 @@ async function createPin(chip_id, pin_number, pin_symbol, pin_description) {
   return getPin(id)
 }
 
+async function updatePin(pin_id, chip_id, pin_number, pin_symbol, pin_description) {
+  const [result] = await pool.query(`
+  UPDATE pins SET
+    chip_id = ?, 
+    pin_number = ?, 
+    pin_symbol = ?, 
+    pin_description = ?
+  WHERE id = ?
+  `, [chip_id, pin_number, pin_symbol, pin_description, pin_id])
+  return getPin(pin_id)
+}
+
 async function createAlias(chip_id, alias_number) {
   const [result] = await pool.query("INSERT INTO aliases (chip_id, alias_chip_number) VALUES (?, ?)", [chip_id, alias_number])
   const id = result.insertId
   return getAlias(id)
+}
+
+async function deleteAliases(chip_id) {
+  const [result] = await pool.query("DELETE FROM aliases WHERE chip_id = ?", [chip_id])
+  return true
 }
 
 async function getAliases(chip_id) {
@@ -428,10 +445,10 @@ async function getComponentTypeList() {
   }
 
 module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
-  createPin, getLeftPins, getRightPins, getSpecs, getNotes, createSpec, createNote,
+  createPin, updatePin, getLeftPins, getRightPins, getSpecs, getNotes, createSpec, createNote,
   searchInventory, getInventoryList, getInventory, getInventoryByChipList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
-  createAlias, getAliases, getManufacturers, createManufacturer, getManufacturerList, getManufacturer,
+  createAlias, getAliases, deleteAliases, getManufacturers, createManufacturer, getManufacturerList, getManufacturer,
   getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
   getComponentTypeList}
 

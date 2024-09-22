@@ -2,6 +2,9 @@ extends ../layout
 
 block content
   h3 !{chip.description}
+    |  
+    a.btn.btn-primary(href="/chips/edit/"+chip.id, role="button") Edit 
+  br
   if (aliases.length) 
     - var sep = ''
     p #[strong Aliases] 
