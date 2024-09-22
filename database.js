@@ -489,10 +489,13 @@ async function getComponentTypeList() {
   }
 
 module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
-  createPin, updatePin, getLeftPins, getRightPins, getSpecs, getNotes, createSpec, createNote,
+  createPin, updatePin, getLeftPins, getRightPins, 
+  getSpecs, createSpec, getSpec, updateSpec, deleteSpec,
+  getNotes, createNote, getNote, updateNote, deleteNote,
   searchInventory, getInventoryList, getInventory, getInventoryByChipList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
-  createAlias, getAliases, deleteAliases, getManufacturers, createManufacturer, getManufacturerList, getManufacturer,
+  createAlias, getAliases, deleteAliases, 
+  getManufacturers, createManufacturer, getManufacturerList, getManufacturer,
   getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
   getComponentTypeList}
 
