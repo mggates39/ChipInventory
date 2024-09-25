@@ -184,7 +184,7 @@ async function lookupInventory(chip_id, full_number, mfg_code_id) {
   return rows
 }
 
-async function getInventory(id) {
+async function getInventory(inventory_id) {
   const [rows] = await pool.query(`
   SELECT inventory.id, chip_id, full_number, mfg_code_id, quantity, chip_number, description, description, mfg_code, name 
     from inventory
@@ -192,7 +192,7 @@ async function getInventory(id) {
     join mfg_codes on mfg_codes.id = inventory.mfg_code_id
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
   WHERE inventory.id = ?
-  `, [id])
+  `, [inventory_id])
   return rows[0]
 }
 
@@ -201,11 +201,11 @@ async function createInventory(chip_id, full_chip_number, mfg_code_id, quantity)
     INSERT INTO inventory (chip_id, full_number, mfg_code_id, quantity)
     VALUES (?, ?, ?, ?)
     `, [chip_id, full_chip_number, mfg_code_id, quantity])
-  const id = result.insertId;
-  return getInventory(id)
+  const inventory_id = result.insertId;
+  return getInventory(inventory_id)
 }
 
-async function updateInventory(id, chip_id, full_chip_number, mfg_code_id, quantity) {
+async function updateInventory(inventory_id, chip_id, full_chip_number, mfg_code_id, quantity) {
   const [result] = await pool.query(`
     UPDATE inventory SET
       chip_id = ?, 
@@ -213,7 +213,7 @@ async function updateInventory(id, chip_id, full_chip_number, mfg_code_id, quant
       mfg_code_id = ?, 
       quantity = ?
     WHERE id = ?
-    `, [chip_id, full_chip_number, mfg_code_id, quantity, id])
+    `, [chip_id, full_chip_number, mfg_code_id, quantity, inventory_id])
   return getInventory(id);  
 }
 
@@ -237,12 +237,12 @@ async function lookupInventoryDate(inventory_id, date_code) {
     return rows
 }
 
-async function getInventoryDate(id) {
+async function getInventoryDate(inventory_id) {
   const [rows] = await pool.query(`
     SELECT * 
     FROM inventory_dates
     WHERE id = ?
-    `, [id])
+    `, [inventory_id])
   return rows
 }
 
