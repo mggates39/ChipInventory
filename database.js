@@ -41,36 +41,36 @@ async function searchChips(query, type) {
   return rows
 }
 
-async function getChip(id) {
+async function getChip(chip_id) {
   const [rows] = await pool.query(`
   SELECT * 
   FROM chips
   WHERE id = ?
-  `, [id])
+  `, [chip_id])
   return rows[0]
 }
 
-async function getPins(id) {
+async function getPins(chip_id) {
   const [rows] = await pool.query(`
   SELECT * 
   FROM pins
   WHERE chip_id = ?
   ORDER BY pin_number
-  `, [id])
+  `, [chip_id])
   return rows
 }
 
-async function getPin(id) {
+async function getPin(chip_id) {
   const [rows] = await pool.query(`
   SELECT * 
   FROM pins
   WHERE id = ?
   ORDER BY pin_number
-  `, [id])
+  `, [chip_id])
   return rows[0]
 }
 
-async function getLeftPins(id) {
+async function getLeftPins(chip_id) {
   const [rows] = await pool.query(`
   select chips.chip_number, chips.pin_count, pinleft.pin_number, pinleft.pin_symbol
 from chips
@@ -78,11 +78,11 @@ join pins pinleft on pinleft.chip_id = chips.id
 where chips.id = ?
   and pinleft.pin_number <= (chips.pin_count/2)
 order by cast(pin_number as signed);
-  `, [id])
+  `, [chip_id])
   return rows
 }
 
-async function getRightPins(id) {
+async function getRightPins(chip_id) {
   const [rows] = await pool.query(`
   select chips.chip_number, chips.pin_count, pinright.pin_number, pinright.pin_symbol
 from chips
@@ -90,25 +90,25 @@ join pins pinright on pinright.chip_id = chips.id
 where chips.id = ?
   and pinright.pin_number > (chips.pin_count/2)
 order by cast(pin_number as signed) desc;
-  `, [id])
+  `, [chip_id])
   return rows
 }
 
-async function getSpecs(id) {
+async function getSpecs(chip_id) {
   const [rows] = await pool.query(`
   SELECT * 
   FROM specs
   WHERE chip_id = ?
-  `, [id])
+  `, [chip_id])
   return rows
 }
 
-async function getNotes(id) {
+async function getNotes(chip_id) {
   const [rows] = await pool.query(`
   SELECT * 
   FROM notes
   WHERE chip_id = ?
-  `, [id])
+  `, [chip_id])
   return rows
 }
 
@@ -345,7 +345,7 @@ async function createChip(chip_number, family, pin_count, package, datasheet, de
   return getChip(id)
 }
 
-async function updateChip(id, chip_number, family, pin_count, package, datasheet, description) {
+async function updateChip(chip_id, chip_number, family, pin_count, package, datasheet, description) {
   const [result] = await pool.query(`
   UPDATE chips SET
     chip_number = ?, 
@@ -355,16 +355,16 @@ async function updateChip(id, chip_number, family, pin_count, package, datasheet
     datasheet = ?, 
     description = ?
   WHERE id = ?
-  `, [chip_number, family, pin_count, package, datasheet, description, id])
+  `, [chip_number, family, pin_count, package, datasheet, description, chip_id])
   return getChip(id)
 }
 
-async function deleteChip(id) {
-  await pool.query('DELETE FROM aliases WHERE chip_id = ?', [id]);
-  await pool.query('DELETE FROM notes WHERE chip_id = ?', [id]);
-  await pool.query('DELETE FROM specs WHERE chip_id = ?', [id]);
-  await pool.query('DELETE FROM pins WHERE chip_id = ?', [id]);
-  await pool.query('DELETE FROM chips WHERE id = ?', [id]);
+async function deleteChip(chip_id) {
+  await pool.query('DELETE FROM aliases WHERE chip_id = ?', [chip_id]);
+  await pool.query('DELETE FROM notes WHERE chip_id = ?', [chip_id]);
+  await pool.query('DELETE FROM specs WHERE chip_id = ?', [chip_id]);
+  await pool.query('DELETE FROM pins WHERE chip_id = ?', [chip_id]);
+  await pool.query('DELETE FROM chips WHERE id = ?', [chip_id]);
   
 }
 
