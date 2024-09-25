@@ -341,8 +341,8 @@ async function createChip(chip_number, family, pin_count, package, datasheet, de
   INSERT INTO chips (chip_number, family, pin_count, package, datasheet, description)
   VALUES (?, ?, ?, ?, ?, ?)
   `, [chip_number, family, pin_count, package, datasheet, description])
-  const id = result.insertId
-  return getChip(id)
+  const chip_id = result.insertId
+  return getChip(chip_id)
 }
 
 async function updateChip(chip_id, chip_number, family, pin_count, package, datasheet, description) {
@@ -356,7 +356,7 @@ async function updateChip(chip_id, chip_number, family, pin_count, package, data
     description = ?
   WHERE id = ?
   `, [chip_number, family, pin_count, package, datasheet, description, chip_id])
-  return getChip(id)
+  return getChip(chip_id)
 }
 
 async function deleteChip(chip_id) {
