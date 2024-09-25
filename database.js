@@ -285,20 +285,20 @@ async function getMfgCodes() {
   return rows;
 }
 
-async function getManufacturer(id) {
+async function getManufacturer(manufacturer_id) {
   const [rows] = await pool.query(`
     select *
     from manufacturer
-    where id = ?`, [id]);
+    where id = ?`, [manufacturer_id]);
   return rows[0];
 }
 
-async function getMfgCodesForMfg(mfg_id) {
+async function getMfgCodesForMfg(manufacturer_id) {
   const [rows] = await pool.query(`
     select *
     from mfg_codes
     where manufacturer_id = ?
-    order by mfg_code`, [mfg_id]);
+    order by mfg_code`, [manufacturer_id]);
   return rows;
 }
 
@@ -323,15 +323,15 @@ async function createManufacturer(manufacture_name) {
     INSERT INTO manuracturer (name)
     VALUES (?)
     `, [manufacture_name])
-    const id = result.insertId;
-    return getManufacturer(id)   
+    const manufacturer_id = result.insertId;
+    return getManufacturer(manufacturer_id)   
 }
 
-async function createManufacturerCode(mfg_id, code) {
+async function createManufacturerCode(manufacturer_id, code) {
   const [result] = await pool.query(`
     INSERT INTO mfg_codes (manufacturer_id, mfg_code)
     VALUES (?, ?)
-    `, [mfg_id, code])
+    `, [manufacturer_id, code])
     const id = result.insertId;
     return getMfgCode(id)   
 }
