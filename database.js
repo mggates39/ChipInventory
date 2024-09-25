@@ -252,8 +252,8 @@ async function createInventoryDate(inventory_id, date_code, quantity) {
     INSERT INTO inventory_dates (inventory_id, date_code, quantity)
     VALUES (?, ?, ?)
     `, [inventory_id, date_code, quantity])
-  const id = result.insertId
-  return getInventoryDate(id)
+  const inventory_date_id = result.insertId
+  return getInventoryDate(inventory_date_id)
 }
 
 async function updateInventoryDate(inventory_date_id, inventory_id, date_code, quantity) {
@@ -264,7 +264,7 @@ async function updateInventoryDate(inventory_date_id, inventory_id, date_code, q
       quantity = ?
     WHERE id = ?
     `, [inventory_id, date_code, quantity, inventory_date_id]);
-  return getInventoryDate(id)
+  return getInventoryDate(inventory_date_id)
 }
 
 
@@ -302,12 +302,12 @@ async function getMfgCodesForMfg(manufacturer_id) {
   return rows;
 }
 
-async function getMfgCode(id) {
+async function getMfgCode(manufacturer_code_id) {
   const [rows] = await pool.query(`
     select *
     from mfg_codes
-    where id = ?`, [id]);
-  return rows;
+    where id = ?`, [manufacturer_code_id]);
+  return rows[0[]];
 }
 
 async function getManufacturerList() {
@@ -332,8 +332,8 @@ async function createManufacturerCode(manufacturer_id, code) {
     INSERT INTO mfg_codes (manufacturer_id, mfg_code)
     VALUES (?, ?)
     `, [manufacturer_id, code])
-    const id = result.insertId;
-    return getMfgCode(id)   
+    const manufacturer_code_id = result.insertId;
+    return getMfgCode(manufacturer_code_id)   
 }
 
 async function createChip(chip_number, family, pin_count, package, datasheet, description) {
@@ -435,8 +435,8 @@ async function createPin(chip_id, pin_number, pin_symbol, pin_description) {
   INSERT INTO pins (chip_id, pin_number, pin_symbol, pin_description)
   VALUES (?, ?, ?, ?)
   `, [chip_id, pin_number, pin_symbol, pin_description])
-  const id = result.insertId
-  return getPin(id)
+  const pin_id = result.insertId
+  return getPin(pin_id)
 }
 
 async function updatePin(pin_id, chip_id, pin_number, pin_symbol, pin_description) {
@@ -453,8 +453,8 @@ async function updatePin(pin_id, chip_id, pin_number, pin_symbol, pin_descriptio
 
 async function createAlias(chip_id, alias_number) {
   const [result] = await pool.query("INSERT INTO aliases (chip_id, alias_chip_number) VALUES (?, ?)", [chip_id, alias_number])
-  const id = result.insertId
-  return getAlias(id)
+  const alias_id = result.insertId
+  return getAlias(alias_id)
 }
 
 async function deleteAliases(chip_id) {
@@ -471,12 +471,12 @@ async function getAliases(chip_id) {
   return rows
 }
 
-async function getAlias(id) {
+async function getAlias(alias_id) {
   const [rows] = await pool.query(`
   SELECT * 
   FROM aliases
   WHERE id = ?
-  `, [id])
+  `, [alias_id])
   return rows[0]
 }
 
