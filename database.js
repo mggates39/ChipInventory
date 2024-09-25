@@ -474,7 +474,7 @@ async function getAliases(chip_id) {
 async function getAlias(id) {
   const [rows] = await pool.query(`
   SELECT * 
-  FROM specs
+  FROM aliases
   WHERE id = ?
   `, [id])
   return rows[0]
