@@ -237,12 +237,12 @@ async function lookupInventoryDate(inventory_id, date_code) {
     return rows
 }
 
-async function getInventoryDate(inventory_id) {
+async function getInventoryDate(inventory_date_id) {
   const [rows] = await pool.query(`
     SELECT * 
     FROM inventory_dates
     WHERE id = ?
-    `, [inventory_id])
+    `, [inventory_date_id])
   return rows
 }
 
@@ -256,14 +256,14 @@ async function createInventoryDate(inventory_id, date_code, quantity) {
   return getInventoryDate(id)
 }
 
-async function updateInventoryDate(id, inventory_id, date_code, quantity) {
+async function updateInventoryDate(inventory_date_id, inventory_id, date_code, quantity) {
   const [result] = await pool.query(`
     UPDATE inventory_dates SET
       inventory_id = ?, 
       date_code = ?, 
       quantity = ?
     WHERE id = ?
-    `, [inventory_id, date_code, quantity, id]);
+    `, [inventory_id, date_code, quantity, inventory_date_id]);
   return getInventoryDate(id)
 }
 
