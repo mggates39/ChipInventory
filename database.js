@@ -307,7 +307,7 @@ async function getMfgCode(manufacturer_code_id) {
     select *
     from mfg_codes
     where id = ?`, [manufacturer_code_id]);
-  return rows[0[]];
+  return rows[0];
 }
 
 async function getManufacturerList() {
