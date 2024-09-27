@@ -256,22 +256,66 @@ where date_code REGEXP '^[0-9]+$';
       (select count(*) from mfg_codes) codes;
 
 select * from component_types;
--- update component_types set symbol = 'U' where id = 1;
 
--- insert into component_types (description, symbol)
--- values
--- ("Capacitor", "C"),
--- ("Capacitor Network", "CN"),
--- ("Resistor", "R"),
--- ("Resistor Network", "RN"),
--- ("Diode" , "D"),
--- ("Transistor", "Q"),
--- ("Inductor", "L"),
--- ("Switch", "SW"),
--- ("Crystal", "Y"),
--- ("Connector jack", "J"),
--- ("Connector plug ", "JP");
+-- INSERT INTO component_types (id, description, symbol, table_name)
+-- VALUES
+-- 	(1,'Integrated Circuit','U','chips'),
+-- 	(2,'Capacitor','C','passives'),
+-- 	(3,'Capacitor Network','CN','passives'),
+-- 	(4,'Resistor','R','passives'),
+--     (5,'Resistor Network','RN','passives'),
+--     (6,'Diode','D','passives'),
+--     (7,'Transistor','Q','transistors'),
+--     (8,'Inductor','L','passives'),
+--     (9,'Switch','SW','switches'),
+--     (10,'Crystal','Y','crystals'),
+--     (11,'Connector jack','J','connectors'),
+--     (12,'Connector plug ','JP','connectors');
 -- commit;
 
+select * from component_types;
+
 select * from pins where chip_id = 3;
-commit;
+
+select family, count(*) ni
+from chips
+group by family
+order by family;
+
+select * from chips
+order by family, chip_number;
+
+-- Insert into mounting_types (name, is_through_hole, is_surface_mount, is_chassis_mount)
+-- values	
+-- 	("through hole", 1, 0, 0),
+-- 	("carrier mount", 1, 1, 0),
+-- 	('surface mount', 0, 1, 0),
+-- 	('chassis mount', 0, 0, 1);
+-- commit;
+
+
+-- INSERT INTO  package_types (name, description, mounting_type_id)
+-- VALUES
+-- 	('DIP', 'Dual In-Line Package', 1),
+-- 	('Axial', 'Axial', 1),
+-- 	('Radial', 'Radial', 1),
+-- 	('PLCC','Plastic Leaded Chip Carrier', 2),
+-- 	('Chassis', 'Chassis', 4);
+-- commit;
+
+-- INSERT INTO component_packages (component_type_id, package_type_id)
+-- VALUES (1, 1), (1, 4), (2, 2), (2, 3), (4, 2), (4, 3), (2, 5);
+-- commit;
+
+select * from package_types;
+
+SELECT id, name,
+    CASE WHEN is_through_hole = 1 THEN 'Yes' ELSE 'No' END is_through_hole,
+    CASE WHEN is_surface_mount = 1 THEN 'Yes' ELSE 'No' END is_surface_mount, 
+    CASE WHEN is_chassis_mount = 1 THEN 'Yes' ELSE 'No' END is_chassis_mount 
+    FROM mounting_types ORDER BY name;
+    
+SELECT p.id, p.name, p.description, m.name mounting_type 
+FROM package_types p
+JOIN mounting_types m on m.id = p.mounting_type_id
+ORDER BY p.name;

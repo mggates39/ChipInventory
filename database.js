@@ -481,12 +481,26 @@ async function getAlias(alias_id) {
 }
 
 async function getComponentTypeList() {
-  const [rows] = await pool.query(`
-    SELECT * 
-    FROM component_types
-    Order by Description`)
-    return rows
-  }
+  const [rows] = await pool.query("SELECT * FROM component_types ORDER BY description");
+  return rows
+}
+
+async function getMountingTypeList() {
+  const [rows] = await pool.query(`SELECT id, name,
+    CASE WHEN is_through_hole = 1 THEN 'Yes' ELSE 'No' END is_through_hole,
+    CASE WHEN is_surface_mount = 1 THEN 'Yes' ELSE 'No' END is_surface_mount, 
+    CASE WHEN is_chassis_mount = 1 THEN 'Yes' ELSE 'No' END is_chassis_mount 
+    FROM mounting_types ORDER BY name`);
+  return rows
+}
+
+async function getPackageTypeList() {
+  const [rows] = await pool.query(`SELECT p.id, p.name, p.description, m.name mounting_type 
+    FROM package_types p
+    JOIN mounting_types m on m.id = p.mounting_type_id
+    ORDER BY m.name, m.name`);
+  return rows
+}
 
 module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
   createPin, updatePin, getLeftPins, getRightPins, 
@@ -497,5 +511,5 @@ module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, 
   createAlias, getAliases, deleteAliases, 
   getManufacturers, createManufacturer, getManufacturerList, getManufacturer,
   getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
-  getComponentTypeList}
+  getComponentTypeList, getMountingTypeList, getPackageTypeList}
 

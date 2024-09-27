@@ -70,8 +70,47 @@ CREATE TABLE mfg_codes (
 CREATE TABLE component_types (
 	id integer primary key auto_increment,
     description VARCHAR(32) NOT NULL,
-    symbol VARCHAR(4) NOT NULL
+    symbol VARCHAR(4) NOT NULL,
+    table_name VARCHAR(32) NOT NULL
 );
+
+CREATE TABLE mounting_types (
+	id integer primary key auto_increment,
+	name varchar(32) not null,
+    is_through_hole  boolean,
+    is_surface_mount boolean,
+    is_chassis_mount boolean
+);
+
+CREATE TABLE package_types (
+	id integer primary key auto_increment,
+    name varchar(32) not null,
+    description varchar(32) not null,
+    mounting_type_id integer not null
+);
+CREATE INDEX type_mounting_type_idx on package_types(mounting_type_id);
+ALTER TABLE  package_types ADD FOREIGN KEY mounting_type_idfk (mounting_type_id) REFERENCES mounting_types(id);
+
+CREATE TABLE component_packages (
+	id integer primary key auto_increment,
+    component_type_id integer not null,
+    package_type_id integer not null
+);
+CREATE INDEX type_component_type_idx on component_packages(component_type_id);
+ALTER TABLE  component_packages ADD FOREIGN KEY componet_type_idfk (component_type_id) REFERENCES component_types(id);
+CREATE INDEX type_package_type_idx on component_packages(package_type_id);
+ALTER TABLE  component_packages ADD FOREIGN KEY package_type_idfk (package_type_id) REFERENCES package_types(id);
+
+CREATE TABLE components (
+	id integer primary key auto_increment,
+    component_type_id integer not null,
+    component_package_id integer not null,
+    name varchar(32) not null
+);
+CREATE INDEX component_type_idx on components(component_type_id);
+ALTER TABLE components ADD FOREIGN KEY components_type_idfk (component_type_id) REFERENCES component_types(id);
+CREATE INDEX component_package_idx on components(component_package_id);
+ALTER TABLE components ADD FOREIGN KEY components_package_idfk (component_package_id) REFERENCES component_packages(id);
 
 CREATE VIEW chip_aliases AS
 SELECT id, chip_number, family, package, pin_count, description, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand

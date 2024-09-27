@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+  h3 Mounting Types
+  table.table.table-striped
+    tr
+      th Name
+      th Is Through-Hole
+      th Is Surface Mount 
+      TH Is Chassis Mount
+
+    each n in mounting_types
+      tr
+        td 
+          a(href="/mounting_types/"+n.id) #{n.name}
+        td= n.is_through_hole
+        td= n.is_surface_mount
+        td= n.is_chassis_mount
+
+    if mounting_types.length == 0
+      tr
+        td(span=4) No Mounting Types found &nbsp;
+  
+  a.btn.btn-primary(href="/mounting_types/new/", role="button") New Mounting Type
+
+  block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#mount").addClass("active");
+    });
