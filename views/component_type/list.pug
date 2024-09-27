@@ -6,12 +6,14 @@ block content
     tr
       th Type
       th Symbol
+      th Table
 
     each n in component_types
       tr
         td 
-          a(href="/component_type/"+n.id) #{n.description}
+          a(href="/component_types/"+n.id) #{n.description}
         td= n.symbol
+        td= n.table_name
 
     if component_types.length == 0
       tr
