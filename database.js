@@ -485,6 +485,15 @@ async function getComponentTypeList() {
   return rows
 }
 
+async function getComponentType(component_type_id) {
+  const [rows] = await pool.query(`
+  SELECT * 
+  FROM component_types
+  WHERE id = ?
+  `, [component_type_id])
+  return rows[0]
+}
+
 async function getMountingTypeList() {
   const [rows] = await pool.query(`SELECT id, name,
     CASE WHEN is_through_hole = 1 THEN 'Yes' ELSE 'No' END is_through_hole,
@@ -494,11 +503,67 @@ async function getMountingTypeList() {
   return rows
 }
 
+async function getMountingType(mounting_type_id) {
+  const [rows] = await pool.query(`
+  SELECT id, name,
+    CASE WHEN is_through_hole = 1 THEN 'Yes' ELSE 'No' END is_through_hole,
+    CASE WHEN is_surface_mount = 1 THEN 'Yes' ELSE 'No' END is_surface_mount, 
+    CASE WHEN is_chassis_mount = 1 THEN 'Yes' ELSE 'No' END is_chassis_mount  
+  FROM mounting_types
+  WHERE id = ?
+  `, [mounting_type_id])
+  return rows[0]
+}
+
+async function getMountingTypes() {
+  const [rows] = await pool.query("SELECT id, name FROM mounting_types ORDER BY name");
+  return rows
+}
+
 async function getPackageTypeList() {
   const [rows] = await pool.query(`SELECT p.id, p.name, p.description, m.name mounting_type 
     FROM package_types p
     JOIN mounting_types m on m.id = p.mounting_type_id
     ORDER BY m.name, m.name`);
+  return rows
+}
+
+async function getPackageType(package_type_id) {
+  const [rows] = await pool.query(`SELECT p.*, m.name mounting_type  
+    FROM package_types p
+    JOIN mounting_types m on m.id = p.mounting_type_id
+    WHERE p.id = ?
+  `, [package_type_id])
+  return rows[0]
+}
+
+async function getComponentTypesForPackageType(package_type_id) {
+  const [rows] = await pool.query(`SELECT ct.*  
+    FROM component_packages cp
+    JOIN component_types ct on ct.id = cp.component_type_id
+    WHERE cp.package_type_id = ?
+    ORDER BY ct.description
+  `, [package_type_id])
+  return rows
+}
+
+async function getPackageTypesForComponentType(component_type_id) {
+  const [rows] = await pool.query(`SELECT pt.*, mt.name mounting_type  
+    FROM component_packages cp
+    JOIN package_types pt on pt.id = cp.package_type_id
+    JOIN mounting_types mt on mt.id = pt.mounting_type_id
+    WHERE cp.component_type_id = ?
+    ORDER BY pt.description
+  `, [component_type_id])
+  return rows
+}
+
+async function getPackageTypesForMountingType(mounting_type_id) {
+  const [rows] = await pool.query(`SELECT *  
+    FROM package_types
+    WHERE mounting_type_id = ?
+    ORDER BY description
+  `, [mounting_type_id])
   return rows
 }
 
@@ -511,5 +576,7 @@ module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, 
   createAlias, getAliases, deleteAliases, 
   getManufacturers, createManufacturer, getManufacturerList, getManufacturer,
   getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
-  getComponentTypeList, getMountingTypeList, getPackageTypeList}
+  getComponentTypeList, getComponentType, getComponentTypesForPackageType,
+  getMountingTypeList, getMountingType, getMountingTypes, getPackageTypesForMountingType,
+  getPackageTypeList, getPackageType, getPackageTypesForComponentType}
 

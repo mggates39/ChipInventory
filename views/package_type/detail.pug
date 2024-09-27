@@ -1,0 +1,29 @@
+extends ../layout
+
+block content
+  p #[strong Package] #{package_type.name}
+  p #[strong Description] #{package_type.description}
+  p #[strong Mounting Type] #{package_type.mounting_type}
+  
+  H6 Component Types that use this package type
+  div(id='comp_types')
+    table.available 
+      tr 
+        th Description 
+        th Symbol
+        th Table Name
+      each n in component_types
+        tr 
+            //- td
+            //-     a(href="/component_type/code/" + n.id target="_blank") #{n.description}
+            td=n.description
+            td=n.symbol
+            td=n.table_name
+
+//-   a.btn.btn-primary(href="/component_type/codenew/"+mfg.id, role="button") Add Code
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#package").addClass("active");
+    });
