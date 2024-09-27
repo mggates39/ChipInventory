@@ -515,6 +515,37 @@ async function getMountingType(mounting_type_id) {
   return rows[0]
 }
 
+async function getMountingTypePlain(mounting_type_id) {
+  const [rows] = await pool.query(`
+  SELECT *
+  FROM mounting_types
+  WHERE id = ?
+  `, [mounting_type_id])
+  return rows[0]
+}
+
+async function updateMountingType(mount_point_id, name, is_through_hole, is_surface_mount, is_chassis_mount) {
+  const [result] = await pool.query(`
+    UPDATE mounting_types SET
+      name = ?, 
+      is_through_hole = ?, 
+      is_surface_mount = ?, 
+      is_chassis_mount = ?
+    WHERE id = ?
+    `, [name, is_through_hole, is_surface_mount, is_chassis_mount, mount_point_id])
+    return getMountingType(mount_point_id)
+  
+}
+
+async function createMountingType(name, is_through_hole, is_surface_mount, is_chassis_mount) {
+  const [result] = await pool.query(`
+  INSERT INTO mounting_types (name, is_through_hole, is_surface_mount, is_chassis_mount))
+  VALUES (?, ?, ?, ?)
+  `, [name, is_through_hole, is_surface_mount, is_chassis_mount])
+  const mounting_type_id = result.insertId
+  return getMountingType(mounting_type_id)
+}
+
 async function getMountingTypes() {
   const [rows] = await pool.query("SELECT id, name FROM mounting_types ORDER BY name");
   return rows
@@ -577,6 +608,7 @@ module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, 
   getManufacturers, createManufacturer, getManufacturerList, getManufacturer,
   getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
   getComponentTypeList, getComponentType, getComponentTypesForPackageType,
-  getMountingTypeList, getMountingType, getMountingTypes, getPackageTypesForMountingType,
+  getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
+  updateMountingType, createMountingType,
   getPackageTypeList, getPackageType, getPackageTypesForComponentType}
 
