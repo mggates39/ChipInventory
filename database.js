@@ -534,7 +534,6 @@ async function updateMountingType(mount_point_id, name, is_through_hole, is_surf
     WHERE id = ?
     `, [name, is_through_hole, is_surface_mount, is_chassis_mount, mount_point_id])
     return getMountingType(mount_point_id)
-  
 }
 
 async function createMountingType(name, is_through_hole, is_surface_mount, is_chassis_mount) {
@@ -566,6 +565,26 @@ async function getPackageType(package_type_id) {
     WHERE p.id = ?
   `, [package_type_id])
   return rows[0]
+}
+
+async function createPackageType(name, description, mounting_type_id) {
+  const [result] = await pool.query(`
+  INSERT INTO package_types (name, description, mounting_type_id))
+  VALUES (?, ?, ?)
+  `, [name, description, mounting_type_id])
+  const package_type_id = result.insertId
+  return getPackageType(package_type_id)
+}
+
+async function updatePackageType(package_type_id, name, description, mounting_type_id) {
+  const [result] = await pool.query(`
+     UPDATE mounting_types SET
+      name = ?, 
+      description = ?, 
+      mounting_type_id = ?
+    WHERE id = ?
+  `, [name, description, mounting_type_id, package_type_id])
+  return getPackageType(package_type_id)
 }
 
 async function getComponentTypesForPackageType(package_type_id) {
@@ -610,5 +629,5 @@ module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, 
   getComponentTypeList, getComponentType, getComponentTypesForPackageType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
   updateMountingType, createMountingType,
-  getPackageTypeList, getPackageType, getPackageTypesForComponentType}
+  getPackageTypeList, getPackageType, getPackageTypesForComponentType, updatePackageType, createPackageType}
 
