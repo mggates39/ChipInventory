@@ -554,7 +554,7 @@ async function getPackageTypeList() {
   const [rows] = await pool.query(`SELECT p.id, p.name, p.description, m.name mounting_type 
     FROM package_types p
     JOIN mounting_types m on m.id = p.mounting_type_id
-    ORDER BY m.name, m.name`);
+    ORDER BY p.name, m.name`);
   return rows
 }
 
@@ -612,7 +612,7 @@ async function getPackageTypesForMountingType(mounting_type_id) {
   const [rows] = await pool.query(`SELECT *  
     FROM package_types
     WHERE mounting_type_id = ?
-    ORDER BY description
+    ORDER BY name
   `, [mounting_type_id])
   return rows
 }
