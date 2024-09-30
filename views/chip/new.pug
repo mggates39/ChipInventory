@@ -16,7 +16,7 @@ block content
       label( for="package_type_id") Package:
       select#package_type_id.form-control(type='select' placeholder='Select package type' name='package_type_id' required='true')
         for package_type in package_types
-          option(value=package_type.id) #{package_type.name}
+          option(value=package_type.id selected= data.package_type_id == package_type.id) #{package_type.name}
     div.form-group
       label( for="pin_count") Pin Count:
       input#pin_count.form-control(type="text" placeholder="Ex) 14,18, 20" name="pin_count" value=data.pin_count)
