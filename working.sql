@@ -139,6 +139,9 @@ select * from specs;
 select * from chips;
 select * from aliases;
 
+-- delete from aliases where id = 112;
+-- commit;
+
 select * from pins where pin_description like '%data%';
 
 select *, replace(pin_symbol, 'DA', 'DA__') newsym from pins where pin_symbol like 'DA_';
@@ -300,12 +303,43 @@ order by family, chip_number;
 -- 	('Axial', 'Axial', 1),
 -- 	('Radial', 'Radial', 1),
 -- 	('PLCC','Plastic Leaded Chip Carrier', 2),
--- 	('Chassis', 'Chassis', 4);
+-- 	('Chassis', 'Chassis', 4),
+--  ('Array', 'In-line Array', 1),
+-- 	('SMD', 'Surface Mount Device', 3),
+-- 	('MELF', 'Metal Electrode Leadless Face', 3),
+--     ('SOIC', 'Small Outline Integrated Circuit', 3),
+-- 	('SOP', 'Small Outline Package', 3),
+-- 	('SOT','Small Outline Transistor', 3),
+-- 	('SOD', 'Small Outline Diode', 3),
+--     ('QFP', 'Quad Flat Package', 3),
+--     ('QFN', 'Quad Flat No-Leads Package', 3),
+-- 	('THD', 'Through Hole Device', 1);
+;
+-- commit;
+-- INSERT INTO  package_types (name, description, mounting_type_id)
+-- VALUES
 -- commit;
 
--- INSERT INTO component_packages (component_type_id, package_type_id)
--- VALUES (1, 1), (1, 4), (2, 2), (2, 3), (4, 2), (4, 3), (2, 5);
--- commit;
+
+select * from component_types;
+select * from package_types;
+
+truncate table component_packages;
+
+INSERT INTO component_packages (component_type_id, package_type_id)
+VALUES (1, 1), (1, 4), (1, 9), (1, 10), (1, 13), (1, 14),
+	(2, 2), (2, 3), (2, 5), (2, 7),
+	(3, 6),
+    (4, 2), (4, 3), (4, 7), (4, 8),
+    (5, 6), 
+    (6, 2), (6, 7), (6, 12),
+    (7, 11), (7, 7), (7,15),
+    (8, 15),
+    (9, 15),
+    (10, 12), (10, 15),
+    (11, 12), (11, 15),
+    (12, 11), (12, 15);
+commit;
 
 select * from package_types;
 
