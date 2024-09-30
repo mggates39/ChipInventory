@@ -353,3 +353,6 @@ SELECT p.id, p.name, p.description, m.name mounting_type
 FROM package_types p
 JOIN mounting_types m on m.id = p.mounting_type_id
 ORDER BY p.name;
+
+select * from chips;
+

@@ -1,6 +1,6 @@
 var express = require('express');
 const { searchChips, getChip, createChip, updateChip, getPins, createPin, updatePin, getLeftPins, getRightPins, 
-  getSpecs, getNotes, getInventoryByChipList, 
+  getSpecs, getNotes, getInventoryByChipList, getPackageTypesForComponentType, 
   getAliases, createAlias, deleteAliases, createSpec, deleteSpec, createNote } = require('../database');
 var router = express.Router();
 
@@ -27,6 +27,7 @@ router.get('/edit/:id', async function(req,res,next) {
   const chip = await getChip(chip_id);
   const pins = await getPins(chip_id);
   const aliases = await getAliases(chip_id);
+  const package_types = await getPackageTypesForComponentType(1);
 
   aliasList = "";
   sep = "";
@@ -40,7 +41,7 @@ router.get('/edit/:id', async function(req,res,next) {
     chip_number: chip.chip_number,
     aliases: aliasList,
     family: chip.family,
-    package: chip.package,
+    package_type_id: chip.package_type_id,
     pin_count: chip.pin_count,
     datasheet: chip.datasheet,
     description: chip.description,
@@ -62,31 +63,34 @@ router.get('/edit/:id', async function(req,res,next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  res.render('chip/edit', {title: 'Edit Chip Definition', data: data});
+  res.render('chip/edit', {title: 'Edit Chip Definition', data: data, package_types: package_types});
 })
 
 /* GET new chip entry page */
-router.get('/chipnew', function(req, res, next) {
+router.get('/chipnew', async function(req, res, next) {
   data = {chip_number: '',
     aliases: '',
     family: '',
-    package: '',
+    package_type_id: '',
     pin_count: '',
     datasheet: '',
     description: ''
   }
-  res.render('chip/new', {title: 'New Chip Definition', data: data});
+  const package_types = await getPackageTypesForComponentType(1);
+
+  res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types});
 });
 
 router.post('/chipnew', async function(req, res) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     family: req.body.family,
-    package: req.body.package,
+    package_type_id: req.body.package_type_id,
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
   }
+  const package_types = await getPackageTypesForComponentType(1);
   var pin=[];
   var sym = [];
   var descr = [];
@@ -100,7 +104,7 @@ router.post('/chipnew', async function(req, res) {
   data['descr'] = descr;
 
   if (descr[req.body.pin_count-1]) {
-    const chip = await createChip(data.chip_number, data.family, data.pin_count, data.package, data.datasheet, data.description);
+    const chip = await createChip(data.chip_number, data.family, data.pin_count, data.package_type_id, data.datasheet, data.description);
     chip_id = chip.id;
 
     for (var i = 0; i < req.body.pin_count; i++) {
@@ -116,7 +120,7 @@ router.post('/chipnew', async function(req, res) {
 
     res.redirect('/chips/'+chip_id);
   } else {
-    res.render('chip/new', {title: 'New Chip Definition', data: data});
+    res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types});
   }
 });
 
@@ -158,7 +162,7 @@ router.post('/:id', async function(req, res) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     family: req.body.family,
-    package: req.body.package,
+    package_type_id: req.body.package_type_id,
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
@@ -178,7 +182,7 @@ router.post('/:id', async function(req, res) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const chip = await updateChip(id, data.chip_number, data.family, data.pin_count, data.package, data.datasheet, data.description);
+  const chip = await updateChip(id, data.chip_number, data.family, data.pin_count, data.package_type_id, data.datasheet, data.description);
   chip_id = chip.id;
 
   for (var i = 0; i < req.body.pin_count; i++) {

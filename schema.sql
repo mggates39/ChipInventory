@@ -8,10 +8,11 @@ CREATE TABLE chips (
   chip_number VARCHAR(32) NOT NULL,
   family VARCHAR(32) NOT NULL,
   pin_count integer NOT NULL,
-  package varchar(16) not null,
+  package_type_id integer not null,
   datasheet varchar(256) NULL,
   description TEXT NOT NULL
 );
+create index chip_pkg_idx on chips(package_type_id);
 
 CREATE TABLE pins (
   id integer PRIMARY KEY AUTO_INCREMENT,
@@ -113,8 +114,9 @@ CREATE INDEX component_package_idx on components(component_package_id);
 ALTER TABLE components ADD FOREIGN KEY components_package_idfk (component_package_id) REFERENCES component_packages(id);
 
 CREATE VIEW chip_aliases AS
-SELECT id, chip_number, family, package, pin_count, description, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand
+SELECT id, chip_number, family, pt.name package, pin_count, description, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand
 FROM chips c
+JOIN package_types pt on pt.id = c.package_type_id
 UNION ALL
 SELECT chip_id as id, alias_chip_number as chip_number,  '' family, '' package, '' pin_count, concat("See <a href='/chips/", a.chip_id,"'>", x.chip_number, "</a>") as description, '' on_hand
 FROM aliases a
@@ -143,3 +145,5 @@ alter table  inventory add FOREIGN KEY mfg_code_idfk (mfg_code_id) REFERENCES mf
 
 CREATE INDEX inv_idx on inventory_dates(inventory_id);
 ALTER TABLE inventory_dates ADD FOREIGN KEY inv_idfk (inventory_id) REFERENCES inventory(id);
+
+ALTER TABLE chips ADD FOREIGN KEY pkg_type_idfk (package_type_id) REFERENCES package_types(id);

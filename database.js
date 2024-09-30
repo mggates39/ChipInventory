@@ -43,9 +43,10 @@ async function searchChips(query, type) {
 
 async function getChip(chip_id) {
   const [rows] = await pool.query(`
-  SELECT * 
-  FROM chips
-  WHERE id = ?
+  SELECT c.*, pt.name as package 
+  FROM chips c
+  JOIN package_types pt on pt.id = c.package_type_id
+  WHERE c.id = ?
   `, [chip_id])
   return rows[0]
 }
@@ -336,26 +337,26 @@ async function createManufacturerCode(manufacturer_id, code) {
     return getMfgCode(manufacturer_code_id)   
 }
 
-async function createChip(chip_number, family, pin_count, package, datasheet, description) {
+async function createChip(chip_number, family, pin_count, package_type_id, datasheet, description) {
   const [result] = await pool.query(`
-  INSERT INTO chips (chip_number, family, pin_count, package, datasheet, description)
+  INSERT INTO chips (chip_number, family, pin_count, package_type_id, datasheet, description)
   VALUES (?, ?, ?, ?, ?, ?)
-  `, [chip_number, family, pin_count, package, datasheet, description])
+  `, [chip_number, family, pin_count, package_type_id, datasheet, description])
   const chip_id = result.insertId
   return getChip(chip_id)
 }
 
-async function updateChip(chip_id, chip_number, family, pin_count, package, datasheet, description) {
+async function updateChip(chip_id, chip_number, family, pin_count, package_type_id, datasheet, description) {
   const [result] = await pool.query(`
   UPDATE chips SET
     chip_number = ?, 
     family = ?, 
     pin_count = ?, 
-    package = ?, 
+    package_type_id = ?, 
     datasheet = ?, 
     description = ?
   WHERE id = ?
-  `, [chip_number, family, pin_count, package, datasheet, description, chip_id])
+  `, [chip_number, family, pin_count, package_type_id, datasheet, description, chip_id])
   return getChip(chip_id)
 }
 
