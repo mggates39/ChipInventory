@@ -109,7 +109,9 @@ router.post('/chipnew', async function(req, res) {
 
     aliases = data.aliases.split(',');
     for( const alias of aliases) {
-      await createAlias(chip_id, alias);
+      if (alias.length > 0) {
+        await createAlias(chip_id, alias);
+      }
     }
 
     res.redirect('/chips/'+chip_id);
