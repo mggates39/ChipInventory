@@ -495,6 +495,39 @@ async function getComponentType(component_type_id) {
   return rows[0]
 }
 
+async function setComponentPackageTypes( component_type_id, package_types) {
+  await pool.query('DELETE FROM component_packages WHERE component_type_id = ?', [component_type_id]);
+  for (const package_type_id of package_types) {
+    await pool.query('INSERT INTO component_packages (component_type_id, package_type_id) VALUES (?, ?)', [component_type_id, package_type_id]);
+  }; 
+}
+
+async function createComponentType(description, symbol, table_name, package_types) {
+  const [result] = await pool.query(`
+    INSERT INTO component_types (description, symbol, table_name)
+    VALUES (?, ?, ?, ?)
+    `, [description, symbol, table_name])
+    const component_type_id = result.insertId
+
+    await setComponentPackageTypes(component_type_id, package_types);
+
+    return getComponentType(component_type_id)    
+}
+
+async function updateComponentType(component_type_id, description, symbol, table_name, package_types) {
+  const [result] = await pool.query(`
+    UPDATE component_types SET
+      description = ?, 
+      symbol = ?, 
+      table_name = ?
+    WHERE id = ?
+    `, [description, symbol, table_name, component_type_id]);
+
+    await setComponentPackageTypes(component_type_id, package_types);
+
+    return getComponentType(component_type_id)
+}
+
 async function getMountingTypeList() {
   const [rows] = await pool.query(`SELECT id, name,
     CASE WHEN is_through_hole = 1 THEN 'Yes' ELSE 'No' END is_through_hole,
@@ -609,6 +642,16 @@ async function getPackageTypesForComponentType(component_type_id) {
   return rows
 }
 
+async function getSelectedPackageTypesForComponentType(component_type_id) {
+  const [rows] = await pool.query(`SELECT pt.*, 
+      CASE WHEN cpt.component_type_id IS NOT NULL THEN 'true' ELSE 'false' END used  
+    FROM package_types pt
+    LEFT JOIN component_packages cpt on cpt.package_type_id = pt.id and cpt.component_type_id = ?
+    ORDER BY pt.description
+  `, [component_type_id])
+  return rows
+}
+
 async function getPackageTypesForMountingType(mounting_type_id) {
   const [rows] = await pool.query(`SELECT *  
     FROM package_types
@@ -627,8 +670,9 @@ module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, 
   createAlias, getAliases, deleteAliases, 
   getManufacturers, createManufacturer, getManufacturerList, getManufacturer,
   getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
-  getComponentTypeList, getComponentType, getComponentTypesForPackageType,
+  getComponentTypeList, getComponentType, getComponentTypesForPackageType, createComponentType, updateComponentType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
   updateMountingType, createMountingType,
-  getPackageTypeList, getPackageType, getPackageTypesForComponentType, updatePackageType, createPackageType}
+  getPackageTypeList, getPackageType, updatePackageType, createPackageType, 
+  getPackageTypesForComponentType, getSelectedPackageTypesForComponentType}
 

@@ -14,13 +14,11 @@ block content
         th Mounting Type
       each n in package_types
         tr 
-            //- td
-            //-     a(href="/component_type/code/" + n.id target="_blank") #{n.description}
             td=n.name
             td=n.description
             td=n.mounting_type
 
-//-   a.btn.btn-primary(href="/component_type/codenew/"+mfg.id, role="button") Add Code
+  a.btn.btn-primary(href="/component_types/edit/"+component_type.id, role="button") Edit 
 
 block scripts
   script(type="text/javascript").
