@@ -601,24 +601,33 @@ async function getPackageType(package_type_id) {
   return rows[0]
 }
 
-async function createPackageType(name, description, mounting_type_id) {
+async function setPackageComponentTypes( package_type_id, component_types) {
+  await pool.query('DELETE FROM component_packages WHERE package_type_id = ?', [package_type_id]);
+  for (const component_type_id of component_types) {
+    await pool.query('INSERT INTO component_packages (component_type_id, package_type_id) VALUES (?, ?)', [component_type_id, package_type_id]);
+  }; 
+}
+
+async function createPackageType(name, description, mounting_type_id, component_types) {
   const [result] = await pool.query(`
   INSERT INTO package_types (name, description, mounting_type_id))
   VALUES (?, ?, ?)
-  `, [name, description, mounting_type_id])
-  const package_type_id = result.insertId
-  return getPackageType(package_type_id)
+  `, [name, description, mounting_type_id]);
+  const package_type_id = result.insertId;
+  await setPackageComponentTypes(package_type_id, component_types);
+  return getPackageType(package_type_id);
 }
 
-async function updatePackageType(package_type_id, name, description, mounting_type_id) {
+async function updatePackageType(package_type_id, name, description, mounting_type_id, component_types) {
   const [result] = await pool.query(`
-     UPDATE mounting_types SET
+     UPDATE package_types SET
       name = ?, 
       description = ?, 
       mounting_type_id = ?
     WHERE id = ?
-  `, [name, description, mounting_type_id, package_type_id])
-  return getPackageType(package_type_id)
+  `, [name, description, mounting_type_id, package_type_id]);
+  await setPackageComponentTypes(package_type_id, component_types);
+  return getPackageType(package_type_id);
 }
 
 async function getComponentTypesForPackageType(package_type_id) {
@@ -652,6 +661,16 @@ async function getSelectedPackageTypesForComponentType(component_type_id) {
   return rows
 }
 
+async function getSelectedComponentTypesForPackageType(package_type_id) {
+  const [rows] = await pool.query(`SELECT ct.*, 
+      CASE WHEN cpt.package_type_id IS NOT NULL THEN 'true' ELSE 'false' END used  
+    FROM component_types ct
+    LEFT JOIN component_packages cpt on cpt.component_type_id = ct.id and cpt.package_type_id = ?
+    ORDER BY ct.description
+  `, [package_type_id])
+  return rows
+}
+
 async function getPackageTypesForMountingType(mounting_type_id) {
   const [rows] = await pool.query(`SELECT *  
     FROM package_types
@@ -670,9 +689,10 @@ module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, 
   createAlias, getAliases, deleteAliases, 
   getManufacturers, createManufacturer, getManufacturerList, getManufacturer,
   getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
-  getComponentTypeList, getComponentType, getComponentTypesForPackageType, createComponentType, updateComponentType,
+  getComponentTypeList, getComponentType, createComponentType, updateComponentType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
   updateMountingType, createMountingType,
   getPackageTypeList, getPackageType, updatePackageType, createPackageType, 
-  getPackageTypesForComponentType, getSelectedPackageTypesForComponentType}
+  getPackageTypesForComponentType, getSelectedPackageTypesForComponentType,
+  getComponentTypesForPackageType, getSelectedComponentTypesForPackageType}
 

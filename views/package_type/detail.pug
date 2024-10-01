@@ -14,13 +14,11 @@ block content
         th Table Name
       each n in component_types
         tr 
-            //- td
-            //-     a(href="/component_type/code/" + n.id target="_blank") #{n.description}
             td=n.description
             td=n.symbol
             td=n.table_name
 
-//-   a.btn.btn-primary(href="/component_type/codenew/"+mfg.id, role="button") Add Code
+  a.btn.btn-primary(href="/package_types/edit/"+package_type.id, role="button") Edit
 
 block scripts
   script(type="text/javascript").
