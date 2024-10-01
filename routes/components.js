@@ -25,11 +25,10 @@ router.get('/edit/:id', async function(req, res, next) {
   res.render('component_type/edit', {title: 'Component Type', component_type: data, package_types: packs});
 })
 
-
 router.post('/:id', async function( req, res, next) {
   const id = req.params.id;
-  console.log(req.body.package_types);
-  updateComponentType(id, req.body.description, req.body.symbol, req.body.table_name, req.body.package_types)
+  await updateComponentType(id, req.body.description, req.body.symbol, req.body.table_name, req.body.package_types)
   res.redirect('/component_types/'+id);
 })
+
 module.exports = router;
