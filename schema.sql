@@ -113,8 +113,10 @@ ALTER TABLE components ADD FOREIGN KEY components_type_idfk (component_type_id) 
 CREATE INDEX component_package_idx on components(component_package_id);
 ALTER TABLE components ADD FOREIGN KEY components_package_idfk (component_package_id) REFERENCES component_packages(id);
 
+
+-- DROP VIEW chip_aliases ;
 CREATE VIEW chip_aliases AS
-SELECT id, chip_number, family, pt.name package, pin_count, description, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand
+SELECT c.id, c.chip_number, c.family, pt.name package, c.pin_count, c.description, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand
 FROM chips c
 JOIN package_types pt on pt.id = c.package_type_id
 UNION ALL
