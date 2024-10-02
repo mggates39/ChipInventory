@@ -496,10 +496,17 @@ async function getComponentType(component_type_id) {
 }
 
 async function setComponentPackageTypes( component_type_id, package_types) {
+  const insertSql = 'INSERT INTO component_packages (component_type_id, package_type_id) VALUES (?, ?)';
+
   await pool.query('DELETE FROM component_packages WHERE component_type_id = ?', [component_type_id]);
-  for (const package_type_id of package_types) {
-    await pool.query('INSERT INTO component_packages (component_type_id, package_type_id) VALUES (?, ?)', [component_type_id, package_type_id]);
-  }; 
+  if (typeof(package_types) == 'object') {
+    for (const package_type_id of package_types) {
+      await pool.query(insertSql, [component_type_id, package_type_id]);
+    }; 
+  } else if (typeof(package_types) == 'string') {
+      package_type_id = package_types;
+      await pool.query(insertSql, [component_type_id, package_type_id]);
+  }
 }
 
 async function createComponentType(description, symbol, table_name, package_types) {
@@ -602,15 +609,22 @@ async function getPackageType(package_type_id) {
 }
 
 async function setPackageComponentTypes( package_type_id, component_types) {
+  const insertSql = 'INSERT INTO component_packages (component_type_id, package_type_id) VALUES (?, ?)';
+
   await pool.query('DELETE FROM component_packages WHERE package_type_id = ?', [package_type_id]);
-  for (const component_type_id of component_types) {
-    await pool.query('INSERT INTO component_packages (component_type_id, package_type_id) VALUES (?, ?)', [component_type_id, package_type_id]);
-  }; 
+  if (typeof(component_types) == 'object') {
+    for (const component_type_id of component_types) {
+      await pool.query(insertSql, [component_type_id, package_type_id]);
+    }; 
+  } else if (typeof(component_types) == 'string') {
+      component_type_id = component_types;
+      await pool.query(insertSql, [component_type_id, package_type_id]);
+  };
 }
 
 async function createPackageType(name, description, mounting_type_id, component_types) {
   const [result] = await pool.query(`
-  INSERT INTO package_types (name, description, mounting_type_id))
+  INSERT INTO package_types (name, description, mounting_type_id)
   VALUES (?, ?, ?)
   `, [name, description, mounting_type_id]);
   const package_type_id = result.insertId;
