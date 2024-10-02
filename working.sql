@@ -220,3 +220,27 @@ SELECT pt.*,
 select * from component_packages 
 -- where component_type_id = 14
 order by component_type_id, package_type_id;
+
+-- Migrate core chip data to components
+-- INSERT components (id, component_type_id, package_type_id, name, description)
+-- SELECT id, 1, package_type_id, chip_number, description
+-- FROM chips
+-- WHERE 1=1;
+-- commit;
+
+-- CREATE INDEX chip_pkg_idx ON chips(package_type_id);
+-- ALTER TABLE chips ADD FOREIGN KEY pkg_type_idfk (package_type_id) REFERENCES package_types(id);
+
+-- alter table chips 
+-- 	drop FOREIGN KEY chips_ibfk_1,
+-- 	drop index chip_pkg_idx,
+-- 	drop column package_type_id, 
+--     drop column chip_number, 
+--     drop column description;
+    
+
+select * from components;
+
+select table_name, count(*) ni
+from component_types
+group by table_name;
