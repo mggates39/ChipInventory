@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  p Create a new package type defintion
+  form(action="/package_types/new" method="POST")
+    div.form-group
+      label(for="name") Package:
+      input#name.form-control( type="text" placeholder="Ex) DIP" name="name" value=package_type.name)
+    div.form-group
+      label( for="description") Description:
+      input#description.form-control(type="text" placeholder="Ex) Dual In-line Package" name="description" value=package_type.description)
+    div.form-group
+      label( for="mounting_type_id") Mounting Type:
+      select#mounting_type_id.form-control(type='select' placeholder='Select mounting type' name='mounting_type_id' required='true')
+        for mounting_type in mounting_types
+          option(value=mounting_type.id selected= package_type.mounting_type_id == mounting_type.id) #{mounting_type.name}
+    div.form-group
+      label Available Component Types:
+      for component_type in component_types
+        br
+        input#component_types(type="checkbox" name="component_types" value=component_type.id checked= 'true' == component_type.used)
+        | 
+        label(for=component_types) #{component_type.description} - #{component_type.symbol}
+
+    button.btn.btn-default.btn-primary(type="submit") Submit
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#package").addClass("active");
+    });
