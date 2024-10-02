@@ -361,7 +361,7 @@ async function createChip(chip_number, family, pin_count, package_type_id, datas
 
 async function updateChip(chip_id, chip_number, family, pin_count, package_type_id, datasheet, description) {
   const component_type_id = 1;
-  const [result] = await pool.query(`
+  await pool.query(`
     UPDATE components SET
       name = ?, 
       component_type_id = ?, 
@@ -369,7 +369,7 @@ async function updateChip(chip_id, chip_number, family, pin_count, package_type_
       description = ?
     WHERE id = ?
     `, [chip_number, component_type_id, package_type_id, description, chip_id])
-  const [result] = await pool.query(`
+  await pool.query(`
     UPDATE chips SET
       family = ?, 
       pin_count = ?, 
