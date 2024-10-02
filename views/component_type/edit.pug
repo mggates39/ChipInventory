@@ -16,9 +16,9 @@ block content
       label Available Package Types:
       for package_type in package_types
         br
-        input#package_types(type="checkbox" name="package_types" value=package_type.id checked= 'true' == package_type.used)
+        input#package_type_selection(type="checkbox" name="package_type_selection" value=package_type.id checked= 'true' == package_type.used)
         | 
-        label(for=item) #{package_type.name} - #{package_type.description}
+        label(for=package_type_selection) #{package_type.name} - #{package_type.description}
 
     button.btn.btn-default.btn-primary(type="submit") Submit
 

@@ -18,9 +18,9 @@ block content
       label Available Component Types:
       for component_type in component_types
         br
-        input#component_types(type="checkbox" name="component_types" value=component_type.id checked= 'true' == component_type.used)
+        input#component_type_selection(type="checkbox" name="component_type_selection" value=component_type.id checked= 'true' == component_type.used)
         | 
-        label(for=component_types) #{component_type.description} - #{component_type.symbol}
+        label(for=component_type_selection) #{component_type.description} - #{component_type.symbol}
 
     button.btn.btn-default.btn-primary(type="submit") Submit
 
