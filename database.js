@@ -341,8 +341,8 @@ async function createManufacturerCode(manufacturer_id, code) {
     INSERT INTO mfg_codes (manufacturer_id, mfg_code)
     VALUES (?, ?)
     `, [manufacturer_id, code])
-    const manufacturer_code_id = result.insertId;
-    return getMfgCode(manufacturer_code_id)   
+  const manufacturer_code_id = result.insertId;
+  return getMfgCode(manufacturer_code_id)   
 }
 
 async function createChip(chip_number, family, pin_count, package_type_id, datasheet, description) {
@@ -356,8 +356,7 @@ async function createChip(chip_number, family, pin_count, package_type_id, datas
       INSERT INTO chips (1d, family, pin_count, datasheet)
       VALUES (?, ?, ?, ?)
       `, [chip_id, family, pin_count, datasheet])
-      const chip_id = result.insertId
-        return getChip(chip_id)
+  return getChip(chip_id)
 }
 
 async function updateChip(chip_id, chip_number, family, pin_count, package_type_id, datasheet, description) {
