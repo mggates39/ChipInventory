@@ -349,11 +349,11 @@ async function createChip(chip_number, family, pin_count, package_type_id, datas
   const component_type_id = 1;
   const [result] = await pool.query(`
     INSERT INTO components (name, component_type_id, package_type_id, description)
-    VALUES (?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?)
     `, [chip_number, component_type_id, package_type_id, description])
   const chip_id = result.insertId
   await pool.query(`
-      INSERT INTO chips (1d, family, pin_count, datasheet)
+      INSERT INTO chips (id, family, pin_count, datasheet)
       VALUES (?, ?, ?, ?)
       `, [chip_id, family, pin_count, datasheet])
   return getChip(chip_id)
