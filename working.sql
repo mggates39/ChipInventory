@@ -237,7 +237,7 @@ order by component_type_id, package_type_id;
 -- 	drop column package_type_id, 
 --     drop column chip_number, 
 --     drop column description;
-    
+--     commit;-- 
 
 select * from components;
 
