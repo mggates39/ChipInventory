@@ -2,10 +2,10 @@ use chip_data;
 
 Insert into mounting_types (id, name, is_through_hole, is_surface_mount, is_chassis_mount)
 values	
-	(1, "through hole", 1, 0, 0),
-	(2, "carrier mount", 1, 1, 0),
-	(3, 'surface mount', 0, 1, 0),
-	(4, 'chassis mount', 0, 0, 1);
+	(1, "Through Hole", 1, 0, 0),
+	(2, "Carrier Mount", 1, 1, 0),
+	(3, 'Surface Mount', 0, 1, 0),
+	(4, 'Chassis Mount', 0, 0, 1);
 commit;
 
 INSERT INTO  package_types (id, name, description, mounting_type_id)
@@ -15,7 +15,7 @@ VALUES
 	('3', 'Radial', 'Radial', '1'),
 	('4', 'PLCC', 'Plastic Leaded Chip Carrier', '2'),
 	('5', 'Chassis', 'Chassis', '4'),
-	('6', 'Array', 'In-line Array', '1'),
+	('6', 'SIP', 'Single In-line Package', '1'),
 	('7', 'SMD', 'Surface Mount Device', '3'),
 	('8', 'MELF', 'Metal Electrode Leadless Face', '3'),
 	('9', 'SOIC', 'Small Outline Integrated Circuit', '3'),
