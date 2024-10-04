@@ -147,14 +147,14 @@ router.post('/:id/newnote', async function(req, res) {
 
 /* Add one or more aliases to the selected chip */
 router.post('/:id/newalias', async function(req, res) {
-  const id = req.params.id;
+  const chip_id = req.params.id;
   aliases = req.body.alias.split(',');
   for( const alias of aliases) {
     if (alias.length > 0) {
       await createAlias(chip_id, alias);
     }
   }
-  res.redirect('/chips/'+id);
+  res.redirect('/chips/'+chip_id);
 });
 
 router.post('/:id', async function(req, res) {

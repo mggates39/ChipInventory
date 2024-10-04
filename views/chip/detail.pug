@@ -43,25 +43,25 @@ block content
   div(id=iswide)
     table.pindiagram
       tr
-        th(class="leftpinsym") &nbsp;
-        th(class="lefttoppinnum") &nbsp;
-        th(class="righttoppinnum") &nbsp;
-        th(class="rightpinsym") &nbsp;
+        th.leftpinsym &nbsp;
+        th.lefttoppinnum &nbsp;
+        th.righttoppinnum &nbsp;
+        th.rightpinsym &nbsp;
 
       each n, index in layout_pins
         tr
-          td(class="leftpinsym") !{n.left_sym}
-          td(class="leftpinnum") #{n.left_pin} !{n.bull}
-          td(class="rightpinnum") #{n.right_pin}
-          td(class="rightpinsym") !{n.right_sym}
+          td.leftpinsym !{n.left_sym} &#9616;
+          td.leftpinnum #{n.left_pin} !{n.bull}
+          td.rightpinnum #{n.right_pin}
+          td.rightpinsym &#9612; !{n.right_sym}
 
       tr
-        td(class="leftpinsym") &nbsp;
-        td(class="leftbottompinnum") &nbsp;
-        td(class="rightbottompinnum") &nbsp;
-        td(class="rightpinsym") &nbsp;
+        td.leftpinsym &nbsp;
+        td.leftbottompinnum &nbsp;
+        td.rightbottompinnum &nbsp;
+        td.rightpinsym &nbsp;
 
-  div(id='dpintable')
+  div#dpintable
     table.pintable
       tr
         th(style="min-width:50px;") Pin
@@ -73,6 +73,8 @@ block content
           td= n.pin_number
           td !{n.pin_symbol}
           td !{n.pin_description}
+
+
 
   if (specs.length)
     br
