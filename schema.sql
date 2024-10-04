@@ -142,14 +142,15 @@ ALTER TABLE  inventory_dates ADD FOREIGN KEY inv_idfk (inventory_id) REFERENCES 
 
 
 -- Create any Views
--- DROP VIEW chip_aliases ;
+DROP VIEW chip_aliases ;
 CREATE VIEW chip_aliases AS
-SELECT c.id, cmp.name as chip_number, c.family, pt.name package, c.pin_count, cmp.description, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand
+SELECT c.id, cmp.name as chip_number, c.family, ct.name component_type, pt.name package, c.pin_count, cmp.description, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand
 FROM components cmp
 join chips c on c.id = cmp.id
 JOIN package_types pt on pt.id = cmp.package_type_id
+JOIN component_type ct on ct.id - cmp.component_type_id
 UNION ALL
-SELECT chip_id as id, alias_chip_number as chip_number,  '' family, '' package, '' pin_count, concat("See <a href='/chips/", a.chip_id,"'>", x.name, "</a>") as description, '' on_hand
+SELECT chip_id as id, alias_chip_number as chip_number,  '' family, '' component_type, '' package, '' pin_count, concat("See <a href='/chips/", a.chip_id,"'>", x.name, "</a>") as description, '' on_hand
 FROM aliases a
 JOIN components x ON x.id = a.chip_id;
 

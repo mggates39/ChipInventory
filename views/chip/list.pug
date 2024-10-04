@@ -20,6 +20,7 @@ block content
     tr
       th Number
       th Family
+      th Type
       th Package
       th Pins
       th Description
@@ -30,6 +31,7 @@ block content
         td 
           a(href="/chips/"+n.id) #{n.chip_number}
         td= n.family
+        td= n.component
         td= n.package
         td= n.pin_count
         td !{n.description}
