@@ -327,6 +327,29 @@ async function getManufacturerList() {
   return rows;
 }
 
+async function searchManufacturers(query, type) {
+  var sql = `select m.id, m.name, 
+    (select group_concat( ' ', mfg_code) from mfg_codes mc where mc.manufacturer_id = m.id) mfg_codes
+    from manufacturer m`;
+    
+  if (query) {
+    value = ['%' + query + '%']
+    if (type == 'm') {
+      sql += " WHERE m.name LIKE ? ";
+    } else if (type == 'c') {
+      sql = `select * from (select m.id, m.name, 
+(select group_concat( ' ', mfg_code) from mfg_codes mc where mc.manufacturer_id = m.id and mfg_code like ?) mfg_codes
+from manufacturer m) a
+where a.mfg_codes is not null`;
+    }
+  } else {
+    value = []
+  }
+  sql += ' order by name';
+  const [rows] = await pool.query(sql, value);
+  return rows
+}
+
 async function createManufacturer(manufacture_name) {
   const [result] = await pool.query(`
     INSERT INTO manuracturer (name)
@@ -721,7 +744,7 @@ module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, 
   searchInventory, getInventoryList, getInventory, getInventoryByChipList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, deleteAliases, 
-  getManufacturers, createManufacturer, getManufacturerList, getManufacturer,
+  getManufacturers, createManufacturer, getManufacturerList, getManufacturer, searchManufacturers,
   getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
   getComponentTypeList, getComponentType, createComponentType, updateComponentType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 

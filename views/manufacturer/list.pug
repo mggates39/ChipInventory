@@ -1,7 +1,21 @@
 extends ../layout
 
 block content
-  h3 Maufacturer
+  p This is a searchable list of all the manufactures and codes in this database.
+  div.searchdiv
+    form.searchbox()
+      INPUT(type="search" placeholder="Search" aria-label="Search" NAME="q" VALUE=searched SIZE="20" MAXLENGTH="32")
+      div.form-check.form-check-inline
+        INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="m" id="mfg" checked=mfg_search) 
+        label.form-check-label(for="mfg") Manufacturer
+      div.form-check.form-check-inline
+        INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="c" id="code" checked=code_search) 
+        label.form-check-label(for="code") Code
+      INPUT.btn.btn-primary.mb-3(TYPE="submit" VALUE="Search")
+  
+  div 
+    a.btn.btn-primary(href="/manufacturers/new/", role="button") New Manufacturer
+
   table.table.table-striped
     tr
       th Manufacturer
@@ -16,8 +30,6 @@ block content
     if manufacturers.length == 0
       tr
         td(span=5) No manufacturers found &nbsp;
-  
-  a.btn.btn-primary(href="/manufacturers/new/", role="button") New Manufacturer
 
 block scripts
   script(type="text/javascript").
