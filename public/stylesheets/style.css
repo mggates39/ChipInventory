@@ -87,6 +87,20 @@ body {
   border-top: 1px solid black;
 }
 
+.toppinsym
+{
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  text-align: end;
+}
+
+.bottompinsym
+{
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  text-align: start;
+}
+
 #dpindiagram
 {
   float: left;

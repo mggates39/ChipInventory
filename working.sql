@@ -244,3 +244,65 @@ select * from components;
 select table_name, count(*) ni
 from component_types
 group by table_name;
+
+
+select ct.description component_type, pt.name package_type, count(*) ni 
+from components c
+join component_types ct on ct.id = c.component_type_id
+join package_types pt on pt.id = c.package_type_id
+group by ct.description, pt.name
+order by ct.description, pt.name;
+
+select id, pin_count, pin_count/4 by4, (pin_count/4) % 2 mod2
+from chips;
+
+-- Top
+select cmp.name as chip_number, c.pin_count, pintop.pin_number, pintop.pin_symbol
+from components cmp
+join chips c on c.id = cmp.id
+join pins pintop on pintop.chip_id = c.id
+where c.id = 267
+  and (pintop.pin_number >= 1 and pintop.pin_number <= ((c.pin_count/8) + ((pin_count/4) % 2)))
+order by cast(pin_number as signed) desc;
+
+select cmp.name as chip_number, c.pin_count, pintop.pin_number, pintop.pin_symbol
+from components cmp
+join chips c on c.id = cmp.id
+join pins pintop on pintop.chip_id = c.id
+where c.id = 267
+  and pintop.pin_number > (c.pin_count - (c.pin_count/8) + ((pin_count/4) % 2))
+order by cast(pin_number as signed) desc;
+
+-- left
+select cmp.name as chip_number, c.pin_count, pinleft.pin_number, pinleft.pin_symbol
+from components cmp
+join chips c on c.id = cmp.id
+join pins pinleft on pinleft.chip_id = c.id
+where c.id = 267
+  and pinleft.pin_number > ((c.pin_count/8) + ((pin_count/4) % 2))
+  and pinleft.pin_number <= ((c.pin_count/8) + (c.pin_count/4) + ((pin_count/4) % 2))
+order by cast(pin_number as signed);
+
+-- bottom
+select cmp.name as chip_number, c.pin_count, binbottom.pin_number, binbottom.pin_symbol
+from components cmp
+join chips c on c.id = cmp.id
+join pins binbottom on binbottom.chip_id = c.id
+where c.id = 267
+  and binbottom.pin_number > ((c.pin_count/8) + (c.pin_count/4) + ((pin_count/4) % 2))
+  and binbottom.pin_number <= ((c.pin_count/8) + (c.pin_count/2) + ((pin_count/4) % 2))
+order by cast(pin_number as signed);
+
+-- right
+select cmp.name as chip_number, c.pin_count, pinright.pin_number, pinright.pin_symbol
+from components cmp
+join chips c on c.id = cmp.id
+join pins pinright on pinright.chip_id = c.id
+where c.id = 267
+  and pinright.pin_number > ((c.pin_count/8) + (c.pin_count/2) + ((pin_count/4) % 2))
+  and pinright.pin_number <= (c.pin_count - (c.pin_count/8) + ((pin_count/4) % 2))
+order by cast(pin_number as signed) desc;
+
+
+select * from chips where pin_count = 16
+;
