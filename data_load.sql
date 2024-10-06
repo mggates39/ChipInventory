@@ -27,7 +27,8 @@ VALUES
 	('15', 'THD', 'Through Hole Device', '1'),
 	('16', 'QIP', 'Quad in-line package', '1'),
 	('17', 'TO-XX', 'Transistor Outline', '1'),
-	('18', 'Clamp', 'Fuse Clamp', '1');
+	('18', 'Clamp', 'Fuse Clamp', '1'),
+    ('19', 'PGA', 'Pin Grid Array', '1');
 commit;
 
 INSERT INTO component_types (id, description, symbol, table_name)
@@ -51,13 +52,13 @@ commit;
 -- This can be reloaded to reset the valid packages types for each component type
 TRUNCATE TABLE component_packages;
 INSERT INTO component_packages (component_type_id, package_type_id)
-VALUES (1, 1), (1, 4), (1, 9), (1, 10), (1, 13), (1, 14), (1, 16), (1, 17),
+VALUES (1, 1), (1, 4), (1, 9), (1, 10), (1, 13), (1, 14), (1, 16), (1, 19),
 	(2, 2), (2, 3), (2, 5), (2, 7),
 	(3, 6),
     (4, 2), (4, 3), (4, 7), (4, 8),
     (5, 6), 
     (6, 2), (6, 7), (6, 12), (6, 17),
-    (7, 7), (7, 11), (7,15),
+    (7, 7), (7, 11), (7,15), (7, 17),
     (8, 15),
     (9, 15),
     (10, 12), (10, 15),
