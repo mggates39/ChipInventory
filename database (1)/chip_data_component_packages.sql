@@ -18,31 +18,32 @@ USE `chip_data`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `package_types`
+-- Table structure for table `component_packages`
 --
 
-DROP TABLE IF EXISTS `package_types`;
+DROP TABLE IF EXISTS `component_packages`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `package_types` (
+CREATE TABLE `component_packages` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
-  `description` varchar(32) NOT NULL,
-  `mounting_type_id` int NOT NULL,
+  `component_type_id` int NOT NULL,
+  `package_type_id` int NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `type_mounting_type_idx` (`mounting_type_id`),
-  CONSTRAINT `package_types_ibfk_1` FOREIGN KEY (`mounting_type_id`) REFERENCES `mounting_types` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `type_component_type_idx` (`component_type_id`),
+  KEY `type_package_type_idx` (`package_type_id`),
+  CONSTRAINT `component_packages_ibfk_1` FOREIGN KEY (`component_type_id`) REFERENCES `component_types` (`id`),
+  CONSTRAINT `component_packages_ibfk_2` FOREIGN KEY (`package_type_id`) REFERENCES `package_types` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `package_types`
+-- Dumping data for table `component_packages`
 --
 
-LOCK TABLES `package_types` WRITE;
-/*!40000 ALTER TABLE `package_types` DISABLE KEYS */;
-INSERT INTO `package_types` VALUES (1,'DIP','Dual In-Line Package',1),(2,'Axial','Axial',1),(3,'Radial','Radial',1),(4,'PLCC','Plastic Leaded Chip Carrier',2),(5,'Chassis','Chassis',4),(6,'SIP','Single In-line Package',1),(7,'SMD','Surface Mount Device',3),(8,'MELF','Metal Electrode Leadless Face',3),(9,'SOIC','Small Outline Integrated Circuit',3),(10,'SOP','Small Outline Package',3),(11,'SOT','Small Outline Transistor',3),(12,'SOD','Small Outline Diode',3),(13,'QFP','Quad Flat Package',3),(14,'QFN','Quad Flat No-Leads Package',3),(15,'THD','Through Hole Device',1),(16,'QIP','Quad in-line package',1),(17,'TO-XX','Transistor Outline',1),(18,'Clamp','Fuse Clamp',1),(19,'PGA','Pin Grid Array',2);
-/*!40000 ALTER TABLE `package_types` ENABLE KEYS */;
+LOCK TABLES `component_packages` WRITE;
+/*!40000 ALTER TABLE `component_packages` DISABLE KEYS */;
+INSERT INTO `component_packages` VALUES (9,2,2),(10,2,3),(11,2,5),(12,2,7),(14,4,2),(15,4,3),(16,4,7),(17,4,8),(19,6,2),(20,6,7),(21,6,12),(23,7,7),(24,7,11),(25,7,15),(26,8,15),(27,9,15),(28,10,12),(29,10,15),(30,11,12),(31,11,15),(32,12,11),(33,12,15),(34,13,18),(35,14,15),(36,3,6),(37,5,6),(38,1,1),(39,1,19),(40,1,4),(41,1,14),(42,1,13),(43,1,16),(44,1,9),(45,1,10),(49,6,17),(50,7,17);
+/*!40000 ALTER TABLE `component_packages` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-06 19:21:13
+-- Dump completed on 2024-10-06 19:26:47

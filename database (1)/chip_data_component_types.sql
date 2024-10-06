@@ -18,30 +18,29 @@ USE `chip_data`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `mounting_types`
+-- Table structure for table `component_types`
 --
 
-DROP TABLE IF EXISTS `mounting_types`;
+DROP TABLE IF EXISTS `component_types`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `mounting_types` (
+CREATE TABLE `component_types` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
-  `is_through_hole` tinyint(1) DEFAULT NULL,
-  `is_surface_mount` tinyint(1) DEFAULT NULL,
-  `is_chassis_mount` tinyint(1) DEFAULT NULL,
+  `description` varchar(32) NOT NULL,
+  `symbol` varchar(4) NOT NULL,
+  `table_name` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `mounting_types`
+-- Dumping data for table `component_types`
 --
 
-LOCK TABLES `mounting_types` WRITE;
-/*!40000 ALTER TABLE `mounting_types` DISABLE KEYS */;
-INSERT INTO `mounting_types` VALUES (1,'Through Hole',1,0,0),(2,'Carrier Mount',1,1,0),(3,'Surface Mount',0,1,0),(4,'Chassis Mount',0,0,1);
-/*!40000 ALTER TABLE `mounting_types` ENABLE KEYS */;
+LOCK TABLES `component_types` WRITE;
+/*!40000 ALTER TABLE `component_types` DISABLE KEYS */;
+INSERT INTO `component_types` VALUES (1,'Integrated Circuit','U','chips'),(2,'Capacitor','C','passives'),(3,'Capacitor Network','CN','passives'),(4,'Resistor','R','passives'),(5,'Resistor Network','RN','passives'),(6,'Diode','D','diodes'),(7,'Transistor','Q','transistors'),(8,'Inductor','L','passives'),(9,'Switch','SW','switches'),(10,'Crystal','Y','crystals'),(11,'Connector jack','J','connectors'),(12,'Connector plug ','JP','connectors'),(13,'Fuse','F','power'),(14,'Transformer','T','power');
+/*!40000 ALTER TABLE `component_types` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-05 20:48:21
+-- Dump completed on 2024-10-06 19:26:48
