@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+  p #[strong Component] #{component_type.description}
+  p #[strong Symbol] #{component_type.symbol}
+  p #[strong Data Table] #{component_type.table_name}
+  
+  H6 Package Types used by this component type
+  div(id='package_types')
+    table.available 
+      tr 
+        th Name 
+        th Description
+        th Mounting Type
+      each n in package_types
+        tr 
+            td=n.name
+            td=n.description
+            td=n.mounting_type
+
+  a.btn.btn-primary(href="/component_types/edit/"+component_type.id, role="button") Edit 
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#comp").addClass("active");
+    });

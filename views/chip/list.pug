@@ -1,0 +1,48 @@
+extends ../layout
+
+block content
+  p This is a searchable list of all the chip types in this database.
+  div.searchdiv
+    form.searchbox()
+      INPUT(type="search" placeholder="Search" aria-label="Search" NAME="q" VALUE=searched SIZE="20" MAXLENGTH="32")
+      div.form-check.form-check-inline
+        INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="p" id="part" checked=part_search) 
+        label.form-check-label(for="part") Part number
+      div.form-check.form-check-inline
+        INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="k" id="keyword" checked=key_search) 
+        label.form-check-label(for="keyword") Keyword
+      INPUT.btn.btn-primary.mb-3(TYPE="submit" VALUE="Search")
+  
+  div 
+    a.btn.btn-primary(href="./chips/chipnew/", role="button") New Chip
+
+  table.table.table-striped
+    tr
+      th Number
+      th Family
+      th Type
+      th Package
+      th Pins
+      th Description
+      th On Hand
+
+    each n in chips
+      tr
+        td 
+          a(href="/chips/"+n.id) #{n.chip_number}
+        td= n.family
+        td= n.component
+        td= n.package
+        td= n.pin_count
+        td !{n.description}
+        td= n.on_hand
+
+    if chips.length == 0
+      tr
+        td(span=5) No chips found &nbsp;
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#cmf").addClass("active");
+    });

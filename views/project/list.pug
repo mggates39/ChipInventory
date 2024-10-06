@@ -1,0 +1,11 @@
+extends ../layout
+
+block content
+  h3 Current Projects 
+  p There are no projects at this time.
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#proj").addClass("active");
+    });

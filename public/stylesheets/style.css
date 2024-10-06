@@ -39,12 +39,12 @@ body {
 
 .leftpinsym
 {
-  padding-right: 5px;
+  padding-right: 0px;
 }
 
 .rightpinsym
 {
-  padding-left: 5px;
+  padding-left: 0px;
 }
 
 .leftpinsym, .rightpinnum, .righttoppinnum, .rightbottompinnum
@@ -52,7 +52,7 @@ body {
   text-align: right;
 }
 
-.rightpinsym, .leftpinnum, .lefttoppinnum, leftbottompinnum
+.rightpinsym, .leftpinnum, .lefttoppinnum, .leftbottompinnum
 {
   text-align: left;
 }

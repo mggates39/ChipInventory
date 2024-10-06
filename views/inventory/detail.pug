@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+  h3= inventory.description
+  p= inventory.full_number + ' - ' + inventory.chip_number
+  p Manufacture: #{inventory.mfg_code + ' (' + inventory.name + ')'}
+  table
+    tr
+      th Date Code
+      th Quantity
+
+    each n in inventory_dates
+      tr
+        td= n.date_code
+        td= n.quantity
+
+    tr
+      td Total
+      td= inventory.quantity
+
+  a.btn.btn-primary(href="/inventory/" + inventory.id + "/newdate", role="button") Add Date Code
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#inv").addClass("active");
+    });

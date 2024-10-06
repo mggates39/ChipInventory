@@ -1,0 +1,45 @@
+extends ../layout
+
+block content
+  p This is a searchable list of all the chip inventory.
+  div.searchdiv
+  form.searchbox()
+    INPUT(type="search" placeholder="Search" aria-label="Search" NAME="q" VALUE=searched SIZE="20" MAXLENGTH="32")
+    div.form-check.form-check-inline
+      INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="p" id="part" checked=part_search) 
+      label.form-check-label(for="part") Part number
+    div.form-check.form-check-inline
+      INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="k" id="keyword" checked=key_search) 
+      label.form-check-label(for="keyword") Keyword
+    INPUT.btn.btn-primary.mb-3(TYPE="submit" VALUE="Search")
+  
+
+  table.table.table-striped
+    tr
+      th Base
+      th Number
+      th Manufacturer
+      th Quantity
+      th Description
+
+    each n in inventory
+      tr
+        td 
+          a(href="/chips/"+n.chip_id target='_blank') #{n.chip_number}
+        td
+          a(href="/inventory/"+n.id) #{n.full_number}
+        td= n.mfg_code+' ('+n.name+')'
+        td= n.quantity
+        td= n.description
+
+    if inventory.length == 0
+      tr
+        td(span=5) No inventory found &nbsp;
+  
+  a.btn.btn-primary(href="/inventory/inventorynew/", role="button") New Inventory
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#inv").addClass("active");
+    });

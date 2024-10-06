@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  h3 Component Types
+  table.table.table-striped
+    tr
+      th Type
+      th Symbol
+      th Table
+
+    each n in component_types
+      tr
+        td 
+          a(href="/component_types/"+n.id) #{n.description}
+        td= n.symbol
+        td= n.table_name
+
+    if component_types.length == 0
+      tr
+        td(span=2) No Component Types found &nbsp;
+  
+  a.btn.btn-primary(href="/component_types/new/", role="button") New Component Type
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#comp").addClass("active");
+    });

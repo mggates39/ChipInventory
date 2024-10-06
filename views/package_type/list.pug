@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  h3 Package Types
+  table.table.table-striped
+    tr
+      th Name
+      th Description
+      th Mounting Type
+
+    each n in package_types
+      tr
+        td 
+          a(href="/package_types/"+n.id) #{n.name}
+        td= n.description
+        td= n.mounting_type
+
+    if package_types.length == 0
+      tr
+        td(span=4) No Paclage Types found &nbsp;
+  
+  a.btn.btn-primary(href="/package_types/new/", role="button") New Package Type
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#package").addClass("active");
+    });

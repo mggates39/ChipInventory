@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  p #[strong Mounting Type] #{mounting_type.name}
+  p #[strong Is through hole] #{mounting_type.is_through_hole}
+  p #[strong Is surface mount] #{mounting_type.is_surface_mount}
+  p #[strong Is chassis mount] #{mounting_type.is_chassis_mount}
+  
+  H6 Package Types that use this mounting type
+  div(id='package_types')
+    table.available 
+      tr 
+        th Name 
+        th Description
+      each n in package_types
+        tr 
+            //- td
+            //-     a(href="/mounting_type/code/" + n.id target="_blank") #{n.description}
+            td=n.name
+            td=n.description
+
+//-   a.btn.btn-primary(href="/mounting_type/codenew/"+mfg.id, role="button") Add Code
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#mount").addClass("active");
+    });

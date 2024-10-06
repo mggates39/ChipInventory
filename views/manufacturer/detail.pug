@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+  h3 !{mfg.name}
+
+  div(id='codes')
+    table.available 
+      tr 
+        th Code
+          each n in codes 
+            tr 
+              td
+                a(href="/manufacturer/code/" + n.id target="_blank") #{n.mfg_code}
+
+  a.btn.btn-primary(href="/manufacturers/codenew/"+mfg.id, role="button") Add Code
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#mfg").addClass("active");
+    });
