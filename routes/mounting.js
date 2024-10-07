@@ -41,7 +41,6 @@ router.post('/new', async function( req, res, next) {
 
 router.post('/:id', async function( req, res, next) {
   const id = req.params.id;
-  console.log(req.body);
   await updateMountingType(id, req.body.name, req.body.is_through_hole, req.body.is_surface_mount, req.body.is_chassis_mount);
   res.redirect('/mounting_types/'+id);
 })

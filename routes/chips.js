@@ -232,7 +232,6 @@ router.get('/:id', async function(req, res, next) {
     layout_pins = [];
     top_pins = [];
     bottom_pins = [];
-    console.log(chip.package);
     if (chip.package != 'PLCC') {
       i = 0;
       dip_left_pins.forEach(function(pin) {
