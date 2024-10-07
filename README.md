@@ -38,6 +38,12 @@ MYSQL_DATABASE='chip_data'
 ## Load the initial data
 The easiest way is to use MySQL Workbench and import the data from the project's database folder into the chip_data database.  The workbench handles creating all the schmas and loading the data while managing all of the foreign key relationships.
 
+To remove my inventory from the system run the following SQL
+```
+DELETE FROM inventory_dates;
+DELETE FROM inventory;
+COMMIT;
+```
 # Launch the application
 You can start the application with this command
 ```
