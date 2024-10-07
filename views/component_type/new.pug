@@ -1,0 +1,29 @@
+extends ../layout
+
+block content
+  p Create new component type definition
+  form(action="/component_types/new/" method="POST")
+    div.form-group
+      label(for="description") Component:
+      input#description.form-control( type="text" placeholder="Ex) Resistor" name="description" value=component_type.description)
+    div.form-group
+      label( for="symbol") Symbol:
+      input#symbol.form-control(type="text" placeholder="Ex) R" name="symbol" value=component_type.symbol)
+    div.form-group
+      label( for="table_name") Table Name:
+      input#table_name.form-control(type="text" placeholder="Ex) passives" name="table_name" value=component_type.table_name)
+    div.form-group
+      label Available Package Types:
+      for package_type in package_types
+        br
+        input#package_type_selection(type="checkbox" name="package_type_selection" value=package_type.id checked= 'true' == package_type.used)
+        | 
+        label(for=package_type_selection) #{package_type.name} - #{package_type.description}
+
+    button.btn.btn-default.btn-primary(type="submit") Submit
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#comp").addClass("active");
+    });
