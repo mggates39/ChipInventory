@@ -14,12 +14,10 @@ block content
         th Description
       each n in package_types
         tr 
-            //- td
-            //-     a(href="/mounting_type/code/" + n.id target="_blank") #{n.description}
             td=n.name
             td=n.description
 
-//-   a.btn.btn-primary(href="/mounting_type/codenew/"+mfg.id, role="button") Add Code
+  a.btn.btn-primary(href="/mounting_types/edit/"+mounting_type.id, role="button") Edit
 
 block scripts
   script(type="text/javascript").

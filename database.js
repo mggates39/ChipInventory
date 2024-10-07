@@ -675,7 +675,7 @@ async function getMountingTypePlain(mounting_type_id) {
   return rows[0]
 }
 
-async function updateMountingType(mount_point_id, name, is_through_hole, is_surface_mount, is_chassis_mount) {
+async function updateMountingType(mounting_type_id, name, is_through_hole, is_surface_mount, is_chassis_mount) {
   const [result] = await pool.query(`
     UPDATE mounting_types SET
       name = ?, 
@@ -683,8 +683,8 @@ async function updateMountingType(mount_point_id, name, is_through_hole, is_surf
       is_surface_mount = ?, 
       is_chassis_mount = ?
     WHERE id = ?
-    `, [name, is_through_hole, is_surface_mount, is_chassis_mount, mount_point_id])
-    return getMountingType(mount_point_id)
+    `, [name, is_through_hole, is_surface_mount, is_chassis_mount, mounting_type_id])
+    return getMountingType(mounting_type_id)
 }
 
 async function createMountingType(name, is_through_hole, is_surface_mount, is_chassis_mount) {
