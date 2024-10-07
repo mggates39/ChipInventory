@@ -1,5 +1,5 @@
 var express = require('express');
-const { searchChips, getComponentTypeList} = require('../database');
+const { searchChips, getComponentTypeList, getComponentType} = require('../database');
 var router = express.Router();
 
 /* GET chip list page. */
@@ -23,6 +23,12 @@ router.get('/', async function(req, res, next) {
   const component_types = await getComponentTypeList();
   res.render('component/list', { title: 'Component Master File', chips: chips, searched: search_query, part_search: part_search, key_search: key_search, 
     component_types: component_types, component_type_id: component_type_id });
+});
+
+router.post('/new/', async function(req, res, next) {
+  const component_type_id = req.body.new_component;
+  const comonent_type = await getComponentType(component_type_id);
+  res.redirect("/"+comonent_type.table_name+"/new");
 });
 
 module.exports = router;

@@ -20,7 +20,7 @@ block content
         INPUT.btn.btn-primary.mb-3(TYPE="submit" VALUE="Search")
   
   div 
-    a.btn.btn-primary(href="./chips/new/", role="button") New Component
+    button.btn.btn-primary(type="button" data-bs-toggle="modal" data-bs-target="#newCompnentModal") New Component
 
   table.table.table-striped
     tr
@@ -47,6 +47,30 @@ block content
       tr
         td(span=5) No components found &nbsp;
 
+
+  //- New Component Modal
+  div#newCompnentModal.modal.fade(tabindex="-1" aria-labelledby="newCompnentModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form(action="/components/new" method="POST")
+          div.modal-header
+            h5#newCompnentModalLabel.modal-title Add a Component
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+          div.modal-body
+              div.row
+                div.col-md-12.ms-auto 
+                  label( for="new_component") Choose Component Type
+              div.row
+                div.col-md-12.ms-auto 
+                  select#new_component(type='select' placeholder='Select component type' name='new_component')
+                    option(value=0) ---
+                    for component_type in component_types
+                      option(value=component_type.id selected= component_type_id == component_type.id) #{component_type.description}
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancel
+            button.btn.btn-primary(type="submit" ) Add
+  
 block scripts
   script(type="text/javascript").
     $( document ).ready(function() {
