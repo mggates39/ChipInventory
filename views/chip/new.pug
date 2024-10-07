@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   p Enter the new chip defintion
-  form(action="/chips/chipnew/" method="POST")
+  form(action="/chips/new/" method="POST")
     div.form-group
       label(for="chip_number") Chip Number:
       input#chip_number.form-control( type="text" placeholder="Ex) 7425" name="chip_number" value=data.chip_number)

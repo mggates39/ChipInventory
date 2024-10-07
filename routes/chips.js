@@ -68,7 +68,7 @@ router.get('/edit/:id', async function(req,res,next) {
 })
 
 /* GET new chip entry page */
-router.get('/chipnew', async function(req, res, next) {
+router.get('/new', async function(req, res, next) {
   data = {chip_number: '',
     aliases: '',
     family: '',
@@ -82,7 +82,7 @@ router.get('/chipnew', async function(req, res, next) {
   res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types});
 });
 
-router.post('/chipnew', async function(req, res) {
+router.post('/new', async function(req, res) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     family: req.body.family,
