@@ -1,12 +1,13 @@
 extends ../layout
 
 block content
-  p This is a searchable list of all the chip types in this database.
+  p This is a searchable list of all the component types in this database.
   div.searchdiv.form-inline
     form.form-inline.searchbox()
       div.form-check-inline
         label( for="component_type_id") Component Type: &nbsp;
         select.form-inline#component_type_id(type='select' placeholder='Select component type' name='component_type_id' required='true')
+          option(value=0) All Components
           for component_type in component_types
             option(value=component_type.id selected= component_type_id == component_type.id) #{component_type.description}
         INPUT(type="search" placeholder="Search" aria-label="Search" NAME="q" VALUE=searched SIZE="20" MAXLENGTH="32")
@@ -44,7 +45,7 @@ block content
 
     if chips.length == 0
       tr
-        td(span=5) No chips found &nbsp;
+        td(span=5) No components found &nbsp;
 
 block scripts
   script(type="text/javascript").

@@ -310,3 +310,10 @@ FROM package_types pt
 LEFT JOIN mounting_types mt on mt.id = pt.mounting_type_id and mt.id = 1
 ORDER BY pt.description
 ;
+
+select pt.*, mt.name
+from package_types pt
+JOIN mounting_types mt on mt.id = pt.mounting_type_id
+WHERE mt.is_chassis_mount = 1;
+
+select * from chip_aliases;
