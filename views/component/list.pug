@@ -20,7 +20,7 @@ block content
         INPUT.btn.btn-primary.mb-3(TYPE="submit" VALUE="Search")
   
   div 
-    a.btn.btn-primary(href="./chips/new/", role="button") New Chip
+    a.btn.btn-primary(href="./chips/new/", role="button") New Component
 
   table.table.table-striped
     tr
@@ -35,7 +35,7 @@ block content
     each n in chips
       tr
         td 
-          a(href="/chips/"+n.id) #{n.chip_number}
+          a(href="/"+n.table_name+"/"+n.id) #{n.chip_number}
         td= n.family
         td= n.component
         td= n.package
