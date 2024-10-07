@@ -20,7 +20,7 @@ block content
     p 
       a(target='_blank' href= chip.datasheet) Datasheet PDF
 
-  a.btn.btn-secondary(href="/inventory/inventorynew/"+chip.id, role="button") Add Inventory
+  a.btn.btn-secondary(href="/inventory/new/"+chip.id, role="button") Add Inventory
 
   if (inventory.length)
     div(id='inventory')
@@ -55,7 +55,10 @@ block content
           td.leftpinsym &nbsp;
           td.leftpinnum &nbsp;
           each n, index in top_pins 
-            td #{n.pin} !{n.bull}
+            if (chip.package == 'PLCC')
+              td #{n.pin} !{n.bull}
+            else 
+              td !{n.bull}#{n.pin}
           td.rightpinnum &nbsp;
           td.rightpinsym &nbsp;
 

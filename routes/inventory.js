@@ -20,20 +20,20 @@ router.get('/', async function(req, res, next) {
   res.render('inventory/list', { title: 'Chip Inventory', inventory: inventory, searched: search_query, part_search: part_search, key_search: key_search  });
 });
 
-router.get('/inventorynew/:chip_id', async function(req, res, next) {
+router.get('/new/:chip_id', async function(req, res, next) {
   const chip_id = req.params.chip_id;
   const manufacturers = await getMfgCodes();
   const chip = await getChip(chip_id);
   res.render('inventory/new', {title: 'Add to Chip Inventory', manufacturers: manufacturers, chips: [chip]});
 });
 
-router.get('/inventorynew', async function(req, res, next) {
+router.get('/new', async function(req, res, next) {
   const manufacturers = await getMfgCodes();
   const chips = await searchChips('', '');
   res.render('inventory/new', {title: 'Add to Chip Inventory', manufacturers: manufacturers, chips: chips});
 });
 
-router.post('/inventorynew', async function(req, res) {
+router.post('/new', async function(req, res) {
   const data = req.body;
   var inv_id = 0;
   var new_qty = parseInt(data.quantity);

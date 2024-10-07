@@ -1,6 +1,8 @@
 var express = require('express');
 const { searchChips, getChip, createChip, updateChip, getPins, createPin, updatePin, 
-  getDipLeftPins, getDipRightPins, getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
+  getDipLeftPins, getDipRightPins, 
+  getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
+  getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, getNotes, getInventoryByChipList, getPackageTypesForComponentType, 
   getAliases, createAlias, deleteAliases, createSpec, deleteSpec, createNote } = require('../database');
 var router = express.Router();
@@ -68,7 +70,7 @@ router.get('/edit/:id', async function(req,res,next) {
 })
 
 /* GET new chip entry page */
-router.get('/chipnew', async function(req, res, next) {
+router.get('/new', async function(req, res, next) {
   data = {chip_number: '',
     aliases: '',
     family: '',
@@ -82,7 +84,7 @@ router.get('/chipnew', async function(req, res, next) {
   res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types});
 });
 
-router.post('/chipnew', async function(req, res) {
+router.post('/new', async function(req, res) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     family: req.body.family,
@@ -213,6 +215,10 @@ router.get('/:id', async function(req, res, next) {
     const plcc_right_pins = await getPllcRightPins(id);
     const plcc_top_pins = await getPllcTopPins(id);
     const plcc_bottom_pins = await getPllcBottomPins(id);
+    const quad_left_pins = await getQuadLeftPins(id);
+    const quad_right_pins = await getQuadRightPins(id);
+    const quad_top_pins = await getQuadTopPins(id);
+    const quad_bottom_pins = await getQuadBottomPins(id);
     const specs = await getSpecs(id);
     const notes = await getNotes(id);
     const inventory = await getInventoryByChipList(id);
@@ -232,21 +238,7 @@ router.get('/:id', async function(req, res, next) {
     layout_pins = [];
     top_pins = [];
     bottom_pins = [];
-    if (chip.package != 'PLCC') {
-      i = 0;
-      dip_left_pins.forEach(function(pin) {
-        if (pin.pin_number == 1) {
-          bull = '&nbsp;&#9679;'
-        } else {
-          bull = ''
-        }
-        layout_pins.push(
-          {'left_pin': pin.pin_number, 'bull': bull, 'right_pin': dip_right_pins[i].pin_number, 
-          'left_sym': parse_symbol(pin.pin_symbol), 'right_sym': parse_symbol(dip_right_pins[i].pin_symbol),
-        });
-        i++;
-      });
-    } else {
+    if (chip.package == 'PLCC') {
       i = 0;
       plcc_left_pins.forEach(function(pin) {
         if (pin.pin_number == 1) {
@@ -278,6 +270,53 @@ router.get('/:id', async function(req, res, next) {
         }
         bottom_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
 
+      });
+    } else if  ((chip.package == 'QFN') || (chip.package == 'QFP')) {
+      i = 0;
+      quad_left_pins.forEach(function(pin) {
+        if (pin.pin_number == 1) {
+          bull = '&#9679;'
+        } else {
+          bull = ''
+        }
+        layout_pins.push(
+          {'left_pin': pin.pin_number, 'bull': bull, 'right_pin': quad_right_pins[i].pin_number, 
+          'left_sym': parse_symbol(pin.pin_symbol), 'right_sym': parse_symbol(quad_right_pins[i].pin_symbol),
+        });
+        i++;
+      });
+
+      quad_top_pins.forEach(function(pin) {
+        if (pin.pin_number == 1) {
+          bull = '&#9679;&nbsp;'
+        } else {
+          bull = ''
+        }
+        top_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
+      });
+  
+      quad_bottom_pins.forEach(function(pin) {
+        if (pin.pin_number == 1) {
+          bull = '&#9679;&nbsp;'
+        } else {
+          bull = ''
+        }
+        bottom_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
+
+      });
+    } else {
+      i = 0;
+      dip_left_pins.forEach(function(pin) {
+        if (pin.pin_number == 1) {
+          bull = '&nbsp;&#9679;'
+        } else {
+          bull = ''
+        }
+        layout_pins.push(
+          {'left_pin': pin.pin_number, 'bull': bull, 'right_pin': dip_right_pins[i].pin_number, 
+          'left_sym': parse_symbol(pin.pin_symbol), 'right_sym': parse_symbol(dip_right_pins[i].pin_symbol),
+        });
+        i++;
       });
     }
 

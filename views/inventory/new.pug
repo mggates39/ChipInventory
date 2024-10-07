@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   p Enter the new chip inventory
-  form(action="/inventory/inventorynew/" method="POST")
+  form(action="/inventory/new/" method="POST")
     div.form-group
       label(for="chip_id") Base Chip Number:
       select#chip_id.form-control(type='select' placeholder='Select chip' name='chip_id' required='true')
