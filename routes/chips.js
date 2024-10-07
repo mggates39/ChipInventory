@@ -21,12 +21,12 @@ router.get('/', async function(req, res, next) {
     search_by = 'k';
   }
   if (typeof component_type_id == 'undefined') {
-    component_type_id = 1;
+    component_type_id = 0;
   }
 
-  const chips = await searchChips(search_query, search_by);
+  const chips = await searchChips(search_query, search_by, component_type_id);
   const component_types = await getComponentTypeList();
-  res.render('chip/list', { title: 'Chip Master File', chips: chips, searched: search_query, part_search: part_search, key_search: key_search, 
+  res.render('chip/list', { title: 'Component Master File', chips: chips, searched: search_query, part_search: part_search, key_search: key_search, 
     component_types: component_types, component_type_id: component_type_id });
 });
 
