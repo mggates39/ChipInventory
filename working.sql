@@ -262,35 +262,7 @@ from components cmp
 join chips c on c.id = cmp.id
 join pins pintop on pintop.chip_id = c.id
 where c.id = 267
-  and (pintop.pin_number >= 1 and pintop.pin_number <= ((c.pin_count/8) + ((pin_count/4) % 2)))
-order by cast(pin_number as signed) desc;
-
-select cmp.name as chip_number, c.pin_count, pintop.pin_number, pintop.pin_symbol
-from components cmp
-join chips c on c.id = cmp.id
-join pins pintop on pintop.chip_id = c.id
-where c.id = 267
-  and pintop.pin_number > (c.pin_count - (c.pin_count/8) + ((pin_count/4) % 2))
-order by cast(pin_number as signed) desc;
-
--- left
-select cmp.name as chip_number, c.pin_count, pinleft.pin_number, pinleft.pin_symbol
-from components cmp
-join chips c on c.id = cmp.id
-join pins pinleft on pinleft.chip_id = c.id
-where c.id = 267
-  and pinleft.pin_number > ((c.pin_count/8) + ((pin_count/4) % 2))
-  and pinleft.pin_number <= ((c.pin_count/8) + (c.pin_count/4) + ((pin_count/4) % 2))
-order by cast(pin_number as signed);
-
--- bottom
-select cmp.name as chip_number, c.pin_count, binbottom.pin_number, binbottom.pin_symbol
-from components cmp
-join chips c on c.id = cmp.id
-join pins binbottom on binbottom.chip_id = c.id
-where c.id = 267
-  and binbottom.pin_number > ((c.pin_count/8) + (c.pin_count/4) + ((pin_count/4) % 2))
-  and binbottom.pin_number <= ((c.pin_count/8) + (c.pin_count/2) + ((pin_count/4) % 2))
+  and (pintop.pin_number >= 1 and pintop.pin_number <= (pin_count/4))
 order by cast(pin_number as signed);
 
 -- right
@@ -299,9 +271,31 @@ from components cmp
 join chips c on c.id = cmp.id
 join pins pinright on pinright.chip_id = c.id
 where c.id = 267
-  and pinright.pin_number > ((c.pin_count/8) + (c.pin_count/2) + ((pin_count/4) % 2))
-  and pinright.pin_number <= (c.pin_count - (c.pin_count/8) + ((pin_count/4) % 2))
+  and pinright.pin_number > (c.pin_count/4)
+  and pinright.pin_number <= (c.pin_count/2)
+order by cast(pin_number as signed);
+
+-- bottom
+select cmp.name as chip_number, c.pin_count, binbottom.pin_number, binbottom.pin_symbol
+from components cmp
+join chips c on c.id = cmp.id
+join pins binbottom on binbottom.chip_id = c.id
+where c.id = 267
+  and binbottom.pin_number > (c.pin_count/2)
+  and binbottom.pin_number <= (c.pin_count - (c.pin_count/4))
 order by cast(pin_number as signed) desc;
+
+-- left
+select cmp.name as chip_number, c.pin_count, pinleft.pin_number, pinleft.pin_symbol
+from components cmp
+join chips c on c.id = cmp.id
+join pins pinleft on pinleft.chip_id = c.id
+where c.id = 267
+  and pinleft.pin_number > (c.pin_count - (c.pin_count/4))
+order by cast(pin_number as signed) desc;
+
+
+
 
 
 select * from chips where pin_count = 16;
@@ -316,3 +310,10 @@ FROM package_types pt
 LEFT JOIN mounting_types mt on mt.id = pt.mounting_type_id and mt.id = 1
 ORDER BY pt.description
 ;
+
+select pt.*, mt.name
+from package_types pt
+JOIN mounting_types mt on mt.id = pt.mounting_type_id
+WHERE mt.is_chassis_mount = 1;
+
+select * from chip_aliases;

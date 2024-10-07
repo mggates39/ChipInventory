@@ -23,19 +23,34 @@ async function getSystemData() {
   return rows[0]
 }
 
-async function searchChips(query, type) {
+async function searchChips(query, type, component_type_id) {
   if (query) {
-    value = ['%' + query + '%']
-    if (type == 'p') {
-      sql = "SELECT * FROM chip_aliases WHERE chip_number LIKE ? ORDER BY chip_number, description";
-    } else if (type == 'k') {
-      sql = "SELECT * FROM chip_aliases WHERE description LIKE ? ORDER BY chip_number, description";
+    value = ['%' + query + '%', component_type_id]
+    if (component_type_id == 0) {
+      if (type == 'p') {
+        sql = "SELECT * FROM chip_aliases WHERE chip_number LIKE ? ORDER BY chip_number, description";
+      } else if (type == 'k') {
+        sql = "SELECT * FROM chip_aliases WHERE description LIKE ? ORDER BY chip_number, description";
+      } else {
+        sql = "SELECT * FROM chip_aliases ORDER BY chip_number, description";
+      }
     } else {
-      sql = "SELECT * FROM chip_aliases order by chip_number, description";
+      if (type == 'p') {
+        sql = "SELECT * FROM chip_aliases WHERE chip_number LIKE ? AND component_type_id = ? ORDER BY chip_number, description";
+      } else if (type == 'k') {
+        sql = "SELECT * FROM chip_aliases WHERE description LIKE ? AND component_type_id = ? ORDER BY chip_number, description";
+      } else {
+        sql = "SELECT * FROM chip_aliases ORDER BY chip_number, description";
+      }      
     }
   } else {
-    sql = "SELECT * FROM chip_aliases order by chip_number, description";
-    value = []
+    if (component_type_id == 0) {
+      sql = "SELECT * FROM chip_aliases ORDER BY chip_number, description";
+      value = [];
+    } else {
+      sql = "SELECT * FROM chip_aliases WHERE component_type_id = ? ORDER BY chip_number, description";
+      value = [component_type_id];
+    }
   }
   const [rows] = await pool.query(sql, value);
   return rows
