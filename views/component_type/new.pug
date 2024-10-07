@@ -1,8 +1,8 @@
 extends ../layout
 
 block content
-  p Edit the component type definition
-  form(action="/component_types/"+component_type.id method="POST")
+  p Create new component type definition
+  form(action="/component_types/new/" method="POST")
     div.form-group
       label(for="description") Component:
       input#description.form-control( type="text" placeholder="Ex) Resistor" name="description" value=component_type.description)

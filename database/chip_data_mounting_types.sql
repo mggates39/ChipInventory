@@ -40,7 +40,7 @@ CREATE TABLE `mounting_types` (
 
 LOCK TABLES `mounting_types` WRITE;
 /*!40000 ALTER TABLE `mounting_types` DISABLE KEYS */;
-INSERT INTO `mounting_types` VALUES (1,'Through Hole',1,0,0),(2,'Carrier Mount',1,1,0),(3,'Surface Mount',0,1,0),(4,'Chassis Mount',0,0,1);
+INSERT INTO `mounting_types` VALUES (1,'Through Hole',1,0,0),(2,'Carrier Mount',1,1,NULL),(3,'Surface Mount',NULL,1,NULL),(4,'Chassis Mount',0,0,1);
 /*!40000 ALTER TABLE `mounting_types` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-05 20:48:21
+-- Dump completed on 2024-10-06 23:50:56

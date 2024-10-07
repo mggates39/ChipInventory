@@ -10,7 +10,12 @@ router.get('/', async function(req, res, next) {
 });
 
 router.get('/new', async function(req, res, next) {
-  res.redirect('/component_types/');
+  const data = {description: '',
+    symbol: '',
+    table_name: ''
+  };
+  const packs = await getSelectedPackageTypesForComponentType(0);
+  res.render('component_type/new', {title: 'Component Type', component_type: data, package_types: packs});
 });
 
 /* GET item page */

@@ -73,9 +73,9 @@ async function getPin(chip_id) {
   return rows[0]
 }
 
-async function getLeftPins(chip_id) {
+async function getDipLeftPins(chip_id) {
   const [rows] = await pool.query(`
-  select cmp.name aschip_number, c.pin_count, pinleft.pin_number, pinleft.pin_symbol
+  select cmp.name as chip_number, c.pin_count, pinleft.pin_number, pinleft.pin_symbol
 from components cmp
 join chips c on c.id = cmp.id
 join pins pinleft on pinleft.chip_id = c.id
@@ -86,7 +86,7 @@ order by cast(pin_number as signed);
   return rows
 }
 
-async function getRightPins(chip_id) {
+async function getDipRightPins(chip_id) {
   const [rows] = await pool.query(`
   select cmp.name as chip_number, c.pin_count, pinright.pin_number, pinright.pin_symbol
 from components cmp
@@ -97,6 +97,73 @@ where c.id = ?
 order by cast(pin_number as signed) desc;
   `, [chip_id])
   return rows
+}
+
+async function getPllcLeftPins(chip_id) {
+  const [rows] = await pool.query(`
+  select cmp.name as chip_number, c.pin_count, pinleft.pin_number, pinleft.pin_symbol
+from components cmp
+join chips c on c.id = cmp.id
+join pins pinleft on pinleft.chip_id = c.id
+where c.id = ?
+  and pinleft.pin_number > ((c.pin_count/8) + ((pin_count/4) % 2))
+  and pinleft.pin_number <= ((c.pin_count/8) + (c.pin_count/4) + ((pin_count/4) % 2))
+order by cast(pin_number as signed);
+  `, [chip_id])
+  return rows
+}
+
+async function getPllcRightPins(chip_id) {
+  const [rows] = await pool.query(`
+  select cmp.name as chip_number, c.pin_count, pinright.pin_number, pinright.pin_symbol
+from components cmp
+join chips c on c.id = cmp.id
+join pins pinright on pinright.chip_id = c.id
+where c.id = ?
+  and pinright.pin_number > ((c.pin_count/8) + (c.pin_count/2) + ((pin_count/4) % 2))
+  and pinright.pin_number <= (c.pin_count - (c.pin_count/8) + ((pin_count/4) % 2))
+order by cast(pin_number as signed) desc;
+  `, [chip_id])
+  return rows
+}
+
+async function getPllcTopPins(chip_id) {
+  const [rowsl] = await pool.query(`
+    select cmp.name as chip_number, c.pin_count, pintop.pin_number, pintop.pin_symbol
+from components cmp
+join chips c on c.id = cmp.id
+join pins pintop on pintop.chip_id = c.id
+where c.id = ?
+  and (pintop.pin_number >= 1 and pintop.pin_number <= ((c.pin_count/8) + ((pin_count/4) % 2)))
+order by cast(pin_number as signed) desc;
+    `, [chip_id]);
+   
+  const [rowsr] = await pool.query(`
+    select cmp.name as chip_number, c.pin_count, pintop.pin_number, pintop.pin_symbol
+from components cmp
+join chips c on c.id = cmp.id
+join pins pintop on pintop.chip_id = c.id
+where c.id = ?
+  and pintop.pin_number > (c.pin_count - (c.pin_count/8) + ((pin_count/4) % 2))
+order by cast(pin_number as signed) desc;
+      `, [chip_id]);
+
+  const rows = rowsl.concat(rowsr);
+  return rows;
+}
+
+async function getPllcBottomPins(chip_id) {
+  const [rows] = await pool.query(`
+    select cmp.name as chip_number, c.pin_count, binbottom.pin_number, binbottom.pin_symbol
+from components cmp
+join chips c on c.id = cmp.id
+join pins binbottom on binbottom.chip_id = c.id
+where c.id = ?
+  and binbottom.pin_number > ((c.pin_count/8) + (c.pin_count/4) + ((pin_count/4) % 2))
+  and binbottom.pin_number <= ((c.pin_count/8) + (c.pin_count/2) + ((pin_count/4) % 2))
+order by cast(pin_number as signed);
+    `, [chip_id])
+    return rows    
 }
 
 async function getSpecs(chip_id) {
@@ -608,7 +675,7 @@ async function getMountingTypePlain(mounting_type_id) {
   return rows[0]
 }
 
-async function updateMountingType(mount_point_id, name, is_through_hole, is_surface_mount, is_chassis_mount) {
+async function updateMountingType(mounting_type_id, name, is_through_hole, is_surface_mount, is_chassis_mount) {
   const [result] = await pool.query(`
     UPDATE mounting_types SET
       name = ?, 
@@ -616,8 +683,8 @@ async function updateMountingType(mount_point_id, name, is_through_hole, is_surf
       is_surface_mount = ?, 
       is_chassis_mount = ?
     WHERE id = ?
-    `, [name, is_through_hole, is_surface_mount, is_chassis_mount, mount_point_id])
-    return getMountingType(mount_point_id)
+    `, [name, is_through_hole, is_surface_mount, is_chassis_mount, mounting_type_id])
+    return getMountingType(mounting_type_id)
 }
 
 async function createMountingType(name, is_through_hole, is_surface_mount, is_chassis_mount) {
@@ -738,7 +805,7 @@ async function getPackageTypesForMountingType(mounting_type_id) {
 }
 
 module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
-  createPin, updatePin, getLeftPins, getRightPins, 
+  createPin, updatePin, getDipLeftPins, getDipRightPins, getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getSpecs, createSpec, getSpec, updateSpec, deleteSpec,
   getNotes, createNote, getNote, updateNote, deleteNote,
   searchInventory, getInventoryList, getInventory, getInventoryByChipList, lookupInventory, createInventory, updateInventory,
