@@ -3,7 +3,7 @@ const { searchChips, getChip, createChip, updateChip, getPins, createPin, update
   getDipLeftPins, getDipRightPins, 
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
-  getSpecs, getNotes, getInventoryByChipList, getPackageTypesForComponentType, 
+  getSpecs, getNotes, getInventoryByChipList, getPackageTypesForComponentType, getComponentTypeList,
   getAliases, createAlias, deleteAliases, createSpec, deleteSpec, createNote } = require('../database');
 var router = express.Router();
 
@@ -11,6 +11,7 @@ var router = express.Router();
 router.get('/', async function(req, res, next) {
   const search_query = req.query.q;
   const search_type = req.query.w;
+  var component_type_id = req.query.component_type_id;
   var part_search = true;
   var key_search = false;
   var search_by = 'p';
@@ -19,9 +20,14 @@ router.get('/', async function(req, res, next) {
     key_search = true;
     search_by = 'k';
   }
-  
+  if (typeof component_type_id == 'undefined') {
+    component_type_id = 1;
+  }
+
   const chips = await searchChips(search_query, search_by);
-  res.render('chip/list', { title: 'Chip Master File', chips: chips, searched: search_query, part_search: part_search, key_search: key_search });
+  const component_types = await getComponentTypeList();
+  res.render('chip/list', { title: 'Chip Master File', chips: chips, searched: search_query, part_search: part_search, key_search: key_search, 
+    component_types: component_types, component_type_id: component_type_id });
 });
 
 router.get('/edit/:id', async function(req,res,next) {
