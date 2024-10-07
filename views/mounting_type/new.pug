@@ -7,14 +7,17 @@ block content
       label(for="name") Name:
       input#name.form-control( type="text" placeholder="Ex) Through Hole" name="name" value=mounting_type.name)
     div.form-group
-      label( for="is_through_hole") Is Through Hole?
-      input#is_through_hole.form-control(type="checkbox" name="is_through_hole" value=1)
+      input#is_through_hole(type="checkbox" name="is_through_hole" value=1)
+      | 
+      label(for="is_through_hole") Is Through Hole?
     div.form-group
+      input#is_surface_mount(type="checkbox" name="is_surface_mount" value=1)
+      | 
       label( for="is_surface_mount") Is Surface Mount?
-      input#is_surface_mount.form-control(type="checkbox" name="is_surface_mount" value=1)
     div.form-group
+      input#is_chassis_mount(type="checkbox" name="is_chassis_mount" value=1)
+      | 
       label( for="is_through_hole") Is Chassis Mount?
-      input#is_chassis_mount.form-control(type="checkbox" name="is_chassis_mount" value=1)
 
     button.btn.btn-default.btn-primary(type="submit") Submit
 
