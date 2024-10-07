@@ -170,6 +170,11 @@ where date_code REGEXP '^[0-9]+$';
       (select count(*) from manufacturer) mfgs,
       (select count(*) from mfg_codes) codes;
 
+select concat(ct.description, 's') description, table_name, count(c.id) ni
+from component_types ct
+left join components c on ct.id = c.component_type_id
+group by ct.description, table_name;
+
 select * from component_types;
 
 
@@ -317,3 +322,13 @@ JOIN mounting_types mt on mt.id = pt.mounting_type_id
 WHERE mt.is_chassis_mount = 1;
 
 select * from chip_aliases;
+select * from aliases;
+
+-- update aliases set alias_chip_number = trim(alias_chip_number)
+-- where alias_chip_number like ' %' OR  alias_chip_number like '% ';
+-- commit;
+
+-- update component_types set description = trim(description)
+-- where description like ' %' or description like '% ';
+-- commit;
+
