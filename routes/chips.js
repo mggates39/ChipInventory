@@ -123,7 +123,7 @@ router.post('/new', async function(req, res) {
     aliases = data.aliases.split(',');
     for( const alias of aliases) {
       if (alias.length > 0) {
-        await createAlias(chip_id, alias);
+        await createAlias(chip_id, alias.trim());
       }
     }
 
@@ -160,7 +160,7 @@ router.post('/:id/newalias', async function(req, res) {
   aliases = req.body.alias.split(',');
   for( const alias of aliases) {
     if (alias.length > 0) {
-      await createAlias(chip_id, alias);
+      await createAlias(chip_id, alias.trim());
     }
   }
   res.redirect('/chips/'+chip_id);
@@ -203,7 +203,7 @@ router.post('/:id', async function(req, res) {
   aliases = data.aliases.split(',');
   for( const alias of aliases) {
     if (alias.length > 0) {
-      await createAlias(chip_id, alias);
+      await createAlias(chip_id, alias.trim());
     }
   }
 
