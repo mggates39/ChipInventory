@@ -11,8 +11,7 @@ const pool = mysql.createPool({
 }).promise()
 
 async function getSystemData() {
-  const [rows] = await pool.query(`
-    select (SELECT count(*) from chips ) chips,
+  const [rows] = await pool.query(`select 
       (select count(*) from aliases) aliases,
       (select sum(quantity) from inventory) on_hand,
       (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') min_date,
@@ -21,6 +20,14 @@ async function getSystemData() {
       (select count(*) from mfg_codes) codes
     `)
   return rows[0]
+}
+
+async function getComponentCounts() {
+  const [rows] = await pool.query(`select concat(ct.description, 's') description, table_name, count(c.id) ni
+from component_types ct
+join components c on ct.id = c.component_type_id
+group by ct.description, table_name`);
+  return rows;
 }
 
 async function searchChips(query, type, component_type_id) {
@@ -873,7 +880,7 @@ async function getPackageTypesForMountingType(mounting_type_id) {
   return rows
 }
 
-module.exports = { getSystemData, searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
+module.exports = { getSystemData, getComponentCounts, searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
   createPin, updatePin, getDipLeftPins, getDipRightPins, 
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,

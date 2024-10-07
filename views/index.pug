@@ -8,9 +8,10 @@ block content
       div.card.text-center.border-dark.mb-3(style="max-width: 18rem;")
         h5.card-header.border-dark Definitions
         div.card-body
-          p.card-title Chip Definitions
-          p.card-text Chips: #{data.chips}
+          p.card-title Component Definitions
           p.card-text Aliases: #{data.aliases}
+          for count in counts
+            p.card-text #{count.description}: #{count.ni}
 
     div.col-sm-3 
       div.card.text-center.border-dark.mb-3(style="max-width: 18rem;")

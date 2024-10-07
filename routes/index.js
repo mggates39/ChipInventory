@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const { getSystemData} = require('../database');
+const {getSystemData, getComponentCounts} = require('../database');
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   const data = await getSystemData();
-  res.render('index', { title: 'Lab Management System', data: data });
+  const counts = await getComponentCounts();
+  res.render('index', { title: 'Lab Management System', data: data, counts: counts });
 });
 
 module.exports = router;
