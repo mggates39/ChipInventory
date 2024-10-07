@@ -304,5 +304,15 @@ where c.id = 267
 order by cast(pin_number as signed) desc;
 
 
-select * from chips where pin_count = 16
+select * from chips where pin_count = 16;
+
+select * from package_types;
+select * from mounting_types;
+select * from component_types;
+
+SELECT pt.*, 
+	CASE WHEN mt.name IS NOT NULL THEN 'true' ELSE 'false' END used  
+FROM package_types pt
+LEFT JOIN mounting_types mt on mt.id = pt.mounting_type_id and mt.id = 1
+ORDER BY pt.description
 ;
