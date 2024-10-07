@@ -9,17 +9,40 @@ Includes data from the [ChipDb](https://www.msarnoff.org/chipdb/) project by Mat
 source data [github repository](https://github.com/74hc595/chipdb).
 
 # Installation
-You will need a MySQL/Maria DB database server setup.  Use the .env file to hold the connection information
+## Setup the Database
+You will need a MySQL/Maria DB database server setup.
+
+Using a tool such as MySQL Workbench, connect to the database server with an admin user and run these commands to create the initial database and application user.  
 ```
-.env
+CREATE DATABASE chip_data;
+CREATE USER 'chip_app'@'localhost' IDENTIFIED BY 'password';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, REFERENCES, INDEX, ALTER, CREATE VIEW, SHOW VIEW ON chip_data.* TO `chip_app`@`localhost`;
+FLUSH PRIVILEGES;
+```
+Be sure to note the actual password you use so you can put it iont the .env file below.
+
+## Download and setup the code
+Clone the git repository and in the directory do the following to load all the dependencies
+```
+npm install
+```
+This will install the dependencies in the project directory and should not impact any other projects.
+
+Create a file named .env in the root project folder to hold the database connection information.  Be sure to put in the password you used when you created the chip_app user above.
+```
 MYSQL_HOST="127.0.0.1"
 MYSQL_USER='chip_app'
 MYSQL_PASSWORD=''
 MYSQL_DATABASE='chip_data'
 ```
+## Load the initial data
+The easiest way is to use MySQL Workbench and import the data from the project's database folder into the chip_data database.  The workbench handles creating all the schmas and loading the data while managing all of the foreign key relationships.
 
-Download the git repository and in the directory do the following to load all the dependencies
+# Launch the application
+You can start the application with this command
 ```
-npm install
+npm run dev
 ```
-This will install the dependencies in the project directory and should not impact any other projects.
+Any errors and console logs will appear in the terminal window.
+
+The application can be reached in your browser on localhost port 3000.  The system will restart it after every code change is saved.
