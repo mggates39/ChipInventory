@@ -79,6 +79,14 @@ CREATE TABLE component_types (
     table_name VARCHAR(32) NOT NULL
 );
 
+CREATE TABLE component_sub_types (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    component_type_id INTEGER NOT NULL,
+    name VARCHAR(16) NOT NULL,
+    description VARCHAR(64) NOT NULL
+);
+    
+
 CREATE TABLE mounting_types (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(32) NOT NULL,
@@ -110,9 +118,12 @@ ALTER TABLE  component_packages ADD FOREIGN KEY componet_type_idfk (component_ty
 CREATE INDEX type_package_type_idx ON component_packages(package_type_id);
 ALTER TABLE  component_packages ADD FOREIGN KEY package_type_idfk (package_type_id) REFERENCES package_types(id);
 
-
 CREATE INDEX component_type_idx ON components(component_type_id);
 ALTER TABLE components ADD FOREIGN KEY components_type_idfk (component_type_id) REFERENCES component_types(id);
+
+CREATE INDEX component_type_idx ON component_sub_types(component_type_id);
+ALTER TABLE component_sub_types ADD FOREIGN KEY components_type_idfk (component_type_id) REFERENCES component_types(id);
+
 CREATE INDEX component_package_idx ON components(package_type_id);
 ALTER TABLE components ADD FOREIGN KEY components_package_idfk (package_type_id) REFERENCES package_types(id);
 
