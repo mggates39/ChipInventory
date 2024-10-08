@@ -175,7 +175,7 @@ from component_types ct
 left join components c on ct.id = c.component_type_id
 group by ct.description, table_name;
 
-select * from component_types;
+select table_name from component_types;
 
 
 

@@ -39,7 +39,7 @@ CREATE TABLE `component_types` (
 
 LOCK TABLES `component_types` WRITE;
 /*!40000 ALTER TABLE `component_types` DISABLE KEYS */;
-INSERT INTO `component_types` VALUES (1,'Integrated Circuit','U','chips'),(2,'Capacitor','C','passives'),(3,'Capacitor Network','CN','passives'),(4,'Resistor','R','passives'),(5,'Resistor Network','RN','passives'),(6,'Diode','D','diodes'),(7,'Transistor','Q','transistors'),(8,'Inductor','L','passives'),(9,'Switch','SW','switches'),(10,'Crystal','Y','crystals'),(11,'Connector jack','J','connectors'),(12,'Connector plug ','JP','connectors'),(13,'Fuse','F','power'),(14,'Transformer','T','power');
+INSERT INTO `component_types` VALUES (1,'Integrated Circuit','U','chips'),(2,'Capacitor','C','capacitors'),(3,'Capacitor Network','CN','capacitors'),(4,'Resistor','R','resistors'),(5,'Resistor Network','RN','resistors'),(6,'Diode','D','diodes'),(7,'Transistor','Q','transistors'),(8,'Inductor','L','inductors'),(9,'Switch','SW','switches'),(10,'Crystal','Y','crystals'),(11,'Connector jack','J','connectors'),(12,'Connector plug','JP','connectors'),(13,'Fuse','F','fuses'),(14,'Transformer','T','transformers');
 /*!40000 ALTER TABLE `component_types` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-06 23:50:57
+-- Dump completed on 2024-10-07 23:07:20
