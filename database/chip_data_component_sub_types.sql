@@ -18,30 +18,31 @@ USE `chip_data`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `mounting_types`
+-- Table structure for table `component_sub_types`
 --
 
-DROP TABLE IF EXISTS `mounting_types`;
+DROP TABLE IF EXISTS `component_sub_types`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `mounting_types` (
+CREATE TABLE `component_sub_types` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
-  `is_through_hole` tinyint(1) DEFAULT NULL,
-  `is_surface_mount` tinyint(1) DEFAULT NULL,
-  `is_chassis_mount` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `component_type_id` int NOT NULL,
+  `name` varchar(16) NOT NULL,
+  `description` varchar(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `component_type_idx` (`component_type_id`),
+  CONSTRAINT `component_sub_types_ibfk_1` FOREIGN KEY (`component_type_id`) REFERENCES `component_types` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `mounting_types`
+-- Dumping data for table `component_sub_types`
 --
 
-LOCK TABLES `mounting_types` WRITE;
-/*!40000 ALTER TABLE `mounting_types` DISABLE KEYS */;
-INSERT INTO `mounting_types` VALUES (1,'Through Hole',1,0,0),(2,'Carrier Mount',1,1,NULL),(3,'Surface Mount',NULL,1,NULL),(4,'Chassis Mount',0,0,1);
-/*!40000 ALTER TABLE `mounting_types` ENABLE KEYS */;
+LOCK TABLES `component_sub_types` WRITE;
+/*!40000 ALTER TABLE `component_sub_types` DISABLE KEYS */;
+INSERT INTO `component_sub_types` VALUES (1,1,'7400','7400 series of chips'),(2,1,'5400','5400 series of chips'),(3,1,'4000','4000 series of chips'),(4,1,'Power','Power related chips'),(5,1,'Driver','Signal or bus driver chips'),(6,1,'Linear','Linear chips'),(7,1,'PIA','Peripheral Interface Adapter chips '),(8,1,'MPU','Micro Processor Unit chips'),(10,1,'Memory','Memory chips'),(11,1,'PIC','PIC Micro-controller'),(12,1,'UART','UART Support Chips'),(13,1,'MAX','Maxim Communication Line Driver Chips'),(14,1,'I2C','I2C Support chips'),(15,1,'Optical','Optical Support Chips'),(16,1,'Analog','Analog Support chips');
+/*!40000 ALTER TABLE `component_sub_types` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
