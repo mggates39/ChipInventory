@@ -17,26 +17,26 @@ router.get('/new', async function(req, res, next) {
 /* GET item page */
 router.get('/:id', async function(req, res, nest) {
     const id = req.params.id;
-    const data = await getswitch(id);
+    const data = await getSwitch(id);
     res.render('switch/detail', {title: 'switch', switch: data});
 });
 
 /* GET Edit item page */
 router.get('/edit/:id', async function(req, res, next) {
     const id = req.params.id;
-    const data = await getswitch(id);
+    const data = await getSwitch(id);
     res.render('switch/edit', {title: 'switch', switch: data});
   })
   
 router.post('/new', async function( req, res, next) {
-    const switch = await createswitch(req.body.name, req.body.description, req.body.mounting_type_id, req.body.component_type_selection)
-    const id = switch.id
+    const switch_item = await createSwitch(req.body.name, req.body.description, req.body.mounting_type_id, req.body.component_type_selection)
+    const id = switch_item.id
     res.redirect('/switches/'+id);
   });
 
 router.post('/:id', async function( req, res, next) {
     const id = req.params.id;
-    await updateswitch(id, req.body.name, req.body.description, req.body.mounting_type_id, req.body.component_type_selection)
+    await updateSwitch(id, req.body.name, req.body.description, req.body.mounting_type_id, req.body.component_type_selection)
     res.redirect('/switches/'+id);
   })
   
