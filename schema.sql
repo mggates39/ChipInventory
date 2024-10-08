@@ -6,6 +6,7 @@ USE chip_data;
 CREATE TABLE components (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
     component_type_id INTEGER NOT NULL,
+    component_sub_type_id INTEGER NOT NULL,
     package_type_id INTEGER NOT NULL,
     name VARCHAR(32) NOT NULL,
     description TEXT NOT NULL
@@ -121,6 +122,9 @@ ALTER TABLE  component_packages ADD FOREIGN KEY package_type_idfk (package_type_
 CREATE INDEX component_type_idx ON components(component_type_id);
 ALTER TABLE components ADD FOREIGN KEY components_type_idfk (component_type_id) REFERENCES component_types(id);
 
+CREATE INDEX component_sub_type_idx ON components(component_sub_type_id);
+ALTER TABLE components ADD FOREIGN KEY components_sub_type_idfk (component_sub_type_id) REFERENCES component_sub_types(id);
+
 CREATE INDEX component_type_idx ON component_sub_types(component_type_id);
 ALTER TABLE component_sub_types ADD FOREIGN KEY components_type_idfk (component_type_id) REFERENCES component_types(id);
 
@@ -155,16 +159,18 @@ ALTER TABLE  inventory_dates ADD FOREIGN KEY inv_idfk (inventory_id) REFERENCES 
 -- Create any Views
 -- DROP VIEW chip_aliases ;
 CREATE VIEW chip_aliases AS
-SELECT c.id, cmp.component_type_id, cmp.name as chip_number, c.family, ct.description as component, ct.table_name, pt.name as package, c.pin_count, cmp.description, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand
+SELECT c.id, cmp.component_type_id, cmp.name as chip_number, c.family, ct.description as component, cst.name as component_type, ct.table_name, pt.name as package, c.pin_count, cmp.description, (select sum(quantity) from inventory i where i.chip_id = c.id) on_hand
 FROM components cmp
 JOIN chips c on c.id = cmp.id
 JOIN package_types pt on pt.id = cmp.package_type_id
 JOIN component_types ct on ct.id = cmp.component_type_id
+LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
 UNION ALL
-SELECT chip_id as id, cmp.component_type_id, alias_chip_number as chip_number,  c.family, ct.description as  component, ct.table_name, pt.name as package, c.pin_count, concat("See <a href='/chips/", a.chip_id,"'>", cmp.name, "</a>") as description, '' on_hand
+SELECT chip_id as id, cmp.component_type_id, alias_chip_number as chip_number,  c.family, ct.description as  component, cst.name as component_type, ct.table_name, pt.name as package, c.pin_count, concat("See <a href='/chips/", a.chip_id,"'>", cmp.name, "</a>") as description, '' on_hand
 FROM aliases a
 JOIN components cmp ON cmp.id = a.chip_id
 JOIN chips c on c.id = cmp.id
 JOIN package_types pt on pt.id = cmp.package_type_id
-JOIN component_types ct on ct.id = cmp.component_type_id;
+JOIN component_types ct on ct.id = cmp.component_type_id
+LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id;
 

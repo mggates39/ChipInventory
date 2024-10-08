@@ -177,6 +177,7 @@ group by ct.description, table_name;
 
 select table_name from component_types;
 
+alter table component_sub_types modify description varchar(64) not null;
 
 
 select * from component_types;
@@ -193,6 +194,8 @@ order by family, chip_number;
 
 
 select * from component_types;
+select * from component_sub_types;
+
 select * from package_types;
 
 
@@ -332,3 +335,26 @@ select * from aliases;
 -- where description like ' %' or description like '% ';
 -- commit;
 
+select * from component_sub_types;
+
+select * from  components cmp
+join chips c on c.id = cmp.id
+where cmp.component_sub_type_id is null
+and name like '%74%'
+;
+select * from components where name like '68%';
+
+select family, count(*) ni
+from chips
+group by family
+order by count(*) desc;
+
+update components set component_sub_type_id = 11
+where id in (select id from chips where name like 'PIC%');
+commit;
+
+select cst.name, count(*) ni
+from components c
+left join component_sub_types cst on cst.id = c.component_sub_type_id
+group by cst.name
+order by cst.name;
