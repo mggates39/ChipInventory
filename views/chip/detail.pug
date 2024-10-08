@@ -13,7 +13,9 @@ block content
         - sep = ', '
 
   button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#aliasModal") Add alias
-
+  br
+  br
+  p #[strong Family] #{chip.family}
   p #[strong Package] #{chip.package}
   p #[strong Pin Count] #{chip.pin_count}
   if chip.datasheet
@@ -213,4 +215,16 @@ block scripts
   script(type="text/javascript").
     $( document ).ready(function() {
       $("#cmf").addClass("active");
+    });
+    $('#specModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      $(this).find('#param').focus();
+    });
+    $('#noteModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      $(this).find('#note').focus();
+    });
+    $('#aliasModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      $(this).find('#alias').focus();
     });
