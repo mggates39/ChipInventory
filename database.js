@@ -681,6 +681,16 @@ async function getComponentType(component_type_id) {
   return rows[0]
 }
 
+async function getComponentSubTypesForComponentType(component_type_id) {
+  const [rows] = await pool.query(`
+    SELECT * 
+    FROM component_sub_types
+    WHERE component_type_id = ?
+    ORDER BY name
+    `, [component_type_id])
+    return rows;
+}
+
 async function setComponentPackageTypes( component_type_id, package_types) {
   const insertSql = 'INSERT INTO component_packages (component_type_id, package_type_id) VALUES (?, ?)';
 
@@ -719,6 +729,33 @@ async function updateComponentType(component_type_id, description, symbol, table
     await setComponentPackageTypes(component_type_id, package_types);
 
     return getComponentType(component_type_id)
+}
+
+async function getComponentSubType(component_sub_type_id) {
+  const [rows] = await pool.query(`
+    SELECT * 
+    FROM component_sub_types
+    WHERE id = ?
+    `, [component_sub_type_id])
+    return rows[0];
+}
+
+async function createCompnentSubType(component_type_id, name, description) {
+  const [result] = await pool.query("INSERT INTO component_sub_types (component_type_id, name, description) VALUES (?, ?, ?)", 
+    [component_type_id, name, description])
+  const component_sub_type_id = result.insertId
+  return getComponentSubType(component_sub_type_id)
+}
+
+async function updateCompnentSubType(component_sub_type_id, component_type_id, name, description) {
+  const [result] = await pool.query("UPDATE component_sub_types set component_type_id = ?, name = ?, description = ? WHERE id =?", 
+    [component_type_id, name, description, component_sub_type_id])
+  return getComponentSubType(component_sub_type_id)
+}
+
+async function deleteCompnentSubType(companent_sub_type_id) {
+  const [result] = await pool.query("DELETE FROM component_sub_types WHERE id = ?", [companent_sub_type_id])
+  return true
 }
 
 async function getMountingTypeList() {
@@ -891,7 +928,8 @@ module.exports = { getSystemData, getComponentCounts, searchChips, getChip, crea
   createAlias, getAliases, deleteAliases, 
   getManufacturers, createManufacturer, getManufacturerList, getManufacturer, searchManufacturers,
   getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
-  getComponentTypeList, getComponentType, createComponentType, updateComponentType,
+  getComponentTypeList, getComponentType, createComponentType, updateComponentType, 
+  getComponentSubTypesForComponentType, createCompnentSubType, getComponentSubType, updateCompnentSubType, deleteCompnentSubType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
   updateMountingType, createMountingType,
   getPackageTypeList, getPackageType, updatePackageType, createPackageType, 

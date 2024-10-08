@@ -5,8 +5,32 @@ block content
   p #[strong Symbol] #{component_type.symbol}
   p #[strong Data Table] #{component_type.table_name}
   
+  a.btn.btn-primary(href="/component_types/edit/"+component_type.id, role="button") Edit 
+  br
+  H6 Related Component SubTypes
+  div#component_sub_types 
+    div.container
+      div.row
+        div.col-md-2
+          label Name
+        div.col-md-5
+          label Description
+        div.col-md-2
+          lable Action
+      each n in component_sub_types
+        div.row 
+          div.col-md-2=n.name
+          div.col-md-5=n.description
+          div.col-md-2
+            button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#editSubTypeModal" id=n.id) Edit 
+            |  
+            a.btn.btn-secondary(href="/component_types/"+component_type.id+"/deletesubtype/"+n.id, role="button") Delete 
+  br
+  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#addSubTypeModal") Add Sub Type
+
+  br
   H6 Package Types used by this component type
-  div(id='package_types')
+  div#package_types
     table.available 
       tr 
         th Name 
@@ -18,10 +42,72 @@ block content
             td=n.description
             td=n.mounting_type
 
-  a.btn.btn-primary(href="/component_types/edit/"+component_type.id, role="button") Edit 
+
+  //- Add Sub Type Modal
+  div#addSubTypeModal.modal.fade(tabindex="-1" aria-labelledby="addSubTypeModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form#add(action="/component_types/"+component_type.id+"/newsubtype" method="POST")
+          div.modal-header
+            h5#addSubTypeModalLabel.modal-title Add a Sub-Type Defintion for #{component_type.description}
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+
+          div.modal-body
+            div.container-fluid
+              div.row
+                div.col-md-4
+                  label( for="name") Name
+                div.col-md-8
+                  label( for="description") Description
+              div.row
+                div.col-md-4
+                  input#name.form-control(type="text" placeholder="7400" name="name")
+                div.col-md-8
+                  input#description.form-control(type="text" placeholder="7400 Family of chips" name="description")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save
+
+  //- Edit Sub Type Modal
+  div#editSubTypeModal.modal.fade(tabindex="-1" aria-labelledby="editSubTypeModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form#edit(action="/component_types/"+component_type.id+"/editsubtype" method="POST")
+          div.modal-header
+            h5#editSubTypeModalLabel.modal-title Edit Sub-Type Definition
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+
+          div.modal-body
+            div.container-fluid
+              div.row
+                div.col-md-4
+                  label( for="name") Name
+                div.col-md-8
+                  label( for="description") Description
+              div.row
+                div.col-md-4
+                  input#name.form-control(type="text" placeholder="7400" name="name")
+                div.col-md-8
+                  input#description.form-control(type="text" placeholder="7400 Family of chips" name="description")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save
+
 
 block scripts
   script(type="text/javascript").
     $( document ).ready(function() {
       $("#comp").addClass("active");
+    });
+    $('#editSubTypeModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      console.log('Modal is shown!'); 
+      console.log(e.relatedTarget.id);
+      $(this).find('#name').focus();
+    });
+    $('#addSubTypeModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      $(this).find('#name').focus();
     });
