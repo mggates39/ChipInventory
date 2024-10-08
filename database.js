@@ -747,13 +747,13 @@ async function createCompnentSubType(component_type_id, name, description) {
   return getComponentSubType(component_sub_type_id)
 }
 
-async function updateCompnentSubType(component_sub_type_id, component_type_id, name, description) {
+async function updateComponentSubType(component_sub_type_id, component_type_id, name, description) {
   const [result] = await pool.query("UPDATE component_sub_types set component_type_id = ?, name = ?, description = ? WHERE id =?", 
     [component_type_id, name, description, component_sub_type_id])
   return getComponentSubType(component_sub_type_id)
 }
 
-async function deleteCompnentSubType(companent_sub_type_id) {
+async function deleteComponentSubType(companent_sub_type_id) {
   const [result] = await pool.query("DELETE FROM component_sub_types WHERE id = ?", [companent_sub_type_id])
   return true
 }
@@ -929,7 +929,7 @@ module.exports = { getSystemData, getComponentCounts, searchChips, getChip, crea
   getManufacturers, createManufacturer, getManufacturerList, getManufacturer, searchManufacturers,
   getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
   getComponentTypeList, getComponentType, createComponentType, updateComponentType, 
-  getComponentSubTypesForComponentType, createCompnentSubType, getComponentSubType, updateCompnentSubType, deleteCompnentSubType,
+  getComponentSubTypesForComponentType, createCompnentSubType, getComponentSubType, updateComponentSubType, deleteComponentSubType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
   updateMountingType, createMountingType,
   getPackageTypeList, getPackageType, updatePackageType, createPackageType, 

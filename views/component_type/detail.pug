@@ -5,30 +5,6 @@ block content
   p #[strong Symbol] #{component_type.symbol}
   p #[strong Data Table] #{component_type.table_name}
   
-  a.btn.btn-primary(href="/component_types/edit/"+component_type.id, role="button") Edit 
-  br
-  H6 Related Component SubTypes
-  div#component_sub_types 
-    div.container
-      div.row
-        div.col-md-2
-          label Name
-        div.col-md-5
-          label Description
-        div.col-md-2
-          lable Action
-      each n in component_sub_types
-        div.row 
-          div.col-md-2=n.name
-          div.col-md-5=n.description
-          div.col-md-2
-            button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#editSubTypeModal" id=n.id) Edit 
-            |  
-            a.btn.btn-secondary(href="/component_types/"+component_type.id+"/deletesubtype/"+n.id, role="button") Delete 
-  br
-  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#addSubTypeModal") Add Sub Type
-
-  br
   H6 Package Types used by this component type
   div#package_types
     table.available 
@@ -41,8 +17,32 @@ block content
             td=n.name
             td=n.description
             td=n.mounting_type
-
-
+  br
+  a.btn.btn-primary(href="/component_types/edit/"+component_type.id, role="button") Edit 
+  br
+  br
+  H6 Related Component SubTypes
+  div#component_sub_types 
+    div.container
+      div.row
+        div.col-md-2
+          strong Name
+        div.col-md-5
+          strong Description
+        div.col-md-2
+          strong Action
+      each n in component_sub_types
+        div.row 
+          div.col-md-2=n.name
+          div.col-md-5=n.description
+          div.col-md-2
+            button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#editSubTypeModal" id=n.id) Edit 
+            |  
+            a.btn.btn-secondary.btn-sm(href="/component_sub_types/deletesubtype/"+n.id, role="button") Delete 
+  br
+  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#addSubTypeModal") Add Sub Type
+  br
+  br
   //- Add Sub Type Modal
   div#addSubTypeModal.modal.fade(tabindex="-1" aria-labelledby="addSubTypeModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
@@ -73,7 +73,9 @@ block content
   div#editSubTypeModal.modal.fade(tabindex="-1" aria-labelledby="editSubTypeModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        form#edit(action="/component_types/"+component_type.id+"/editsubtype" method="POST")
+        form#edit(action="/component_sub_types/" method="POST")
+          input#component_type_id(type="hidden" name="component_type_id" value=component_type.id)
+          input#id(type="hidden" name="id")
           div.modal-header
             h5#editSubTypeModalLabel.modal-title Edit Sub-Type Definition
             button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
@@ -101,12 +103,20 @@ block scripts
     $( document ).ready(function() {
       $("#comp").addClass("active");
     });
+    // load the selected component sub type data on edit
     $('#editSubTypeModal').on('shown.bs.modal', function (e) {
       // Your JavaScript code to execute here
-      console.log('Modal is shown!'); 
-      console.log(e.relatedTarget.id);
-      $(this).find('#name').focus();
+      var id = e.relatedTarget.id;
+      $("#edit").attr("action", "/component_sub_types/" + id);
+      $("#edit #id").val(id);
+      $.ajax({url: "/component_sub_types/" + id, success: function(result){
+        $("#edit #name").val(result.name);
+        $("#edit #description").val(result.description);
+        $("#edit #name").focus();
+      }});
     });
+
+    // Set focus on the name field on modal pop-up
     $('#addSubTypeModal').on('shown.bs.modal', function (e) {
       // Your JavaScript code to execute here
       $(this).find('#name').focus();

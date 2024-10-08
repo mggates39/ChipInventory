@@ -6,12 +6,13 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var componentsRouter = require('./routes/components')
+var componentsRouter = require('./routes/components');
 var chipsRouter = require('./routes/chips');
 var inventoryRouter = require('./routes/inventory');
 var projectsRouter = require('./routes/projects');
 var manufacturerRouter = require('./routes/manufacturer');
 var componentTypesRouter = require('./routes/component_types');
+var componentSubTypeRouter = require('./routes/component_sub_types');
 var mountingTypesRouter = require('./routes/mounting_types');
 var packageTypesRouter = require('./routes/package_types');
 
@@ -35,6 +36,7 @@ app.use('/inventory', inventoryRouter);
 app.use('/projects', projectsRouter);
 app.use('/manufacturers', manufacturerRouter);
 app.use('/component_types', componentTypesRouter);
+app.use('/component_sub_types', componentSubTypeRouter);
 app.use('/mounting_types', mountingTypesRouter);
 app.use('/package_types', packageTypesRouter);
 
