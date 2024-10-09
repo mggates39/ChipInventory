@@ -12,148 +12,186 @@ body {
   font-size: medium
 }
 
-.pintable, .specstable
-{
+.pintable,
+.specstable {
   border-collapse: collapse;
 }
 
-.pintable td, .specstable td
-{
+.pintable td,
+.specstable td {
   border: 1px solid black;
   padding: 3px;
   vertical-align: top;
 }
 
-.pintable th, .specstable th
-{
+.pintable th,
+.specstable th {
   border: 1px solid black;
   border-bottom: 3px solid black;
   padding: 3px;
 }
 
-.pindiagram
-{
+.pindiagram {
   border-collapse: collapse;
   margin: 0 auto;
 }
 
-.leftpinsym
-{
+.leftpinsym {
   padding-right: 0px;
 }
 
-.rightpinsym
-{
+.rightpinsym {
   padding-left: 0px;
 }
 
-.leftpinsym, .rightpinnum, .righttoppinnum, .rightbottompinnum
-{
+.leftpinsym,
+.rightpinnum,
+.righttoppinnum,
+.rightbottompinnum {
   text-align: right;
 }
 
-.rightpinsym, .leftpinnum, .lefttoppinnum, .leftbottompinnum
-{
+.rightpinsym,
+.leftpinnum,
+.lefttoppinnum,
+.leftbottompinnum {
   text-align: left;
 }
 
-.leftpinnum, .rightpinnum
-{
+.leftpinnum,
+.rightpinnum {
   min-width: 50px;
   padding: 5px;
 }
 
-.leftpinnum
-{
+.leftpinnum {
   border: 0;
   border-left: 1px solid black;
 }
 
-.rightpinnum
-{
+.rightpinnum {
   border: 0;
   border-right: 1px solid black;
 }
 
-.lefttoppinnum, .righttoppinnum
-{
+.lefttoppinnum,
+.righttoppinnum {
   border: 0;
   border-bottom: 1px solid black;
 }
 
-.leftbottompinnum, .rightbottompinnum
-{
+.leftbottompinnum,
+.rightbottompinnum {
   border: 0;
   border-top: 1px solid black;
 }
 
-.toppinsym
-{
+.toppinsym {
   writing-mode: vertical-rl;
   text-orientation: mixed;
   text-align: end;
 }
 
-.bottompinsym
-{
+.bottompinsym {
   writing-mode: vertical-rl;
   text-orientation: mixed;
   text-align: start;
 }
 
-#dpindiagram
-{
+#dpindiagram {
   float: left;
   width: 40%;
-
 }
 
-#dpindiagramwide
-{
-}
+#dpindiagramwide {}
 
-.specstable
-{
-}
+.specstable {}
 
-html>body #dpindiagram
-{
+html>body #dpindiagram {
   width: 40%;
 }
 
-#dspecs, #dnotes
-{
+#dspecs,
+#dnotes {
   clear: both;
   margin-top: 10px;
 }
 
-.spcaption, .note
-{
+.spcaption,
+.note {
   font-style: italic;
   font-size: 80%;
 }
 
-.neg
-{
+.neg {
   text-decoration: overline;
 }
 
-.searchdiv
-{
+.searchdiv {
   text-align: center;
   margin: 20px;
   display: block;
 }
 
-.searchbox
-{
+.searchbox {
   padding: 10px;
   text-align: center;
 }
 
-.searchbox input
-{
+.searchbox input {
   font-size: 12pt;
   margin-left: 5px;
   margin-right: 5px;
+}
+
+.resist_pink {
+  background-color: #d8a0a6;
+}
+
+resist_silver {
+  background-color: silver;
+}
+
+.resist_gold {
+  background-color: gold;
+}
+
+.resist_black {
+  background-color: #0e0e10;
+}
+
+.resist_brown {
+  background-color: #7e4b26;
+}
+
+.resist_red {
+  background-color: #a72920;
+}
+
+.resist_orange {
+  background-color: #f67828;
+}
+
+.resist_yellow {
+  background-color: #f6b600;
+}
+
+.resist_green {
+  background-color: #61993b;
+}
+
+.resist_blue {
+  background-color: #007cb0;
+}
+
+.resist_violet {
+  background-color: #76689a;
+}
+
+.resist_gray {
+  color: #7a888e;
+}
+
+.resist_white {
+  background-color:#e3d9c6; color:black
 }
