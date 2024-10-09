@@ -76,26 +76,28 @@ async function getComponent(component_id) {
 
 async function getChip(component_id) {
   const [rows] = await pool.query(`
-  SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.pin_count, pt.name as package 
-  FROM components cmp
-  JOIN chips c on c.component_id = cmp.id
-  JOIN package_types pt on pt.id = cmp.package_type_id
-  JOIN component_types ct on ct.id = cmp.component_type_id
-  WHERE c.component_id = ?
+    SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    FROM components cmp
+    JOIN chips c on c.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    WHERE c.component_id = ?
   `, [component_id])
   return rows[0]
 }
 
 async function getCrystal(component_id) {
   const [rows] = await pool.query(`
-    SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.pin_count, pt.name as package 
+    SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
     FROM components cmp
     JOIN crystals c on c.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
     JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
     WHERE c.component_id = ?
     `, [component_id])
-    return rows[0]
+   return rows[0]
 }
 
 async function getPins(component_id) {
@@ -523,36 +525,37 @@ async function createManufacturerCode(manufacturer_id, code) {
   return getMfgCode(manufacturer_code_id)   
 }
 
-async function createChip(chip_number, family, pin_count, package_type_id, datasheet, description) {
+async function createChip(chip_number, family, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
   const component_type_id = 1;
   const [result] = await pool.query(`
-    INSERT INTO components (name, component_type_id, package_type_id, description, pin_count)
-    VALUES (?, ?, ?, ?, ?)
-    `, [chip_number, component_type_id, package_type_id, description, pin_count])
+    INSERT INTO components (name, component_type_id, package_type_id, component_sub_type_id, description, pin_count)
+    VALUES (?, ?, ?, ?, ?, ?)
+    `, [chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count])
   const component_id = result.insertId
   await pool.query(`
-      INSERT INTO chips (id, family, datasheet)
+      INSERT INTO chips (component_id, family, datasheet)
       VALUES (?, ?, ?)
       `, [component_id, family, datasheet])
   return getChip(component_id)
 }
 
-async function updateChip(component_id, chip_number, family, pin_count, package_type_id, datasheet, description) {
+async function updateChip(component_id, chip_number, family, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
   const component_type_id = 1;
   await pool.query(`
     UPDATE components SET
       name = ?, 
       component_type_id = ?, 
       package_type_id = ?, 
+      component_sub_type_id = ?,
       description = ?, 
       pin_count = ?
     WHERE id = ?
-    `, [chip_number, component_type_id, package_type_id, description, pin_count, component_id])
+    `, [chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, component_id])
   await pool.query(`
     UPDATE chips SET
       family = ?, 
       datasheet = ?
-    WHERE id = ?
+    WHERE component_id = ?
     `, [family, datasheet, component_id])
   return getChip(component_id)
 }

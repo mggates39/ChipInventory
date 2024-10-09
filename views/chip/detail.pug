@@ -3,7 +3,7 @@ extends ../layout
 block content
   h3 !{chip.description}
     |  
-    a.btn.btn-primary.btn-sm(href="/chips/edit/"+chip.id, role="button") Edit 
+    a.btn.btn-primary.btn-sm(href="/chips/edit/"+chip.component_id, role="button") Edit 
   br
   if (aliases.length) 
     - var sep = ''
@@ -15,6 +15,7 @@ block content
   button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#aliasModal") Add alias
   br
   br
+  p #[strong Component] #{chip.component_type}
   p #[strong Family] #{chip.family}
   p #[strong Package] #{chip.package}
   p #[strong Pin Count] #{chip.pin_count}
@@ -22,7 +23,7 @@ block content
     p 
       a(target='_blank' href= chip.datasheet) Datasheet PDF
 
-  a.btn.btn-secondary.btn-sm(href="/inventory/new/"+chip.id, role="button") Add Inventory
+  a.btn.btn-secondary.btn-sm(href="/inventory/new/"+chip.component_id, role="button") Add Inventory
 
   if (inventory.length)
     div(id='inventory')
