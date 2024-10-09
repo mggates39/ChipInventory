@@ -65,7 +65,7 @@ async function searchChips(query, type, component_type_id) {
 
 async function getChip(chip_id) {
   const [rows] = await pool.query(`
-  SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, pt.name as package 
+  SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.pin_count, pt.name as package 
   FROM components cmp
   JOIN chips c on c.id = cmp.id
   JOIN package_types pt on pt.id = cmp.package_type_id
@@ -97,12 +97,12 @@ async function getPin(chip_id) {
 
 async function getDipLeftPins(chip_id) {
   const [rows] = await pool.query(`
-  select cmp.name as chip_number, c.pin_count, pinleft.pin_number, pinleft.pin_symbol
+  select cmp.name as chip_number, cmp.pin_count, pinleft.pin_number, pinleft.pin_symbol
 from components cmp
 join chips c on c.id = cmp.id
 join pins pinleft on pinleft.chip_id = c.id
 where c.id = ?
-  and pinleft.pin_number <= (c.pin_count/2)
+  and pinleft.pin_number <= (cmp.pin_count/2)
 order by cast(pin_number as signed);
   `, [chip_id])
   return rows
@@ -110,12 +110,12 @@ order by cast(pin_number as signed);
 
 async function getDipRightPins(chip_id) {
   const [rows] = await pool.query(`
-  select cmp.name as chip_number, c.pin_count, pinright.pin_number, pinright.pin_symbol
+  select cmp.name as chip_number, cmp.pin_count, pinright.pin_number, pinright.pin_symbol
 from components cmp
 join chips c on c.id = cmp.id
 join pins pinright on pinright.chip_id = c.id
 where c.id = ?
-  and pinright.pin_number > (c.pin_count/2)
+  and pinright.pin_number > (cmp.pin_count/2)
 order by cast(pin_number as signed) desc;
   `, [chip_id])
   return rows
@@ -123,13 +123,13 @@ order by cast(pin_number as signed) desc;
 
 async function getPllcLeftPins(chip_id) {
   const [rows] = await pool.query(`
-  select cmp.name as chip_number, c.pin_count, pinleft.pin_number, pinleft.pin_symbol
+  select cmp.name as chip_number, cmp.pin_count, pinleft.pin_number, pinleft.pin_symbol
 from components cmp
 join chips c on c.id = cmp.id
 join pins pinleft on pinleft.chip_id = c.id
 where c.id = ?
-  and pinleft.pin_number > ((c.pin_count/8) + ((pin_count/4) % 2))
-  and pinleft.pin_number <= ((c.pin_count/8) + (c.pin_count/4) + ((pin_count/4) % 2))
+  and pinleft.pin_number > ((cmp.pin_count/8) + ((cmp.pin_count/4) % 2))
+  and pinleft.pin_number <= ((cmp.pin_count/8) + (cmp.pin_count/4) + ((cmp.pin_count/4) % 2))
 order by cast(pin_number as signed);
   `, [chip_id])
   return rows
@@ -137,13 +137,13 @@ order by cast(pin_number as signed);
 
 async function getPllcRightPins(chip_id) {
   const [rows] = await pool.query(`
-  select cmp.name as chip_number, c.pin_count, pinright.pin_number, pinright.pin_symbol
+  select cmp.name as chip_number, cmp.pin_count, pinright.pin_number, pinright.pin_symbol
 from components cmp
 join chips c on c.id = cmp.id
 join pins pinright on pinright.chip_id = c.id
 where c.id = ?
-  and pinright.pin_number > ((c.pin_count/8) + (c.pin_count/2) + ((pin_count/4) % 2))
-  and pinright.pin_number <= (c.pin_count - (c.pin_count/8) + ((pin_count/4) % 2))
+  and pinright.pin_number > ((cmp.pin_count/8) + (cmp.pin_count/2) + ((cmp.pin_count/4) % 2))
+  and pinright.pin_number <= (cmp.pin_count - (cmp.pin_count/8) + ((cmp.pin_count/4) % 2))
 order by cast(pin_number as signed) desc;
   `, [chip_id])
   return rows
@@ -151,22 +151,22 @@ order by cast(pin_number as signed) desc;
 
 async function getPllcTopPins(chip_id) {
   const [rowsl] = await pool.query(`
-    select cmp.name as chip_number, c.pin_count, pintop.pin_number, pintop.pin_symbol
+    select cmp.name as chip_number, cmp.pin_count, pintop.pin_number, pintop.pin_symbol
 from components cmp
 join chips c on c.id = cmp.id
 join pins pintop on pintop.chip_id = c.id
 where c.id = ?
-  and (pintop.pin_number >= 1 and pintop.pin_number <= ((c.pin_count/8) + ((pin_count/4) % 2)))
+  and (pintop.pin_number >= 1 and pintop.pin_number <= ((cmp.pin_count/8) + ((cmp.pin_count/4) % 2)))
 order by cast(pin_number as signed) desc;
     `, [chip_id]);
    
   const [rowsr] = await pool.query(`
-    select cmp.name as chip_number, c.pin_count, pintop.pin_number, pintop.pin_symbol
+    select cmp.name as chip_number, cmp.pin_count, pintop.pin_number, pintop.pin_symbol
 from components cmp
 join chips c on c.id = cmp.id
 join pins pintop on pintop.chip_id = c.id
 where c.id = ?
-  and pintop.pin_number > (c.pin_count - (c.pin_count/8) + ((pin_count/4) % 2))
+  and pintop.pin_number > (cmp.pin_count - (cmp.pin_count/8) + ((cmp.pin_count/4) % 2))
 order by cast(pin_number as signed) desc;
       `, [chip_id]);
 
@@ -176,13 +176,13 @@ order by cast(pin_number as signed) desc;
 
 async function getPllcBottomPins(chip_id) {
   const [rows] = await pool.query(`
-    select cmp.name as chip_number, c.pin_count, binbottom.pin_number, binbottom.pin_symbol
+    select cmp.name as chip_number, cmp.pin_count, binbottom.pin_number, binbottom.pin_symbol
 from components cmp
 join chips c on c.id = cmp.id
 join pins binbottom on binbottom.chip_id = c.id
 where c.id = ?
-  and binbottom.pin_number > ((c.pin_count/8) + (c.pin_count/4) + ((pin_count/4) % 2))
-  and binbottom.pin_number <= ((c.pin_count/8) + (c.pin_count/2) + ((pin_count/4) % 2))
+  and binbottom.pin_number > ((cmp.pin_count/8) + (cmp.pin_count/4) + ((cmp.pin_count/4) % 2))
+  and binbottom.pin_number <= ((cmp.pin_count/8) + (cmp.pin_count/2) + ((cmp.pin_count/4) % 2))
 order by cast(pin_number as signed);
     `, [chip_id])
     return rows    
@@ -190,12 +190,12 @@ order by cast(pin_number as signed);
 
 async function getQuadLeftPins(chip_id) {
   const [rows] = await pool.query(`
-  select cmp.name as chip_number, c.pin_count, pinleft.pin_number, pinleft.pin_symbol
+  select cmp.name as chip_number, cmp.pin_count, pinleft.pin_number, pinleft.pin_symbol
 from components cmp
 join chips c on c.id = cmp.id
 join pins pinleft on pinleft.chip_id = c.id
 where c.id = ?
-  and pinleft.pin_number > (c.pin_count - (c.pin_count/4))
+  and pinleft.pin_number > (cmp.pin_count - (cmp.pin_count/4))
 order by cast(pin_number as signed) desc
   `, [chip_id]);
   return rows;
@@ -203,13 +203,13 @@ order by cast(pin_number as signed) desc
 
 async function getQuadRightPins(chip_id) {
   const [rows] = await pool.query(`
-  select cmp.name as chip_number, c.pin_count, pinright.pin_number, pinright.pin_symbol
+  select cmp.name as chip_number, cmp.pin_count, pinright.pin_number, pinright.pin_symbol
 from components cmp
 join chips c on c.id = cmp.id
 join pins pinright on pinright.chip_id = c.id
 where c.id = ?
-  and pinright.pin_number > (c.pin_count/4)
-  and pinright.pin_number <= (c.pin_count/2)
+  and pinright.pin_number > (cmp.pin_count/4)
+  and pinright.pin_number <= (cmp.pin_count/2)
 order by cast(pin_number as signed)
   `, [chip_id]);
   return rows;
@@ -217,12 +217,12 @@ order by cast(pin_number as signed)
 
 async function getQuadTopPins(chip_id) {
   const [rows] = await pool.query(`
-    select cmp.name as chip_number, c.pin_count, pintop.pin_number, pintop.pin_symbol
+    select cmp.name as chip_number, cmp.pin_count, pintop.pin_number, pintop.pin_symbol
 from components cmp
 join chips c on c.id = cmp.id
 join pins pintop on pintop.chip_id = c.id
 where c.id = ?
-  and (pintop.pin_number >= 1 and pintop.pin_number <= (pin_count/4))
+  and (pintop.pin_number >= 1 and pintop.pin_number <= (cmp.pin_count/4))
 order by cast(pin_number as signed)
       `, [chip_id]);
   return rows;
@@ -230,13 +230,13 @@ order by cast(pin_number as signed)
 
 async function getQuadBottomPins(chip_id) {
   const [rows] = await pool.query(`
-    select cmp.name as chip_number, c.pin_count, binbottom.pin_number, binbottom.pin_symbol
+    select cmp.name as chip_number, cmp.pin_count, binbottom.pin_number, binbottom.pin_symbol
 from components cmp
 join chips c on c.id = cmp.id
 join pins binbottom on binbottom.chip_id = c.id
 where c.id = ?
-  and binbottom.pin_number > (c.pin_count/2)
-  and binbottom.pin_number <= (c.pin_count - (c.pin_count/4))
+  and binbottom.pin_number > (cmp.pin_count/2)
+  and binbottom.pin_number <= (cmp.pin_count - (cmp.pin_count/4))
 order by cast(pin_number as signed) desc
     `, [chip_id])
     return rows    
@@ -514,14 +514,14 @@ async function createManufacturerCode(manufacturer_id, code) {
 async function createChip(chip_number, family, pin_count, package_type_id, datasheet, description) {
   const component_type_id = 1;
   const [result] = await pool.query(`
-    INSERT INTO components (name, component_type_id, package_type_id, description)
-    VALUES (?, ?, ?, ?)
-    `, [chip_number, component_type_id, package_type_id, description])
+    INSERT INTO components (name, component_type_id, package_type_id, description, pin_count)
+    VALUES (?, ?, ?, ?, ?)
+    `, [chip_number, component_type_id, package_type_id, description, pin_count])
   const chip_id = result.insertId
   await pool.query(`
-      INSERT INTO chips (id, family, pin_count, datasheet)
-      VALUES (?, ?, ?, ?)
-      `, [chip_id, family, pin_count, datasheet])
+      INSERT INTO chips (id, family, datasheet)
+      VALUES (?, ?, ?)
+      `, [chip_id, family, datasheet])
   return getChip(chip_id)
 }
 
@@ -532,16 +532,16 @@ async function updateChip(chip_id, chip_number, family, pin_count, package_type_
       name = ?, 
       component_type_id = ?, 
       package_type_id = ?, 
-      description = ?
+      description = ?, 
+      pin_count = ?
     WHERE id = ?
-    `, [chip_number, component_type_id, package_type_id, description, chip_id])
+    `, [chip_number, component_type_id, package_type_id, description, pin_count, chip_id])
   await pool.query(`
     UPDATE chips SET
       family = ?, 
-      pin_count = ?, 
       datasheet = ?
     WHERE id = ?
-    `, [family, pin_count, datasheet, chip_id])
+    `, [family, datasheet, chip_id])
   return getChip(chip_id)
 }
 
