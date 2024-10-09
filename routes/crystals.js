@@ -4,19 +4,25 @@ const { getMountingTypeList,
   getCrystal, getPins, getDipLeftPins, getDipRightPins, 
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins, 
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
-  getSpecs, getNotes, getAliases, getInventoryByComponentList,
-  getSelectedComponentTypesForPackageType} = require('../database');
+  getSpecs, getNotes, getAliases, 
+  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType} = require('../database');
 const {parse_symbol} = require('../utility');
 
 /* GET new item page */
 router.get('/new', async function(req, res, next) {
-    const data = {name: '',
-        description: '',
-        mounting_type_id: ''
-      };
-    const comps = await getSelectedComponentTypesForPackageType(0);
-    const mounts = await getMountingTypeList();
-    res.render('crystal/new', {title: 'Crystal', package_type: data, component_types: comps, mounting_types: mounts});
+  data = {chip_number: '',
+    aliases: '',
+    frequency: '',
+    package_type_id: '',
+    component_sub_type_id: '',
+    pin_count: '',
+    datasheet: '',
+    description: ''
+  }
+  const package_types = await getPackageTypesForComponentType(10);
+  const component_sub_types = await getComponentSubTypesForComponentType(10);
+
+  res.render('crystal/new', {title: 'New Crystal Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
   });
   
 /* GET item page */
