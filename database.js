@@ -65,11 +65,11 @@ async function searchChips(query, type, component_type_id) {
 
 async function getComponent(component_id) {
   const [rows] = await pool.query(`
-  SELECT cmp.*, pt.name as package, ct.name as component, ct.table_name 
+  SELECT cmp.*, pt.name as package, ct.description as component, ct.table_name 
   FROM components cmp
   JOIN package_types pt on pt.id = cmp.package_type_id
   JOIN component_types ct on ct.id = cmp.component_type_id
-  WHERE c.component_id = ?
+  WHERE cmp.id = ?
   `, [component_id])
   return rows[0]
 }

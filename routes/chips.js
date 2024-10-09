@@ -4,7 +4,7 @@ const { getChip, createChip, updateChip, getPins, createPin, updatePin,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, getComponentTypeList,
-  getAliases, createAlias, deleteAliases, createSpec, deleteSpec, createNote } = require('../database');
+  getAliases, createAlias, deleteAliases } = require('../database');
 const {parse_symbol} = require('../utility');
 var router = express.Router();
 

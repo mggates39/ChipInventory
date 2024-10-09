@@ -1,5 +1,5 @@
 var express = require('express');
-const { searchChips, getComponentTypeList, getComponentType, getComponent} = require('../database');
+const { searchChips, getComponentTypeList, getComponentType, getComponent, createSpec, deleteSpec, createNote} = require('../database');
 var router = express.Router();
 
 /* GET component list page. */
@@ -34,7 +34,7 @@ router.post('/new/', async function(req, res, next) {
 router.get('/:id', async function(req, res, next) {
   const id = req.params.id;
   const component = await getComponent(id);
-  res.redirect("/"+comonent_type.table_name+"/"+id);
+  res.redirect("/"+component.table_name+"/"+id);
 });
 
 /* Add a specification to the selected component */
