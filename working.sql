@@ -284,13 +284,13 @@ where c.id = 267
 order by cast(pin_number as signed);
 
 -- bottom
-select cmp.name as chip_number, c.pin_count, binbottom.pin_number, binbottom.pin_symbol
+select cmp.name as chip_number, cmp.pin_count, binbottom.pin_number, binbottom.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins binbottom on binbottom.chip_id = c.id
-where c.id = 267
-  and binbottom.pin_number > (c.pin_count/2)
-  and binbottom.pin_number <= (c.pin_count - (c.pin_count/4))
+join chips c on c.component_id = cmp.id
+join pins binbottom on binbottom.component_id = cmp.id
+where c.component_id = 267
+  and binbottom.pin_number > (cmp.pin_count/2)
+  and binbottom.pin_number <= (cmp.pin_count - (cmp.pin_count/4))
 order by cast(pin_number as signed) desc;
 
 -- left
@@ -319,6 +319,12 @@ LEFT JOIN mounting_types mt on mt.id = pt.mounting_type_id and mt.id = 1
 ORDER BY pt.description
 ;
 
+-- insert into crystals values (174, "32.768kHz","https://www.analog.com/media/jp/technical-documentation/data-sheets/2940.pdf");
+-- delete from chips where component_id = 174;
+-- commit;
+-- update components set component_type_id = 10 where id = 174;
+-- commit;
+
 select pt.*, mt.name
 from package_types pt
 JOIN mounting_types mt on mt.id = pt.mounting_type_id
@@ -334,27 +340,55 @@ select * from aliases;
 -- update component_types set description = trim(description)
 -- where description like ' %' or description like '% ';
 -- commit;
+select * from component_types;
 
-select * from component_sub_types;
+select * from component_sub_types
+where component_type_id = 10;
 
 select * from  components cmp
-join chips c on c.id = cmp.id
-where cmp.component_sub_type_id is null
-and name like '%74%'
+join chips c on c.component_id = cmp.id
+-- where cmp.component_sub_type_id is null
+where  family like '%micro%'
+order by cmp.name
 ;
 select * from components where name like '68%';
 
 select family, count(*) ni
-from chips
+from chips c
+join components cmp on cmp.id = c.component_id
+where cmp.component_sub_type_id is null
 group by family
 order by count(*) desc;
 
-update components set component_sub_type_id = 11
-where id in (select id from chips where name like 'PIC%');
-commit;
+-- update components set component_sub_type_id = 10
+-- where id in (select id from chips WHERE family like '%memory%');
+-- commit;
+-- update components set component_sub_type_id = 38
+-- where id = 174;
+-- update chips set family = 'Microship' where family like '%micro%';
+-- commit;
 
 select cst.name, count(*) ni
 from components c
 left join component_sub_types cst on cst.id = c.component_sub_type_id
 group by cst.name
 order by cst.name;
+
+
+-- alter table components add column pin_count INTEGER null;
+-- UPDATE components
+-- JOIN chips ON components.id = chips.id
+-- SET components.pin_count = chips.pin_count;
+-- commit;
+-- alter table components modify column pin_count INTEGER NOT NULL;
+-- alter table chips drop column pin_count;
+
+select * from components where pin_count is null;
+
+
+SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.pin_count, pt.name as package 
+    FROM components cmp
+    JOIN crystals c on c.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id;
+    
