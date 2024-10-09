@@ -29,7 +29,6 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `id`,
  1 AS `component_type_id`,
  1 AS `chip_number`,
- 1 AS `family`,
  1 AS `component`,
  1 AS `component_type`,
  1 AS `table_name`,
@@ -52,7 +51,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`mggates`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `chip_aliases` AS select `cmp`.`id` AS `id`,`cmp`.`component_type_id` AS `component_type_id`,`cmp`.`name` AS `chip_number`,`c`.`family` AS `family`,`ct`.`description` AS `component`,`cst`.`name` AS `component_type`,`ct`.`table_name` AS `table_name`,`pt`.`name` AS `package`,`cmp`.`pin_count` AS `pin_count`,`cmp`.`description` AS `description`,(select sum(`i`.`quantity`) from `inventory` `i` where (`i`.`component_id` = `cmp`.`id`)) AS `on_hand` from ((((`components` `cmp` join `chips` `c` on((`c`.`component_id` = `cmp`.`id`))) join `package_types` `pt` on((`pt`.`id` = `cmp`.`package_type_id`))) join `component_types` `ct` on((`ct`.`id` = `cmp`.`component_type_id`))) left join `component_sub_types` `cst` on((`cst`.`id` = `cmp`.`component_sub_type_id`))) union all select `a`.`component_id` AS `id`,`cmp`.`component_type_id` AS `component_type_id`,`a`.`alias_chip_number` AS `chip_number`,`c`.`family` AS `family`,`ct`.`description` AS `component`,`cst`.`name` AS `component_type`,`ct`.`table_name` AS `table_name`,`pt`.`name` AS `package`,`cmp`.`pin_count` AS `pin_count`,concat('See <a href=\'/chips/',`a`.`component_id`,'\'>',`cmp`.`name`,'</a>') AS `description`,'' AS `on_hand` from (((((`aliases` `a` join `components` `cmp` on((`cmp`.`id` = `a`.`component_id`))) join `chips` `c` on((`c`.`component_id` = `cmp`.`id`))) join `package_types` `pt` on((`pt`.`id` = `cmp`.`package_type_id`))) join `component_types` `ct` on((`ct`.`id` = `cmp`.`component_type_id`))) left join `component_sub_types` `cst` on((`cst`.`id` = `cmp`.`component_sub_type_id`))) */;
+/*!50001 VIEW `chip_aliases` AS select `cmp`.`id` AS `id`,`cmp`.`component_type_id` AS `component_type_id`,`cmp`.`name` AS `chip_number`,`ct`.`description` AS `component`,`cst`.`name` AS `component_type`,`ct`.`table_name` AS `table_name`,`pt`.`name` AS `package`,`cmp`.`pin_count` AS `pin_count`,`cmp`.`description` AS `description`,(select sum(`i`.`quantity`) from `inventory` `i` where (`i`.`component_id` = `cmp`.`id`)) AS `on_hand` from (((`components` `cmp` join `package_types` `pt` on((`pt`.`id` = `cmp`.`package_type_id`))) join `component_types` `ct` on((`ct`.`id` = `cmp`.`component_type_id`))) left join `component_sub_types` `cst` on((`cst`.`id` = `cmp`.`component_sub_type_id`))) union all select `cmp`.`id` AS `id`,`cmp`.`component_type_id` AS `component_type_id`,`a`.`alias_chip_number` AS `chip_number`,`ct`.`description` AS `component`,`cst`.`name` AS `component_type`,`ct`.`table_name` AS `table_name`,`pt`.`name` AS `package`,`cmp`.`pin_count` AS `pin_count`,concat('See <a href=\'/chips/',`a`.`component_id`,'\'>',`cmp`.`name`,'</a>') AS `description`,'' AS `on_hand` from ((((`aliases` `a` join `components` `cmp` on((`cmp`.`id` = `a`.`component_id`))) join `package_types` `pt` on((`pt`.`id` = `cmp`.`package_type_id`))) join `component_types` `ct` on((`ct`.`id` = `cmp`.`component_type_id`))) left join `component_sub_types` `cst` on((`cst`.`id` = `cmp`.`component_sub_type_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -66,4 +65,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-09 12:50:26
+-- Dump completed on 2024-10-09 16:05:31
