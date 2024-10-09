@@ -5,6 +5,7 @@ const { getChip, createChip, updateChip, getPins, createPin, updatePin,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, getNotes, getInventoryByChipList, getPackageTypesForComponentType, getComponentTypeList,
   getAliases, createAlias, deleteAliases, createSpec, deleteSpec, createNote } = require('../database');
+const {parse_symbol} = require('../utility');
 var router = express.Router();
 
 router.get('/edit/:id', async function(req,res,next) {
@@ -108,39 +109,6 @@ router.post('/new', async function(req, res) {
   } else {
     res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types});
   }
-});
-
-/* Add a specification to the selected chip */
-router.post('/:id/newspec', async function(req, res) {
-  const id = req.params.id;
-  await createSpec(id, req.body.param, req.body.value, req.body.units)
-  res.redirect('/chips/'+id);
-});
-
-router.get('/:id/delspec/:spec_id', async function(req, res) {
-  const id = req.params.id;
-  const spec_id = req.params.spec_id;
-  await deleteSpec(spec_id)
-  res.redirect('/chips/'+id);
-})
-
-/* Add a note to the selected chip */
-router.post('/:id/newnote', async function(req, res) {
-  const id = req.params.id;
-  await createNote(id, req.body.note)
-  res.redirect('/chips/'+id);
-});
-
-/* Add one or more aliases to the selected chip */
-router.post('/:id/newalias', async function(req, res) {
-  const chip_id = req.params.id;
-  aliases = req.body.alias.split(',');
-  for( const alias of aliases) {
-    if (alias.length > 0) {
-      await createAlias(chip_id, alias.trim());
-    }
-  }
-  res.redirect('/chips/'+chip_id);
 });
 
 router.post('/:id', async function(req, res) {
