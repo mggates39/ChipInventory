@@ -3,7 +3,7 @@ const { getChip, createChip, updateChip, getPins, createPin, updatePin,
   getDipLeftPins, getDipRightPins, 
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
-  getSpecs, getNotes, getInventoryByChipList, getPackageTypesForComponentType, getComponentTypeList,
+  getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, getComponentTypeList,
   getAliases, createAlias, deleteAliases, createSpec, deleteSpec, createNote } = require('../database');
 const {parse_symbol} = require('../utility');
 var router = express.Router();
@@ -172,7 +172,7 @@ router.get('/:id', async function(req, res, next) {
     const quad_bottom_pins = await getQuadBottomPins(id);
     const specs = await getSpecs(id);
     const notes = await getNotes(id);
-    const inventory = await getInventoryByChipList(id);
+    const inventory = await getInventoryByComponentList(id);
     const aliases = await getAliases(id);
 
     fixed_pins = [];
@@ -283,56 +283,4 @@ router.get('/:id', async function(req, res, next) {
       specs: clean_specs, notes: notes, aliases: aliases, inventory: inventory });
 });
 
-function parse_symbol(symbol)
-{
-  // process __ for subscripts
-  let newsym = '';
-  if (symbol.includes('__')){
-    let seen = 0
-    for (let i = 0; i < symbol.length; i++) {
-      if (symbol[i] == '_') {
-        seen++;
-        if (seen == 2) {
-          newsym += '<sub>';
-        }
-      } else if ((symbol[i] == '/' || symbol[i] == ' ') && seen == 2) {
-        newsym += '</sub>';
-        seen = 0;
-        newsym += symbol[i];
-      } else {
-        newsym += symbol[i]
-      }
-    }
-    
-    if (seen == 2) {
-      newsym += '</sub>';
-      seen = 0;
-  ``}
-  } else {
-    newsym = symbol;
-  }
-
-  // Process ~ for negation
-  if (newsym.includes('~')) {
-    let negsym = ''
-    let found = false
-    for (let i = 0; i < newsym.length; i++) {
-      if (newsym[i] == '~') {
-        found = !found;
-        if (found) {
-          negsym += "<span class='neg'>"
-        } else {
-          negsym += '</span>'
-        }
-      } else {
-        negsym += newsym[i];
-      }
-    }
-    if (found) {
-      negsym += "</span>";
-    }
-    newsym = negsym;
-  }
-  return newsym
-}
 module.exports = router;

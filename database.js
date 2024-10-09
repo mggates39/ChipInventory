@@ -23,9 +23,9 @@ async function getSystemData() {
 }
 
 async function getComponentCounts() {
-  const [rows] = await pool.query(`select concat(ct.description, 's') description, table_name, count(c.id) ni
+  const [rows] = await pool.query(`select concat(ct.description, 's') description, table_name, count(cmp.id) ni
 from component_types ct
-join components c on ct.id = c.component_type_id
+join components cmp on ct.id = cmp.component_type_id
 group by ct.description, table_name`);
   return rows;
 }
@@ -63,200 +63,212 @@ async function searchChips(query, type, component_type_id) {
   return rows
 }
 
-async function getChip(chip_id) {
+async function getComponent(component_id) {
   const [rows] = await pool.query(`
-  SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.pin_count, pt.name as package 
+  SELECT cmp.*, pt.name as package, ct.name as component, ct.table_name 
   FROM components cmp
-  JOIN chips c on c.id = cmp.id
   JOIN package_types pt on pt.id = cmp.package_type_id
   JOIN component_types ct on ct.id = cmp.component_type_id
-  WHERE c.id = ?
-  `, [chip_id])
+  WHERE c.component_id = ?
+  `, [component_id])
   return rows[0]
 }
 
-async function getPins(chip_id) {
+async function getChip(component_id) {
+  const [rows] = await pool.query(`
+  SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.pin_count, pt.name as package 
+  FROM components cmp
+  JOIN chips c on c.component_id = cmp.id
+  JOIN package_types pt on pt.id = cmp.package_type_id
+  JOIN component_types ct on ct.id = cmp.component_type_id
+  WHERE c.component_id = ?
+  `, [component_id])
+  return rows[0]
+}
+
+async function getCrystal(component_id) {
+  const [rows] = await pool.query(`
+    SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.pin_count, pt.name as package 
+    FROM components cmp
+    JOIN crystals c on c.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    WHERE c.component_id = ?
+    `, [component_id])
+    return rows[0]
+}
+
+async function getPins(component_id) {
   const [rows] = await pool.query(`
   SELECT * 
   FROM pins
-  WHERE chip_id = ?
+  WHERE component_id = ?
   ORDER BY pin_number
-  `, [chip_id])
+  `, [component_id])
   return rows
 }
 
-async function getPin(chip_id) {
+async function getPin(component_id) {
   const [rows] = await pool.query(`
   SELECT * 
   FROM pins
   WHERE id = ?
   ORDER BY pin_number
-  `, [chip_id])
+  `, [component_id])
   return rows[0]
 }
 
-async function getDipLeftPins(chip_id) {
+async function getDipLeftPins(component_id) {
   const [rows] = await pool.query(`
   select cmp.name as chip_number, cmp.pin_count, pinleft.pin_number, pinleft.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins pinleft on pinleft.chip_id = c.id
-where c.id = ?
+join pins pinleft on pinleft.component_id = cmp.id
+where cmp.id = ?
   and pinleft.pin_number <= (cmp.pin_count/2)
 order by cast(pin_number as signed);
-  `, [chip_id])
+  `, [component_id])
   return rows
 }
 
-async function getDipRightPins(chip_id) {
+async function getDipRightPins(component_id) {
   const [rows] = await pool.query(`
   select cmp.name as chip_number, cmp.pin_count, pinright.pin_number, pinright.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins pinright on pinright.chip_id = c.id
-where c.id = ?
+join pins pinright on pinright.component_id = cmp.id
+where cmp.id = ?
   and pinright.pin_number > (cmp.pin_count/2)
 order by cast(pin_number as signed) desc;
-  `, [chip_id])
+  `, [component_id])
   return rows
 }
 
-async function getPllcLeftPins(chip_id) {
+async function getPllcLeftPins(component_id) {
   const [rows] = await pool.query(`
   select cmp.name as chip_number, cmp.pin_count, pinleft.pin_number, pinleft.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins pinleft on pinleft.chip_id = c.id
-where c.id = ?
+join pins pinleft on pinleft.component_id = cmp.id
+where cmp.id = ?
   and pinleft.pin_number > ((cmp.pin_count/8) + ((cmp.pin_count/4) % 2))
   and pinleft.pin_number <= ((cmp.pin_count/8) + (cmp.pin_count/4) + ((cmp.pin_count/4) % 2))
 order by cast(pin_number as signed);
-  `, [chip_id])
+  `, [component_id])
   return rows
 }
 
-async function getPllcRightPins(chip_id) {
+async function getPllcRightPins(component_id) {
   const [rows] = await pool.query(`
   select cmp.name as chip_number, cmp.pin_count, pinright.pin_number, pinright.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins pinright on pinright.chip_id = c.id
-where c.id = ?
+join pins pinright on pinright.component_id = cmp.id
+where cmp.id = ?
   and pinright.pin_number > ((cmp.pin_count/8) + (cmp.pin_count/2) + ((cmp.pin_count/4) % 2))
   and pinright.pin_number <= (cmp.pin_count - (cmp.pin_count/8) + ((cmp.pin_count/4) % 2))
 order by cast(pin_number as signed) desc;
-  `, [chip_id])
+  `, [component_id])
   return rows
 }
 
-async function getPllcTopPins(chip_id) {
+async function getPllcTopPins(component_id) {
   const [rowsl] = await pool.query(`
     select cmp.name as chip_number, cmp.pin_count, pintop.pin_number, pintop.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins pintop on pintop.chip_id = c.id
-where c.id = ?
+join pins pintop on pintop.component_id = cmp.id
+where cmp.id = ?
   and (pintop.pin_number >= 1 and pintop.pin_number <= ((cmp.pin_count/8) + ((cmp.pin_count/4) % 2)))
 order by cast(pin_number as signed) desc;
-    `, [chip_id]);
+    `, [component_id]);
    
   const [rowsr] = await pool.query(`
     select cmp.name as chip_number, cmp.pin_count, pintop.pin_number, pintop.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins pintop on pintop.chip_id = c.id
-where c.id = ?
+join pins pintop on pintop.component_id = cmp.id
+where cmp.id = ?
   and pintop.pin_number > (cmp.pin_count - (cmp.pin_count/8) + ((cmp.pin_count/4) % 2))
 order by cast(pin_number as signed) desc;
-      `, [chip_id]);
+      `, [component_id]);
 
   const rows = rowsl.concat(rowsr);
   return rows;
 }
 
-async function getPllcBottomPins(chip_id) {
+async function getPllcBottomPins(component_id) {
   const [rows] = await pool.query(`
     select cmp.name as chip_number, cmp.pin_count, binbottom.pin_number, binbottom.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins binbottom on binbottom.chip_id = c.id
-where c.id = ?
+join pins binbottom on binbottom.component_id = cmp.id
+where cmp.id = ?
   and binbottom.pin_number > ((cmp.pin_count/8) + (cmp.pin_count/4) + ((cmp.pin_count/4) % 2))
   and binbottom.pin_number <= ((cmp.pin_count/8) + (cmp.pin_count/2) + ((cmp.pin_count/4) % 2))
 order by cast(pin_number as signed);
-    `, [chip_id])
+    `, [component_id])
     return rows    
 }
 
-async function getQuadLeftPins(chip_id) {
+async function getQuadLeftPins(component_id) {
   const [rows] = await pool.query(`
   select cmp.name as chip_number, cmp.pin_count, pinleft.pin_number, pinleft.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins pinleft on pinleft.chip_id = c.id
-where c.id = ?
+join pins pinleft on pinleft.component_id = cmp.id
+where cmp.id = ?
   and pinleft.pin_number > (cmp.pin_count - (cmp.pin_count/4))
 order by cast(pin_number as signed) desc
-  `, [chip_id]);
+  `, [component_id]);
   return rows;
 }
 
-async function getQuadRightPins(chip_id) {
+async function getQuadRightPins(component_id) {
   const [rows] = await pool.query(`
   select cmp.name as chip_number, cmp.pin_count, pinright.pin_number, pinright.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins pinright on pinright.chip_id = c.id
-where c.id = ?
+join pins pinright on pinright.component_id = cmp.id
+where cmp.id = ?
   and pinright.pin_number > (cmp.pin_count/4)
   and pinright.pin_number <= (cmp.pin_count/2)
 order by cast(pin_number as signed)
-  `, [chip_id]);
+  `, [component_id]);
   return rows;
 }
 
-async function getQuadTopPins(chip_id) {
+async function getQuadTopPins(component_id) {
   const [rows] = await pool.query(`
     select cmp.name as chip_number, cmp.pin_count, pintop.pin_number, pintop.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins pintop on pintop.chip_id = c.id
-where c.id = ?
+join pins pintop on pintop.component_id = cmp.id
+where cmp.id = ?
   and (pintop.pin_number >= 1 and pintop.pin_number <= (cmp.pin_count/4))
 order by cast(pin_number as signed)
-      `, [chip_id]);
+      `, [component_id]);
   return rows;
 }
 
-async function getQuadBottomPins(chip_id) {
+async function getQuadBottomPins(component_id) {
   const [rows] = await pool.query(`
     select cmp.name as chip_number, cmp.pin_count, binbottom.pin_number, binbottom.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins binbottom on binbottom.chip_id = c.id
-where c.id = ?
+join pins binbottom on binbottom.component_id = cmp.id
+where cmp.id = ?
   and binbottom.pin_number > (cmp.pin_count/2)
   and binbottom.pin_number <= (cmp.pin_count - (cmp.pin_count/4))
 order by cast(pin_number as signed) desc
-    `, [chip_id])
+    `, [component_id])
     return rows    
 }
 
-async function getSpecs(chip_id) {
+async function getSpecs(component_id) {
   const [rows] = await pool.query(`
   SELECT * 
   FROM specs
-  WHERE chip_id = ?
-  `, [chip_id])
+  WHERE component_id = ?
+  `, [component_id])
   return rows
 }
 
-async function getNotes(chip_id) {
+async function getNotes(component_id) {
   const [rows] = await pool.query(`
   SELECT * 
   FROM notes
-  WHERE chip_id = ?
-  `, [chip_id])
+  WHERE component_id = ?
+  `, [component_id])
   return rows
 }
 
@@ -264,38 +276,38 @@ async function searchInventory(query, type) {
   if (query) {
     value = ['%' + query + '%']
     if (type == 'p') {
-      sql = `select inventory.id, chip_id, full_number, quantity, cmp.name as chip_number, cmp.description, description, mfg_code, manufacturer.name 
+      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, description, mfg_code, manufacturer.name 
       from inventory 
-      join chips on chips.id = inventory.chip_id
-      join components cmp on cmp.id = chips.id
+      join chips on chips.component_id = inventory.component_id
+      join components cmp on cmp.id = chips.component_id
       join mfg_codes on mfg_codes.id = inventory.mfg_code_id
       join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
       where full_number like ? or chip_number like ?
       order by chip_number, full_number`;
       value = ['%' + query + '%', '%' + query + '%'];
     } else if (type == 'k') {
-      sql = `select inventory.id, chip_id, full_number, quantity, cmp.name as chip_number, description, description, mfg_code, manufacturer.name 
+      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, description, description, mfg_code, manufacturer.name 
       from inventory
-      join chips on chips.id = inventory.chip_id
-      join components cmp on cmp.id = chips.id
+      join chips on component_id.id = inventory.component_id
+      join components cmp on cmp.id = chips.component_id
       join mfg_codes on mfg_codes.id = inventory.mfg_code_id
       join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
       where description like ?
       order by chip_number, full_number`;
     } else {
-      sql = `select inventory.id, chip_id, full_number, quantity, cmp.name as chip_number, description, description, mfg_code, manufacturer.name 
+      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, description, description, mfg_code, manufacturer.name 
     from inventory
-    join chips on chips.id = inventory.chip_id
-    join components cmp on cmp.id = chips.id
+    join chips on chips.component_id = inventory.component_id
+    join components cmp on cmp.id = chips.component_id
     join mfg_codes on mfg_codes.id = inventory.mfg_code_id
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
     order by chip_number, full_number`;
     }
   } else {
-    sql = `select inventory.id, chip_id, full_number, quantity, cmp.name as chip_number, description, description, mfg_code, manufacturer.name 
+    sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, description, description, mfg_code, manufacturer.name 
       from inventory
-      join chips on chips.id = inventory.chip_id
-      join components cmp on cmp.id = chips.id
+      join chips on chips.component_id = inventory.component_id
+      join components cmp on cmp.id = chips.component_id
       join mfg_codes on mfg_codes.id = inventory.mfg_code_id
       join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
       order by chip_number, full_number`;
@@ -306,41 +318,41 @@ async function searchInventory(query, type) {
 }
 
 async function getInventoryList() {
-  const [rows] = await pool.query(`select inventory.id, chip_id, full_number, quantity, cmp.name as chip_number, cmp.description, mfg_code, manufacturer.name 
+  const [rows] = await pool.query(`select inventory.id, inventory.component_id, full_number, quantity, cmp.name as chip_number, cmp.description, mfg_code, manufacturer.name 
     from inventory
-    join components cmp on cmp.id = inventory.chip_id
+    join components cmp on cmp.id = inventory.component_id
     join mfg_codes on mfg_codes.id = inventory.mfg_code_id
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
     order by chip_number, full_number`)
   return rows
 }
 
-async function getInventoryByChipList(chip_id) {
-  const [rows] = await pool.query(`select inventory.id, chip_id, full_number, quantity, cmp.name as chip_number, mfg_code, manufacturer.name   
+async function getInventoryByComponentList(component_id) {
+  const [rows] = await pool.query(`select inventory.id, component_id, full_number, quantity, cmp.name as chip_number, mfg_code, manufacturer.name   
     from inventory
-    join components cmp on cmp.id = inventory.chip_id
+    join components cmp on cmp.id = inventory.component_id
     join mfg_codes on mfg_codes.id = inventory.mfg_code_id
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
-    where inventory.chip_id = ?
-    order by full_number`, [chip_id])
+    where inventory.component_id = ?
+    order by full_number`, [component_id])
   return rows
 }
 
-async function lookupInventory(chip_id, full_number, mfg_code_id) {
+async function lookupInventory(component_id, full_number, mfg_code_id) {
   const [rows] = await pool.query(`select *   
     from inventory
-    where inventory.chip_id = ?
+    where inventory.component_id = ?
       and full_number = ?
       and mfg_code_id = ?
-    order by full_number`, [chip_id, full_number, mfg_code_id]);
+    order by full_number`, [component_id, full_number, mfg_code_id]);
   return rows
 }
 
 async function getInventory(inventory_id) {
   const [rows] = await pool.query(`
-  SELECT inventory.id, chip_id, full_number, mfg_code_id, quantity, cmp.name as chip_number, description, description, mfg_code, manufacturer.name 
+  SELECT inventory.id, component_id, full_number, mfg_code_id, quantity, cmp.name as chip_number, description, description, mfg_code, manufacturer.name 
     from inventory
-    join components cmp on cmp.id = inventory.chip_id
+    join components cmp on cmp.id = inventory.component_id
     join mfg_codes on mfg_codes.id = inventory.mfg_code_id
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
   WHERE inventory.id = ?
@@ -348,24 +360,24 @@ async function getInventory(inventory_id) {
   return rows[0]
 }
 
-async function createInventory(chip_id, full_chip_number, mfg_code_id, quantity) {
+async function createInventory(component_id, full_chip_number, mfg_code_id, quantity) {
   const [result] = await pool.query(`
-    INSERT INTO inventory (chip_id, full_number, mfg_code_id, quantity)
+    INSERT INTO inventory (component_id, full_number, mfg_code_id, quantity)
     VALUES (?, ?, ?, ?)
-    `, [chip_id, full_chip_number, mfg_code_id, quantity])
+    `, [component_id, full_chip_number, mfg_code_id, quantity])
   const inventory_id = result.insertId;
   return getInventory(inventory_id)
 }
 
-async function updateInventory(inventory_id, chip_id, full_chip_number, mfg_code_id, quantity) {
+async function updateInventory(inventory_id, component_id, full_chip_number, mfg_code_id, quantity) {
   const [result] = await pool.query(`
     UPDATE inventory SET
-      chip_id = ?, 
+      component_id = ?, 
       full_number = ?, 
       mfg_code_id = ?, 
       quantity = ?
     WHERE id = ?
-    `, [chip_id, full_chip_number, mfg_code_id, quantity, inventory_id])
+    `, [component_id, full_chip_number, mfg_code_id, quantity, inventory_id])
   return getInventory(id);  
 }
 
@@ -517,15 +529,15 @@ async function createChip(chip_number, family, pin_count, package_type_id, datas
     INSERT INTO components (name, component_type_id, package_type_id, description, pin_count)
     VALUES (?, ?, ?, ?, ?)
     `, [chip_number, component_type_id, package_type_id, description, pin_count])
-  const chip_id = result.insertId
+  const component_id = result.insertId
   await pool.query(`
       INSERT INTO chips (id, family, datasheet)
       VALUES (?, ?, ?)
-      `, [chip_id, family, datasheet])
-  return getChip(chip_id)
+      `, [component_id, family, datasheet])
+  return getChip(component_id)
 }
 
-async function updateChip(chip_id, chip_number, family, pin_count, package_type_id, datasheet, description) {
+async function updateChip(component_id, chip_number, family, pin_count, package_type_id, datasheet, description) {
   const component_type_id = 1;
   await pool.query(`
     UPDATE components SET
@@ -535,33 +547,33 @@ async function updateChip(chip_id, chip_number, family, pin_count, package_type_
       description = ?, 
       pin_count = ?
     WHERE id = ?
-    `, [chip_number, component_type_id, package_type_id, description, pin_count, chip_id])
+    `, [chip_number, component_type_id, package_type_id, description, pin_count, component_id])
   await pool.query(`
     UPDATE chips SET
       family = ?, 
       datasheet = ?
     WHERE id = ?
-    `, [family, datasheet, chip_id])
-  return getChip(chip_id)
+    `, [family, datasheet, component_id])
+  return getChip(component_id)
 }
 
-async function deleteChip(chip_id) {
-  await pool.query('DELETE FROM aliases WHERE chip_id = ?', [chip_id]);
-  await pool.query('DELETE FROM notes WHERE chip_id = ?', [chip_id]);
-  await pool.query('DELETE FROM specs WHERE chip_id = ?', [chip_id]);
-  await pool.query('DELETE FROM pins WHERE chip_id = ?', [chip_id]);
-  await pool.query('DELETE FROM chips WHERE id = ?', [chip_id]);
-  await pool.query('DELETE FROM components WHERE id = ?', [chip_id]);
+async function deleteChip(component_id) {
+  await pool.query('DELETE FROM aliases WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM notes WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM specs WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM pins WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM chips WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM components WHERE id = ?', [component_id]);
   
 }
 
-async function createSpec(chip_id, parameter, value, units) {
+async function createSpec(component_id, parameter, value, units) {
   const [result] = await pool.query(`
-  INSERT INTO specs (chip_id, parameter, value, unit)
+  INSERT INTO specs (component_id, parameter, value, unit)
   VALUES (?, ?, ?, ?)
-  `, [chip_id, parameter, value, units])
+  `, [component_id, parameter, value, units])
   const id = result.insertId
-  return getChip(chip_id)
+  return getChip(component_id)
 }
 
 async function deleteSpec(spec_id) {
@@ -574,26 +586,26 @@ async function getSpec(spec_id) {
   return rows[0];
 }
 
-async function updateSpec(spec_id, chip_id, parameter, value, units) {
+async function updateSpec(spec_id, component_id, parameter, value, units) {
   const [result] = await pool.query(`
   UPDATE specs SET
-    chip_id = ?, 
+    component_id = ?, 
     parameter = ?, 
     value = ?, 
     unit = ?)
   WHERE id = ?
-  `, [chip_id, parameter, value, units, spec_id])
+  `, [component_id, parameter, value, units, spec_id])
   const id = result.insertId
-  return getChip(chip_id)
+  return getChip(component_id)
 }
 
-async function createNote(chip_id, note) {
+async function createNote(component_id, note) {
   const [result] = await pool.query(`
-  INSERT INTO notes (chip_id, note)
+  INSERT INTO notes (component_id, note)
   VALUES (?, ?)
-  `, [chip_id, note])
+  `, [component_id, note])
   const id = result.insertId
-  return getChip(chip_id)
+  return getChip(component_id)
 }
 
 async function deleteNote(note_id) {
@@ -606,55 +618,55 @@ async function getNote(note_id) {
   return rows[0];
 }
 
-async function updateNote(note_id, chip_id, note) {
+async function updateNote(note_id, component_id, note) {
   const [result] = await pool.query(`
     UPDATE notes SET 
-      chip_id = ?, 
+      component_id = ?, 
       note = ?
     WHERE id = ?
-    `, [chip_id, note, note_id])
+    `, [component_id, note, note_id])
     return getNote(note_id)
   
 }
 
-async function createPin(chip_id, pin_number, pin_symbol, pin_description) {
+async function createPin(component_id, pin_number, pin_symbol, pin_description) {
   const [result] = await pool.query(`
-  INSERT INTO pins (chip_id, pin_number, pin_symbol, pin_description)
+  INSERT INTO pins (component_id, pin_number, pin_symbol, pin_description)
   VALUES (?, ?, ?, ?)
-  `, [chip_id, pin_number, pin_symbol, pin_description])
+  `, [component_id, pin_number, pin_symbol, pin_description])
   const pin_id = result.insertId
   return getPin(pin_id)
 }
 
-async function updatePin(pin_id, chip_id, pin_number, pin_symbol, pin_description) {
+async function updatePin(pin_id, component_id, pin_number, pin_symbol, pin_description) {
   const [result] = await pool.query(`
   UPDATE pins SET
-    chip_id = ?, 
+    component_id = ?, 
     pin_number = ?, 
     pin_symbol = ?, 
     pin_description = ?
   WHERE id = ?
-  `, [chip_id, pin_number, pin_symbol, pin_description, pin_id])
+  `, [component_id, pin_number, pin_symbol, pin_description, pin_id])
   return getPin(pin_id)
 }
 
-async function createAlias(chip_id, alias_number) {
-  const [result] = await pool.query("INSERT INTO aliases (chip_id, alias_chip_number) VALUES (?, ?)", [chip_id, alias_number])
+async function createAlias(component_id, alias_number) {
+  const [result] = await pool.query("INSERT INTO aliases (component_id, alias_chip_number) VALUES (?, ?)", [component_id, alias_number])
   const alias_id = result.insertId
   return getAlias(alias_id)
 }
 
-async function deleteAliases(chip_id) {
-  const [result] = await pool.query("DELETE FROM aliases WHERE chip_id = ?", [chip_id])
+async function deleteAliases(component_id) {
+  const [result] = await pool.query("DELETE FROM aliases WHERE component_id = ?", [component_id])
   return true
 }
 
-async function getAliases(chip_id) {
+async function getAliases(component_id) {
   const [rows] = await pool.query(`
   SELECT * 
   FROM aliases
-  WHERE chip_id = ?
-  `, [chip_id])
+  WHERE component_id = ?
+  `, [component_id])
   return rows
 }
 
@@ -917,13 +929,15 @@ async function getPackageTypesForMountingType(mounting_type_id) {
   return rows
 }
 
-module.exports = { getSystemData, getComponentCounts, searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
+module.exports = { getSystemData, getComponentCounts, getComponent, 
+  searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
   createPin, updatePin, getDipLeftPins, getDipRightPins, 
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, createSpec, getSpec, updateSpec, deleteSpec,
   getNotes, createNote, getNote, updateNote, deleteNote,
-  searchInventory, getInventoryList, getInventory, getInventoryByChipList, lookupInventory, createInventory, updateInventory,
+  getCrystal,
+  searchInventory, getInventoryList, getInventory, getInventoryByComponentList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, deleteAliases, 
   getManufacturers, createManufacturer, getManufacturerList, getManufacturer, searchManufacturers,

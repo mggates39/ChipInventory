@@ -26,11 +26,11 @@ DROP TABLE IF EXISTS `aliases`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aliases` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `chip_id` int NOT NULL,
+  `component_id` int NOT NULL,
   `alias_chip_number` varchar(32) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `chip_idx` (`chip_id`),
-  CONSTRAINT `aliases_ibfk_1` FOREIGN KEY (`chip_id`) REFERENCES `chips` (`id`)
+  KEY `component_idx` (`component_id`),
+  CONSTRAINT `aliases_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `component` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-08 17:54:11
+-- Dump completed on 2024-10-09 12:50:26

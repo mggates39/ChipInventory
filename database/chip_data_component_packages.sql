@@ -33,7 +33,7 @@ CREATE TABLE `component_packages` (
   KEY `type_package_type_idx` (`package_type_id`),
   CONSTRAINT `component_packages_ibfk_1` FOREIGN KEY (`component_type_id`) REFERENCES `component_types` (`id`),
   CONSTRAINT `component_packages_ibfk_2` FOREIGN KEY (`package_type_id`) REFERENCES `package_types` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `component_packages` (
 
 LOCK TABLES `component_packages` WRITE;
 /*!40000 ALTER TABLE `component_packages` DISABLE KEYS */;
-INSERT INTO `component_packages` VALUES (19,6,2),(20,6,7),(21,6,12),(23,7,7),(24,7,11),(25,7,15),(27,9,15),(28,10,12),(29,10,15),(30,11,12),(31,11,15),(32,12,11),(33,12,15),(38,1,1),(39,1,19),(40,1,4),(41,1,14),(42,1,13),(43,1,16),(44,1,9),(45,1,10),(49,6,17),(50,7,17),(51,2,2),(52,2,5),(53,2,3),(54,2,7),(55,3,6),(56,8,15),(57,4,2),(58,4,8),(59,4,3),(60,4,7),(61,5,6),(62,14,15),(63,13,18);
+INSERT INTO `component_packages` VALUES (19,6,2),(20,6,7),(21,6,12),(23,7,7),(24,7,11),(25,7,15),(27,9,15),(28,10,12),(29,10,15),(30,11,12),(31,11,15),(32,12,11),(33,12,15),(38,1,1),(39,1,19),(40,1,4),(41,1,14),(42,1,13),(43,1,16),(44,1,9),(45,1,10),(49,6,17),(50,7,17),(51,2,2),(52,2,5),(53,2,3),(54,2,7),(56,8,15),(57,4,2),(58,4,8),(59,4,3),(60,4,7),(62,14,15),(63,13,18),(64,3,7),(65,3,15),(66,5,1),(67,5,6),(68,5,10),(69,5,7),(70,5,15);
 /*!40000 ALTER TABLE `component_packages` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-08 17:54:11
+-- Dump completed on 2024-10-09 12:50:26
