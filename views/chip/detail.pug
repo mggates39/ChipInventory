@@ -3,7 +3,7 @@ extends ../layout
 block content
   h3 !{chip.description}
     |  
-    a.btn.btn-primary(href="/chips/edit/"+chip.id, role="button") Edit 
+    a.btn.btn-primary.btn-sm(href="/chips/edit/"+chip.id, role="button") Edit 
   br
   if (aliases.length) 
     - var sep = ''
@@ -12,7 +12,7 @@ block content
         = sep + alias.alias_chip_number 
         - sep = ', '
 
-  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#aliasModal") Add alias
+  button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#aliasModal") Add alias
   br
   br
   p #[strong Family] #{chip.family}
@@ -22,7 +22,7 @@ block content
     p 
       a(target='_blank' href= chip.datasheet) Datasheet PDF
 
-  a.btn.btn-secondary(href="/inventory/new/"+chip.id, role="button") Add Inventory
+  a.btn.btn-secondary.btn-sm(href="/inventory/new/"+chip.id, role="button") Add Inventory
 
   if (inventory.length)
     div(id='inventory')
@@ -123,11 +123,11 @@ block content
             td(style="text-align:right;") !{n.value}
             td !{n.unit}
             td 
-              button.btn.btn-secondary(type="button") Edit 
+              button.btn.btn-secondary.btn-sm(type="button") Edit 
               |  
-              a.btn.btn-secondary(href="/chips/"+chip.id+"/delspec/"+n.id, role="button") Delete 
+              a.btn.btn-secondary.btn-sm(href="/chips/"+chip.id+"/delspec/"+n.id, role="button") Delete 
   br
-  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#specModal") Add specifications
+  button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#specModal") Add specifications
 
   br
   if (notes.length)
@@ -138,7 +138,7 @@ block content
         each n in notes
           li !{n.note}
   br
-  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#noteModal") Add notes
+  button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#noteModal") Add notes
   br
 
   //- Specification Modal
