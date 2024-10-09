@@ -68,8 +68,9 @@ router.get('/new', async function(req, res, next) {
     description: ''
   }
   const package_types = await getPackageTypesForComponentType(1);
+  const component_sub_types = await getComponentSubTypesForComponentType(1);
 
-  res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types});
+  res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
 });
 
 router.post('/new', async function(req, res) {
