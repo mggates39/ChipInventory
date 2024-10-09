@@ -19,6 +19,12 @@ CREATE TABLE chips (
   datasheet VARCHAR(256) NULL
 );
 
+CREATE TABLE crystals (
+	component_id INTEGER PRIMARY KEY NOT NULL,
+    frequency  VARCHAR(32) NOT NULL,
+  datasheet VARCHAR(256) NULL
+);
+
 CREATE TABLE pins (
   id INTEGER PRIMARY KEY AUTO_INCREMENT,
   component_id INTEGER NOT NULL,
@@ -110,6 +116,9 @@ CREATE TABLE component_packages (
 );
 
 -- Create Incexes and FK relationships once the tables are call reated.
+ALTER TABLE  chips ADD FOREIGN KEY chip_comp_idfk (component_id) REFERENCES components(id);
+ALTER TABLE  crystals ADD FOREIGN KEY crystal_comp_idfk (component_id) REFERENCES components(id);
+
 CREATE INDEX type_mounting_type_idx ON package_types(mounting_type_id);
 ALTER TABLE  package_types ADD FOREIGN KEY mounting_type_idfk (mounting_type_id) REFERENCES mounting_types(id);
 
