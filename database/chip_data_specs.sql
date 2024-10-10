@@ -33,7 +33,7 @@ CREATE TABLE `specs` (
   PRIMARY KEY (`id`),
   KEY `component_idx` (`component_id`),
   CONSTRAINT `specs_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=609 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=611 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-09 16:05:31
+-- Dump completed on 2024-10-09 22:06:41

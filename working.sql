@@ -343,7 +343,7 @@ select * from aliases;
 select * from component_types;
 
 select * from component_sub_types
-where component_type_id = 10;
+where component_type_id = 1;
 
 select * from  components cmp
 join chips c on c.component_id = cmp.id
@@ -351,7 +351,11 @@ join chips c on c.component_id = cmp.id
 where  family like '%micro%'
 order by cmp.name
 ;
-select * from components where name like '68%';
+select * 
+from components cmp
+join chips c on c.component_id = cmp.id
+where cmp.component_sub_type_id is null
+order by cmp.name;
 
 select family, count(*) ni
 from chips c
@@ -392,3 +396,8 @@ SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.p
     JOIN package_types pt on pt.id = cmp.package_type_id
     JOIN component_types ct on ct.id = cmp.component_type_id;
     
+select * from components where id = 80;
+select * from chips where component_id = 80;
+select * from aliases where component_id = 80;
+select * from pins where component_id = 80;
+

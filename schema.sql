@@ -144,22 +144,22 @@ CREATE INDEX mfg_idx ON mfg_codes(manufacturer_id);
 ALTER TABLE  mfg_codes ADD FOREIGN KEY mfg_codes_mfg_idfk (manufacturer_id) REFERENCES manufacturer(id);
 
 CREATE INDEX chip_idx ON pins (component_id);
-ALTER TABLE  pins add FOREIGN KEY pins_chip_idfk (component_id) REFERENCES component(id);
+ALTER TABLE  pins add FOREIGN KEY pins_chip_idfk (component_id) REFERENCES components(id);
 
 CREATE INDEX chip_idx ON notes (component_id);
-ALTER TABLE  notes ADD FOREIGN KEY notes_chip_idfk (component_id) REFERENCES component(id);
+ALTER TABLE  notes ADD FOREIGN KEY notes_chip_idfk (component_id) REFERENCES components(id);
 
 CREATE INDEX chip_idx ON specs (component_id);
-ALTER TABLE  specs ADD FOREIGN KEY specs_chip_idfk (component_id) REFERENCES component(id);
+ALTER TABLE  specs ADD FOREIGN KEY specs_chip_idfk (component_id) REFERENCES components(id);
 
 CREATE INDEX chip_idx ON aliases (component_id);
-ALTER table  aliases ADD FOREIGN KEY aliases_chip_idfk (component_id) REFERENCES component(id);
+ALTER table  aliases ADD FOREIGN KEY aliases_chip_idfk (component_id) REFERENCES components(id);
 
 CREATE INDEX chip_idx ON inventory (component_id);
-ALTER TABLE  inventory ADD FOREIGN KEY inventory_chip_idfk (component_id) REFERENCES component(id);
+ALTER TABLE  inventory ADD FOREIGN KEY inventory_chip_idfk (component_id) REFERENCES components(id);
 
 CREATE INDEX mfg_code_idx ON inventory (mfg_code_id);
-ALTER table  inventory ADD FOREIGN KEY mfg_code_idfk (mfg_code_id) REFERENCES mfg_code(id);
+ALTER table  inventory ADD FOREIGN KEY mfg_code_idfk (mfg_code_id) REFERENCES mfg_codes(id);
 
 CREATE INDEX inv_idx ON inventory_dates(inventory_id);
 ALTER TABLE  inventory_dates ADD FOREIGN KEY inv_idfk (inventory_id) REFERENCES inventory(id);

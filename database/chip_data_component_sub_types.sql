@@ -32,7 +32,7 @@ CREATE TABLE `component_sub_types` (
   PRIMARY KEY (`id`),
   KEY `component_type_idx` (`component_type_id`),
   CONSTRAINT `component_sub_types_ibfk_1` FOREIGN KEY (`component_type_id`) REFERENCES `component_types` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `component_sub_types` (
 
 LOCK TABLES `component_sub_types` WRITE;
 /*!40000 ALTER TABLE `component_sub_types` DISABLE KEYS */;
-INSERT INTO `component_sub_types` VALUES (1,1,'7400','7400 series of chips'),(2,1,'5400','5400 series of chips'),(3,1,'4000','4000 series of chips'),(4,1,'Power','Power related chips'),(5,1,'Driver','Signal or bus driver chips'),(6,1,'Linear','Linear chips'),(7,1,'PIA','Peripheral Interface Adapter chips '),(8,1,'MPU','Micro Processor Unit chips'),(10,1,'Memory','Memory chips'),(11,1,'PIC','PIC Micro-controller'),(12,1,'UART','UART Support Chips'),(13,1,'MAX','Maxim Communication Line Driver Chips'),(14,1,'I2C','I2C Support chips'),(15,1,'Optical','Optical Support Chips'),(16,1,'Analog','Analog Support chips'),(17,2,'Ceramic','Ceramic Capacitor'),(18,2,'Film','Film Capacitor'),(19,2,'Tantalum','Polarized Tantalum Capacitor'),(20,2,'Polymer','Polymer Capacitor'),(21,2,'Electrolytic','Polarized Electrolytic Capacitor'),(22,2,'Super Cap','Polarized Super Capacitor'),(23,2,'Trimmer','Trimmer Capacitor'),(24,2,'Variable','Variable Capacitor'),(25,3,'Ceramic','Ceramic Capacitor'),(26,3,'Film','Thick Film Capacitor'),(27,3,'Poly','Polypropylene Capacitor'),(28,4,'Film','Film Resistor'),(29,4,'Variable','Variable Resistor'),(30,4,'Wire Wound','Wire Wound Resistor'),(31,4,'Carbon','Carbon Composite Resistor'),(32,4,'Photo','Photo Resistor'),(33,4,'Thermistor','Thermistor'),(34,5,'Carbon ','Carbon Composite Resistor'),(35,5,'Film','Film Resistor'),(36,1,'AVR','Atmel AVR MCU');
+INSERT INTO `component_sub_types` VALUES (1,1,'7400','7400 series of chips'),(2,1,'5400','5400 series of chips'),(3,1,'4000','4000 series of chips'),(4,1,'Power','Power related chips'),(5,1,'Driver','Signal or bus driver chips'),(6,1,'Linear','Linear chips'),(7,1,'PIA','Peripheral Interface Adapter chips '),(8,1,'MPU','Micro Processor Unit chips'),(10,1,'Memory','Memory chips'),(11,1,'PIC','PIC Micro-controller'),(12,1,'UART','UART Support Chips'),(13,1,'MAX','Maxim Communication Line Driver Chips'),(14,1,'I2C','I2C Support chips'),(15,1,'Optical','Optical Support Chips'),(16,1,'Analog','Analog Support chips'),(17,2,'Ceramic','Ceramic Capacitor'),(18,2,'Film','Film Capacitor'),(19,2,'Tantalum','Polarized Tantalum Capacitor'),(20,2,'Polymer','Polymer Capacitor'),(21,2,'Electrolytic','Polarized Electrolytic Capacitor'),(22,2,'Super Cap','Polarized Super Capacitor'),(23,2,'Trimmer','Trimmer Capacitor'),(24,2,'Variable','Variable Capacitor'),(25,3,'Ceramic','Ceramic Capacitor'),(26,3,'Film','Thick Film Capacitor'),(27,3,'Poly','Polypropylene Capacitor'),(28,4,'Film','Film Resistor'),(29,4,'Variable','Variable Resistor'),(30,4,'Wire Wound','Wire Wound Resistor'),(31,4,'Carbon','Carbon Composite Resistor'),(32,4,'Photo','Photo Resistor'),(33,4,'Thermistor','Thermistor'),(34,5,'Carbon ','Carbon Composite Resistor'),(35,5,'Film','Film Resistor'),(36,1,'AVR','Atmel AVR MCU'),(37,10,'VCXO','Voltage-Controlled Crystal Oscillator)'),(38,10,'TCXO','Temperature-Compensated Crystal Oscillator'),(39,10,'OCXO','Oven-Controlled Crystal Oscillator'),(40,10,'VCTCXO','Voltage-Controlled Temperature-Compensated Crystal Oscillator');
 /*!40000 ALTER TABLE `component_sub_types` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-09 16:05:31
+-- Dump completed on 2024-10-09 22:06:41
