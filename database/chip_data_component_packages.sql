@@ -33,7 +33,7 @@ CREATE TABLE `component_packages` (
   KEY `type_package_type_idx` (`package_type_id`),
   CONSTRAINT `component_packages_ibfk_1` FOREIGN KEY (`component_type_id`) REFERENCES `component_types` (`id`),
   CONSTRAINT `component_packages_ibfk_2` FOREIGN KEY (`package_type_id`) REFERENCES `package_types` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `component_packages` (
 
 LOCK TABLES `component_packages` WRITE;
 /*!40000 ALTER TABLE `component_packages` DISABLE KEYS */;
-INSERT INTO `component_packages` VALUES (19,6,2),(20,6,7),(21,6,12),(23,7,7),(24,7,11),(25,7,15),(27,9,15),(30,11,12),(31,11,15),(32,12,11),(33,12,15),(38,1,1),(39,1,19),(40,1,4),(41,1,14),(42,1,13),(43,1,16),(44,1,9),(45,1,10),(49,6,17),(50,7,17),(51,2,2),(52,2,5),(53,2,3),(54,2,7),(56,8,15),(57,4,2),(58,4,8),(59,4,3),(60,4,7),(62,14,15),(63,13,18),(64,3,7),(65,3,15),(66,5,1),(67,5,6),(68,5,10),(69,5,7),(70,5,15),(74,10,1),(75,10,7),(76,10,15);
+INSERT INTO `component_packages` VALUES (87,10,1),(88,10,7),(89,10,15),(90,6,2),(91,6,12),(92,6,7),(93,6,17),(94,13,2),(95,13,18),(96,13,3),(97,13,7),(98,13,15),(107,1,1),(108,1,19),(109,1,4),(110,1,14),(111,1,13),(112,1,16),(113,1,9),(114,1,10),(115,9,15),(116,8,2),(117,8,3),(118,8,15),(119,14,15),(120,2,2),(121,2,5),(122,2,3),(123,2,7),(124,3,7),(125,3,15),(126,5,1),(127,5,6),(128,5,10),(129,5,7),(130,5,15),(131,15,2),(132,7,11),(133,7,7),(134,7,15),(135,7,17),(138,11,7),(139,11,15),(140,12,7),(141,12,15),(142,4,2),(143,4,8),(144,4,3),(145,4,7),(146,4,15);
 /*!40000 ALTER TABLE `component_packages` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-09 22:43:56
+-- Dump completed on 2024-10-10 18:26:27
