@@ -767,7 +767,7 @@ async function setComponentPackageTypes( component_type_id, package_types) {
 async function createComponentType(description, symbol, table_name, package_types) {
   const [result] = await pool.query(`
     INSERT INTO component_types (description, symbol, table_name)
-    VALUES (?, ?, ?, ?)
+    VALUES (?, ?, ?)
     `, [description, symbol, table_name])
     const component_type_id = result.insertId
 
