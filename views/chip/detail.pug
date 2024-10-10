@@ -67,12 +67,18 @@ block content
 
       each n, index in layout_pins
         tr
-          td.leftpinsym !{n.left_sym} &#9616;
+          if (n.left_sym)
+            td.leftpinsym !{n.left_sym} &#9616;
+          else 
+            td.leftpinsym &nbsp;
           td.leftpinnum #{n.left_pin} !{n.bull}
           for m, m_index in top_pins 
             td.spacerpin &nbsp;
           td.rightpinnum #{n.right_pin}
-          td.rightpinsym &#9612; !{n.right_sym}
+          if (n.right_sym)
+            td.rightpinsym &#9612; !{n.right_sym}
+          else
+            td.rightpinsym &nbsp;
 
       if (top_pins.length)
         tr
