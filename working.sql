@@ -348,7 +348,7 @@ where component_type_id = 1;
 select * from  components cmp
 join chips c on c.component_id = cmp.id
 -- where cmp.component_sub_type_id is null
-where  family like '%micro%'
+where  family like '%zil%'
 order by cmp.name
 ;
 select * 
