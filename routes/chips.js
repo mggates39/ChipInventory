@@ -145,7 +145,7 @@ router.post('/:id', async function(req, res) {
   data['descr'] = descr;
 
   const chip = await updateChip(id, data.chip_number, data.family, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
-  chip_id =chip.component_id;
+  chip_id = chip.component_id;
 
   for (var i = 0; i < req.body.pin_count; i++) {
     await updatePin(pin_id[i], chip_id, pin[i], sym[i], descr[i]);
