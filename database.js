@@ -14,6 +14,7 @@ async function getSystemData() {
   const [rows] = await pool.query(`select 
       (select count(*) from aliases) aliases,
       (select sum(quantity) from inventory) on_hand,
+      (select count(*) from (select distinct component_id from inventory) a) used_components,
       (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') min_date,
       (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') max_date,
       (select count(*) from manufacturer) mfgs,
@@ -23,10 +24,36 @@ async function getSystemData() {
 }
 
 async function getComponentCounts() {
-  const [rows] = await pool.query(`select concat(ct.description, 's') description, table_name, count(cmp.id) ni
-from component_types ct
-join components cmp on ct.id = cmp.component_type_id
-group by ct.description, table_name`);
+  const [rows] = await pool.query(`
+    select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, 
+      table_name, count(cmp.id) ni
+    from component_types ct
+    join components cmp on ct.id = cmp.component_type_id
+    group by ct.description, table_name
+    order by ct.description`);
+  return rows;
+}
+
+async function getAliasCounts() {
+  const [rows] = await pool.query(`
+    select concat(ct.description, ' Aliases') description, table_name, count(c.id) ni
+    from component_types ct
+    join components c on ct.id = c.component_type_id
+    join aliases a on a.component_id = c.id
+    group by ct.description, table_name
+    order by ct.description`);
+  return rows;
+}
+
+async function getInventoryCounts() {
+  const [rows] = await pool.query(`
+    select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, table_name, count(c.id) ni, sum(i.quantity) quantity
+    from component_types ct
+    join components c on ct.id = c.component_type_id
+    join inventory i on i.component_id = c.id
+    where c.id in (select distinct component_id from inventory)
+    group by ct.description, table_name
+    order by ct.description`);
   return rows;
 }
 
@@ -976,7 +1003,7 @@ async function getPackageTypesForMountingType(mounting_type_id) {
   return rows
 }
 
-module.exports = { getSystemData, getComponentCounts, getComponent, 
+module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInventoryCounts, getComponent, 
   searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
   createPin, updatePin, getDipLeftPins, getDipRightPins, 
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,

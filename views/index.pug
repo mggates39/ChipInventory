@@ -9,16 +9,18 @@ block content
         h5.card-header.border-dark Definitions
         div.card-body
           p.card-title Component Definitions
-          p.card-text Aliases: #{data.aliases}
           for count in counts
             p.card-text #{count.description}: #{count.ni}
+          for alias in aliases
+            p.card-text #{alias.description}: #{alias.ni}
 
     div.col-sm-3 
       div.card.text-center.border-dark.mb-3(style="max-width: 18rem;")
         h5.card-header.border-dark On Hand
         div.card-body
           p.card-title Components On Hand
-          p.card-text= data.on_hand
+          for item in inventory
+            p.card-text #{item.quantity} from #{item.ni} #{item.description}
 
     div.col-sm-3 
       div.card.text-center.border-dark.mb-3(style="max-width: 18rem;")
