@@ -7,6 +7,7 @@ block content
       th Type
       th Symbol
       th Table
+      th Number of Sub Types
 
     each n in component_types
       tr
@@ -14,6 +15,7 @@ block content
           a(href="/component_types/"+n.id) #{n.description}
         td= n.symbol
         td= n.table_name
+        td= n.num
 
     if component_types.length == 0
       tr
