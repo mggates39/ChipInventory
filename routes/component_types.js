@@ -10,7 +10,9 @@ router.get('/', async function(req, res, next) {
 });
 
 router.get('/new', async function(req, res, next) {
-  const data = {description: '',
+  const data = {
+    name: '',
+    description: '',
     symbol: '',
     table_name: ''
   };
@@ -36,7 +38,7 @@ router.get('/edit/:id', async function(req, res, next) {
 })
 
 router.post('/new', async function( req, res, next) {
-  const component_type = await createComponentType(req.body.description, req.body.symbol, req.body.table_name, req.body.package_type_selection)
+  const component_type = await createComponentType(req.body.name, req.body.description, req.body.symbol, req.body.table_name, req.body.package_type_selection)
   const id = component_type.id
   res.redirect('/component_types/'+id);
 });
@@ -44,7 +46,7 @@ router.post('/new', async function( req, res, next) {
 /* POST existing item update */
 router.post('/:id', async function( req, res, next) {
   const id = req.params.id;
-  await updateComponentType(id, req.body.description, req.body.symbol, req.body.table_name, req.body.package_type_selection)
+  await updateComponentType(id, req.body.name, req.body.description, req.body.symbol, req.body.table_name, req.body.package_type_selection)
   res.redirect('/component_types/'+id);
 })
 

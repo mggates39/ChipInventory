@@ -5,7 +5,10 @@ block content
   form(action="/component_types/new/" method="POST")
     div.form-group
       label(for="description") Component:
-      input#description.form-control( type="text" placeholder="Ex) Resistor" name="description" value=component_type.description)
+      input#name.form-control( type="text" placeholder="Ex) IC" name="name" value=component_type.name)
+    div.form-group
+      label(for="description") Description:
+      input#description.form-control( type="text" placeholder="Ex) Integrated Circuit" name="description" value=component_type.description)
     div.form-group
       label( for="symbol") Symbol:
       input#symbol.form-control(type="text" placeholder="Ex) R" name="symbol" value=component_type.symbol)

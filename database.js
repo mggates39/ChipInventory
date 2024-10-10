@@ -791,11 +791,11 @@ async function setComponentPackageTypes( component_type_id, package_types) {
   }
 }
 
-async function createComponentType(description, symbol, table_name, package_types) {
+async function createComponentType(name, description, symbol, table_name, package_types) {
   const [result] = await pool.query(`
     INSERT INTO component_types (description, symbol, table_name)
-    VALUES (?, ?, ?)
-    `, [description, symbol, table_name])
+    VALUES (?, ?, ?, ?)
+    `, [name, description, symbol, table_name])
     const component_type_id = result.insertId
 
     await setComponentPackageTypes(component_type_id, package_types);
@@ -803,14 +803,15 @@ async function createComponentType(description, symbol, table_name, package_type
     return getComponentType(component_type_id)    
 }
 
-async function updateComponentType(component_type_id, description, symbol, table_name, package_types) {
+async function updateComponentType(component_type_id, name, description, symbol, table_name, package_types) {
   const [result] = await pool.query(`
     UPDATE component_types SET
+      name = ?,
       description = ?, 
       symbol = ?, 
       table_name = ?
     WHERE id = ?
-    `, [description, symbol, table_name, component_type_id]);
+    `, [name, description, symbol, table_name, component_type_id]);
 
     await setComponentPackageTypes(component_type_id, package_types);
 
