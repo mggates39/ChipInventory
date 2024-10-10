@@ -165,15 +165,34 @@ where date_code REGEXP '^[0-9]+$';
     select (SELECT count(*) from chips ) chips,
       (select count(*) from aliases) aliases,
       (select sum(quantity) from inventory) on_hand,
+      (select count(*) from (select distinct component_id from inventory) a) used_components,
       (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') min_date,
       (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') max_date,
       (select count(*) from manufacturer) mfgs,
       (select count(*) from mfg_codes) codes;
 
-select concat(ct.description, 's') description, table_name, count(c.id) ni
+select count(*) from (select distinct component_id from inventory) a;
+
+select concat(ct.description, ' Aliases') description, table_name, count(c.id) ni
+from component_types ct
+join components c on ct.id = c.component_type_id
+join aliases a on a.component_id = c.id
+group by ct.description, table_name
+order by ct.description;
+
+select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, table_name, count(c.id) ni, sum(i.quantity) quantity
+from component_types ct
+join components c on ct.id = c.component_type_id
+join inventory i on i.component_id = c.id
+where c.id in (select distinct component_id from inventory)
+group by ct.description, table_name
+order by ct.description;
+
+select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, table_name, count(c.id) ni
 from component_types ct
 left join components c on ct.id = c.component_type_id
-group by ct.description, table_name;
+group by ct.description, table_name
+order by ct.description;
 
 select table_name from component_types;
 
@@ -400,4 +419,9 @@ select * from components where id = 80;
 select * from chips where component_id = 80;
 select * from aliases where component_id = 80;
 select * from pins where component_id = 80;
+
+
+SELECT ct.* , (select count(*) ni from component_sub_types where component_type_id = ct.id) num
+FROM component_types ct
+ORDER BY description;
 
