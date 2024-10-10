@@ -3,7 +3,7 @@ extends ../layout
 block content
   h3 !{crystal.description}
     |  
-    a.btn.btn-primary.btn-sm(href="/crystal/edit/"+crystal.component_id, role="button") Edit 
+    a.btn.btn-primary.btn-sm(href="/crystals/edit/"+crystal.component_id, role="button") Edit 
   br
   if (aliases.length) 
     - var sep = ''

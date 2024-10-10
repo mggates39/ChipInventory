@@ -525,22 +525,16 @@ async function createManufacturerCode(manufacturer_id, code) {
   return getMfgCode(manufacturer_code_id)   
 }
 
-async function createChip(chip_number, family, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 1;
+async function createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count) {
   const [result] = await pool.query(`
     INSERT INTO components (name, component_type_id, package_type_id, component_sub_type_id, description, pin_count)
     VALUES (?, ?, ?, ?, ?, ?)
     `, [chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count])
   const component_id = result.insertId
-  await pool.query(`
-      INSERT INTO chips (component_id, family, datasheet)
-      VALUES (?, ?, ?)
-      `, [component_id, family, datasheet])
-  return getChip(component_id)
+  return component_id;
 }
 
-async function updateChip(component_id, chip_number, family, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 1;
+async function updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count) {
   await pool.query(`
     UPDATE components SET
       name = ?, 
@@ -551,6 +545,22 @@ async function updateChip(component_id, chip_number, family, pin_count, package_
       pin_count = ?
     WHERE id = ?
     `, [chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, component_id])
+  return true;
+}
+
+async function createChip(chip_number, family, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 1;
+  const component_id = await createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO chips (component_id, family, datasheet)
+      VALUES (?, ?, ?)
+      `, [component_id, family, datasheet])
+  return getChip(component_id)
+}
+
+async function updateChip(component_id, chip_number, family, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 1;
+  await updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
     UPDATE chips SET
       family = ?, 
@@ -567,7 +577,39 @@ async function deleteChip(component_id) {
   await pool.query('DELETE FROM pins WHERE component_id = ?', [component_id]);
   await pool.query('DELETE FROM chips WHERE component_id = ?', [component_id]);
   await pool.query('DELETE FROM components WHERE id = ?', [component_id]);
-  
+  return true
+}
+
+async function createCrystal(chip_number, frequency, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 10;
+  const component_id = await createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO crystals (component_id, frequency, datasheet)
+      VALUES (?, ?, ?)
+      `, [component_id, frequency, datasheet])
+  return getCrystal(component_id)
+}
+
+async function updateCrystal(component_id, chip_number, frequency, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 10;
+  await updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE crystals SET
+      frequency = ?, 
+      datasheet = ?
+    WHERE component_id = ?
+    `, [frequency, datasheet, component_id])
+  return getCrystal(component_id)
+}
+
+async function deleteCrystal(component_id) {
+  await pool.query('DELETE FROM aliases WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM notes WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM specs WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM pins WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM crystals WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM components WHERE id = ?', [component_id]);
+  return true
 }
 
 async function createSpec(component_id, parameter, value, units) {
@@ -939,7 +981,7 @@ module.exports = { getSystemData, getComponentCounts, getComponent,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, createSpec, getSpec, updateSpec, deleteSpec,
   getNotes, createNote, getNote, updateNote, deleteNote,
-  getCrystal,
+  getCrystal, createCrystal, updateCrystal, deleteCrystal,
   searchInventory, getInventoryList, getInventory, getInventoryByComponentList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, deleteAliases, 

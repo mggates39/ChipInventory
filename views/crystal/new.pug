@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  p Enter the new Crystal defintion
+  p Enter the new crystal defintion
   form(action="/crystals/new/" method="POST")
     div.form-group
       label(for="chip_number") Chip Number:
@@ -13,8 +13,8 @@ block content
       label( for="frequency") Frequency:
       input#frequency.form-control(type="text" placeholder="Ex) 7400" name="frequency" value=data.frequency)
     div.form-group
-      label( for="compnent_sub_type_id") Component:
-      select#compnent_sub_type_id.form-control(type='select' placeholder='Select Component type' name='compnent_sub_type_id' required='true')
+      label( for="component_sub_type_id") Component:
+      select#component_sub_type_id.form-control(type='select' placeholder='Select Component type' name='component_sub_type_id' required='true')
         for component_sub_type in component_sub_types
           option(value=component_sub_type.id selected= data.component_sub_type_id == component_sub_type.id) #{component_sub_type.name}
     div.form-group
