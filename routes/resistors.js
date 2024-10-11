@@ -10,6 +10,7 @@ const {parse_symbol} = require('../utility');
 /* GET new item page */
 router.get('/new', async function(req, res, next) {
   data = {chip_number: '',
+    aliases: '',
     package_type_id: '',
     pin_count: 2,
     component_sub_type_id: '',
@@ -172,12 +173,21 @@ router.get('/edit/:id', async function(req, res, next) {
   const resistor_id = req.params.id;
   const resistor = await getResistor(resistor_id);
   const pins = await getPins(resistor_id);
+  const aliases = await getAliases(resistor_id);
   const package_types = await getPackageTypesForComponentType(4);
   const component_sub_types = await getComponentSubTypesForComponentType(4);
 
+  aliasList = "";
+  sep = "";
+  aliases.forEach(function(alias) {
+    aliasList += (sep + alias.alias_chip_number);
+    sep = ", ";
+  })
+  
   data = {
     id: resistor_id,
     chip_number: resistor.chip_number,
+    aliases: aliasList,
     resistance: resistor.resistance,
     tolerance: resistor.tolerance,
     power: resistor.power,
@@ -209,6 +219,7 @@ router.get('/edit/:id', async function(req, res, next) {
   
 router.post('/new', async function( req, res, next) {
   data = {chip_number: req.body.chip_number,
+    aliases: req.body.aliases,
     resistance: req.body.resistance,
     tolerance: req.body.tolerance,
     power: req.body.power,
@@ -241,6 +252,13 @@ router.post('/new', async function( req, res, next) {
       await createPin(resistor_id, pin[i], sym[i], descr[i]);
     }
 
+    aliases = data.aliases.split(',');
+    for( const alias of aliases) {
+      if (alias.length > 0) {
+        await createAlias(resistor_id, alias.trim());
+      }
+    }
+
     res.redirect('/resistors/'+resistor_id);
   } else {
     res.render('resistor/new', {title: 'New Resistor Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
@@ -250,6 +268,7 @@ router.post('/new', async function( req, res, next) {
 router.post('/:id', async function( req, res, next) {
   const id = req.params.id;
   data = {chip_number: req.body.chip_number,
+    aliases: req.body.aliases,
     resistance: req.body.resistance,
     tolerance: req.body.tolerance,
     power: req.body.power,
@@ -279,6 +298,15 @@ router.post('/:id', async function( req, res, next) {
 
   for (var i = 0; i < req.body.pin_count; i++) {
     await updatePin(pin_id[i], resistor_id, pin[i], sym[i], descr[i]);
+  }
+
+  await deleteAliases(resistor_id);
+
+  aliases = data.aliases.split(',');
+  for( const alias of aliases) {
+    if (alias.length > 0) {
+      await createAlias(resistor_id, alias.trim());
+    }
   }
 
   res.redirect('/resistors/'+id);
