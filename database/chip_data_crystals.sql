@@ -39,7 +39,7 @@ CREATE TABLE `crystals` (
 
 LOCK TABLES `crystals` WRITE;
 /*!40000 ALTER TABLE `crystals` DISABLE KEYS */;
-INSERT INTO `crystals` VALUES (174,'32.768kHz','https://www.analog.com/media/jp/technical-documentation/data-sheets/2940.pdf');
+INSERT INTO `crystals` VALUES (174,'32.768kHz','https://www.analog.com/media/jp/technical-documentation/data-sheets/2940.pdf'),(268,'8.0000000 MHz','https://www.we-online.com/components/products/datasheet/830003147B.pdf');
 /*!40000 ALTER TABLE `crystals` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-10 18:26:27
+-- Dump completed on 2024-10-11 18:24:46
