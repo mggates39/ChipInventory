@@ -26,11 +26,12 @@ DROP TABLE IF EXISTS `component_types`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `component_types` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(16) NOT NULL,
   `description` varchar(32) NOT NULL,
   `symbol` varchar(4) NOT NULL,
   `table_name` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +40,7 @@ CREATE TABLE `component_types` (
 
 LOCK TABLES `component_types` WRITE;
 /*!40000 ALTER TABLE `component_types` DISABLE KEYS */;
-INSERT INTO `component_types` VALUES (1,'Integrated Circuit','U','chips'),(2,'Capacitor','C','passives'),(3,'Capacitor Network','CN','passives'),(4,'Resistor','R','passives'),(5,'Resistor Network','RN','passives'),(6,'Diode','D','diodes'),(7,'Transistor','Q','transistors'),(8,'Inductor','L','passives'),(9,'Switch','SW','switches'),(10,'Crystal','Y','crystals'),(11,'Connector jack','J','connectors'),(12,'Connector plug ','JP','connectors'),(13,'Fuse','F','power'),(14,'Transformer','T','power');
+INSERT INTO `component_types` VALUES (1,'IC','Integrated Circuit','U','chips'),(2,'Cap','Capacitor','C','capacitors'),(3,'CN','Capacitor Network','CN','capacitors'),(4,'Res','Resistor','R','resistors'),(5,'RN','Resistor Network','RN','resistor_networks'),(6,'Diode','Diode','D','diodes'),(7,'Transisstor','Transistor','Q','transistors'),(8,'Inductor','Inductor','L','inductors'),(9,'Switch','Switch','SW','switches'),(10,'Xtal','Crystal','Y','crystals'),(11,'Socket','Connector jack','J','connectors'),(12,'Pin','Connector plug','JP','connectors'),(13,'Fuse','Fuse','F','fuses'),(14,'XFMR','Transformer','T','transformers'),(15,'Wire','Wire','W','wires');
 /*!40000 ALTER TABLE `component_types` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-06 23:50:57
+-- Dump completed on 2024-10-11 18:24:46

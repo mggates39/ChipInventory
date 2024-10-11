@@ -3,7 +3,7 @@ extends ../layout
 block content
   h3 !{chip.description}
     |  
-    a.btn.btn-primary(href="/chips/edit/"+chip.id, role="button") Edit 
+    a.btn.btn-primary.btn-sm(href="/chips/edit/"+chip.component_id, role="button") Edit 
   br
   if (aliases.length) 
     - var sep = ''
@@ -12,15 +12,18 @@ block content
         = sep + alias.alias_chip_number 
         - sep = ', '
 
-  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#aliasModal") Add alias
-
+  button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#aliasModal") Add alias
+  br
+  br
+  p #[strong Family] #{chip.family}
+  p #[strong Component] #{chip.component_type}
   p #[strong Package] #{chip.package}
   p #[strong Pin Count] #{chip.pin_count}
   if chip.datasheet
     p 
       a(target='_blank' href= chip.datasheet) Datasheet PDF
 
-  a.btn.btn-secondary(href="/inventory/new/"+chip.id, role="button") Add Inventory
+  a.btn.btn-secondary.btn-sm(href="/inventory/new/"+chip.component_id, role="button") Add Inventory
 
   if (inventory.length)
     div(id='inventory')
@@ -64,12 +67,18 @@ block content
 
       each n, index in layout_pins
         tr
-          td.leftpinsym !{n.left_sym} &#9616;
+          if (n.left_sym)
+            td.leftpinsym !{n.left_sym} &#9616;
+          else 
+            td.leftpinsym &nbsp;
           td.leftpinnum #{n.left_pin} !{n.bull}
           for m, m_index in top_pins 
             td.spacerpin &nbsp;
           td.rightpinnum #{n.right_pin}
-          td.rightpinsym &#9612; !{n.right_sym}
+          if (n.right_sym)
+            td.rightpinsym &#9612; !{n.right_sym}
+          else
+            td.rightpinsym &nbsp;
 
       if (top_pins.length)
         tr
@@ -121,11 +130,11 @@ block content
             td(style="text-align:right;") !{n.value}
             td !{n.unit}
             td 
-              button.btn.btn-secondary(type="button") Edit 
+              button.btn.btn-secondary.btn-sm(type="button") Edit 
               |  
-              a.btn.btn-secondary(href="/chips/"+chip.id+"/delspec/"+n.id, role="button") Delete 
+              a.btn.btn-secondary.btn-sm(href="/components/"+chip.component_id+"/delspec/"+n.id, role="button") Delete 
   br
-  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#specModal") Add specifications
+  button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#specModal") Add specifications
 
   br
   if (notes.length)
@@ -136,14 +145,14 @@ block content
         each n in notes
           li !{n.note}
   br
-  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#noteModal") Add notes
+  button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#noteModal") Add notes
   br
 
   //- Specification Modal
   div#specModal.modal.fade(tabindex="-1" aria-labelledby="specModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        form(action="/chips/"+chip.id+"/newspec" method="POST")
+        form(action="/components/"+chip.component_id+"/newspec" method="POST")
           div.modal-header
             h5#specModalLabel.modal-title Add a Specification
             button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
@@ -173,7 +182,7 @@ block content
   div#noteModal.modal.fade(tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        form(action="/chips/"+chip.id+"/newnote" method="POST")
+        form(action="/components/"+chip.component_id+"/newnote" method="POST")
           div.modal-header
             h5#noteModalLabel.modal-title Add a Note
             button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
@@ -193,7 +202,7 @@ block content
   div#aliasModal.modal.fade(tabindex="-1" aria-labelledby="aliasModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        form(action="/chips/"+chip.id+"/newalias" method="POST")
+        form(action="/components/"+chip.component_id+"/newalias" method="POST")
           div.modal-header
             h5#aliasModalLabel.modal-title Add an Alias
             button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
@@ -213,4 +222,16 @@ block scripts
   script(type="text/javascript").
     $( document ).ready(function() {
       $("#cmf").addClass("active");
+    });
+    $('#specModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      $(this).find('#param').focus();
+    });
+    $('#noteModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      $(this).find('#note').focus();
+    });
+    $('#aliasModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      $(this).find('#alias').focus();
     });

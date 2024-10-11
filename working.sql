@@ -165,13 +165,38 @@ where date_code REGEXP '^[0-9]+$';
     select (SELECT count(*) from chips ) chips,
       (select count(*) from aliases) aliases,
       (select sum(quantity) from inventory) on_hand,
+      (select count(*) from (select distinct component_id from inventory) a) used_components,
       (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') min_date,
       (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') max_date,
       (select count(*) from manufacturer) mfgs,
       (select count(*) from mfg_codes) codes;
 
-select * from component_types;
+select count(*) from (select distinct component_id from inventory) a;
 
+select concat(ct.description, ' Aliases') description, table_name, count(c.id) ni
+from component_types ct
+join components c on ct.id = c.component_type_id
+join aliases a on a.component_id = c.id
+group by ct.description, table_name
+order by ct.description;
+
+select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, table_name, count(c.id) ni, sum(i.quantity) quantity
+from component_types ct
+join components c on ct.id = c.component_type_id
+join inventory i on i.component_id = c.id
+where c.id in (select distinct component_id from inventory)
+group by ct.description, table_name
+order by ct.description;
+
+select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, table_name, count(c.id) ni
+from component_types ct
+left join components c on ct.id = c.component_type_id
+group by ct.description, table_name
+order by ct.description;
+
+select table_name from component_types;
+
+alter table component_sub_types modify description varchar(64) not null;
 
 
 select * from component_types;
@@ -188,6 +213,8 @@ order by family, chip_number;
 
 
 select * from component_types;
+select * from component_sub_types;
+
 select * from package_types;
 
 
@@ -276,13 +303,13 @@ where c.id = 267
 order by cast(pin_number as signed);
 
 -- bottom
-select cmp.name as chip_number, c.pin_count, binbottom.pin_number, binbottom.pin_symbol
+select cmp.name as chip_number, cmp.pin_count, binbottom.pin_number, binbottom.pin_symbol
 from components cmp
-join chips c on c.id = cmp.id
-join pins binbottom on binbottom.chip_id = c.id
-where c.id = 267
-  and binbottom.pin_number > (c.pin_count/2)
-  and binbottom.pin_number <= (c.pin_count - (c.pin_count/4))
+join chips c on c.component_id = cmp.id
+join pins binbottom on binbottom.component_id = cmp.id
+where c.component_id = 267
+  and binbottom.pin_number > (cmp.pin_count/2)
+  and binbottom.pin_number <= (cmp.pin_count - (cmp.pin_count/4))
 order by cast(pin_number as signed) desc;
 
 -- left
@@ -311,9 +338,128 @@ LEFT JOIN mounting_types mt on mt.id = pt.mounting_type_id and mt.id = 1
 ORDER BY pt.description
 ;
 
+-- insert into crystals values (174, "32.768kHz","https://www.analog.com/media/jp/technical-documentation/data-sheets/2940.pdf");
+-- delete from chips where component_id = 174;
+-- commit;
+-- update components set component_type_id = 10 where id = 174;
+-- commit;
+
 select pt.*, mt.name
 from package_types pt
 JOIN mounting_types mt on mt.id = pt.mounting_type_id
 WHERE mt.is_chassis_mount = 1;
 
 select * from chip_aliases;
+select * from aliases;
+
+-- update aliases set alias_chip_number = trim(alias_chip_number)
+-- where alias_chip_number like ' %' OR  alias_chip_number like '% ';
+-- commit;
+
+-- update component_types set description = trim(description)
+-- where description like ' %' or description like '% ';
+-- commit;
+select * from component_types;
+
+select * from component_sub_types
+where component_type_id = 1;
+
+select * from  components cmp
+join chips c on c.component_id = cmp.id
+-- where cmp.component_sub_type_id is null
+where  family like '%zil%'
+order by cmp.name
+;
+select * 
+from components cmp
+join chips c on c.component_id = cmp.id
+where cmp.component_sub_type_id is null
+order by cmp.name;
+
+select family, count(*) ni
+from chips c
+join components cmp on cmp.id = c.component_id
+where cmp.component_sub_type_id is null
+group by family
+order by count(*) desc;
+
+-- update components set component_sub_type_id = 10
+-- where id in (select id from chips WHERE family like '%memory%');
+-- commit;
+-- update components set component_sub_type_id = 38
+-- where id = 174;
+-- update chips set family = 'Microship' where family like '%micro%';
+-- commit;
+
+select cst.name, count(*) ni
+from components c
+left join component_sub_types cst on cst.id = c.component_sub_type_id
+group by cst.name
+order by cst.name;
+
+
+-- alter table components add column pin_count INTEGER null;
+-- UPDATE components
+-- JOIN chips ON components.id = chips.id
+-- SET components.pin_count = chips.pin_count;
+-- commit;
+-- alter table components modify column pin_count INTEGER NOT NULL;
+-- alter table chips drop column pin_count;
+
+select * from components where pin_count is null;
+
+
+SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.pin_count, pt.name as package 
+    FROM components cmp
+    JOIN crystals c on c.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id;
+    
+select * from components where id = 80;
+select * from chips where component_id = 80;
+select * from aliases where component_id = 80;
+select * from pins where component_id = 80;
+
+
+SELECT ct.* , (select count(*) ni from component_sub_types where component_type_id = ct.id) num
+FROM component_types ct
+ORDER BY description;
+
+SELECT cmp.*, pt.name as package, ct.description as component, ct.table_name 
+  FROM components cmp
+  JOIN package_types pt on pt.id = cmp.package_type_id
+  JOIN component_types ct on ct.id = cmp.component_type_id
+  WHERE cmp.id = 268;
+
+select 
+      (select count(*) from aliases) aliases,
+      (select sum(quantity) from inventory) on_hand,
+      (select count(*) from (select distinct component_id from inventory) a) used_components,
+      (select SUBSTRING(min(centcode), 3) from (select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode from inventory_dates where date_code REGEXP '^[0-9]+$') A) min_date,
+      (select SUBSTRING(max(centcode), 3) from (select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode from inventory_dates where date_code REGEXP '^[0-9]+$') A) max_date,
+      (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') omin_date,
+      (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') omax_date,
+      (select count(*) from manufacturer) mfgs,
+      (select count(*) from mfg_codes) codes
+    ;
+
+select SUBSTRING(min(centcode),3) min, SUBSTRING(max(centcode), 3) max
+from (
+select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode
+from inventory_dates where date_code REGEXP '^[0-9]+$'
+) A;
+
+
+-- truncate table resistors;
+-- delete from components where id = 275;
+-- commit;
+
+
+select * from pins;
+select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, description, mfg_code, manufacturer.name 
+      from inventory 
+      join components cmp on cmp.id = inventory.component_id
+      join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+      join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+      where full_number like '%300%' or cmp.name like '%300%'
+      order by chip_number, full_number

@@ -6,13 +6,18 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var componentsRouter = require('./routes/components');
 var chipsRouter = require('./routes/chips');
+var crystalRouter = require('./routes/crystals');
+var resistorRouter = require('./routes/resistors');
+var resistorNetworkRouter = require('./routes/resistor_networks');
 var inventoryRouter = require('./routes/inventory');
 var projectsRouter = require('./routes/projects');
 var manufacturerRouter = require('./routes/manufacturer');
-var componentsRouter = require('./routes/components');
-var mountingRouter = require('./routes/mounting');
-var packagesRouter = require('./routes/packages');
+var componentTypesRouter = require('./routes/component_types');
+var componentSubTypeRouter = require('./routes/component_sub_types');
+var mountingTypesRouter = require('./routes/mounting_types');
+var packageTypesRouter = require('./routes/package_types');
 
 var app = express();
 
@@ -28,13 +33,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/components', componentsRouter);
 app.use('/chips', chipsRouter);
+app.use('/crystals', crystalRouter);
+app.use('/resistors', resistorRouter);
+app.use('/resistor_networks', resistorNetworkRouter);
 app.use('/inventory', inventoryRouter);
 app.use('/projects', projectsRouter);
 app.use('/manufacturers', manufacturerRouter);
-app.use('/component_types', componentsRouter);
-app.use('/mounting_types', mountingRouter);
-app.use('/package_types', packagesRouter);
+app.use('/component_types', componentTypesRouter);
+app.use('/component_sub_types', componentSubTypeRouter);
+app.use('/mounting_types', mountingTypesRouter);
+app.use('/package_types', packageTypesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

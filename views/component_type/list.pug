@@ -4,16 +4,20 @@ block content
   h3 Component Types
   table.table.table-striped
     tr
-      th Type
+      th Name
+      th Description
       th Symbol
       th Table
+      th Number of Sub Types
 
     each n in component_types
       tr
         td 
-          a(href="/component_types/"+n.id) #{n.description}
+          a(href="/component_types/"+n.id) #{n.name}
+        td= n.description
         td= n.symbol
         td= n.table_name
+        td= n.num
 
     if component_types.length == 0
       tr

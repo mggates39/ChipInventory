@@ -1,34 +1,13 @@
 var express = require('express');
-const { searchChips, getChip, createChip, updateChip, getPins, createPin, updatePin, 
+const { getChip, createChip, updateChip, getPins, createPin, updatePin, 
   getDipLeftPins, getDipRightPins, 
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
-  getSpecs, getNotes, getInventoryByChipList, getPackageTypesForComponentType, getComponentTypeList,
-  getAliases, createAlias, deleteAliases, createSpec, deleteSpec, createNote } = require('../database');
+  getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, 
+  getComponentTypeList, getComponentSubTypesForComponentType,
+  getAliases, createAlias, deleteAliases } = require('../database');
+const {parse_symbol} = require('../utility');
 var router = express.Router();
-
-/* GET chip list page. */
-router.get('/', async function(req, res, next) {
-  const search_query = req.query.q;
-  const search_type = req.query.w;
-  var component_type_id = req.query.component_type_id;
-  var part_search = true;
-  var key_search = false;
-  var search_by = 'p';
-  if (search_type == 'k') {
-    part_search = false;
-    key_search = true;
-    search_by = 'k';
-  }
-  if (typeof component_type_id == 'undefined') {
-    component_type_id = 0;
-  }
-
-  const chips = await searchChips(search_query, search_by, component_type_id);
-  const component_types = await getComponentTypeList();
-  res.render('chip/list', { title: 'Component Master File', chips: chips, searched: search_query, part_search: part_search, key_search: key_search, 
-    component_types: component_types, component_type_id: component_type_id });
-});
 
 router.get('/edit/:id', async function(req,res,next) {
   const chip_id = req.params.id;
@@ -37,6 +16,7 @@ router.get('/edit/:id', async function(req,res,next) {
   const pins = await getPins(chip_id);
   const aliases = await getAliases(chip_id);
   const package_types = await getPackageTypesForComponentType(1);
+  const component_sub_types = await getComponentSubTypesForComponentType(1);
 
   aliasList = "";
   sep = "";
@@ -51,6 +31,7 @@ router.get('/edit/:id', async function(req,res,next) {
     aliases: aliasList,
     family: chip.family,
     package_type_id: chip.package_type_id,
+    component_sub_type_id: chip.component_sub_type_id,
     pin_count: chip.pin_count,
     datasheet: chip.datasheet,
     description: chip.description,
@@ -72,7 +53,7 @@ router.get('/edit/:id', async function(req,res,next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  res.render('chip/edit', {title: 'Edit Chip Definition', data: data, package_types: package_types});
+  res.render('chip/edit', {title: 'Edit Chip Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
 })
 
 /* GET new chip entry page */
@@ -81,13 +62,15 @@ router.get('/new', async function(req, res, next) {
     aliases: '',
     family: '',
     package_type_id: '',
+    component_sub_type_id: '',
     pin_count: '',
     datasheet: '',
     description: ''
   }
   const package_types = await getPackageTypesForComponentType(1);
+  const component_sub_types = await getComponentSubTypesForComponentType(1);
 
-  res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types});
+  res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
 });
 
 router.post('/new', async function(req, res) {
@@ -95,11 +78,13 @@ router.post('/new', async function(req, res) {
     aliases: req.body.aliases,
     family: req.body.family,
     package_type_id: req.body.package_type_id,
+    component_sub_type_id: req.body.component_sub_type_id,
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
   }
   const package_types = await getPackageTypesForComponentType(1);
+  const component_sub_types = await getComponentSubTypesForComponentType(1);
   var pin=[];
   var sym = [];
   var descr = [];
@@ -113,8 +98,8 @@ router.post('/new', async function(req, res) {
   data['descr'] = descr;
 
   if (descr[req.body.pin_count-1]) {
-    const chip = await createChip(data.chip_number, data.family, data.pin_count, data.package_type_id, data.datasheet, data.description);
-    chip_id = chip.id;
+    const chip = await createChip(data.chip_number, data.family, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+    chip_id = chip.component_id;
 
     for (var i = 0; i < req.body.pin_count; i++) {
       await createPin(chip_id, pin[i], sym[i], descr[i]);
@@ -129,41 +114,8 @@ router.post('/new', async function(req, res) {
 
     res.redirect('/chips/'+chip_id);
   } else {
-    res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types});
+    res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
   }
-});
-
-/* Add a specification to the selected chip */
-router.post('/:id/newspec', async function(req, res) {
-  const id = req.params.id;
-  await createSpec(id, req.body.param, req.body.value, req.body.units)
-  res.redirect('/chips/'+id);
-});
-
-router.get('/:id/delspec/:spec_id', async function(req, res) {
-  const id = req.params.id;
-  const spec_id = req.params.spec_id;
-  await deleteSpec(spec_id)
-  res.redirect('/chips/'+id);
-})
-
-/* Add a note to the selected chip */
-router.post('/:id/newnote', async function(req, res) {
-  const id = req.params.id;
-  await createNote(id, req.body.note)
-  res.redirect('/chips/'+id);
-});
-
-/* Add one or more aliases to the selected chip */
-router.post('/:id/newalias', async function(req, res) {
-  const chip_id = req.params.id;
-  aliases = req.body.alias.split(',');
-  for( const alias of aliases) {
-    if (alias.length > 0) {
-      await createAlias(chip_id, alias.trim());
-    }
-  }
-  res.redirect('/chips/'+chip_id);
 });
 
 router.post('/:id', async function(req, res) {
@@ -172,6 +124,7 @@ router.post('/:id', async function(req, res) {
     aliases: req.body.aliases,
     family: req.body.family,
     package_type_id: req.body.package_type_id,
+    component_sub_type_id: req.body.component_sub_type_id,
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
@@ -191,8 +144,8 @@ router.post('/:id', async function(req, res) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const chip = await updateChip(id, data.chip_number, data.family, data.pin_count, data.package_type_id, data.datasheet, data.description);
-  chip_id = chip.id;
+  const chip = await updateChip(id, data.chip_number, data.family, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+  chip_id = chip.component_id;
 
   for (var i = 0; i < req.body.pin_count; i++) {
     await updatePin(pin_id[i], chip_id, pin[i], sym[i], descr[i]);
@@ -227,7 +180,7 @@ router.get('/:id', async function(req, res, next) {
     const quad_bottom_pins = await getQuadBottomPins(id);
     const specs = await getSpecs(id);
     const notes = await getNotes(id);
-    const inventory = await getInventoryByChipList(id);
+    const inventory = await getInventoryByComponentList(id);
     const aliases = await getAliases(id);
 
     fixed_pins = [];
@@ -338,56 +291,4 @@ router.get('/:id', async function(req, res, next) {
       specs: clean_specs, notes: notes, aliases: aliases, inventory: inventory });
 });
 
-function parse_symbol(symbol)
-{
-  // process __ for subscripts
-  let newsym = '';
-  if (symbol.includes('__')){
-    let seen = 0
-    for (let i = 0; i < symbol.length; i++) {
-      if (symbol[i] == '_') {
-        seen++;
-        if (seen == 2) {
-          newsym += '<sub>';
-        }
-      } else if ((symbol[i] == '/' || symbol[i] == ' ') && seen == 2) {
-        newsym += '</sub>';
-        seen = 0;
-        newsym += symbol[i];
-      } else {
-        newsym += symbol[i]
-      }
-    }
-    
-    if (seen == 2) {
-      newsym += '</sub>';
-      seen = 0;
-  ``}
-  } else {
-    newsym = symbol;
-  }
-
-  // Process ~ for negation
-  if (newsym.includes('~')) {
-    let negsym = ''
-    let found = false
-    for (let i = 0; i < newsym.length; i++) {
-      if (newsym[i] == '~') {
-        found = !found;
-        if (found) {
-          negsym += "<span class='neg'>"
-        } else {
-          negsym += '</span>'
-        }
-      } else {
-        negsym += newsym[i];
-      }
-    }
-    if (found) {
-      negsym += "</span>";
-    }
-    newsym = negsym;
-  }
-  return newsym
-}
 module.exports = router;

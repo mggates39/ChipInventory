@@ -25,7 +25,7 @@ block content
     each n in inventory
       tr
         td 
-          a(href="/chips/"+n.chip_id target='_blank') #{n.chip_number}
+          a(href="/"+n.table_name+"/"+n.component_id target='_blank') #{n.chip_number}
         td
           a(href="/inventory/"+n.id) #{n.full_number}
         td= n.mfg_code+' ('+n.name+')'

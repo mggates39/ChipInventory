@@ -1,13 +1,13 @@
 extends ../layout
 
 block content
-  p Enter the new chip inventory
+  p Enter the new component inventory
   form(action="/inventory/new/" method="POST")
     div.form-group
       label(for="chip_id") Base Chip Number:
       select#chip_id.form-control(type='select' placeholder='Select chip' name='chip_id' required='true')
-        for chip in chips
-          option(value=chip.id) #{chip.chip_number}
+        for component in components
+          option(value=component.id) #{component.name}
     div.form-group
       label(for="mfg_code_id") Manufacturer:
       select#mfg_code_id.form-control(type='select' placeholder='Select Manufacturer' name='mfg_code_id' )

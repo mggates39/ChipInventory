@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  p Edit the manufacturer definition
+  form(action="/manufacturers/"+data.id method="POST")
+    div.form-group
+      label(for="name") Name:
+      input#name.form-control( type="text" placeholder="Ex) Texas Instruments" name="name" value=data.name)
+
+    button.btn.btn-default.btn-primary(type="submit") Submit
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#mfg").addClass("active");
+    });
