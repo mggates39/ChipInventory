@@ -15,8 +15,10 @@ async function getSystemData() {
       (select count(*) from aliases) aliases,
       (select sum(quantity) from inventory) on_hand,
       (select count(*) from (select distinct component_id from inventory) a) used_components,
-      (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') min_date,
-      (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') max_date,
+      (select SUBSTRING(min(centcode), 3) from (select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode from inventory_dates where date_code REGEXP '^[0-9]+$') A) min_date,
+      (select SUBSTRING(max(centcode), 3) from (select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode from inventory_dates where date_code REGEXP '^[0-9]+$') A) max_date,
+      (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') old_min_date,
+      (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') old_max_date,
       (select count(*) from manufacturer) mfgs,
       (select count(*) from mfg_codes) codes
     `)

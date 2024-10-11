@@ -425,3 +425,34 @@ SELECT ct.* , (select count(*) ni from component_sub_types where component_type_
 FROM component_types ct
 ORDER BY description;
 
+SELECT cmp.*, pt.name as package, ct.description as component, ct.table_name 
+  FROM components cmp
+  JOIN package_types pt on pt.id = cmp.package_type_id
+  JOIN component_types ct on ct.id = cmp.component_type_id
+  WHERE cmp.id = 268;
+
+  select
+      (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') min_date,
+      (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') max_date
+;
+
+select SUBSTRING(min(centcode),3) min, SUBSTRING(max(centcode), 3) max
+from (
+select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode
+from inventory_dates where date_code REGEXP '^[0-9]+$'
+) A;
+
+select * from components where id > 273;
+-- truncate table resistors;
+-- delete from components where id = 275;
+-- commit;
+
+
+select * from pins;
+select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, description, mfg_code, manufacturer.name 
+      from inventory 
+      join components cmp on cmp.id = inventory.component_id
+      join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+      join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+      where full_number like '%300%' or cmp.name like '%300%'
+      order by chip_number, full_number
