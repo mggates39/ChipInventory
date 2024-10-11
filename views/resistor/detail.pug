@@ -15,11 +15,11 @@ block content
   button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#aliasModal") Add alias
   br
   br
+  p #[strong Component] #{resistor.component_type}
+  p #[strong Package] #{resistor.package}
   p #[strong Resistance] #{resistor.resistance} &Omega;
   p #[strong Tolerance] #{resistor.tolerance} %
   p #[strong Power] #{resistor.power} W
-  p #[strong Component] #{resistor.component_type}
-  p #[strong Package] #{resistor.package}
   if resistor.datasheet
     p 
       a(target='_blank' href= resistor.datasheet) Datasheet PDF
