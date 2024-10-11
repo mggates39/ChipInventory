@@ -16,7 +16,7 @@ block content
       label( for="component_sub_type_id") Component:
       select#component_sub_type_id.form-control(type='select' placeholder='Select Component type' name='component_sub_type_id' required='true')
         for component_sub_type in component_sub_types
-          option(value=component_sub_type.id selected= data.component_sub_type_id == component_sub_type.id) #{component_sub_type.name}
+          option(value=component_sub_type.id selected= data.component_sub_type_id == component_sub_type.id) #{component_sub_type.name} - #{component_sub_type.description}
     div.form-group
       label( for="package_type_id") Package:
       select#package_type_id.form-control(type='select' placeholder='Select package type' name='package_type_id' required='true')

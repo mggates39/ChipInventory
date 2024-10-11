@@ -241,7 +241,7 @@ router.post('/new', async function( req, res, next) {
 
     res.redirect('/crystals/'+crystal_id);
   } else {
-    res.render('crystals/new', {title: 'New crystal Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+    res.render('crystal/new', {title: 'New crystal Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
   }
 });
 
