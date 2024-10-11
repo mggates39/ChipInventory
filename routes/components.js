@@ -1,5 +1,5 @@
 var express = require('express');
-const { searchChips, getComponentTypeList, getComponentType, getComponent, createSpec, deleteSpec, createNote} = require('../database');
+const { searchChips, getComponentTypeList, getComponentType, getComponent, createSpec, deleteSpec, createNote, createAlias} = require('../database');
 var router = express.Router();
 
 /* GET component list page. */
