@@ -3,6 +3,8 @@ extends ../layout
 block content
   h3 !{mfg.name}
 
+  a.btn.btn-primary(href="/manufacturers/edit/"+mfg.id, role="button") Edit 
+
   div(id='codes')
     table.available 
       tr 
@@ -12,7 +14,32 @@ block content
               td
                 a(href="/manufacturer/code/" + n.id target="_blank") #{n.mfg_code}
 
-  a.btn.btn-primary(href="/manufacturers/codenew/"+mfg.id, role="button") Add Code
+  br
+  button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#codeModal") Add Code
+  br
+
+
+  //- Note Modal
+  div#codeModal.modal.fade(tabindex="-1" aria-labelledby="codeModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form(action="/manufacturers/"+mfg.id+"/newcode" method="POST")
+          div.modal-header
+            h5#codeModalLabel.modal-title Add a Manufacture Code
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+          div.modal-body
+              div.row
+                div.col-md-12.ms-auto 
+                  label( for="code") Code
+              div.row
+                div.col-md-12.ms-auto 
+                  input#code.form-control(type="text" placeholder="Ex) SN" name="code")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save
+            
+
 
 block scripts
   script(type="text/javascript").

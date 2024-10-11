@@ -555,13 +555,22 @@ where a.mfg_codes is not null`;
   return rows
 }
 
-async function createManufacturer(manufacture_name) {
+async function createManufacturer(manufacturer_name) {
   const [result] = await pool.query(`
-    INSERT INTO manuracturer (name)
+    INSERT INTO manufacturer (name)
     VALUES (?)
-    `, [manufacture_name])
+    `, [manufacturer_name])
     const manufacturer_id = result.insertId;
     return getManufacturer(manufacturer_id)   
+}
+
+async function updateManufacturer(manufacturer_id, manufacturer_name) {
+  const [result] = await pool.query(`
+    UPDATE manufacturer
+      SET name = ?
+    WHERE id = ?
+    `, [manufacturer_name, manufacturer_id])
+  return getManufacturer(manufacturer_id)   
 }
 
 async function createManufacturerCode(manufacturer_id, code) {
@@ -1094,7 +1103,7 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   searchInventory, getInventoryList, getInventory, getInventoryByComponentList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, deleteAliases, 
-  getManufacturers, createManufacturer, getManufacturerList, getManufacturer, searchManufacturers,
+  getManufacturers, createManufacturer, getManufacturerList, getManufacturer, searchManufacturers, updateManufacturer,
   getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
   getComponentTypeList, getComponentType, createComponentType, updateComponentType, 
   getComponentSubTypesForComponentType, createCompnentSubType, getComponentSubType, updateComponentSubType, deleteComponentSubType,
