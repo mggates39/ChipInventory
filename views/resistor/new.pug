@@ -3,6 +3,7 @@ extends ../layout
 block content
   p Enter the new Resistor defintion
   form(action="/resistors/new/" method="POST")
+    input#pin_count(type="hidden" name="pin_count" value=data.pin_count)
     div.form-group
       label(for="chip_number") Resistor Number:
       input#chip_number.form-control( type="text" placeholder="Ex) 7425" name="chip_number" value=data.chip_number)
@@ -27,7 +28,7 @@ block content
       input#tolerance.form-control(type="text" placeholder="Ex) 0.5. 1. 10 " name="tolerance" value=data.tolerance)
     div.form-group
       label( for="power") Power W:
-      input#power.form-control(type="text" placeholder="Ex) 0.25" name="resistance" value=data.power)
+      input#power.form-control(type="text" placeholder="Ex) 0.25" name="power" value=data.power)
     div.form-group
       label( for="datasheet") Datasheet:
       input#datasheet.form-control(type="text" placeholder="URL to datasheet" name="datasheet" value=data.datasheet)
