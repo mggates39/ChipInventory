@@ -126,7 +126,7 @@ block content
             td 
               button.btn.btn-secondary.btn-sm(type="button") Edit 
               |  
-              a.btn.btn-secondary.btn-sm(href="/.components/"+crystal.component_id+"/delspec/"+n.id, role="button") Delete 
+              a.btn.btn-secondary.btn-sm(href="/components/"+crystal.component_id+"/delspec/"+n.id, role="button") Delete 
   br
   button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#specModal") Add specifications
 
@@ -146,7 +146,7 @@ block content
   div#specModal.modal.fade(tabindex="-1" aria-labelledby="specModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        form(action="/.components/"+crystal.component_id+"/newspec" method="POST")
+        form(action="/components/"+crystal.component_id+"/newspec" method="POST")
           div.modal-header
             h5#specModalLabel.modal-title Add a Specification
             button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
@@ -176,7 +176,7 @@ block content
   div#noteModal.modal.fade(tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        form(action="/.components/"+crystal.component_id+"/newnote" method="POST")
+        form(action="/components/"+crystal.component_id+"/newnote" method="POST")
           div.modal-header
             h5#noteModalLabel.modal-title Add a Note
             button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
@@ -196,7 +196,7 @@ block content
   div#aliasModal.modal.fade(tabindex="-1" aria-labelledby="aliasModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        form(action="/.components/"+crystal.component_id+"/newalias" method="POST")
+        form(action="/components/"+crystal.component_id+"/newalias" method="POST")
           div.modal-header
             h5#aliasModalLabel.modal-title Add an Alias
             button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
