@@ -34,8 +34,8 @@ router.get('/edit/:id', async function(req, res, next) {
 })
 
 router.post('/new', async function( req, res, next) {
-  const package_type = await createMountingType(req.body.name, req.body.is_through_hole, req.body.is_surface_mount, req.body.is_chassis_mount);
-  const id = package_type.id
+  const mounting_type = await createMountingType(req.body.name, req.body.is_through_hole, req.body.is_surface_mount, req.body.is_chassis_mount);
+  const id = mounting_type.id
   res.redirect('/mounting_types/'+id);
 });
 
