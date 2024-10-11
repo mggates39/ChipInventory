@@ -128,18 +128,18 @@ async function getCrystal(component_id) {
 }
 
 async function getResistor(component_id) {
-  return getResistor_internall(compnent_id);
+  return getResistor_internall(component_id);
 };
 
 async function getResistorNetwork(component_id) {
-  return getResistor_internall(compnent_id);
+  return getResistor_internall(component_id);
 };
 
 async function getResistor_internall(component_id) {
   const [rows] = await pool.query(`
     SELECT r.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
     FROM components cmp
-    JOIN resistor r on r.component_id = cmp.id
+    JOIN resistors r on r.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
     JOIN component_types ct on ct.id = cmp.component_type_id
     LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
