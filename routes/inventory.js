@@ -24,7 +24,6 @@ router.get('/new/:component_id', async function(req, res, next) {
   const component_id = req.params.component_id;
   const manufacturers = await getMfgCodes();
   const component = await getComponent(component_id);
-  console.log(component);
   res.render('inventory/new', {title: 'Add to Component Inventory', manufacturers: manufacturers, components: [component]});
 });
 
