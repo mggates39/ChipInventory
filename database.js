@@ -326,41 +326,41 @@ async function searchInventory(query, type) {
   if (query) {
     value = ['%' + query + '%']
     if (type == 'p') {
-      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, description, mfg_code, manufacturer.name 
+      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, mfg_code, manufacturer.name 
       from inventory 
-      join chips on chips.component_id = inventory.component_id
-      join components cmp on cmp.id = chips.component_id
+      join components cmp on cmp.id = inventory.component_id
+      join component_types ct on ct.id = cmp.component_type_id
       join mfg_codes on mfg_codes.id = inventory.mfg_code_id
       join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
-      where full_number like ? or chip_number like ?
-      order by chip_number, full_number`;
+      where full_number like ? or cmp.name like ?
+      order by cmp.name, full_number`;
       value = ['%' + query + '%', '%' + query + '%'];
     } else if (type == 'k') {
-      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, description, description, mfg_code, manufacturer.name 
+      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, mfg_code, manufacturer.name 
       from inventory
-      join chips on component_id.id = inventory.component_id
-      join components cmp on cmp.id = chips.component_id
+      join components cmp on cmp.id = inventory.component_id
+      join component_types ct on ct.id = cmp.component_type_id
       join mfg_codes on mfg_codes.id = inventory.mfg_code_id
       join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
       where description like ?
-      order by chip_number, full_number`;
+      order by cmp.name, full_number`;
     } else {
-      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, description, description, mfg_code, manufacturer.name 
+      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, mfg_code, manufacturer.name 
     from inventory
-    join chips on chips.component_id = inventory.component_id
-    join components cmp on cmp.id = chips.component_id
+    join components cmp on cmp.id = inventory.component_id
+    join component_types ct on ct.id = cmp.component_type_id
     join mfg_codes on mfg_codes.id = inventory.mfg_code_id
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
-    order by chip_number, full_number`;
+    order by cmp.name, full_number`;
     }
   } else {
-    sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, description, description, mfg_code, manufacturer.name 
+    sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, mfg_code, manufacturer.name 
       from inventory
-      join chips on chips.component_id = inventory.component_id
-      join components cmp on cmp.id = chips.component_id
+      join components cmp on cmp.id = inventory.component_id
+      join component_types ct on ct.id = cmp.component_type_id
       join mfg_codes on mfg_codes.id = inventory.mfg_code_id
       join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
-      order by chip_number, full_number`;
+      order by cmp.name, full_number`;
     value = []
   }
   const [rows] = await pool.query(sql, value);
@@ -373,7 +373,7 @@ async function getInventoryList() {
     join components cmp on cmp.id = inventory.component_id
     join mfg_codes on mfg_codes.id = inventory.mfg_code_id
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
-    order by chip_number, full_number`)
+    order by cmp.name, full_number`)
   return rows
 }
 
