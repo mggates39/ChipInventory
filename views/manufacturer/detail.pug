@@ -46,3 +46,8 @@ block scripts
     $( document ).ready(function() {
       $("#mfg").addClass("active");
     });
+
+    $('#codeModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      $(this).find('#code').focus();
+    });
