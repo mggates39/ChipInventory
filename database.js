@@ -127,6 +127,27 @@ async function getCrystal(component_id) {
    return rows[0]
 }
 
+async function getResistor(component_id) {
+  return getResistor_internall(compnent_id);
+};
+
+async function getResistorNetwork(component_id) {
+  return getResistor_internall(compnent_id);
+};
+
+async function getResistor_internall(component_id) {
+  const [rows] = await pool.query(`
+    SELECT r.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    FROM components cmp
+    JOIN resistor r on r.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    WHERE r.component_id = ?
+    `, [component_id])
+   return rows[0]
+}
+
 async function getPins(component_id) {
   const [rows] = await pool.query(`
   SELECT * 
@@ -575,6 +596,15 @@ async function updateComponent(component_id, chip_number, component_type_id, pac
   return true;
 }
 
+async function deleteComponent(component_id) {
+  await pool.query('DELETE FROM aliases WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM notes WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM specs WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM pins WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM components WHERE id = ?', [component_id]);
+  return true
+}
+
 async function createChip(chip_number, family, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
   const component_type_id = 1;
   const component_id = await createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
@@ -598,12 +628,8 @@ async function updateChip(component_id, chip_number, family, pin_count, package_
 }
 
 async function deleteChip(component_id) {
-  await pool.query('DELETE FROM aliases WHERE component_id = ?', [component_id]);
-  await pool.query('DELETE FROM notes WHERE component_id = ?', [component_id]);
-  await pool.query('DELETE FROM specs WHERE component_id = ?', [component_id]);
-  await pool.query('DELETE FROM pins WHERE component_id = ?', [component_id]);
   await pool.query('DELETE FROM chips WHERE component_id = ?', [component_id]);
-  await pool.query('DELETE FROM components WHERE id = ?', [component_id]);
+  await deleteComponent(component_id)
   return true
 }
 
@@ -630,12 +656,63 @@ async function updateCrystal(component_id, chip_number, frequency, pin_count, pa
 }
 
 async function deleteCrystal(component_id) {
-  await pool.query('DELETE FROM aliases WHERE component_id = ?', [component_id]);
-  await pool.query('DELETE FROM notes WHERE component_id = ?', [component_id]);
-  await pool.query('DELETE FROM specs WHERE component_id = ?', [component_id]);
-  await pool.query('DELETE FROM pins WHERE component_id = ?', [component_id]);
   await pool.query('DELETE FROM crystals WHERE component_id = ?', [component_id]);
-  await pool.query('DELETE FROM components WHERE id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
+async function createResistor(chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, datasheet) {
+  const component_type_id = 4;
+  return await createResistor_internal(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, 1, datasheet);
+}
+
+async function createResistorNetwork(chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, number_resistors, datasheet) {
+  const component_type_id = 5;
+  return await createResistor_internal(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, number_resistors, datasheet);
+}
+
+async function createResistor_internal(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, number_resistors, datasheet) {
+  const component_id = await createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO resistors (component_id, resistance, tolerance, power, number_resistors, datasheet)
+      VALUES (?, ?, ?, ?, ?, ?)
+      `, [component_id, resistance, tolerance, power, number_resistors, datasheet])
+  return getResistor(component_id);
+};
+
+async function updateResistor(component_id, chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, datasheet) {
+  const component_type_id = 4;
+  return await updateResistor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, 1, datasheet);
+}
+
+async function updateResistorNetwork(component_id, chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, number_resistors, datasheet) {
+  const component_type_id = 5;
+  return await updateResistor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, number_resistors, datasheet);
+}
+
+async function updateResistor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, number_resistors, datasheet) {
+  await updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE resistors SET
+      resistance = ?, 
+      tolerance = ?, 
+      power = ?, 
+      number_resistors = ?, 
+      datasheet = ?
+    WHERE component_id = ?
+    `, [resistance, tolerance, power, number_resistors, datasheet, component_id])
+  return getResistor(component_id)
+};
+
+async function deleteResistor(component_id) {
+  await pool.query('DELETE FROM resistors WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
+async function deleteResistorNetwork(component_id) {
+  await pool.query('DELETE FROM resistors WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
   return true
 }
 
@@ -1012,6 +1089,8 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getSpecs, createSpec, getSpec, updateSpec, deleteSpec,
   getNotes, createNote, getNote, updateNote, deleteNote,
   getCrystal, createCrystal, updateCrystal, deleteCrystal,
+  getResistor, createResistor, updateResistor, deleteResistor,
+  getResistorNetwork, createResistorNetwork, updateResistorNetwork, deleteResistorNetwork,
   searchInventory, getInventoryList, getInventory, getInventoryByComponentList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, deleteAliases, 

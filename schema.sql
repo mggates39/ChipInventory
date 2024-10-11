@@ -85,6 +85,17 @@ CREATE TABLE `crystals` (
   CONSTRAINT `crystals_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `resistors` (
+  `component_id` int NOT NULL,
+  `resistance`  int unsigned NOT NULL,
+  `tolerance` float(6.4) NOT NULL,
+  `power` float(7,3) NOT NULL,
+  `number_resistors` int NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `resistor_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB;
+
 CREATE TABLE `pins` (
   `id` int NOT NULL AUTO_INCREMENT,
   `component_id` int NOT NULL,
