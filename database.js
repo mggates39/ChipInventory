@@ -868,10 +868,12 @@ async function getComponentType(component_type_id) {
 
 async function getComponentSubTypesForComponentType(component_type_id) {
   const [rows] = await pool.query(`
-    SELECT * 
-    FROM component_sub_types
-    WHERE component_type_id = ?
-    ORDER BY name
+    SELECT cst.id, cst.name, cst.description, count(c.id) ni
+    FROM component_sub_types cst
+    left join components c on c.component_sub_type_id = cst.id
+    WHERE cst.component_type_id = ?
+    group by cst.id, cst.name, cst.description
+    ORDER BY cst.name
     `, [component_type_id])
     return rows;
 }
@@ -943,6 +945,40 @@ async function deleteComponentSubType(companent_sub_type_id) {
   const [result] = await pool.query("DELETE FROM component_sub_types WHERE id = ?", [companent_sub_type_id])
   return true
 }
+
+async function getLocationTypeList() {
+  const [rows] = await pool.query("SELECT * FROM location_types ORDER BY name");
+  return rows;
+}
+
+async function getLocationType(location_type_id) {
+  const [rows] = await pool.query(`
+  SELECT * 
+  FROM location_types
+  WHERE id = ?
+  `, [location_type_id])
+  return rows[0]
+}
+
+async function createLocationType(name, description, tag) {
+  const [result] = await pool.query("INSERT INTO location_types (name, description, tag) VALUES (?, ?, ?)", 
+    [name, description, tag])
+  const location_type_id = result.insertId
+  return getLocationType(location_type_id)
+}
+
+async function updateLocationType(location_type_id, name, description, tag) {
+  const [result] = await pool.query("UPDATE location_types set name = ?, description = ?, tag = ? WHERE id =?", 
+    [name, description, tag, location_type_id])
+  return getLocationType(location_type_id)
+}
+
+async function deleteLocationType(location_type_id) {
+  const [result] = await pool.query("DELETE FROM location_types WHERE id = ?", [location_type_id])
+  return true
+}
+
+
 
 async function getMountingTypeList() {
   const [rows] = await pool.query(`SELECT id, name,
@@ -1124,5 +1160,6 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   updateMountingType, createMountingType,
   getPackageTypeList, getPackageType, updatePackageType, createPackageType, 
   getPackageTypesForComponentType, getSelectedPackageTypesForComponentType,
-  getComponentTypesForPackageType, getSelectedComponentTypesForPackageType}
+  getComponentTypesForPackageType, getSelectedComponentTypesForPackageType,
+  getLocationTypeList, getLocationType, createLocationType, updateLocationType, deleteLocationType}
 
