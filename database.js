@@ -170,6 +170,17 @@ async function getPin(component_id) {
   return rows[0]
 }
 
+async function getSipPins(component_id) {
+  const [rows] = await pool.query(`
+    select cmp.name as chip_number, cmp.pin_count, pin.pin_number, pin.pin_symbol
+    from components cmp
+    join pins pin on pin.component_id = cmp.id
+    where cmp.id = ?
+    order by cast(pin_number as signed);
+    `, [component_id])
+  return rows
+}
+
 async function getDipLeftPins(component_id) {
   const [rows] = await pool.query(`
   select cmp.name as chip_number, cmp.pin_count, pinleft.pin_number, pinleft.pin_symbol
@@ -1094,7 +1105,7 @@ async function getPackageTypesForMountingType(mounting_type_id) {
 
 module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInventoryCounts, getComponent, 
   searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
-  createPin, updatePin, getDipLeftPins, getDipRightPins, 
+  createPin, updatePin, getDipLeftPins, getDipRightPins, getSipPins,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, createSpec, getSpec, updateSpec, deleteSpec,
