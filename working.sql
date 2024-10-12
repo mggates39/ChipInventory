@@ -391,9 +391,9 @@ order by count(*) desc;
 -- update chips set family = 'Microship' where family like '%micro%';
 -- commit;
 
-select cst.name, count(*) ni
-from components c
-left join component_sub_types cst on cst.id = c.component_sub_type_id
+select cst.name, count(c.id) ni
+from component_sub_types cst
+left join components c on cst.id = c.component_sub_type_id
 group by cst.name
 order by cst.name;
 
@@ -462,4 +462,12 @@ select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as 
       join mfg_codes on mfg_codes.id = inventory.mfg_code_id
       join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
       where full_number like '%300%' or cmp.name like '%300%'
-      order by chip_number, full_number
+      order by chip_number, full_number;
+      
+      
+    SELECT cst.id, cst.name, cst.description, count(c.id) ni
+    FROM component_sub_types cst
+    left join components c on c.component_sub_type_id = cst.id
+    WHERE cst.component_type_id = 1
+    group by cst.id, cst.name, cst.description
+    ORDER BY cst.name      

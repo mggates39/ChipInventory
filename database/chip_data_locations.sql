@@ -18,32 +18,34 @@ USE `chip_data`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `component_packages`
+-- Table structure for table `locations`
 --
 
-DROP TABLE IF EXISTS `component_packages`;
+DROP TABLE IF EXISTS `locations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `component_packages` (
+CREATE TABLE `locations` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `component_type_id` int NOT NULL,
-  `package_type_id` int NOT NULL,
+  `parent_location_id` int DEFAULT NULL,
+  `location_type_id` int NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `description` text NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `type_component_type_idx` (`component_type_id`),
-  KEY `type_package_type_idx` (`package_type_id`),
-  CONSTRAINT `component_packages_ibfk_1` FOREIGN KEY (`component_type_id`) REFERENCES `component_types` (`id`),
-  CONSTRAINT `component_packages_ibfk_2` FOREIGN KEY (`package_type_id`) REFERENCES `package_types` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=180 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `parent_location_idx` (`parent_location_id`),
+  KEY `location_type_idx` (`location_type_id`),
+  CONSTRAINT `location_type_idfk` FOREIGN KEY (`location_type_id`) REFERENCES `location_types` (`id`),
+  CONSTRAINT `parent_location_idfk` FOREIGN KEY (`parent_location_id`) REFERENCES `locations` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `component_packages`
+-- Dumping data for table `locations`
 --
 
-LOCK TABLES `component_packages` WRITE;
-/*!40000 ALTER TABLE `component_packages` DISABLE KEYS */;
-INSERT INTO `component_packages` VALUES (90,6,2),(91,6,12),(92,6,7),(93,6,17),(94,13,2),(95,13,18),(96,13,3),(97,13,7),(98,13,15),(115,9,15),(116,8,2),(117,8,3),(118,8,15),(119,14,15),(120,2,2),(121,2,5),(122,2,3),(123,2,7),(124,3,7),(125,3,15),(131,15,2),(132,7,11),(133,7,7),(134,7,15),(135,7,17),(138,11,7),(139,11,15),(140,12,7),(141,12,15),(147,4,2),(148,4,5),(149,4,8),(150,4,3),(151,4,7),(152,4,15),(160,10,1),(161,10,3),(162,10,7),(163,10,15),(164,5,1),(165,5,6),(166,5,10),(167,5,11),(168,5,7),(169,5,15),(170,5,17),(171,1,1),(172,1,19),(173,1,4),(174,1,14),(175,1,13),(176,1,16),(177,1,6),(178,1,9),(179,1,10);
-/*!40000 ALTER TABLE `component_packages` ENABLE KEYS */;
+LOCK TABLES `locations` WRITE;
+/*!40000 ALTER TABLE `locations` DISABLE KEYS */;
+INSERT INTO `locations` VALUES (1,NULL,6,'Home','39 Begonia Lane'),(2,1,1,'Office','Upstairs Office'),(3,2,2,'Bookshelf 1','First bookshelf by the door');
+/*!40000 ALTER TABLE `locations` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
