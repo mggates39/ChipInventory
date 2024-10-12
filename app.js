@@ -18,6 +18,7 @@ var componentTypesRouter = require('./routes/component_types');
 var componentSubTypeRouter = require('./routes/component_sub_types');
 var mountingTypesRouter = require('./routes/mounting_types');
 var packageTypesRouter = require('./routes/package_types');
+var locationTypesRouter = require('./routes/location_types');
 
 var app = express();
 
@@ -45,6 +46,7 @@ app.use('/component_types', componentTypesRouter);
 app.use('/component_sub_types', componentSubTypeRouter);
 app.use('/mounting_types', mountingTypesRouter);
 app.use('/package_types', packageTypesRouter);
+app.use('/location_types', locationTypesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

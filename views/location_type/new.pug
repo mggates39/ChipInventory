@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+  p Create a new location type definition
+  form(action="/location_types/new" method="POST")
+    div.form-group
+      label(for="name") Name:
+      input#name.form-control( type="text" placeholder="Ex) Room or Shelf" name="name" value=location_type.name)
+    div.form-group
+      label( for="description") Description:
+      input#description.form-control(type="text" placeholder="Workshop" name="description" value=location_type.description)
+    div.form-group
+      label( for="tag") Tag:
+      input#tag.form-control(type="text" placeholder="Ex) Shortcut" name="tag" value=location_type.tag)
+
+    button.btn.btn-default.btn-primary(type="submit") Submit
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#loctype").addClass("active");
+    });

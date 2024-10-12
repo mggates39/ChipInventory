@@ -175,6 +175,26 @@ CREATE TABLE `inventory_dates` (
   CONSTRAINT `inventory_dates_ibfk_1` FOREIGN KEY (`inventory_id`) REFERENCES `inventory` (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `location_types` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(16) NOT NULL,
+  `description` varchar(32) NOT NULL,
+  `tag` varchar(16) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `locations` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `parent_location_id` int null,
+  `location_type_id` int NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `description` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `parent_location_idx` (`parent_location_id`),
+  KEY `location_type_idx` (`location_type_id`),
+  CONSTRAINT `location_type_idfk` FOREIGN KEY (`location_type_id`) REFERENCES `location_types` (`id`),
+  CONSTRAINT `parent_location_idfk` FOREIGN KEY (`parent_location_id`) REFERENCES `locations` (`id`)
+) ENGINE=InnoDB;
 
 
 -- Create any Views
