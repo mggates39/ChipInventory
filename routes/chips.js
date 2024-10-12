@@ -1,6 +1,6 @@
 var express = require('express');
 const { getChip, createChip, updateChip, getPins, createPin, updatePin, 
-  getDipLeftPins, getDipRightPins, 
+  getDipLeftPins, getDipRightPins, getSipPins,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, 
@@ -170,6 +170,7 @@ router.get('/:id', async function(req, res, next) {
     const pins = await getPins(id);
     const dip_left_pins = await getDipLeftPins(id);
     const dip_right_pins = await getDipRightPins(id);
+    const sip_pins = await getSipPins(id);
     const plcc_left_pins = await getPllcLeftPins(id);
     const plcc_right_pins = await getPllcRightPins(id);
     const plcc_top_pins = await getPllcTopPins(id);
@@ -197,7 +198,18 @@ router.get('/:id', async function(req, res, next) {
     layout_pins = [];
     top_pins = [];
     bottom_pins = [];
-    if (chip.package == 'PLCC') {
+
+    if (chip.package == 'SIP') {
+      sip_pins.forEach(function(pin) {
+        if (pin.pin_number == 1) {
+          bull = '&nbsp;&#9679;'
+        } else {
+          bull = ''
+        }
+        layout_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
+      });
+  
+    } else if (chip.package == 'PLCC') {
       i = 0;
       plcc_left_pins.forEach(function(pin) {
         if (pin.pin_number == 1) {
@@ -230,7 +242,7 @@ router.get('/:id', async function(req, res, next) {
         bottom_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
 
       });
-    } else if  ((chip.package == 'QFN') || (chip.package == 'QFP')) {
+    } else if ((chip.package == 'QFN') || (chip.package == 'QFP')) {
       i = 0;
       quad_left_pins.forEach(function(pin) {
         if (pin.pin_number == 1) {
