@@ -978,7 +978,60 @@ async function deleteLocationType(location_type_id) {
   return true
 }
 
+async function getLocationList() {
+  const [rows] = await pool.query(`
+    SELECT ol.*, pl.name as parent_location , lt.name as location_type 
+    FROM locations ol
+    LEFT JOIN locations pl on pl.id = ol.parent_location_id
+    LEFT JOIN location_types lt on lt.id = ol.location_type_id
+    ORDER BY ol.name`);
+  return rows;
+}
 
+async function getChildLocationList(location_id) {
+  const [rows] = await pool.query(`
+    SELECT ol.*, pl.name as parent_location , lt.name as location_type 
+    FROM locations ol
+    LEFT JOIN locations pl on pl.id = ol.parent_location_id
+    LEFT JOIN location_types lt on lt.id = ol.location_type_id
+    WHERE ol.parent_location_id = ?
+    ORDER BY ol.name`, [location_id]);
+  return rows;
+}
+
+async function getLocation(location_id) {
+  const [rows] = await pool.query(`
+  SELECT ol.*, pl.name as parent_location , lt.name as location_type
+  FROM locations ol
+  LEFT JOIN locations pl on pl.id = ol.parent_location_id
+  LEFT JOIN location_types lt on lt.id = ol.location_type_id
+  WHERE ol.id = ?
+  `, [location_id])
+  return rows[0]
+}
+
+async function createLocation(parent_location_id, location_type_id, name, description) {
+  const [result] = await pool.query("INSERT INTO locations (parent_location_id, location_type_id, name, description) VALUES (?, ?, ?, ?)", 
+    [parent_location_id, location_type_id, name, description])
+  const location_id = result.insertId
+  return getLocation(location_id)
+}
+
+async function updateLocation(location_id, parent_location_id, location_type_id, name, description) {
+  const [result] = await pool.query(`UPDATE locations SET
+    parent_location_id = ?, 
+    location_type_id = ?, 
+    name = ?, 
+    description = ? 
+    WHERE id = ?`, 
+    [parent_location_id, location_type_id, name, description, location_id])
+  return getLocation(location_id)
+}
+
+async function deleteLocation(location_id) {
+  const [result] = await pool.query("DELETE FROM locations WHERE id = ?", [location_id])
+  return true
+}
 
 async function getMountingTypeList() {
   const [rows] = await pool.query(`SELECT id, name,
@@ -1161,5 +1214,6 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getPackageTypeList, getPackageType, updatePackageType, createPackageType, 
   getPackageTypesForComponentType, getSelectedPackageTypesForComponentType,
   getComponentTypesForPackageType, getSelectedComponentTypesForPackageType,
-  getLocationTypeList, getLocationType, createLocationType, updateLocationType, deleteLocationType}
+  getLocationTypeList, getLocationType, createLocationType, updateLocationType, deleteLocationType,
+  getLocationList, getLocation, createLocation, updateLocation, deleteLocation, getChildLocationList}
 

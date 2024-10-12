@@ -1,0 +1,38 @@
+extends ../layout
+
+block content
+  p #[strong Name] #{location.name}
+  p #[strong Description] #{location.description}
+  p #[strong Type] #{location.location_type}
+  p #[strong Parent Location] 
+    a(href="/locations/"+location.parent_location_id) #{location.parent_location}
+  
+  a.btn.btn-primary(href="/locations/edit/"+location.id, role="button") Edit
+
+    br
+  br
+  H6 Locations contained at this location
+  div#child_locations 
+    div.container
+      div.row
+        div.col-md-2
+          strong Name
+        div.col-md-5
+          strong Description
+        div.col-md-1
+          strong Type
+        div.col-md-2
+          strong Parent Location
+      each n in child_locations
+        div.row 
+          div.col-md-2
+            a(href="/locations/"+n.id) #{n.name}
+          div.col-md-5=n.description
+          div.col-md-1=n.location_type
+          div.col-md-2=n.parent_location
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#location").addClass("active");
+    });
