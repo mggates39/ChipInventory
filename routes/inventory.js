@@ -18,7 +18,7 @@ router.get('/', async function(req, res, next) {
   }
   
   const inventory = await searchInventory(search_query, search_by);
-  res.render('inventory/list', { title: 'Chip Inventory', inventory: inventory, searched: search_query, part_search: part_search, key_search: key_search  });
+  res.render('inventory/list', { title: 'Component Inventory', inventory: inventory, searched: search_query, part_search: part_search, key_search: key_search  });
 });
 
 router.get('/edit/:id', async function(req, res, next) {
