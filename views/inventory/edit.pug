@@ -1,33 +1,30 @@
 extends ../layout
 
 block content
-  p Enter the new component inventory
-  form(action="/inventory/new/" method="POST")
+  p Edit the component inventory
+  form(action="/inventory/"+data.id method="POST")
     div.form-group
-      label(for="chip_id") Base Chip Number:
-      select#chip_id.form-control(type='select' placeholder='Select chip' name='chip_id' required='true')
+      label(for="component_id") Base Chip Number:
+      select#component_id.form-control(type='select' placeholder='Select chip' name='component_id' required='true')
         for component in components
-          option(value=component.id) #{component.name}
+          option(value=component.id selected= data.component_id == component.id) #{component.name}
     div.form-group
       label(for="mfg_code_id") Manufacturer:
       select#mfg_code_id.form-control(type='select' placeholder='Select Manufacturer' name='mfg_code_id' )
         for mfg in manufacturers
-          option(value=mfg.id) #{mfg.display_name}
+          option(value=mfg.id selected= data.mfg_code_id == mfg.id) #{mfg.display_name}
     div.form-group
       label(for="full_number") Chip Number:
-      input#full_number.form-control(type="text" placeholder="Enter actual number on the chip" name="full_number")
+      input#full_number.form-control(type="text" placeholder="Enter actual number on the chip" name="full_number" value=data.full_number)
     div.form-group
       label( for="location_id") Location:
       select#location_id.form-control(type='select' placeholder='Select Component type' name='location_id')
         option(value='') 
         for location in locations
-          option(value=location.id) #{location.name}
-    div.form-group
-      label(for="date_code") Date Code:
-      input#date_code.form-control(type="text" placeholder="Ex) 9315" name="date_code")
+          option(value=location.id selected= data.location_id == location.id) #{location.name}
     div.form-group
       label(for="quantity") Quantity:
-      input#quantity.form-control(type="text" placeholder="Enter quantity to be added" name="quantity")
+      input#quantity.form-control(type="text" placeholder="Enter quantity to be added" name="quantity" value=data.quantity)
     br
     button.btn.btn-default.btn-primary(type="submit") Submit
 

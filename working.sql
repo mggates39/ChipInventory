@@ -470,4 +470,35 @@ select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as 
     left join components c on c.component_sub_type_id = cst.id
     WHERE cst.component_type_id = 1
     group by cst.id, cst.name, cst.description
-    ORDER BY cst.name      
+    ORDER BY cst.name;
+    
+    
+
+  SELECT i.id, component_id, full_number, i.mfg_code_id, i.quantity, cmp.name as chip_number, cmp.description, i.location_id, l.name loacation, mfg_code, manufacturer.name 
+    from inventory i
+    join components cmp on cmp.id = i.component_id
+    join mfg_codes on mfg_codes.id = i.mfg_code_id
+    join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+    left join locations l on l.id = i.location_id
+  WHERE i.id = 1;
+  
+  
+  select i.id, component_id, i.full_number, i.quantity, cmp.name as chip_number, l.name loacation, mfg_code, manufacturer.name   
+    from inventory i
+    join components cmp on cmp.id = i.component_id
+    join mfg_codes on mfg_codes.id = i.mfg_code_id
+    join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+    left join locations l on l.id = i.location_id
+    where i.component_id = 218
+    order by full_number;
+  
+select inventory.id, inventory.component_id, full_number, quantity, cmp.name as chip_number, cmp.description, 
+    l.name location, mfg_code, manufacturer.name 
+    from inventory
+    join components cmp on cmp.id = inventory.component_id
+    join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+    join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+    left join locations l on l.id = inventory.location_id
+    order by cmp.name, full_number;
+    
+

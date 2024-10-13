@@ -339,40 +339,44 @@ async function searchInventory(query, type) {
   if (query) {
     value = ['%' + query + '%']
     if (type == 'p') {
-      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, mfg_code, manufacturer.name 
+      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, l.name location, mfg_code, manufacturer.name 
       from inventory 
       join components cmp on cmp.id = inventory.component_id
       join component_types ct on ct.id = cmp.component_type_id
       join mfg_codes on mfg_codes.id = inventory.mfg_code_id
       join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+      left join locations l on l.id = inventory.location_id
       where full_number like ? or cmp.name like ?
       order by cmp.name, full_number`;
       value = ['%' + query + '%', '%' + query + '%'];
     } else if (type == 'k') {
-      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, mfg_code, manufacturer.name 
+      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, l.name location, mfg_code, manufacturer.name 
       from inventory
       join components cmp on cmp.id = inventory.component_id
       join component_types ct on ct.id = cmp.component_type_id
       join mfg_codes on mfg_codes.id = inventory.mfg_code_id
       join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+      left join locations l on l.id = inventory.location_id
       where description like ?
       order by cmp.name, full_number`;
     } else {
-      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, mfg_code, manufacturer.name 
+      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, l.name location, mfg_code, manufacturer.name 
     from inventory
     join components cmp on cmp.id = inventory.component_id
     join component_types ct on ct.id = cmp.component_type_id
     join mfg_codes on mfg_codes.id = inventory.mfg_code_id
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+    left join locations l on l.id = inventory.location_id
     order by cmp.name, full_number`;
     }
   } else {
-    sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, mfg_code, manufacturer.name 
+    sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, l.name location, mfg_code, manufacturer.name 
       from inventory
       join components cmp on cmp.id = inventory.component_id
       join component_types ct on ct.id = cmp.component_type_id
       join mfg_codes on mfg_codes.id = inventory.mfg_code_id
       join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+      left join locations l on l.id = inventory.location_id
       order by cmp.name, full_number`;
     value = []
   }
@@ -381,23 +385,40 @@ async function searchInventory(query, type) {
 }
 
 async function getInventoryList() {
-  const [rows] = await pool.query(`select inventory.id, inventory.component_id, full_number, quantity, cmp.name as chip_number, cmp.description, mfg_code, manufacturer.name 
+  const [rows] = await pool.query(`
+    select inventory.id, inventory.component_id, full_number, quantity, cmp.name as chip_number, cmp.description, 
+    l.name location, mfg_code, manufacturer.name 
     from inventory
     join components cmp on cmp.id = inventory.component_id
     join mfg_codes on mfg_codes.id = inventory.mfg_code_id
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+    left join locations l on l.id = inventory.location_id
     order by cmp.name, full_number`)
   return rows
 }
 
 async function getInventoryByComponentList(component_id) {
-  const [rows] = await pool.query(`select inventory.id, component_id, full_number, quantity, cmp.name as chip_number, mfg_code, manufacturer.name   
-    from inventory
-    join components cmp on cmp.id = inventory.component_id
-    join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+  const [rows] = await pool.query(`select i.id, component_id, i.full_number, i.quantity, cmp.name as chip_number, l.name loacation, mfg_code, manufacturer.name   
+    from inventory i
+    join components cmp on cmp.id = i.component_id
+    join mfg_codes on mfg_codes.id = i.mfg_code_id
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
-    where inventory.component_id = ?
+    left join locations l on l.id = i.location_id
+    where i.component_id = ?
     order by full_number`, [component_id])
+  return rows
+}
+
+async function getInventoryByLocationList(location_id) {
+  const [rows] = await pool.query(`
+    SELECT i.id, component_id, i.full_number, i.mfg_code_id, i.quantity, cmp.name as chip_number, cmp.description, i.location_id, l.name loacation, mfg_code, manufacturer.name 
+    from inventory i
+    join components cmp on cmp.id = i.component_id
+    join mfg_codes on mfg_codes.id = i.mfg_code_id
+    join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+    left join locations l on l.id = i.location_id
+    where i.location_id = ?
+    order by full_number`, [location_id])
   return rows
 }
 
@@ -413,35 +434,37 @@ async function lookupInventory(component_id, full_number, mfg_code_id) {
 
 async function getInventory(inventory_id) {
   const [rows] = await pool.query(`
-  SELECT inventory.id, component_id, full_number, mfg_code_id, quantity, cmp.name as chip_number, description, description, mfg_code, manufacturer.name 
-    from inventory
-    join components cmp on cmp.id = inventory.component_id
-    join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+  SELECT i.id, component_id, i.full_number, i.mfg_code_id, i.quantity, cmp.name as chip_number, cmp.description, i.location_id, l.name location, mfg_code, manufacturer.name 
+    from inventory i
+    join components cmp on cmp.id = i.component_id
+    join mfg_codes on mfg_codes.id = i.mfg_code_id
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
-  WHERE inventory.id = ?
+    left join locations l on l.id = i.location_id
+  WHERE i.id = ?
   `, [inventory_id])
   return rows[0]
 }
 
-async function createInventory(component_id, full_chip_number, mfg_code_id, quantity) {
+async function createInventory(component_id, full_chip_number, mfg_code_id, quantity, location_id) {
   const [result] = await pool.query(`
-    INSERT INTO inventory (component_id, full_number, mfg_code_id, quantity)
-    VALUES (?, ?, ?, ?)
-    `, [component_id, full_chip_number, mfg_code_id, quantity])
+    INSERT INTO inventory (component_id, full_number, mfg_code_id, quantity, location_id)
+    VALUES (?, ?, ?, ?, ?)
+    `, [component_id, full_chip_number, mfg_code_id, quantity, location_id])
   const inventory_id = result.insertId;
   return getInventory(inventory_id)
 }
 
-async function updateInventory(inventory_id, component_id, full_chip_number, mfg_code_id, quantity) {
+async function updateInventory(inventory_id, component_id, full_chip_number, mfg_code_id, quantity, location_id) {
   const [result] = await pool.query(`
     UPDATE inventory SET
       component_id = ?, 
       full_number = ?, 
       mfg_code_id = ?, 
-      quantity = ?
+      quantity = ?,
+      location_id = ?
     WHERE id = ?
-    `, [component_id, full_chip_number, mfg_code_id, quantity, inventory_id])
-  return getInventory(id);  
+    `, [component_id, full_chip_number, mfg_code_id, quantity, location_id, inventory_id])
+  return getInventory(inventory_id);  
 }
 
 async function getInventoryDates(inventory_id) {
@@ -1210,7 +1233,7 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getComponentTypeList, getComponentType, createComponentType, updateComponentType, 
   getComponentSubTypesForComponentType, createCompnentSubType, getComponentSubType, updateComponentSubType, deleteComponentSubType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
-  updateMountingType, createMountingType,
+  updateMountingType, createMountingType, getInventoryByLocationList,
   getPackageTypeList, getPackageType, updatePackageType, createPackageType, 
   getPackageTypesForComponentType, getSelectedPackageTypesForComponentType,
   getComponentTypesForPackageType, getSelectedComponentTypesForPackageType,

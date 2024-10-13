@@ -9,9 +9,9 @@ block content
   
   a.btn.btn-primary(href="/locations/edit/"+location.id, role="button") Edit
 
-    br
   br
-  H6 Locations contained at this location
+  br
+  H6 Locations in this location
   div#child_locations 
     div.container
       div.row
@@ -30,6 +30,28 @@ block content
           div.col-md-5=n.description
           div.col-md-1=n.location_type
           div.col-md-2=n.parent_location
+
+  br
+  br
+  H6 Inventory at this location
+  div#child_locations 
+    div.container
+      div.row
+        div.col-md-2
+          strong Name
+        div.col-md-5
+          strong Description
+        div.col-md-1
+          strong Manufacturer
+        div.col-md-2
+          strong Quantity
+      each n in inventories
+        div.row 
+          div.col-md-2
+            a(href="/inventory/"+n.id) #{n.full_number}
+          div.col-md-5=n.description
+          div.col-md-1=n.name
+          div.col-md-2=n.quantity
 
 block scripts
   script(type="text/javascript").

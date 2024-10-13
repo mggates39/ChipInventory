@@ -21,6 +21,7 @@ block content
       th Manufacturer
       th Quantity
       th Description
+      th Location
 
     each n in inventory
       tr
@@ -31,6 +32,7 @@ block content
         td= n.mfg_code+' ('+n.name+')'
         td= n.quantity
         td= n.description
+        td= n.location
 
     if inventory.length == 0
       tr

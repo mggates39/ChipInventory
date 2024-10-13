@@ -1,6 +1,7 @@
 var express = require('express');
-const { searchInventory, getInventory, getInventoryDates, getChip, searchChips, getMfgCodes, getComponent, 
-  lookupInventory, createInventory, updateInventory, createInventoryDate, updateInventoryDate, lookupInventoryDate } = require('../database');
+const { searchInventory, getInventory, getInventoryDates, searchChips, getMfgCodes, getComponent, 
+  lookupInventory, createInventory, updateInventory, createInventoryDate, updateInventoryDate, lookupInventoryDate, 
+  getLocationList} = require('../database');
 var router = express.Router();
 
 /* GET Inventory list page. */
@@ -20,17 +21,29 @@ router.get('/', async function(req, res, next) {
   res.render('inventory/list', { title: 'Chip Inventory', inventory: inventory, searched: search_query, part_search: part_search, key_search: key_search  });
 });
 
+router.get('/edit/:id', async function(req, res, next) {
+  const id = req.params.id;
+  const data = await getInventory(id);
+  const manufacturers = await getMfgCodes();
+  const component = await getComponent(data.component_id);
+  const locations = await getLocationList();
+  console.log(data);
+  res.render('inventory/edit', {title: 'Edit Component Inventory', data: data, manufacturers: manufacturers, components: [component], locations: locations});
+});
+
 router.get('/new/:component_id', async function(req, res, next) {
   const component_id = req.params.component_id;
   const manufacturers = await getMfgCodes();
   const component = await getComponent(component_id);
-  res.render('inventory/new', {title: 'Add to Component Inventory', manufacturers: manufacturers, components: [component]});
+  const locations = await getLocationList();
+  res.render('inventory/new', {title: 'Add to Component Inventory', manufacturers: manufacturers, components: [component], locations: locations});
 });
 
 router.get('/new', async function(req, res, next) {
   const manufacturers = await getMfgCodes();
   const components = await searchChips('', '');
-  res.render('inventory/new', {title: 'Add to Component Inventory', manufacturers: manufacturers, components: components});
+  const locations = await getLocationList();
+  res.render('inventory/new', {title: 'Add to Component Inventory', manufacturers: manufacturers, components: components, locations: locations});
 });
 
 router.post('/new', async function(req, res) {
@@ -42,9 +55,9 @@ router.post('/new', async function(req, res) {
   if (inv.length) {
     inv_id = inv[0].id;
     old_qty = parseInt(inv[0].quantity)
-    await updateInventory(inv_id, inv[0].chip_id, inv[0].full_number, inv[0].mfg_code_id, (old_qty + new_qty))
+    await updateInventory(inv_id, inv[0].chip_id, inv[0].full_number, inv[0].mfg_code_id, (old_qty + new_qty), data.location_id)
   } else {
-    const new_inv = await createInventory(data.chip_id, data.full_number, data.mfg_code_id, data.quantity);
+    const new_inv = await createInventory(data.chip_id, data.full_number, data.mfg_code_id, data.quantity, data.location_id);
     inv_id = new_inv.id;
   }
   const inv_date = await lookupInventoryDate(inv_id, data.date_code);
@@ -56,6 +69,19 @@ router.post('/new', async function(req, res) {
   }
 
   res.redirect('/inventory/'+inv_id);
+});
+
+router.post('/:id', async function(req, res) {
+  const id = req.params.id;
+  const data = req.body;
+  console.log(data);
+  if (data.location_id == '') {
+    location_id = null;
+  } else {
+    location_id = data.location_id;
+  }
+  await updateInventory(id, data.component_id, data.full_number, data.mfg_code_id, data.quantity, location_id);
+  res.redirect('/inventory/'+id);
 });
 
 router.get('/:id/newdate', async function(req, res, next) {

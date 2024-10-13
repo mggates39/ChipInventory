@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const {getLocationList, getLocation, createLocation, updateLocation, getLocationTypeList, getChildLocationList} = require('../database');
+const {getLocationList, getLocation, createLocation, updateLocation, getLocationTypeList, getChildLocationList, getInventoryByLocationList} = require('../database');
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
@@ -25,7 +25,8 @@ router.get('/:id', async function(req, res, next) {
   const id = req.params.id;
   const data = await getLocation(id);
   const child_locations = await getChildLocationList(id);
-  res.render('location/detail', {title: 'Location', location: data, child_locations: child_locations});
+  const inventories = await getInventoryByLocationList(id);
+  res.render('location/detail', {title: 'Location', location: data, child_locations: child_locations, inventories: inventories});
 });
 
 router.get('/edit/:id', async function(req, res, next) {

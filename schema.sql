@@ -151,30 +151,6 @@ CREATE TABLE `mfg_codes` (
   CONSTRAINT `mfg_codes_ibfk_1` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturer` (`id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE `inventory` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `component_id` int NOT NULL,
-  `mfg_code_id` int NOT NULL,
-  `full_number` varchar(64) NOT NULL,
-  `quantity` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `component_idx` (`component_id`),
-  KEY `mfg_code_idx` (`mfg_code_id`),
-  CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`),
-  CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`mfg_code_id`) REFERENCES `mfg_codes` (`id`)
-) ENGINE=InnoDB;
-
-
-CREATE TABLE `inventory_dates` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `inventory_id` int NOT NULL,
-  `date_code` varchar(16) NOT NULL,
-  `quantity` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `inv_idx` (`inventory_id`),
-  CONSTRAINT `inventory_dates_ibfk_1` FOREIGN KEY (`inventory_id`) REFERENCES `inventory` (`id`)
-) ENGINE=InnoDB;
-
 CREATE TABLE `location_types` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(16) NOT NULL,
@@ -194,6 +170,32 @@ CREATE TABLE `locations` (
   KEY `location_type_idx` (`location_type_id`),
   CONSTRAINT `location_type_idfk` FOREIGN KEY (`location_type_id`) REFERENCES `location_types` (`id`),
   CONSTRAINT `parent_location_idfk` FOREIGN KEY (`parent_location_id`) REFERENCES `locations` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `inventory` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `component_id` int NOT NULL,
+  `mfg_code_id` int NOT NULL,
+  `full_number` varchar(64) NOT NULL,
+  `location_id` int NULL,
+  `quantity` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `component_idx` (`component_id`),
+  KEY `mfg_code_idx` (`mfg_code_id`),
+  KEY `location_idx` (`location_id`),
+  CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`),
+  CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`mfg_code_id`) REFERENCES `mfg_codes` (`id`),
+  CONSTRAINT `inventory_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `inventory_dates` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `inventory_id` int NOT NULL,
+  `date_code` varchar(16) NOT NULL,
+  `quantity` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `inv_idx` (`inventory_id`),
+  CONSTRAINT `inventory_dates_ibfk_1` FOREIGN KEY (`inventory_id`) REFERENCES `inventory` (`id`)
 ) ENGINE=InnoDB;
 
 
