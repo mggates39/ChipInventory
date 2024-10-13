@@ -37,3 +37,11 @@ block content
           p.card-title Manufacturer Counts
           p.card-text Manufacturers: #{data.mfgs}
           p.card-text Codes: #{data.codes}
+
+    div.col-sm-3 
+      div.card.text-center.border-dark.mb-3(style="max-width: 18rem;")
+        h5.card-header.border-dark Locations
+        div.card-body
+          p.card-title Location Counts
+          p.card-text Main Locations: #{data.main_locations}
+          p.card-text Child Locations: #{data.child_locations}

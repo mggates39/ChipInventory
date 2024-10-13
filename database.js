@@ -20,7 +20,9 @@ async function getSystemData() {
       (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') old_min_date,
       (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') old_max_date,
       (select count(*) from manufacturer) mfgs,
-      (select count(*) from mfg_codes) codes
+      (select count(*) from mfg_codes) codes,
+      (select count(*) from locations where parent_location_id is null) main_locations,
+      (select count(*) from locations where parent_location_id is not null) child_locations
     `)
   return rows[0]
 }
@@ -357,7 +359,7 @@ async function searchInventory(query, type) {
       join mfg_codes on mfg_codes.id = inventory.mfg_code_id
       join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
       left join locations l on l.id = inventory.location_id
-      where description like ?
+      where cmp.description like ?
       order by cmp.name, full_number`;
     } else {
       sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, l.name location, mfg_code, manufacturer.name 
