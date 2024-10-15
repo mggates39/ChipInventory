@@ -22,6 +22,8 @@ html(lang="en")
             li.nav-item
               a#inv.nav-link(href='/inventory') Inventory 
             li.nav-item
+              a#location.nav-link(href="/locations") Locations
+            li.nav-item
               a#proj.nav-link(href='/projects') My Projects 
             li.nav-item.dropdown
               a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") Settings
@@ -38,8 +40,6 @@ html(lang="en")
                   hr.dropdown-divider
                 li
                   a#loctype.dropdown-item(href="/location_types") Location Types
-                li
-                  a#location.dropdown-item(href="/locations") Locations
 
     div.container
       h1.mb-4 !{title}
