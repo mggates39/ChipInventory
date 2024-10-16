@@ -35,7 +35,7 @@ CREATE TABLE `locations` (
   KEY `location_type_idx` (`location_type_id`),
   CONSTRAINT `location_type_idfk` FOREIGN KEY (`location_type_id`) REFERENCES `location_types` (`id`),
   CONSTRAINT `parent_location_idfk` FOREIGN KEY (`parent_location_id`) REFERENCES `locations` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `locations` (
 
 LOCK TABLES `locations` WRITE;
 /*!40000 ALTER TABLE `locations` DISABLE KEYS */;
-INSERT INTO `locations` VALUES (1,NULL,6,'Home','39 Begonia Lane'),(2,1,1,'Office','Upstairs Office'),(3,2,2,'Bookshelf 1','First bookshelf by the door');
+INSERT INTO `locations` VALUES (1,NULL,6,'Home','39 Begonia Lane'),(2,1,1,'Office','Upstairs Office'),(3,2,2,'Bookshelf 1','First bookshelf by the door'),(4,5,10,'Small Chip Tray','Small Chip Tray'),(5,2,11,'Elephant Basket','Elephant Basket'),(6,1,1,'Lab','Basement Lab'),(7,5,12,'Digikey Bag','Digikey Bag');
 /*!40000 ALTER TABLE `locations` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-13  0:45:19
+-- Dump completed on 2024-10-15 22:04:46

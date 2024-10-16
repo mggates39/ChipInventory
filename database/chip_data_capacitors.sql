@@ -18,30 +18,32 @@ USE `chip_data`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `component_types`
+-- Table structure for table `capacitors`
 --
 
-DROP TABLE IF EXISTS `component_types`;
+DROP TABLE IF EXISTS `capacitors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `component_types` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(16) NOT NULL,
-  `description` varchar(32) NOT NULL,
-  `symbol` varchar(4) NOT NULL,
-  `table_name` varchar(32) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `capacitors` (
+  `component_id` int NOT NULL,
+  `capacitance` int unsigned NOT NULL,
+  `working_voltage` float(7,3) NOT NULL,
+  `tolerance` float NOT NULL,
+  `number_capacitors` int DEFAULT NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `cap_compnt_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `component_types`
+-- Dumping data for table `capacitors`
 --
 
-LOCK TABLES `component_types` WRITE;
-/*!40000 ALTER TABLE `component_types` DISABLE KEYS */;
-INSERT INTO `component_types` VALUES (1,'IC','Integrated Circuit','U','chips'),(2,'Cap','Capacitor','C','capacitors'),(3,'CN','Capacitor Network','CN','capacitors'),(4,'Res','Resistor','R','resistors'),(5,'RN','Resistor Network','RN','resistor_networks'),(6,'Diode','Diode','D','diodes'),(7,'Transisstor','Transistor','Q','transistors'),(8,'Inductor','Inductor','L','inductors'),(9,'Switch','Switch','SW','switches'),(10,'Xtal','Crystal','Y','crystals'),(11,'Socket','Connector jack','J','connectors'),(12,'Pin','Connector plug','JP','connectors'),(13,'Fuse','Fuse','F','fuses'),(14,'XFMR','Transformer','T','transformers'),(15,'Wire','Wire','W','wires');
-/*!40000 ALTER TABLE `component_types` ENABLE KEYS */;
+LOCK TABLES `capacitors` WRITE;
+/*!40000 ALTER TABLE `capacitors` DISABLE KEYS */;
+INSERT INTO `capacitors` VALUES (280,1,20.000,35,1,'https://datasheets.kyocera-avx.com/tap.pdf');
+/*!40000 ALTER TABLE `capacitors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-15 22:04:45
+-- Dump completed on 2024-10-15 22:04:46
