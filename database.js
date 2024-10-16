@@ -152,6 +152,27 @@ async function getResistor_internall(component_id) {
    return rows[0]
 }
 
+async function getCapacitor(component_id) {
+  return getCapacitor_internall(component_id);
+};
+
+async function getCapacitorNetwork(component_id) {
+  return getCapacitor_internall(component_id);
+};
+
+async function getCapacitor_internall(component_id) {
+  const [rows] = await pool.query(`
+    SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    FROM components cmp
+    JOIN capacitors c on c.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    WHERE c.component_id = ?
+    `, [component_id])
+   return rows[0]
+}
+
 async function getPins(component_id) {
   const [rows] = await pool.query(`
   SELECT * 
@@ -763,6 +784,61 @@ async function deleteResistorNetwork(component_id) {
   return true
 }
 
+async function createCapacitor(chip_number, package_type_id, component_sub_type_id, description, pin_count, capacitance, working_voltage, tolerance, datasheet) {
+  const component_type_id = 2;
+  return await createCapacitor_internal(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, capacitance, working_voltage, tolerance, 1, datasheet);
+}
+
+async function createCapacitorNetwork(chip_number, package_type_id, component_sub_type_id, description, pin_count, capacitance, working_voltage, tolerance, number_capacitors, datasheet) {
+  const component_type_id = 3;
+  return await createCapacitor_internal(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, capacitance, working_voltage, tolerance, number_capacitors, datasheet);
+}
+
+async function createCapacitor_internal(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, capacitance, working_voltage, tolerance, number_capacitors, datasheet) {
+  const component_id = await createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO capacitors (component_id, capacitance, working_voltage, tolerance, number_capacitors, datasheet)
+      VALUES (?, ?, ?, ?, ?, ?)
+      `, [component_id, capacitance, working_voltage, tolerance, number_capacitors, datasheet])
+  return getCapacitor(component_id);
+};
+
+async function updateCapacitor(component_id, chip_number, package_type_id, component_sub_type_id, description, pin_count, capacitance, working_voltage, tolerance, datasheet) {
+  const component_type_id = 2;
+  return await updateCapacitor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, capacitance, working_voltage, tolerance, 1, datasheet);
+}
+
+async function updateCapacitorNetwork(component_id, chip_number, package_type_id, component_sub_type_id, description, pin_count, capacitance, working_voltage, tolerance, number_capacitors, datasheet) {
+  const component_type_id = 2;
+  return await updateCapacitor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, capacitance, working_voltage, tolerance, number_capacitors, datasheet);
+}
+
+async function updateCapacitor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, capacitance, working_voltage, tolerance, number_capacitors, datasheet) {
+  await updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE capacitors SET
+      capacitance = ?, 
+      working_voltage = ?, 
+      tolerance = ?, 
+      number_capacitors = ?, 
+      datasheet = ?
+    WHERE component_id = ?
+    `, [capacitance, working_voltage, tolerance, number_capacitors, datasheet, component_id])
+  return getCapacitor(component_id)
+};
+
+async function deleteCapacitor(component_id) {
+  await pool.query('DELETE FROM capacitors WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
+async function deleteCapacitorNetwork(component_id) {
+  await pool.query('DELETE FROM capacitors WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
 async function createSpec(component_id, parameter, value, units) {
   const [result] = await pool.query(`
   INSERT INTO specs (component_id, parameter, value, unit)
@@ -1227,6 +1303,8 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getCrystal, createCrystal, updateCrystal, deleteCrystal,
   getResistor, createResistor, updateResistor, deleteResistor,
   getResistorNetwork, createResistorNetwork, updateResistorNetwork, deleteResistorNetwork,
+  getCapacitor, createCapacitor, updateCapacitor, deleteCapacitor,
+  getCapacitorNetwork, createCapacitorNetwork, updateCapacitorNetwork, deleteCapacitorNetwork,
   searchInventory, getInventoryList, getInventory, getInventoryByComponentList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, deleteAliases, 

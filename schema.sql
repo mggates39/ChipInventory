@@ -69,6 +69,17 @@ CREATE TABLE `components` (
   CONSTRAINT `component_subtype_idfk` FOREIGN KEY (`component_sub_type_id`) REFERENCES `component_sub_types` (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `capacitors` (
+  `component_id` int NOT NULL,
+  `capacitance`  int unsigned NOT NULL,
+  `working_voltage` float(7,3) NOT NULL,
+  `tolerance` float(6.4) NOT NULL,
+  `number_capacitors` int NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `cap_compnt_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB;
+
 CREATE TABLE `chips` (
   `component_id` int NOT NULL,
   `family` varchar(32) NOT NULL,
