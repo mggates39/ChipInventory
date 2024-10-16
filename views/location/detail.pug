@@ -17,9 +17,9 @@ block content
       div.row
         div.col-md-2
           strong Name
-        div.col-md-5
+        div.col-md-4
           strong Description
-        div.col-md-1
+        div.col-md-2
           strong Type
         div.col-md-2
           strong Parent Location
@@ -27,8 +27,8 @@ block content
         div.row 
           div.col-md-2
             a(href="/locations/"+n.id) #{n.name}
-          div.col-md-5=n.description
-          div.col-md-1=n.location_type
+          div.col-md-4=n.description
+          div.col-md-2=n.location_type
           div.col-md-2=n.parent_location
 
   br
@@ -39,9 +39,9 @@ block content
       div.row
         div.col-md-2
           strong Name
-        div.col-md-5
+        div.col-md-4
           strong Description
-        div.col-md-1
+        div.col-md-2
           strong Manufacturer
         div.col-md-2
           strong Quantity
@@ -49,8 +49,8 @@ block content
         div.row 
           div.col-md-2
             a(href="/inventory/"+n.id) #{n.full_number}
-          div.col-md-5=n.description
-          div.col-md-1=n.name
+          div.col-md-4=n.description
+          div.col-md-2=n.name
           div.col-md-2=n.quantity
 
 block scripts
