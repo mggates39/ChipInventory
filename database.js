@@ -406,8 +406,6 @@ async function searchInventory(query, type, component_type_id) {
       value = [component_type_id]    
     }
   }
-  console.log(sql);
-  console.log(value);
   const [rows] = await pool.query(sql, value);
   return rows
 }

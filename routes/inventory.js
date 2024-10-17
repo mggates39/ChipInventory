@@ -33,7 +33,6 @@ router.get('/edit/:id', async function(req, res, next) {
   const manufacturers = await getMfgCodes();
   const component = await getComponent(data.component_id);
   const locations = await getLocationList();
-  console.log(data);
   res.render('inventory/edit', {title: 'Edit Component Inventory', data: data, manufacturers: manufacturers, components: [component], locations: locations});
 });
 
@@ -80,7 +79,6 @@ router.post('/new', async function(req, res) {
 router.post('/:id', async function(req, res) {
   const id = req.params.id;
   const data = req.body;
-  console.log(data);
   if (data.location_id == '') {
     location_id = null;
   } else {
