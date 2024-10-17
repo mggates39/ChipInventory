@@ -109,7 +109,7 @@ router.get('/edit/:id', async function(req, res, next) {
   })
   
   data = {
-    id: capacitor_id,
+    component_id: capacitor_id,
     chip_number: capacitor.chip_number,
     aliases: aliasList,
     capacitance: capacitor.capacitance,

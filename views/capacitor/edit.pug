@@ -40,6 +40,7 @@ block content
     - var n = 0
     - while (n < data.pin_count)
       div.row 
+        input(type="hidden" id="pin_id_"+n name="pin_id_"+n value=data.pin_id[n])
         div.col 
           input.form-control(type="text" id="pin_"+n name="pin_"+n value=(n+1))
         div.col 
