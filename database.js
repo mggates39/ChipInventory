@@ -173,6 +173,20 @@ async function getCapacitor_internall(component_id) {
    return rows[0]
 }
 
+async function getSocket(component_id) {
+  const [rows] = await pool.query(`
+    SELECT s.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    FROM components cmp
+    JOIN sockets s on s.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    WHERE s.component_id = ?
+    `, [component_id])
+   return rows[0]
+}
+
+
 async function getPins(component_id) {
   const [rows] = await pool.query(`
   SELECT * 
@@ -842,6 +856,33 @@ async function deleteCapacitorNetwork(component_id) {
   return true
 }
 
+async function createSocket(socket_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 16;
+  const component_id = await createComponent(socket_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO sockets (component_id,  datasheet)
+      VALUES (?, ?)
+      `, [component_id, datasheet])
+  return getSocket(component_id)
+}
+
+async function updateSocket(component_id, socket_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 16;
+  await updateComponent(component_id, socket_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE sockets SET
+      datasheet = ?
+    WHERE component_id = ?
+    `, [datasheet, component_id])
+  return getSocket(component_id)
+}
+
+async function deleteSocket(component_id) {
+  await pool.query('DELETE FROM sockets WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
 async function createSpec(component_id, parameter, value, units) {
   const [result] = await pool.query(`
   INSERT INTO specs (component_id, parameter, value, unit)
@@ -998,7 +1039,7 @@ async function setComponentPackageTypes( component_type_id, package_types) {
 
 async function createComponentType(name, description, symbol, table_name, package_types) {
   const [result] = await pool.query(`
-    INSERT INTO component_types (description, symbol, table_name)
+    INSERT INTO component_types (name, description, symbol, table_name)
     VALUES (?, ?, ?, ?)
     `, [name, description, symbol, table_name])
     const component_type_id = result.insertId
@@ -1310,6 +1351,7 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getResistorNetwork, createResistorNetwork, updateResistorNetwork, deleteResistorNetwork,
   getCapacitor, createCapacitor, updateCapacitor, deleteCapacitor,
   getCapacitorNetwork, createCapacitorNetwork, updateCapacitorNetwork, deleteCapacitorNetwork,
+  getSocket, createSocket, updateSocket, deleteSocket,
   searchInventory, getInventoryList, getInventory, getInventoryByComponentList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, deleteAliases, 
