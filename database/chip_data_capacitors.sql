@@ -42,7 +42,7 @@ CREATE TABLE `capacitors` (
 
 LOCK TABLES `capacitors` WRITE;
 /*!40000 ALTER TABLE `capacitors` DISABLE KEYS */;
-INSERT INTO `capacitors` VALUES (280,1,20.000,35,1,'https://datasheets.kyocera-avx.com/tap.pdf');
+INSERT INTO `capacitors` VALUES (280,1,20.000,35,1,'https://datasheets.kyocera-avx.com/tap.pdf'),(281,100,25.000,20,1,'https://search.kemet.com/download/specsheet/ESK107M025AE3AA'),(282,10,20.000,63,1,'https://www.we-online.com/components/products/datasheet/860080772001.pdf'),(283,22,50.000,50,1,'https://product.tdk.com/en/system/files/dam/doc/product/capacitor/ceramic/lead-mlcc/catalog/leadmlcc_halogenfree_fg_en.pdf');
 /*!40000 ALTER TABLE `capacitors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-15 22:04:46
+-- Dump completed on 2024-10-17 18:49:11

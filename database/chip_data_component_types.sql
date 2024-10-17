@@ -31,7 +31,7 @@ CREATE TABLE `component_types` (
   `symbol` varchar(4) NOT NULL,
   `table_name` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `component_types` (
 
 LOCK TABLES `component_types` WRITE;
 /*!40000 ALTER TABLE `component_types` DISABLE KEYS */;
-INSERT INTO `component_types` VALUES (1,'IC','Integrated Circuit','U','chips'),(2,'Cap','Capacitor','C','capacitors'),(3,'CN','Capacitor Network','CN','capacitors'),(4,'Res','Resistor','R','resistors'),(5,'RN','Resistor Network','RN','resistor_networks'),(6,'Diode','Diode','D','diodes'),(7,'Transisstor','Transistor','Q','transistors'),(8,'Inductor','Inductor','L','inductors'),(9,'Switch','Switch','SW','switches'),(10,'Xtal','Crystal','Y','crystals'),(11,'Socket','Connector jack','J','connectors'),(12,'Pin','Connector plug','JP','connectors'),(13,'Fuse','Fuse','F','fuses'),(14,'XFMR','Transformer','T','transformers'),(15,'Wire','Wire','W','wires');
+INSERT INTO `component_types` VALUES (1,'IC','Integrated Circuit','U','chips'),(2,'Cap','Capacitor','C','capacitors'),(3,'CN','Capacitor Network','CN','capacitors'),(4,'Res','Resistor','R','resistors'),(5,'RN','Resistor Network','RN','resistor_networks'),(6,'Diode','Diode','D','diodes'),(7,'Transisstor','Transistor','Q','transistors'),(8,'Inductor','Inductor','L','inductors'),(9,'Switch','Switch','SW','switches'),(10,'Xtal','Crystal','Y','crystals'),(11,'Socket','Connector jack','J','connectors'),(12,'Pin','Connector plug','JP','connectors'),(13,'Fuse','Fuse','F','fuses'),(14,'XFMR','Transformer','T','transformers'),(15,'Wire','Wire','W','wires'),(16,'Socket','Socket','ICS','sockets');
 /*!40000 ALTER TABLE `component_types` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-15 22:04:45
+-- Dump completed on 2024-10-17 18:49:11

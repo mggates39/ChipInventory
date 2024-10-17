@@ -18,34 +18,28 @@ USE `chip_data`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `locations`
+-- Table structure for table `sockets`
 --
 
-DROP TABLE IF EXISTS `locations`;
+DROP TABLE IF EXISTS `sockets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `locations` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `parent_location_id` int DEFAULT NULL,
-  `location_type_id` int NOT NULL,
-  `name` varchar(32) NOT NULL,
-  `description` text NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `parent_location_idx` (`parent_location_id`),
-  KEY `location_type_idx` (`location_type_id`),
-  CONSTRAINT `location_type_idfk` FOREIGN KEY (`location_type_id`) REFERENCES `location_types` (`id`),
-  CONSTRAINT `parent_location_idfk` FOREIGN KEY (`parent_location_id`) REFERENCES `locations` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `sockets` (
+  `component_id` int NOT NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `sockets_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `locations`
+-- Dumping data for table `sockets`
 --
 
-LOCK TABLES `locations` WRITE;
-/*!40000 ALTER TABLE `locations` DISABLE KEYS */;
-INSERT INTO `locations` VALUES (1,NULL,6,'Home','39 Begonia Lane'),(2,1,1,'Office','Upstairs Office'),(3,2,2,'Bookshelf 1','First bookshelf by the door'),(4,5,10,'Small Chip Tray','Small Chip Tray'),(5,2,11,'Elephant Basket','Elephant Basket'),(6,1,1,'Lab','Basement Lab'),(7,5,12,'Digikey Bag','Digikey Bag'),(8,5,4,'Archgon Box','Archgon Box');
-/*!40000 ALTER TABLE `locations` ENABLE KEYS */;
+LOCK TABLES `sockets` WRITE;
+/*!40000 ALTER TABLE `sockets` DISABLE KEYS */;
+INSERT INTO `sockets` VALUES (284,'https://app.adam-tech.com/products/download/data_sheet/199582/ics-3xx-t-data-sheet.pdf'),(285,'https://www.te.com/usa-en/product-1-2199298-3.datasheet.pdf'),(287,'https://www.on-shore.com/wp-content/uploads/2015/09/ipg2.pdf'),(288,'https://www.on-shore.com/wp-content/uploads/2015/09/ipg2.pdf'),(289,'https://app.adam-tech.com/products/download/data_sheet/199581/ics-6xx-t-data-sheet.pdf'),(290,'https://app.adam-tech.com/products/download/data_sheet/198231/plcc-52-at-data-sheet.pdf');
+/*!40000 ALTER TABLE `sockets` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
