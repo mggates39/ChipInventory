@@ -8,6 +8,8 @@ block content
       th Description
       th Type
       th Parent Location
+      th # Components 
+      th # Locations
 
     each n in locations
       tr
@@ -17,6 +19,8 @@ block content
         td= n.location_type 
         td 
             a(href="/locations/"+n.parent_location_id) #{n.parent_location}
+        td= n.num_items
+        td= n.num_child_locations 
 
     if locations.length == 0
       tr
