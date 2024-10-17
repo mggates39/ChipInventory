@@ -211,8 +211,8 @@ CREATE TABLE `inventory_dates` (
 
 
 -- Create any Views
--- DROP VIEW chip_aliases ;
-CREATE VIEW `chip_aliases` AS 
+-- DROP VIEW `component_search` ;
+CREATE VIEW `component_search` AS 
 SELECT 
     `cmp`.`id` AS `id`,
     `cmp`.`component_type_id` AS `component_type_id`,
@@ -254,5 +254,26 @@ FROM
     JOIN `components` `cmp` ON ((`cmp`.`id` = `a`.`component_id`)))
     JOIN `package_types` `pt` ON ((`pt`.`id` = `cmp`.`package_type_id`)))
     JOIN `component_types` `ct` ON ((`ct`.`id` = `cmp`.`component_type_id`)))
-    LEFT JOIN `component_sub_types` `cst` ON ((`cst`.`id` = `cmp`.`component_sub_type_id`)))
+    LEFT JOIN `component_sub_types` `cst` ON ((`cst`.`id` = `cmp`.`component_sub_type_id`)));
 
+-- DROP VIEW `inventory_search` ;
+CREATE VIEW `inventory_search` AS 
+SELECT 
+	i.id, 
+    cmp.id as component_id, 
+    i.full_number, 
+    i.quantity, 
+	cmp.name as chip_number, 
+    cmp.description, 
+    ct.id as component_type_id,
+    ct.description as type,
+    ct.table_name, 
+    l.name as location, 
+    mfg_code, 
+    manufacturer.name as mfg_name 
+FROM inventory i
+JOIN components cmp ON cmp.id = i.component_id
+JOIN component_types ct ON ct.id = cmp.component_type_id
+JOIN mfg_codes ON mfg_codes.id = i.mfg_code_id
+JOIN manufacturer ON manufacturer.id = mfg_codes.manufacturer_id
+LEFT JOIN locations l ON l.id = i.location_id;

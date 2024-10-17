@@ -61,32 +61,32 @@ async function getInventoryCounts() {
   return rows;
 }
 
-async function searchChips(query, type, component_type_id) {
+async function searchComponents(query, type, component_type_id) {
   if (query) {
     value = ['%' + query + '%', component_type_id]
     if (component_type_id == 0) {
       if (type == 'p') {
-        sql = "SELECT * FROM chip_aliases WHERE chip_number LIKE ? ORDER BY chip_number, description";
+        sql = "SELECT * FROM component_search WHERE chip_number LIKE ? ORDER BY chip_number, description";
       } else if (type == 'k') {
-        sql = "SELECT * FROM chip_aliases WHERE description LIKE ? ORDER BY chip_number, description";
+        sql = "SELECT * FROM component_search WHERE description LIKE ? ORDER BY chip_number, description";
       } else {
-        sql = "SELECT * FROM chip_aliases ORDER BY chip_number, description";
+        sql = "SELECT * FROM component_search ORDER BY chip_number, description";
       }
     } else {
       if (type == 'p') {
-        sql = "SELECT * FROM chip_aliases WHERE chip_number LIKE ? AND component_type_id = ? ORDER BY chip_number, description";
+        sql = "SELECT * FROM component_search WHERE chip_number LIKE ? AND component_type_id = ? ORDER BY chip_number, description";
       } else if (type == 'k') {
-        sql = "SELECT * FROM chip_aliases WHERE description LIKE ? AND component_type_id = ? ORDER BY chip_number, description";
+        sql = "SELECT * FROM component_search WHERE description LIKE ? AND component_type_id = ? ORDER BY chip_number, description";
       } else {
-        sql = "SELECT * FROM chip_aliases ORDER BY chip_number, description";
+        sql = "SELECT * FROM component_search ORDER BY chip_number, description";
       }      
     }
   } else {
     if (component_type_id == 0) {
-      sql = "SELECT * FROM chip_aliases ORDER BY chip_number, description";
+      sql = "SELECT * FROM component_search ORDER BY chip_number, description";
       value = [];
     } else {
-      sql = "SELECT * FROM chip_aliases WHERE component_type_id = ? ORDER BY chip_number, description";
+      sql = "SELECT * FROM component_search WHERE component_type_id = ? ORDER BY chip_number, description";
       value = [component_type_id];
     }
   }
@@ -358,51 +358,56 @@ async function getNotes(component_id) {
   return rows
 }
 
-async function searchInventory(query, type) {
+async function searchInventory(query, type, component_type_id) {
   if (query) {
-    value = ['%' + query + '%']
-    if (type == 'p') {
-      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, l.name location, mfg_code, manufacturer.name 
-      from inventory 
-      join components cmp on cmp.id = inventory.component_id
-      join component_types ct on ct.id = cmp.component_type_id
-      join mfg_codes on mfg_codes.id = inventory.mfg_code_id
-      join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
-      left join locations l on l.id = inventory.location_id
-      where full_number like ? or cmp.name like ?
-      order by cmp.name, full_number`;
-      value = ['%' + query + '%', '%' + query + '%'];
-    } else if (type == 'k') {
-      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, l.name location, mfg_code, manufacturer.name 
-      from inventory
-      join components cmp on cmp.id = inventory.component_id
-      join component_types ct on ct.id = cmp.component_type_id
-      join mfg_codes on mfg_codes.id = inventory.mfg_code_id
-      join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
-      left join locations l on l.id = inventory.location_id
-      where cmp.description like ?
-      order by cmp.name, full_number`;
+    value = ['%' + query + '%', component_type_id]
+    if (component_type_id == 0) {
+      if (type == 'p') {
+        sql = `select * from inventory_search
+        where full_number like ? or chip_number like ?
+        order by chip_number, full_number`;
+        value = ['%' + query + '%', '%' + query + '%'];
+      } else if (type == 'k') {
+        sql = `select * from inventory_search
+        where description like ?
+        order by chip_number, full_number`;
+      } else {
+        sql = `select * from inventory_search
+      order by chip_number, full_number`;
+      }
     } else {
-      sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, l.name location, mfg_code, manufacturer.name 
-    from inventory
-    join components cmp on cmp.id = inventory.component_id
-    join component_types ct on ct.id = cmp.component_type_id
-    join mfg_codes on mfg_codes.id = inventory.mfg_code_id
-    join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
-    left join locations l on l.id = inventory.location_id
-    order by cmp.name, full_number`;
+      if (type == 'p') {
+        sql = `select * from inventory_search
+        where (full_number like ? or chip_number like ?)
+          and component_type_id = ?
+        order by chip_number, full_number`;
+        value = ['%' + query + '%', '%' + query + '%', component_type_id];
+      } else if (type == 'k') {
+        sql = `select * from inventory_search
+        where description like ?
+          and component_type_id = ?
+        order by chip_number, full_number`;
+      } else {
+        sql = `select * from inventory_search
+        Where component_type_id = ?
+        order by chip_number, full_number`;
+        value = [component_type_id]
+      }
     }
   } else {
-    sql = `select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, ct.table_name, l.name location, mfg_code, manufacturer.name 
-      from inventory
-      join components cmp on cmp.id = inventory.component_id
-      join component_types ct on ct.id = cmp.component_type_id
-      join mfg_codes on mfg_codes.id = inventory.mfg_code_id
-      join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
-      left join locations l on l.id = inventory.location_id
-      order by cmp.name, full_number`;
-    value = []
+    if (component_type_id == 0) {
+      sql = `select * from inventory_search
+        order by chip_number, full_number`;
+      value = [] 
+    } else {
+      sql = `select * from inventory_search
+      Where component_type_id = ?
+      order by chip_number, full_number`;
+      value = [component_type_id]    
+    }
   }
+  console.log(sql);
+  console.log(value);
   const [rows] = await pool.query(sql, value);
   return rows
 }
@@ -1294,7 +1299,7 @@ async function getPackageTypesForMountingType(mounting_type_id) {
 }
 
 module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInventoryCounts, getComponent, 
-  searchChips, getChip, createChip, updateChip, deleteChip, getPins, 
+  searchComponents, getChip, createChip, updateChip, deleteChip, getPins, 
   createPin, updatePin, getDipLeftPins, getDipRightPins, getSipPins,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,

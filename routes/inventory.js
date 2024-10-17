@@ -1,5 +1,5 @@
 var express = require('express');
-const { searchInventory, getInventory, getInventoryDates, searchChips, getMfgCodes, getComponent, 
+const { searchInventory, getInventory, getInventoryDates, searchComponents, getMfgCodes, getComponent, getComponentTypeList,
   lookupInventory, createInventory, updateInventory, createInventoryDate, updateInventoryDate, lookupInventoryDate, 
   getLocationList} = require('../database');
 var router = express.Router();
@@ -8,6 +8,7 @@ var router = express.Router();
 router.get('/', async function(req, res, next) {
   const search_query = req.query.q;
   const search_type = req.query.w;
+  var component_type_id = req.query.component_type_id;
   var part_search = true;
   var key_search = false;
   var search_by = 'p';
@@ -16,9 +17,14 @@ router.get('/', async function(req, res, next) {
     key_search = true;
     search_by = 'k';
   }
+  if (typeof component_type_id == 'undefined') {
+    component_type_id = 0;
+  }
   
-  const inventory = await searchInventory(search_query, search_by);
-  res.render('inventory/list', { title: 'Component Inventory', inventory: inventory, searched: search_query, part_search: part_search, key_search: key_search  });
+  const inventory = await searchInventory(search_query, search_by, component_type_id);
+  const component_types = await getComponentTypeList();
+  res.render('inventory/list', { title: 'Component Inventory', inventory: inventory, searched: search_query, part_search: part_search, key_search: key_search, 
+    component_types: component_types, component_type_id: component_type_id});
 });
 
 router.get('/edit/:id', async function(req, res, next) {
@@ -41,7 +47,7 @@ router.get('/new/:component_id', async function(req, res, next) {
 
 router.get('/new', async function(req, res, next) {
   const manufacturers = await getMfgCodes();
-  const components = await searchChips('', '');
+  const components = await searchComponents('', '', 0);
   const locations = await getLocationList();
   res.render('inventory/new', {title: 'Add to Component Inventory', manufacturers: manufacturers, components: components, locations: locations});
 });

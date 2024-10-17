@@ -119,7 +119,7 @@ select * from notes;
 
 select * from specs;
 
-select * from chip_aliases
+select * from component_search
 order by 2,3;
 
 select * from manufacturer;
@@ -141,10 +141,10 @@ order by c.chip_number;
       (select sum(quantity) from inventory) items;
       
       
--- drop view chip_aliases;
+-- drop view component_search;
 
 
-select * from chip_aliases
+select * from component_search
 order by chip_number;
 
 select * from inventory
@@ -349,7 +349,7 @@ from package_types pt
 JOIN mounting_types mt on mt.id = pt.mounting_type_id
 WHERE mt.is_chassis_mount = 1;
 
-select * from chip_aliases;
+select * from component_search;
 select * from aliases;
 
 -- update aliases set alias_chip_number = trim(alias_chip_number)

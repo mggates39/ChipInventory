@@ -1,5 +1,5 @@
 var express = require('express');
-const { searchChips, getComponentTypeList, getComponentType, getComponent, createSpec, deleteSpec, createNote, createAlias} = require('../database');
+const { searchComponents, getComponentTypeList, getComponentType, getComponent, createSpec, deleteSpec, createNote, createAlias} = require('../database');
 var router = express.Router();
 
 /* GET component list page. */
@@ -19,7 +19,7 @@ router.get('/', async function(req, res, next) {
     component_type_id = 0;
   }
 
-  const chips = await searchChips(search_query, search_by, component_type_id);
+  const chips = await searchComponents(search_query, search_by, component_type_id);
   const component_types = await getComponentTypeList();
   res.render('component/list', { title: 'Component Master File', chips: chips, searched: search_query, part_search: part_search, key_search: key_search, 
     component_types: component_types, component_type_id: component_type_id });
