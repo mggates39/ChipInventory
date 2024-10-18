@@ -51,5 +51,7 @@ You can start the application with this command
 npm run dev
 ```
 Any errors and console logs will appear in the terminal window.
+The system will restart it after every code change is saved.
 
-The application can be reached in your browser on localhost port 3000.  The system will restart it after every code change is saved.
+The application can be reached in your browser on localhost port 3000. 
+![Image of the application main page in a browser](public/images/main_page.png "Main Page")
