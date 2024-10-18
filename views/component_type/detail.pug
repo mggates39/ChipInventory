@@ -30,12 +30,15 @@ block content
           strong Name
         div.col-md-5
           strong Description
+        div.col-md-1
+          strong Use Count
         div.col-md-2
           strong Action
       each n in component_sub_types
         div.row 
           div.col-md-2=n.name
           div.col-md-5=n.description
+          div.col-md-1=n.ni
           div.col-md-2
             button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#editSubTypeModal" id=n.id) Edit 
             |  

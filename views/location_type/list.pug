@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  h3 Location Types
+  table.table.table-striped
+    tr
+      th Name
+      th Description
+      th Tag
+
+    each n in location_types
+      tr
+        td 
+          a(href="/location_types/"+n.id) #{n.name}
+        td= n.description
+        td= n.tag
+
+    if location_types.length == 0
+      tr
+        td(span=4) No Location Types found &nbsp;
+  
+  a.btn.btn-primary(href="/location_types/new/", role="button") New Location Type
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#loctype").addClass("active");
+    });

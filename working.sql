@@ -119,7 +119,7 @@ select * from notes;
 
 select * from specs;
 
-select * from chip_aliases
+select * from component_search
 order by 2,3;
 
 select * from manufacturer;
@@ -141,10 +141,10 @@ order by c.chip_number;
       (select sum(quantity) from inventory) items;
       
       
--- drop view chip_aliases;
+-- drop view component_search;
 
 
-select * from chip_aliases
+select * from component_search
 order by chip_number;
 
 select * from inventory
@@ -349,7 +349,7 @@ from package_types pt
 JOIN mounting_types mt on mt.id = pt.mounting_type_id
 WHERE mt.is_chassis_mount = 1;
 
-select * from chip_aliases;
+select * from component_search;
 select * from aliases;
 
 -- update aliases set alias_chip_number = trim(alias_chip_number)
@@ -391,9 +391,9 @@ order by count(*) desc;
 -- update chips set family = 'Microship' where family like '%micro%';
 -- commit;
 
-select cst.name, count(*) ni
-from components c
-left join component_sub_types cst on cst.id = c.component_sub_type_id
+select cst.name, count(c.id) ni
+from component_sub_types cst
+left join components c on cst.id = c.component_sub_type_id
 group by cst.name
 order by cst.name;
 
@@ -454,6 +454,9 @@ from inventory_dates where date_code REGEXP '^[0-9]+$'
 -- delete from components where id = 275;
 -- commit;
 
+select * from sockets;
+select * from components where id = 284;
+
 
 select * from pins;
 select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as chip_number, cmp.description, description, mfg_code, manufacturer.name 
@@ -462,4 +465,66 @@ select inventory.id, cmp.id as component_id, full_number, quantity, cmp.name as 
       join mfg_codes on mfg_codes.id = inventory.mfg_code_id
       join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
       where full_number like '%300%' or cmp.name like '%300%'
-      order by chip_number, full_number
+      order by chip_number, full_number;
+      
+      
+    SELECT cst.id, cst.name, cst.description, count(c.id) ni
+    FROM component_sub_types cst
+    left join components c on c.component_sub_type_id = cst.id
+    WHERE cst.component_type_id = 1
+    group by cst.id, cst.name, cst.description
+    ORDER BY cst.name;
+    
+    
+
+  SELECT i.id, component_id, full_number, i.mfg_code_id, i.quantity, cmp.name as chip_number, cmp.description, i.location_id, l.name loacation, mfg_code, manufacturer.name 
+    from inventory i
+    join components cmp on cmp.id = i.component_id
+    join mfg_codes on mfg_codes.id = i.mfg_code_id
+    join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+    left join locations l on l.id = i.location_id
+  WHERE i.id = 1;
+  
+  
+  select i.id, component_id, i.full_number, i.quantity, cmp.name as chip_number, l.name loacation, mfg_code, manufacturer.name   
+    from inventory i
+    join components cmp on cmp.id = i.component_id
+    join mfg_codes on mfg_codes.id = i.mfg_code_id
+    join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+    left join locations l on l.id = i.location_id
+    where i.component_id = 218
+    order by full_number;
+  
+select inventory.id, inventory.component_id, full_number, quantity, cmp.name as chip_number, cmp.description, 
+    l.name location, mfg_code, manufacturer.name 
+    from inventory
+    join components cmp on cmp.id = inventory.component_id
+    join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+    join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+    left join locations l on l.id = inventory.location_id
+    order by cmp.name, full_number;
+    
+
+
+
+select inventory.id, cmp.id as component_id, full_number, quantity, 
+	cmp.name as chip_number, cmp.description, ct.description as type, ct.table_name, l.name location, 
+    mfg_code, manufacturer.name 
+from inventory
+join components cmp on cmp.id = inventory.component_id
+join component_types ct on ct.id = cmp.component_type_id
+join mfg_codes on mfg_codes.id = inventory.mfg_code_id
+join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
+left join locations l on l.id = inventory.location_id
+;     
+
+select * from inventory_search;
+
+
+SELECT ol.id, ol.parent_location_id, ol.location_type_id, ol.name, ol.description, pl.name as parent_location , lt.name as location_type, 
+	(select sum(quantity) from inventory where inventory.location_id = ol.id) num_items,
+    (select sum(1) from locations cl where cl.parent_location_id = ol.id) num_child_locations
+    FROM locations ol
+    LEFT JOIN locations pl on pl.id = ol.parent_location_id
+    LEFT JOIN location_types lt on lt.id = ol.location_type_id
+    ORDER BY ol.name;

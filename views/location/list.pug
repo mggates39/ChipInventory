@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+  h3 Locations
+  table.table.table-striped
+    tr
+      th Name
+      th Description
+      th Type
+      th Parent Location
+      th # Components 
+      th # Locations
+
+    each n in locations
+      tr
+        td 
+          a(href="/locations/"+n.id) #{n.name}
+        td= n.description
+        td= n.location_type 
+        td 
+            a(href="/locations/"+n.parent_location_id) #{n.parent_location}
+        td= n.num_items
+        td= n.num_child_locations 
+
+    if locations.length == 0
+      tr
+        td(span=4) No Locations found &nbsp;
+  
+  a.btn.btn-primary(href="/locations/new/", role="button") New Location
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#location").addClass("active");
+    });

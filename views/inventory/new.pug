@@ -17,6 +17,12 @@ block content
       label(for="full_number") Chip Number:
       input#full_number.form-control(type="text" placeholder="Enter actual number on the chip" name="full_number")
     div.form-group
+      label( for="location_id") Location:
+      select#location_id.form-control(type='select' placeholder='Select Component type' name='location_id')
+        option(value='') 
+        for location in locations
+          option(value=location.id) #{location.name}
+    div.form-group
       label(for="date_code") Date Code:
       input#date_code.form-control(type="text" placeholder="Ex) 9315" name="date_code")
     div.form-group

@@ -69,6 +69,17 @@ CREATE TABLE `components` (
   CONSTRAINT `component_subtype_idfk` FOREIGN KEY (`component_sub_type_id`) REFERENCES `component_sub_types` (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `capacitors` (
+  `component_id` int NOT NULL,
+  `capacitance`  int unsigned NOT NULL,
+  `working_voltage` float(7,3) NOT NULL,
+  `tolerance` float(6.4) NOT NULL,
+  `number_capacitors` int NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `cap_compnt_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB;
+
 CREATE TABLE `chips` (
   `component_id` int NOT NULL,
   `family` varchar(32) NOT NULL,
@@ -105,6 +116,13 @@ CREATE TABLE `pins` (
   PRIMARY KEY (`id`),
   KEY `component_idx` (`component_id`),
   CONSTRAINT `pins_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `sockets` (
+  `component_id` int NOT NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `sockets_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE `notes` (
@@ -151,19 +169,42 @@ CREATE TABLE `mfg_codes` (
   CONSTRAINT `mfg_codes_ibfk_1` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturer` (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `location_types` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(16) NOT NULL,
+  `description` varchar(32) NOT NULL,
+  `tag` varchar(16) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `locations` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `parent_location_id` int null,
+  `location_type_id` int NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `description` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `parent_location_idx` (`parent_location_id`),
+  KEY `location_type_idx` (`location_type_id`),
+  CONSTRAINT `location_type_idfk` FOREIGN KEY (`location_type_id`) REFERENCES `location_types` (`id`),
+  CONSTRAINT `parent_location_idfk` FOREIGN KEY (`parent_location_id`) REFERENCES `locations` (`id`)
+) ENGINE=InnoDB;
+
 CREATE TABLE `inventory` (
   `id` int NOT NULL AUTO_INCREMENT,
   `component_id` int NOT NULL,
   `mfg_code_id` int NOT NULL,
   `full_number` varchar(64) NOT NULL,
+  `location_id` int NULL,
   `quantity` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `component_idx` (`component_id`),
   KEY `mfg_code_idx` (`mfg_code_id`),
+  KEY `location_idx` (`location_id`),
   CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`),
-  CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`mfg_code_id`) REFERENCES `mfg_codes` (`id`)
+  CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`mfg_code_id`) REFERENCES `mfg_codes` (`id`),
+  CONSTRAINT `inventory_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`)
 ) ENGINE=InnoDB;
-
 
 CREATE TABLE `inventory_dates` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -176,10 +217,9 @@ CREATE TABLE `inventory_dates` (
 ) ENGINE=InnoDB;
 
 
-
 -- Create any Views
--- DROP VIEW chip_aliases ;
-CREATE VIEW `chip_aliases` AS 
+-- DROP VIEW `component_search` ;
+CREATE VIEW `component_search` AS 
 SELECT 
     `cmp`.`id` AS `id`,
     `cmp`.`component_type_id` AS `component_type_id`,
@@ -221,5 +261,26 @@ FROM
     JOIN `components` `cmp` ON ((`cmp`.`id` = `a`.`component_id`)))
     JOIN `package_types` `pt` ON ((`pt`.`id` = `cmp`.`package_type_id`)))
     JOIN `component_types` `ct` ON ((`ct`.`id` = `cmp`.`component_type_id`)))
-    LEFT JOIN `component_sub_types` `cst` ON ((`cst`.`id` = `cmp`.`component_sub_type_id`)))
+    LEFT JOIN `component_sub_types` `cst` ON ((`cst`.`id` = `cmp`.`component_sub_type_id`)));
 
+-- DROP VIEW `inventory_search` ;
+CREATE VIEW `inventory_search` AS 
+SELECT 
+	i.id, 
+    cmp.id as component_id, 
+    i.full_number, 
+    i.quantity, 
+	cmp.name as chip_number, 
+    cmp.description, 
+    ct.id as component_type_id,
+    ct.description as type,
+    ct.table_name, 
+    l.name as location, 
+    mfg_code, 
+    manufacturer.name as mfg_name 
+FROM inventory i
+JOIN components cmp ON cmp.id = i.component_id
+JOIN component_types ct ON ct.id = cmp.component_type_id
+JOIN mfg_codes ON mfg_codes.id = i.mfg_code_id
+JOIN manufacturer ON manufacturer.id = mfg_codes.manufacturer_id
+LEFT JOIN locations l ON l.id = i.location_id;

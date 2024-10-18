@@ -64,6 +64,18 @@ body {
   padding: 5px;
 }
 
+.leftsipedge {
+  min-width: 2px;
+  border: 0;
+  border-left: 1px solid black;
+}
+
+.rightsipedge {
+  min-width: 2px;
+  border: 0;
+  border-right: 1px solid black;
+}
+
 .leftpinnum {
   border: 0;
   border-left: 1px solid black;

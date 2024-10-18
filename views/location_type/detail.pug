@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+  p #[strong Name] #{location_type.name}
+  p #[strong Description] #{location_type.description}
+  p #[strong Tag] #{location_type.tag}
+  
+  a.btn.btn-primary(href="/location_types/edit/"+location_type.id, role="button") Edit
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#loctype").addClass("active");
+    });

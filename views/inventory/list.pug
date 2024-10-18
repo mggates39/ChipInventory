@@ -1,26 +1,34 @@
 extends ../layout
 
 block content
-  p This is a searchable list of all the chip inventory.
-  div.searchdiv
-  form.searchbox()
-    INPUT(type="search" placeholder="Search" aria-label="Search" NAME="q" VALUE=searched SIZE="20" MAXLENGTH="32")
-    div.form-check.form-check-inline
-      INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="p" id="part" checked=part_search) 
-      label.form-check-label(for="part") Part number
-    div.form-check.form-check-inline
-      INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="k" id="keyword" checked=key_search) 
-      label.form-check-label(for="keyword") Keyword
-    INPUT.btn.btn-primary.mb-3(TYPE="submit" VALUE="Search")
+  p This is a searchable list of all the component inventory.
+  div.searchdiv.form-inline
+    form.form-inline.searchbox()
+      div.form-check-inline
+        label( for="component_type_id") Component Type: &nbsp;
+        select.form-inline#component_type_id(type='select' placeholder='Select component type' name='component_type_id' required='true')
+          option(value=0) All Components
+          for component_type in component_types
+            option(value=component_type.id selected= component_type_id == component_type.id) #{component_type.description}
+        INPUT(type="search" placeholder="Search" aria-label="Search" NAME="q" VALUE=searched SIZE="20" MAXLENGTH="32")
+        div.form-check.form-check-inline
+          INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="p" id="part" checked=part_search) 
+          label.form-check-label(for="part") Part number
+        div.form-check.form-check-inline
+          INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="k" id="keyword" checked=key_search) 
+          label.form-check-label(for="keyword") Keyword
+        INPUT.btn.btn-primary.mb-3(TYPE="submit" VALUE="Search")
   
 
   table.table.table-striped
     tr
       th Base
       th Number
+      th Type
+      th Description
       th Manufacturer
       th Quantity
-      th Description
+      th Location
 
     each n in inventory
       tr
@@ -28,9 +36,11 @@ block content
           a(href="/"+n.table_name+"/"+n.component_id target='_blank') #{n.chip_number}
         td
           a(href="/inventory/"+n.id) #{n.full_number}
-        td= n.mfg_code+' ('+n.name+')'
-        td= n.quantity
+        td= n.type
         td= n.description
+        td= n.mfg_code+' ('+n.mfg_name+')'
+        td= n.quantity
+        td= n.location
 
     if inventory.length == 0
       tr

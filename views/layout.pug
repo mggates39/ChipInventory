@@ -22,6 +22,8 @@ html(lang="en")
             li.nav-item
               a#inv.nav-link(href='/inventory') Inventory 
             li.nav-item
+              a#location.nav-link(href="/locations") Locations
+            li.nav-item
               a#proj.nav-link(href='/projects') My Projects 
             li.nav-item.dropdown
               a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") Settings
@@ -29,13 +31,15 @@ html(lang="en")
                 li
                   a#mfg.dropdown-item(href="/manufacturers") Manufacturers
                 li
+                  a#mount.dropdown-item(href="/mounting_types") Mounting Types
+                li
                   a#comp.dropdown-item(href="/component_types") Component Types
+                li
+                  a#package.dropdown-item(href="/package_types") Package Types
                 li
                   hr.dropdown-divider
                 li
-                  a#mount.dropdown-item(href="/mounting_types") Mounting Types
-                li
-                  a#package.dropdown-item(href="/package_types") Package Types
+                  a#loctype.dropdown-item(href="/location_types") Location Types
 
     div.container
       h1.mb-4 !{title}

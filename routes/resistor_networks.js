@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const {  getResistorNetwork, getPins, getDipLeftPins, getDipRightPins, 
-  getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins, 
-  getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
+const {  getResistorNetwork, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createResistorNetwork, updateResistorNetwork, createPin, updatePin,
   getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType} = require('../database');
 const {parse_symbol} = require('../utility');
@@ -33,16 +31,9 @@ router.get('/:id', async function(req, res, nest) {
   const id = req.params.id;
   const data = await getResistorNetwork(id);
   const pins = await getPins(id);
+  const sip_pins = await getSipPins(id);
   const dip_left_pins = await getDipLeftPins(id);
   const dip_right_pins = await getDipRightPins(id);
-  const plcc_left_pins = await getPllcLeftPins(id);
-  const plcc_right_pins = await getPllcRightPins(id);
-  const plcc_top_pins = await getPllcTopPins(id);
-  const plcc_bottom_pins = await getPllcBottomPins(id);
-  const quad_left_pins = await getQuadLeftPins(id);
-  const quad_right_pins = await getQuadRightPins(id);
-  const quad_top_pins = await getQuadTopPins(id);
-  const quad_bottom_pins = await getQuadBottomPins(id);
   const specs = await getSpecs(id);
   const notes = await getNotes(id);
   const inventory = await getInventoryByComponentList(id);
@@ -62,72 +53,17 @@ router.get('/:id', async function(req, res, nest) {
   layout_pins = [];
   top_pins = [];
   bottom_pins = [];
-  if (data.package == 'PLCC') {
-    i = 0;
-    plcc_left_pins.forEach(function(pin) {
+
+  if (data.package == 'SIP') {
+    sip_pins.forEach(function(pin) {
       if (pin.pin_number == 1) {
         bull = '&nbsp;&#9679;'
       } else {
         bull = ''
       }
-      layout_pins.push(
-        {'left_pin': pin.pin_number, 'bull': bull, 'right_pin': plcc_right_pins[i].pin_number, 
-        'left_sym': parse_symbol(pin.pin_symbol), 'right_sym': parse_symbol(plcc_right_pins[i].pin_symbol),
-      });
-      i++;
+      layout_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
     });
-
-    plcc_top_pins.forEach(function(pin) {
-      if (pin.pin_number == 1) {
-        bull = '&#9679;&nbsp;'
-      } else {
-        bull = ''
-      }
-      top_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
-    });
-
-    plcc_bottom_pins.forEach(function(pin) {
-      if (pin.pin_number == 1) {
-        bull = '&#9679;&nbsp;'
-      } else {
-        bull = ''
-      }
-      bottom_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
-
-    });
-  } else if  ((data.package == 'QFN') || (data.package == 'QFP')) {
-    i = 0;
-    quad_left_pins.forEach(function(pin) {
-      if (pin.pin_number == 1) {
-        bull = '&#9679;'
-      } else {
-        bull = ''
-      }
-      layout_pins.push(
-        {'left_pin': pin.pin_number, 'bull': bull, 'right_pin': quad_right_pins[i].pin_number, 
-        'left_sym': parse_symbol(pin.pin_symbol), 'right_sym': parse_symbol(quad_right_pins[i].pin_symbol),
-      });
-      i++;
-    });
-
-    quad_top_pins.forEach(function(pin) {
-      if (pin.pin_number == 1) {
-        bull = '&#9679;&nbsp;'
-      } else {
-        bull = ''
-      }
-      top_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
-    });
-
-    quad_bottom_pins.forEach(function(pin) {
-      if (pin.pin_number == 1) {
-        bull = '&#9679;&nbsp;'
-      } else {
-        bull = ''
-      }
-      bottom_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
-
-    });
+  
   } else {
     i = 0;
     dip_left_pins.forEach(function(pin) {
@@ -152,7 +88,7 @@ router.get('/:id', async function(req, res, nest) {
   })
 
   res.render('resistor_network/detail', { title: data.chip_number + ' - ' + data.description, resistor: data, 
-    pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
+    pins: fixed_pins, layout_pins: layout_pins,
     specs: clean_specs, notes: notes, aliases: aliases, inventory: inventory });
 });
 
