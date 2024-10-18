@@ -1137,9 +1137,10 @@ async function getLocationList() {
 
 async function getChildLocationList(location_id) {
   const [rows] = await pool.query(`
-    SELECT ol.*, pl.name as parent_location , lt.name as location_type 
+    SELECT ol.*, lt.name as location_type, 
+ 	    (select sum(quantity) from inventory where inventory.location_id = ol.id) num_items,
+      (select sum(1) from locations cl where cl.parent_location_id = ol.id) num_child_locations
     FROM locations ol
-    LEFT JOIN locations pl on pl.id = ol.parent_location_id
     LEFT JOIN location_types lt on lt.id = ol.location_type_id
     WHERE ol.parent_location_id = ?
     ORDER BY ol.name`, [location_id]);
