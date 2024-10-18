@@ -2,6 +2,9 @@ extends ../layout
 
 block content
   h3 Locations
+
+  a.btn.btn-primary(href="/locations/new/", role="button") New Location
+
   table.table.table-striped
     tr
       th Name
@@ -26,8 +29,6 @@ block content
       tr
         td(span=4) No Locations found &nbsp;
   
-  a.btn.btn-primary(href="/locations/new/", role="button") New Location
-
 block scripts
   script(type="text/javascript").
     $( document ).ready(function() {
