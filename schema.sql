@@ -216,6 +216,24 @@ CREATE TABLE `inventory_dates` (
   CONSTRAINT `inventory_dates_ibfk_1` FOREIGN KEY (`inventory_id`) REFERENCES `inventory` (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `lists` (
+	`id` int NOT NULL AUTO_INCREMENT,
+    `name` varchar(16) NOT NULL,
+    `description` varchar(64) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `list_entries` (
+	`id` int NOT NULL AUTO_INCREMENT,
+    `sequence` int NOT NULL,
+    `list_id` int NOT NULL,
+    `name` varchar(16) NOT NULL,
+    `description` varchar(32) NOT NULL,
+    `modifer_value` int NULL,
+    PRIMARY KEY (`id`),
+  KEY `list_idx` (`list_id`),
+  CONSTRAINT `list_ibfk_1` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`)
+) ENGINE=InnoDB;
 
 -- Create any Views
 -- DROP VIEW `component_search` ;

@@ -68,4 +68,21 @@ VALUES (1, 1), (1, 4), (1, 9), (1, 10), (1, 13), (1, 14), (1, 16), (1, 19),
     (14, 15);
 commit;
 
+INSERT INTO lists (id, name, description)
+VALUES (1, 'Capacitance', 'Suffix for capacitor values in Farads'),
+	(2, 'Resistance', 'Suffix for resistor values in ohms');
+commit;
+
+INSERT INTO list_entries (id, list_id, sequence, name, description, modifer_value)
+VALUES (1, 1, 1, 'pF', 'pico-farad', -12),
+(2, 1, 2, 'nF', 'nano-farad', -9),
+(3, 1, 3, '&micro;F', 'micro-farad', -6),
+(4, 1, 4, 'mF', 'milli-farad', -3),
+(5, 1, 5, 'F', 'farad', 0),
+(6, 2, 1, '&Omega;', 'Ohm', 0),
+(7, 2, 2, 'k&Omega;', 'Kila-Ohm', 3),
+(8, 2, 2, 'M&Omega;', 'Mega-Ohm', 6);
+commit;
+
+
 
