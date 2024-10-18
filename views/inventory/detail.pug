@@ -2,7 +2,8 @@ extends ../layout
 
 block content
   h3= inventory.description
-  p= inventory.full_number + ' - ' + inventory.chip_number
+  p= inventory.full_number + ' - '
+   a(href="/chips/"+inventory.component_id) #{inventory.chip_number}
   p #[strong Manufacture:] #{inventory.mfg_code + ' (' + inventory.name + ')'}
   p #[strong Location:] #{inventory.location}
 
