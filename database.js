@@ -13,6 +13,7 @@ const pool = mysql.createPool({
 async function getSystemData() {
   const [rows] = await pool.query(`select 
       (select count(*) from aliases) aliases,
+      (select count(*) from components) definitions,
       (select sum(quantity) from inventory) on_hand,
       (select count(*) from (select distinct component_id from inventory) a) used_components,
       (select SUBSTRING(min(centcode), 3) from (select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode from inventory_dates where date_code REGEXP '^[0-9]+$') A) min_date,
