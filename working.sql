@@ -528,3 +528,37 @@ SELECT ol.id, ol.parent_location_id, ol.location_type_id, ol.name, ol.descriptio
     LEFT JOIN locations pl on pl.id = ol.parent_location_id
     LEFT JOIN location_types lt on lt.id = ol.location_type_id
     ORDER BY ol.name;
+    
+    
+SELECT ol.*, lt.name as location_type, 
+ 	(select sum(quantity) from inventory where inventory.location_id = ol.id) num_items,
+    (select sum(1) from locations cl where cl.parent_location_id = ol.id) num_child_locations
+    FROM locations ol
+    LEFT JOIN location_types lt on lt.id = ol.location_type_id
+    WHERE ol.parent_location_id = 5
+    ORDER BY ol.name;    
+
+SELECT le.*
+FROM list_entries le
+JOIN lists l on l.id = le.list_id
+WHERE l.name = 'Capacitance'
+ORDER BY le.sequence;
+
+
+SELECT l.id, l.name, l.description, count(le.id) num_entries 
+FROM lists l 
+LEFT JOIN list_entries le on le.list_id = l.id
+GROUP BY l.id, l.name, l.description
+ORDER BY l.name;
+
+select c.*, le.name unit_label
+from capacitors c
+left join list_entries le on le.id = c.unit_id;
+
+-- alter table capacitors add column unit_id integer after capacitance;
+-- update capacitors set unit_id = 3 where component_id in (280, 281, 282);
+-- update capacitors set unit_id = 1 where component_id in (283);
+-- commit;
+-- alter table capacitors modify column unit_id integer not null;
+-- CREATE INDEX `cap_unit_list_idx`  ON capacitors (unit_id);
+-- alter table capacitors add CONSTRAINT `cap_unit_list_ibfk` FOREIGN KEY (`unit_id`) REFERENCES `list_entries` (`id`)

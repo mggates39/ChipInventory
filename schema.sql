@@ -52,6 +52,25 @@ CREATE TABLE `component_packages` (
   CONSTRAINT `component_packages_ibfk_2` FOREIGN KEY (`package_type_id`) REFERENCES `package_types` (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `lists` (
+	`id` int NOT NULL AUTO_INCREMENT,
+    `name` varchar(16) NOT NULL,
+    `description` varchar(64) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `list_entries` (
+	`id` int NOT NULL AUTO_INCREMENT,
+    `list_id` int NOT NULL,
+    `sequence` int NOT NULL,
+    `name` varchar(16) NOT NULL,
+    `description` varchar(32) NOT NULL,
+    `modifier_value` int NULL,
+    PRIMARY KEY (`id`),
+  KEY `list_idx` (`list_id`),
+  CONSTRAINT `list_ibfk_1` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`)
+) ENGINE=InnoDB;
+
 CREATE TABLE `components` (
   `id` int NOT NULL AUTO_INCREMENT,
   `component_type_id` int NOT NULL,
@@ -72,12 +91,15 @@ CREATE TABLE `components` (
 CREATE TABLE `capacitors` (
   `component_id` int NOT NULL,
   `capacitance`  int unsigned NOT NULL,
+  `unit_id` int NOT NULL,
   `working_voltage` float(7,3) NOT NULL,
   `tolerance` float(6.4) NOT NULL,
   `number_capacitors` int NULL,
   `datasheet` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`component_id`),
-  CONSTRAINT `cap_compnt_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+  KEY `cap_unit_list_idx` (`unit_id`),
+  CONSTRAINT `cap_compnt_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`),
+  CONSTRAINT `cap_unit_list_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `list_entries` (`id`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE `chips` (
@@ -216,24 +238,6 @@ CREATE TABLE `inventory_dates` (
   CONSTRAINT `inventory_dates_ibfk_1` FOREIGN KEY (`inventory_id`) REFERENCES `inventory` (`id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE `lists` (
-	`id` int NOT NULL AUTO_INCREMENT,
-    `name` varchar(16) NOT NULL,
-    `description` varchar(64) NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB;
-
-CREATE TABLE `list_entries` (
-	`id` int NOT NULL AUTO_INCREMENT,
-    `list_id` int NOT NULL,
-    `sequence` int NOT NULL,
-    `name` varchar(16) NOT NULL,
-    `description` varchar(32) NOT NULL,
-    `modifier_value` int NULL,
-    PRIMARY KEY (`id`),
-  KEY `list_idx` (`list_id`),
-  CONSTRAINT `list_ibfk_1` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`)
-) ENGINE=InnoDB;
 
 -- Create any Views
 -- DROP VIEW `component_search` ;
