@@ -541,7 +541,7 @@ SELECT ol.*, lt.name as location_type,
 SELECT le.*
 FROM list_entries le
 JOIN lists l on l.id = le.list_id
-WHERE l.name = 'Resistance'
+WHERE l.name = 'ProjectStatus'
 ORDER BY le.sequence;
 
 select r.*, c.name, c.description 
