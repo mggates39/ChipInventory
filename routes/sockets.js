@@ -27,7 +27,7 @@ router.get('/edit/:id', async function(req,res,next) {
   
   data = {
     id: socket_id,
-    socket_number: socket.socket_number,
+    socket_number: socket.chip_number,
     aliases: aliasList,
     package_type_id: socket.package_type_id,
     component_sub_type_id: socket.component_sub_type_id,
