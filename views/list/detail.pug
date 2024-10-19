@@ -1,0 +1,135 @@
+extends ../layout
+
+block content
+  p #[strong List Name] #{list.name}
+  p #[strong Description] #{list.description}
+  
+  br
+  a.btn.btn-primary(href="/lists/edit/"+list.id, role="button") Edit 
+  br
+  br
+  H6 List Entries
+  div#list_entries 
+    div.container
+      div.row
+        div.col-md-1
+          strong Sequence
+        div.col-md-2
+          strong Name
+        div.col-md-3
+          strong Description
+        div.col-md-1
+          strong Modifier
+        div.col-md-2
+          strong Action
+      each n in list_entries
+        div.row 
+          div.col-md-1=n.sequence
+          div.col-md-2 !{n.name}
+          div.col-md-3=n.description
+          div.col-md-1=n.modifier_value
+          div.col-md-2
+            button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#editListEntryModal" id=n.id) Edit 
+            |  
+            a.btn.btn-secondary.btn-sm(href="/list_entries/delete/"+n.id, role="button") Delete 
+  br
+  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#addListEntryModal") Add List Entry
+  br
+  br
+  //- Add List Entry Modal
+  div#addListEntryModal.modal.fade(tabindex="-1" aria-labelledby="addListEntryModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form#add(action="/lists/"+list.id+"/newentry" method="POST")
+          div.modal-header
+            h5#addListEntryModalLabel.modal-title Add a List Entry for #{list.name}
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+
+          div.modal-body
+            div.container-fluid
+              div.row
+                div.col-md-3
+                  label( for="sequence") Seq
+                div.col-md-3
+                  label( for="name") Name
+                div.col-md-3
+                  label( for="description") Description
+                div.col-md-3
+                  label( for="modifier_value") Modifier
+              div.row
+                div.col-md-3
+                  input#sequence.form-control(type="text" placeholder="1,2,3..." name="sequence")
+                div.col-md-3
+                  input#name.form-control(type="text" placeholder="Resistance" name="name")
+                div.col-md-3
+                  input#description.form-control(type="text" placeholder="Resistance Value types" name="description")
+                div.col-md-3
+                  input#modifier_value.form-control(type="text" placeholder="Power of 10s" name="modifier_value")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save
+
+  //- Edit Sub Type Modal
+  div#editListEntryModal.modal.fade(tabindex="-1" aria-labelledby="editListEntryModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form#edit(action="/list_entries/" method="POST")
+          input#list_id(type="hidden" name="list_id" value=list.id)
+          input#id(type="hidden" name="id")
+          div.modal-header
+            h5#editListEntryModalLabel.modal-title Edit List Entry
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+
+          div.modal-body
+            div.container-fluid
+              div.row
+                div.col-md-3
+                  label( for="sequence") Seq
+                div.col-md-3
+                  label( for="name") Name
+                div.col-md-3
+                  label( for="description") Description
+                div.col-md-3
+                  label( for="modifier_value") Modifier
+              div.row
+                div.col-md-3
+                  input#sequence.form-control(type="text" placeholder="1,2,3..." name="sequence")
+                div.col-md-3
+                  input#name.form-control(type="text" placeholder="Resistance" name="name")
+                div.col-md-3
+                  input#description.form-control(type="text" placeholder="Resistance Value types" name="description")
+                div.col-md-3
+                  input#modifier_value.form-control(type="text" placeholder="Power of 10s" name="modifier_value")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save
+
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#list").addClass("active");
+    });
+    // load the selected component sub type data on edit
+    $('#editListEntryModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      var id = e.relatedTarget.id;
+      $("#edit").attr("action", "/list_entries/" + id);
+      $("#edit #id").val(id);
+      $.ajax({url: "/list_entries/" + id, success: function(result){
+        console.log(result);
+        $("#edit #sequence").val(result.sequence);
+        $("#edit #name").val(result.name);
+        $("#edit #description").val(result.description);
+        $("#edit #modifier_value").val(result.modifier_value);
+        $("#edit #sequence").focus();
+      }});
+    });
+
+    // Set focus on the sequence field on modal pop-up
+    $('#addListEntryModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      $(this).find('#sequence').focus();
+    });

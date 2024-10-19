@@ -1340,6 +1340,92 @@ async function getPackageTypesForMountingType(mounting_type_id) {
   return rows
 }
 
+async function getPickListByName(pick_list_name) {
+  const [rows] = await pool.query(`SELECT le.*
+    FROM list_entries le
+    JOIN lists l on l.id = le.list_id
+    WHERE l.name = ?
+    ORDER BY le.sequence
+  `, [pick_list_name])
+  return rows
+}
+
+async function getLists() {
+  const [rows] = await pool.query(`
+    SELECT l.id, l.name, l.description, count(le.id) num_entries 
+    FROM lists l 
+    LEFT JOIN list_entries le on le.list_id = l.id
+    GROUP BY l.id, l.name, l.description
+    ORDER BY l.name`);
+  return rows;
+}
+
+async function getList(list_id) {
+  const [rows] = await pool.query(`
+  SELECT * 
+  FROM lists
+  WHERE id = ?
+  `, [list_id])
+  return rows[0]
+}
+
+async function createList(name, description) {
+  const [result] = await pool.query("INSERT INTO lists (name, description) VALUES (?, ?)", 
+    [name, description])
+  const list_id = result.insertId
+  return getList(list_id)
+}
+
+async function updateList(list_id, name, description) {
+  const [result] = await pool.query("UPDATE lists set name = ?, description = ? WHERE id =?", 
+    [name, description, list_id])
+  return getList(list_id)
+}
+
+async function deleteList(list_id) {
+  const [result] = await pool.query("DELETE FROM lists WHERE id = ?", [list_id])
+  return true
+}
+
+async function getListEntriesForList(list_id) {
+  const [rows] = await pool.query("SELECT * FROM list_entries Where list_id = ? ORDER BY sequence", [list_id]);
+  return rows;
+}
+
+async function getListEntry(list_entry_id) {
+  const [rows] = await pool.query(`
+  SELECT * 
+  FROM list_entries
+  WHERE id = ?
+  `, [list_entry_id])
+  return rows[0]
+}
+
+async function createListEntry(list_id, sequence, name, description, modifier_value) {
+  const [result] = await pool.query("INSERT INTO list_entries (list_id, sequence, name, description, modifier_value) VALUES (?, ?, ?, ?, ?)", 
+    [list_id, sequence, name, description, modifier_value])
+  const list_entry_id = result.insertId
+  return getListEntry(list_entry_id)
+}
+
+async function updateListEntry(list_entry_id, list_id, sequence, name, description, modifier_value) {
+  const [result] = await pool.query(`UPDATE list_entries SET 
+      list_id = ?,
+      sequence = ?,
+      name = ?, 
+      description = ?,
+      modifier_value = ?
+    WHERE id = ?`, 
+    [list_id, sequence, name, description, modifier_value, list_entry_id])
+  return getListEntry(list_entry_id)
+}
+
+async function deleteListEntry(list_entry_id) {
+  const [result] = await pool.query("DELETE FROM list_entries WHERE id = ?", [list_entry_id])
+  return true
+}
+
+
 module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInventoryCounts, getComponent, 
   searchComponents, getChip, createChip, updateChip, deleteChip, getPins, 
   createPin, updatePin, getDipLeftPins, getDipRightPins, getSipPins,
@@ -1366,5 +1452,7 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getPackageTypesForComponentType, getSelectedPackageTypesForComponentType,
   getComponentTypesForPackageType, getSelectedComponentTypesForPackageType,
   getLocationTypeList, getLocationType, createLocationType, updateLocationType, deleteLocationType,
-  getLocationList, getLocation, createLocation, updateLocation, deleteLocation, getChildLocationList}
+  getLocationList, getLocation, createLocation, updateLocation, deleteLocation, getChildLocationList,
+  getPickListByName, getLists, getList, createList, updateList, deleteList,
+  getListEntriesForList, getListEntry, createListEntry, updateListEntry, deleteListEntry}
 

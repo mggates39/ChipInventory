@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+  p Edit the list definition
+  form(action="/lists/"+list.id method="POST")
+    div.form-group
+      label(for="name") List Name:
+      input#name.form-control( type="text" placeholder="Ex) IC" name="name" value=list.name)
+    div.form-group
+      label(for="description") Description:
+      input#description.form-control( type="text" placeholder="Ex) Integrated Circuit" name="description" value=list.description)
+
+    button.btn.btn-default.btn-primary(type="submit") Submit
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#list").addClass("active");
+    });

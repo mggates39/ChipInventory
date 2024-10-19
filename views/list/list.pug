@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  h3 Pick Lists
+  table.table.table-striped
+    tr
+      th Name
+      th Description
+      th Number of Entries
+
+    each n in lists
+      tr
+        td 
+          a(href="/lists/"+n.id) #{n.name}
+        td= n.description
+        td= n.num_entries
+
+    if lists.length == 0
+      tr
+        td(span=2) No Lists found &nbsp;
+  
+  a.btn.btn-primary(href="/lists/new/", role="button") New List
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#list").addClass("active");
+    });

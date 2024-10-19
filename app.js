@@ -23,6 +23,8 @@ var mountingTypesRouter = require('./routes/mounting_types');
 var packageTypesRouter = require('./routes/package_types');
 var locationTypesRouter = require('./routes/location_types');
 var locationsRouter = require('./routes/locations');
+var listsRouters = require('./routes/lists');
+var listEntriesRouter = require('./routes/list_entries');
 
 var app = express();
 
@@ -55,6 +57,8 @@ app.use('/mounting_types', mountingTypesRouter);
 app.use('/package_types', packageTypesRouter);
 app.use('/location_types', locationTypesRouter);
 app.use('/locations', locationsRouter);
+app.use('/lists', listsRouters);
+app.use('/list_entries', listEntriesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

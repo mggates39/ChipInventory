@@ -225,11 +225,11 @@ CREATE TABLE `lists` (
 
 CREATE TABLE `list_entries` (
 	`id` int NOT NULL AUTO_INCREMENT,
-    `sequence` int NOT NULL,
     `list_id` int NOT NULL,
+    `sequence` int NOT NULL,
     `name` varchar(16) NOT NULL,
     `description` varchar(32) NOT NULL,
-    `modifer_value` int NULL,
+    `modifier_value` int NULL,
     PRIMARY KEY (`id`),
   KEY `list_idx` (`list_id`),
   CONSTRAINT `list_ibfk_1` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`)
