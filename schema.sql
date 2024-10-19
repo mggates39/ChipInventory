@@ -150,6 +150,13 @@ CREATE TABLE `sockets` (
   CONSTRAINT `sockets_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `connectors` (
+  `component_id` int NOT NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `connectors_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB;
+
 CREATE TABLE `notes` (
   `id` int NOT NULL AUTO_INCREMENT,
   `component_id` int NOT NULL,
