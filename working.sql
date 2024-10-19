@@ -564,3 +564,10 @@ from resistors r
 join components c on c.id = r.component_id
 left join list_entries le on le.id = r.unit_id;
 
+   SELECT p.id, p.name, p.description, le.name as status_value,  count(pi.id) num_items, 
+      sum(qty_needed) needed, sum(qty_available) available, sum(qty_to_order) on_order
+    FROM projects p 
+    JOIN list_entries le on le.id = p.status_id
+    LEFT JOIN project_items pi on pi.project_id = p.id
+    GROUP BY  p.id, p.name, p.description, le.name 
+    ORDER BY p.name;

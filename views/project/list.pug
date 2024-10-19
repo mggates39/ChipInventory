@@ -1,8 +1,33 @@
 extends ../layout
 
 block content
-  h3 Current Projects 
-  p There are no projects at this time.
+  h3 Current Projects
+  table.table.table-striped
+    tr
+      th Name
+      th Description
+      th Status 
+      th Number Items 
+      th Qty Needed 
+      th Qty Available 
+      th Qty On Order
+
+    each n in projects
+      tr
+        td 
+          a(href="/projects/"+n.id) #{n.name}
+        td= n.description
+        td= n.status_value
+        td= n.num_items
+        td= n.needed
+        td= n.status_valavailableue
+        td= n.on_order
+
+    if projects.length == 0
+      tr
+        td(span=4) No Projects found &nbsp;
+  
+  a.btn.btn-primary(href="/projects/new/", role="button") New Project
 
 block scripts
   script(type="text/javascript").

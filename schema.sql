@@ -241,6 +241,33 @@ CREATE TABLE `inventory_dates` (
   CONSTRAINT `inventory_dates_ibfk_1` FOREIGN KEY (`inventory_id`) REFERENCES `inventory` (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `projects` (
+	`id` int NOT NULL AUTO_INCREMENT,
+    `name` varchar(32) NOT NULL,
+    `description` varchar(64) NOT NULL,
+    `status_id` int NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `project_status_idx` (`status_id`),
+    CONSTRAINT `project_status_ibfk` FOREIGN KEY (`status_id`) REFERENCES `list_entries`(`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `project_items` (
+	`id` int NOT NULL AUTO_INCREMENT,
+    `project_id` INT NOT NULL,
+    `number` int NOT NULL,
+    `component_id` int NOT NULL,
+    `qty_needed` int NOT NULL,
+    `inventory_id` int NULL,
+    `qty_available` int NULL,
+    `qty_to_order` int NULL,
+    PRIMARY KEY(`id`),
+    KEY `project_idx` (`project_id`),
+    KEY `prjct_itm_comp_idx` (`component_id`),
+    KEY `prjct_itm_invp_idx` (`inventory_id`),
+	CONSTRAINT `project_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`),
+    CONSTRAINT `prjct_itm_comp_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`),
+    CONSTRAINT `prjct_itm_inv_ibfk_1` FOREIGN KEY (`inventory_id`) REFERENCES `inventory` (`id`)
+) ENGINE=InnoDB;
 
 -- Create any Views
 -- DROP VIEW `component_search` ;
