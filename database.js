@@ -142,12 +142,14 @@ async function getResistorNetwork(component_id) {
 
 async function getResistor_internall(component_id) {
   const [rows] = await pool.query(`
-    SELECT r.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    SELECT r.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, 
+      cmp.pin_count, pt.name as package, cst.description as component_type, le.name as unit_label 
     FROM components cmp
     JOIN resistors r on r.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
     JOIN component_types ct on ct.id = cmp.component_type_id
     LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    left join list_entries le on le.id = r.unit_id
     WHERE r.component_id = ?
     `, [component_id])
    return rows[0]
@@ -749,46 +751,47 @@ async function deleteCrystal(component_id) {
   return true
 }
 
-async function createResistor(chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, datasheet) {
+async function createResistor(chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, unit_id, tolerance, power, datasheet) {
   const component_type_id = 4;
-  return await createResistor_internal(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, 1, datasheet);
+  return await createResistor_internal(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, unit_id, tolerance, power, 1, datasheet);
 }
 
-async function createResistorNetwork(chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, number_resistors, datasheet) {
+async function createResistorNetwork(chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, unit_id, tolerance, power, number_resistors, datasheet) {
   const component_type_id = 5;
-  return await createResistor_internal(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, number_resistors, datasheet);
+  return await createResistor_internal(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, unit_id, tolerance, power, number_resistors, datasheet);
 }
 
-async function createResistor_internal(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, number_resistors, datasheet) {
+async function createResistor_internal(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, unit_id, tolerance, power, number_resistors, datasheet) {
   const component_id = await createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
-      INSERT INTO resistors (component_id, resistance, tolerance, power, number_resistors, datasheet)
-      VALUES (?, ?, ?, ?, ?, ?)
-      `, [component_id, resistance, tolerance, power, number_resistors, datasheet])
+      INSERT INTO resistors (component_id, resistance, unit_id, tolerance, power, number_resistors, datasheet)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+      `, [component_id, resistance, unit_id, tolerance, power, number_resistors, datasheet])
   return getResistor(component_id);
 };
 
-async function updateResistor(component_id, chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, datasheet) {
+async function updateResistor(component_id, chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, unit_id, tolerance, power, datasheet) {
   const component_type_id = 4;
-  return await updateResistor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, 1, datasheet);
+  return await updateResistor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, unit_id, tolerance, power, 1, datasheet);
 }
 
-async function updateResistorNetwork(component_id, chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, number_resistors, datasheet) {
+async function updateResistorNetwork(component_id, chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, unit_id, tolerance, power, number_resistors, datasheet) {
   const component_type_id = 5;
-  return await updateResistor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, number_resistors, datasheet);
+  return await updateResistor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, unit_id, tolerance, power, number_resistors, datasheet);
 }
 
-async function updateResistor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, tolerance, power, number_resistors, datasheet) {
+async function updateResistor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, resistance, unit_id, tolerance, power, number_resistors, datasheet) {
   await updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
     UPDATE resistors SET
       resistance = ?, 
+      unit_id = ?, 
       tolerance = ?, 
       power = ?, 
       number_resistors = ?, 
       datasheet = ?
     WHERE component_id = ?
-    `, [resistance, tolerance, power, number_resistors, datasheet, component_id])
+    `, [resistance, unit_id, tolerance, power, number_resistors, datasheet, component_id])
   return getResistor(component_id)
 };
 

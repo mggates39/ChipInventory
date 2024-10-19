@@ -17,7 +17,7 @@ block content
   br
   p #[strong Component] #{resistor.component_type}
   p #[strong Package] #{resistor.package}
-  p #[strong Resistance] #{resistor.resistance} &Omega;
+  p #[strong Resistance] #{resistor.resistance} !{resistor.unit_label}
   p #[strong Tolerance] #{resistor.tolerance} %
   p #[strong Power] #{resistor.power} W
   if resistor.datasheet

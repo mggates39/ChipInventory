@@ -541,9 +541,12 @@ SELECT ol.*, lt.name as location_type,
 SELECT le.*
 FROM list_entries le
 JOIN lists l on l.id = le.list_id
-WHERE l.name = 'Capacitance'
+WHERE l.name = 'Resistance'
 ORDER BY le.sequence;
 
+select r.*, c.name, c.description 
+from resistors r
+join components c on c.id = r.component_id;
 
 SELECT l.id, l.name, l.description, count(le.id) num_entries 
 FROM lists l 
@@ -551,14 +554,13 @@ LEFT JOIN list_entries le on le.list_id = l.id
 GROUP BY l.id, l.name, l.description
 ORDER BY l.name;
 
-select c.*, le.name unit_label
-from capacitors c
-left join list_entries le on le.id = c.unit_id;
+select r.component_id, r.capacitance, le.name unit_label, c.name, c.description
+from capacitors r
+join components c on c.id = r.component_id
+left join list_entries le on le.id = r.unit_id;
 
--- alter table capacitors add column unit_id integer after capacitance;
--- update capacitors set unit_id = 3 where component_id in (280, 281, 282);
--- update capacitors set unit_id = 1 where component_id in (283);
--- commit;
--- alter table capacitors modify column unit_id integer not null;
--- CREATE INDEX `cap_unit_list_idx`  ON capacitors (unit_id);
--- alter table capacitors add CONSTRAINT `cap_unit_list_ibfk` FOREIGN KEY (`unit_id`) REFERENCES `list_entries` (`id`)
+select r.component_id, r.resistance, le.name unit_label, c.name, c.description
+from resistors r
+join components c on c.id = r.component_id
+left join list_entries le on le.id = r.unit_id;
+

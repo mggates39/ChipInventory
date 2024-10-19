@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-const {  getResistorNetwork, getPins, getDipLeftPins, getDipRightPins, getSipPins,
+const {getResistorNetwork, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createResistorNetwork, updateResistorNetwork, createPin, updatePin,
-  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType} = require('../database');
+  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType, getPickListByName} = require('../database');
 const {parse_symbol} = require('../utility');
 
 /* GET new item page */
@@ -13,6 +13,7 @@ router.get('/new', async function(req, res, next) {
     pin_count: '',
     component_sub_type_id: '',
     resistance: '',
+    unit_id: 6, 
     tolerance: '',
     power: '',
     number_resistors: '',
@@ -22,8 +23,10 @@ router.get('/new', async function(req, res, next) {
 
   const package_types = await getPackageTypesForComponentType(5);
   const component_sub_types = await getComponentSubTypesForComponentType(5);
+  const unit_list = await getPickListByName('Resistance');
 
-  res.render('resistor_network/new', {title: 'New Resistor Network Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('resistor_network/new', {title: 'New Resistor Network Definition', data: data, package_types: package_types, 
+    component_sub_types: component_sub_types, unit_list: unit_list});
 });
   
 /* GET item page */
@@ -100,6 +103,7 @@ router.get('/edit/:id', async function(req, res, next) {
   const aliases = await getAliases(resistor_id);
   const package_types = await getPackageTypesForComponentType(5);
   const component_sub_types = await getComponentSubTypesForComponentType(5);
+  const unit_list = await getPickListByName('Resistance');
 
   aliasList = "";
   sep = "";
@@ -113,6 +117,7 @@ router.get('/edit/:id', async function(req, res, next) {
     chip_number: resistor.chip_number,
     aliases: aliasList,
     resistance: resistor.resistance,
+    unit_id: resistor.unit_id,
     tolerance: resistor.tolerance,
     power: resistor.power,
     number_resistors: resistor.number_resistors,
@@ -139,13 +144,15 @@ router.get('/edit/:id', async function(req, res, next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  res.render('resistor_network/edit', {title: 'Edit Resistor Network Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('resistor_network/edit', {title: 'Edit Resistor Network Definition', data: data, package_types: package_types, 
+    component_sub_types: component_sub_types, unit_list: unit_list});
 })
   
 router.post('/new', async function( req, res, next) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     resistance: req.body.resistance,
+    unit_id: req.body.unit_id,
     tolerance: req.body.tolerance,
     power: req.body.power,
     number_resistors: req.body.number_resistors,
@@ -157,6 +164,8 @@ router.post('/new', async function( req, res, next) {
   }
   const package_types = await getPackageTypesForComponentType(5);
   const component_sub_types = await getComponentSubTypesForComponentType(5);
+  const unit_list = await getPickListByName('Resistance');
+
   var pin=[];
   var sym = [];
   var descr = [];
@@ -171,7 +180,8 @@ router.post('/new', async function( req, res, next) {
 
   if (descr[req.body.pin_count-1]) {
     
-    const resistor = await createResistorNetwork(data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, data.resistance, data.tolerance, data.power, data.number_resistors, data.datasheet);
+    const resistor = await createResistorNetwork(data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, 
+      data.resistance, data.unit_id, data.tolerance, data.power, data.number_resistors, data.datasheet);
     resistor_id = resistor.component_id;
 
     for (var i = 0; i < req.body.pin_count; i++) {
@@ -187,7 +197,8 @@ router.post('/new', async function( req, res, next) {
 
     res.redirect('/resistor_networks/'+resistor_id);
   } else {
-    res.render('resistor_network/new', {title: 'New Resistor Network Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+    res.render('resistor_network/new', {title: 'New Resistor Network Definition', data: data, package_types: package_types, 
+      component_sub_types: component_sub_types, unit_list: unit_list});
   }
 });
 
@@ -196,6 +207,7 @@ router.post('/:id', async function( req, res, next) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     resistance: req.body.resistance,
+    unit_id: req.body.unit_id,
     tolerance: req.body.tolerance,
     power: req.body.power,
     number_resistors: req.body.number_resistors,
@@ -220,7 +232,8 @@ router.post('/:id', async function( req, res, next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const resistor = await updateResistorNetwork(id, data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, data.resistance, data.tolerance, data.power, data.number_resistors, data.datasheet);
+  const resistor = await updateResistorNetwork(id, data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, 
+    data.resistance, data.unit_id, data.tolerance, data.power, data.number_resistors, data.datasheet);
   resistor_id =resistor.component_id;
 
   for (var i = 0; i < req.body.pin_count; i++) {
