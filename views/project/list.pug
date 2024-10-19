@@ -8,8 +8,9 @@ block content
       th Description
       th Status 
       th Number Items 
+      th Qty Desired 
+      th Qty On Hand
       th Qty Needed 
-      th Qty Available 
       th Qty On Order
 
     each n in projects
@@ -20,7 +21,8 @@ block content
         td= n.status_value
         td= n.num_items
         td= n.needed
-        td= n.status_valavailableue
+        td= n.available
+        td= n.unavailable
         td= n.on_order
 
     if projects.length == 0

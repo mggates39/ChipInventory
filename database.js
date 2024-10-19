@@ -1435,7 +1435,8 @@ async function deleteListEntry(list_entry_id) {
 async function getProjectList() {
   const [rows] = await pool.query(`
     SELECT p.id, p.name, p.description, le.name as status_value, count(pi.id) num_items, 
-      sum(qty_needed) needed, sum(qty_available) available, sum(qty_to_order) on_order
+      sum(qty_needed) needed, sum(qty_available) available, sum(qty_to_order) on_order,
+      (sum(qty_needed) - sum(qty_available)) unavailable
     FROM projects p 
     JOIN list_entries le on le.id = p.status_id
     LEFT JOIN project_items pi on pi.project_id = p.id
