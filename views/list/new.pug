@@ -1,10 +1,10 @@
 extends ../layout
 
 block content
-  p Create new component type definition
+  p Create new list definition
   form(action="/lists/new/" method="POST")
     div.form-group
-      label(for="description") List Name:
+      label(for="name") List Name:
       input#name.form-control( type="text" placeholder="Ex) IC" name="name" value=list.name)
     div.form-group
       label(for="description") Description:
