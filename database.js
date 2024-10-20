@@ -23,7 +23,11 @@ async function getSystemData() {
       (select count(*) from manufacturer) mfgs,
       (select count(*) from mfg_codes) codes,
       (select count(*) from locations where parent_location_id is null) main_locations,
-      (select count(*) from locations where parent_location_id is not null) child_locations
+      (select count(*) from locations where parent_location_id is not null) child_locations,
+      (select count(*) from projects) number_projects,
+      (select sum(qty_needed) from project_items) project_needed,
+      (select sum(qty_available) from project_items) project_available,
+      (select sum(qty_needed)-sum(qty_available) from project_items) project_missing
     `)
   return rows[0]
 }

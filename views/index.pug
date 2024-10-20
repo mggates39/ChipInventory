@@ -45,3 +45,13 @@ block content
           p.card-title Location Counts
           p.card-text Main Locations: #{data.main_locations}
           p.card-text Child Locations: #{data.child_locations}
+
+    div.col-sm-3 
+      div.card.text-center.border-dark.mb-3(style="max-width: 18rem;")
+        h5.card-header.border-dark Projects
+        div.card-body
+          p.card-title Project Summaries
+          p.card-text Projects: #{data.number_projects}
+          p.card-text Needed Components: #{data.project_needed}
+          p.card-text Available Components: #{data.project_available}
+          p.card-text Missing Components: #{data.project_missing}
