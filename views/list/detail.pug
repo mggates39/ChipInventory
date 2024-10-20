@@ -119,7 +119,6 @@ block scripts
       $("#edit").attr("action", "/list_entries/" + id);
       $("#edit #id").val(id);
       $.ajax({url: "/list_entries/" + id, success: function(result){
-        console.log(result);
         $("#edit #sequence").val(result.sequence);
         $("#edit #name").val(result.name);
         $("#edit #description").val(result.description);

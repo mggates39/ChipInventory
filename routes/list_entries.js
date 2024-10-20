@@ -15,7 +15,6 @@ router.get('/delete/:id', async function(req, res) {
 router.get('/:id', async function(req, res, next) {
     const id = req.params.id;
     const data = await getListEntry(id);
-    console.log(data);
     res.send(data);
   });
 
