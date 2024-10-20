@@ -1,6 +1,7 @@
 var mysql = require('mysql2');
 var dotenv = require('dotenv');
 
+// Create the database connection pool from the config
 dotenv.config()
 
 const pool = mysql.createPool({
@@ -10,6 +11,7 @@ const pool = mysql.createPool({
   database: process.env.MYSQL_DATABASE
 }).promise()
 
+// Index page queries
 async function getSystemData() {
   const [rows] = await pool.query(`select 
       (select count(*) from aliases) aliases,
@@ -66,6 +68,7 @@ async function getInventoryCounts() {
   return rows;
 }
 
+// Component related queries
 async function searchComponents(query, type, component_type_id) {
   if (query) {
     value = ['%' + query + '%', component_type_id]
@@ -117,6 +120,39 @@ async function getComponent(component_id) {
   return rows[0]
 }
 
+async function createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count) {
+  const [result] = await pool.query(`
+    INSERT INTO components (name, component_type_id, package_type_id, component_sub_type_id, description, pin_count)
+    VALUES (?, ?, ?, ?, ?, ?)
+    `, [chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count])
+  const component_id = result.insertId
+  return component_id;
+}
+
+async function updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count) {
+  await pool.query(`
+    UPDATE components SET
+      name = ?, 
+      component_type_id = ?, 
+      package_type_id = ?, 
+      component_sub_type_id = ?,
+      description = ?, 
+      pin_count = ?
+    WHERE id = ?
+    `, [chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, component_id])
+  return true;
+}
+
+async function deleteComponent(component_id) {
+  await pool.query('DELETE FROM aliases WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM notes WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM specs WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM pins WHERE component_id = ?', [component_id]);
+  await pool.query('DELETE FROM components WHERE id = ?', [component_id]);
+  return true
+}
+
+// Chip related queries
 async function getChip(component_id) {
   const [rows] = await pool.query(`
     SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
@@ -130,6 +166,35 @@ async function getChip(component_id) {
   return rows[0]
 }
 
+async function createChip(chip_number, family, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 1;
+  const component_id = await createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO chips (component_id, family, datasheet)
+      VALUES (?, ?, ?)
+      `, [component_id, family, datasheet])
+  return getChip(component_id)
+}
+
+async function updateChip(component_id, chip_number, family, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 1;
+  await updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE chips SET
+      family = ?, 
+      datasheet = ?
+    WHERE component_id = ?
+    `, [family, datasheet, component_id])
+  return getChip(component_id)
+}
+
+async function deleteChip(component_id) {
+  await pool.query('DELETE FROM chips WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
+// Crystal related queries
 async function getCrystal(component_id) {
   const [rows] = await pool.query(`
     SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
@@ -143,6 +208,35 @@ async function getCrystal(component_id) {
    return rows[0]
 }
 
+async function createCrystal(chip_number, frequency, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 10;
+  const component_id = await createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO crystals (component_id, frequency, datasheet)
+      VALUES (?, ?, ?)
+      `, [component_id, frequency, datasheet])
+  return getCrystal(component_id)
+}
+
+async function updateCrystal(component_id, chip_number, frequency, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 10;
+  await updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE crystals SET
+      frequency = ?, 
+      datasheet = ?
+    WHERE component_id = ?
+    `, [frequency, datasheet, component_id])
+  return getCrystal(component_id)
+}
+
+async function deleteCrystal(component_id) {
+  await pool.query('DELETE FROM crystals WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
+// Resistor related queries
 async function getResistor(component_id) {
   return getResistor_internall(component_id);
 };
@@ -202,7 +296,20 @@ async function getSocket(component_id) {
    return rows[0]
 }
 
+async function getConnector(component_id) {
+  const [rows] = await pool.query(`
+    SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    FROM components cmp
+    JOIN connectors c on c.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    WHERE c.component_id = ?
+    `, [component_id])
+   return rows[0]
+}
 
+// Pin related queries
 async function getPins(component_id) {
   const [rows] = await pool.query(`
   SELECT * 
@@ -388,6 +495,8 @@ async function getNotes(component_id) {
   return rows
 }
 
+
+// Inventory related queries
 async function searchInventory(query, type, component_type_id) {
   if (query) {
     value = ['%' + query + '%', component_type_id]
@@ -552,7 +661,6 @@ async function getInventoryDate(inventory_date_id) {
   return rows
 }
 
-
 async function createInventoryDate(inventory_id, date_code, quantity) {
   const [result] = await pool.query(`
     INSERT INTO inventory_dates (inventory_id, date_code, quantity)
@@ -573,7 +681,7 @@ async function updateInventoryDate(inventory_date_id, inventory_id, date_code, q
   return getInventoryDate(inventory_date_id)
 }
 
-
+// Manufacturer related queries
 async function getManufacturers() {
   const [rows] = await pool.query(`
     SELECT * 
@@ -669,97 +777,24 @@ async function createManufacturerCode(manufacturer_id, code) {
   const [result] = await pool.query(`
     INSERT INTO mfg_codes (manufacturer_id, mfg_code)
     VALUES (?, ?)
-    `, [manufacturer_id, code])
+    `, [manufacturer_id, code]);
   const manufacturer_code_id = result.insertId;
-  return getMfgCode(manufacturer_code_id)   
+  return getMfgCode(manufacturer_code_id)   ;
 }
 
-async function createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count) {
+async function updateManufacturerCode(manufacturer_code_id, manufacturer_id, code) {
   const [result] = await pool.query(`
-    INSERT INTO components (name, component_type_id, package_type_id, component_sub_type_id, description, pin_count)
-    VALUES (?, ?, ?, ?, ?, ?)
-    `, [chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count])
-  const component_id = result.insertId
-  return component_id;
-}
-
-async function updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count) {
-  await pool.query(`
-    UPDATE components SET
-      name = ?, 
-      component_type_id = ?, 
-      package_type_id = ?, 
-      component_sub_type_id = ?,
-      description = ?, 
-      pin_count = ?
+    UPDATE mfg_codes SET
+      manufacturer_id = ?, 
+      mfg_code = ?
     WHERE id = ?
-    `, [chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, component_id])
+    `, [manufacturer_code_id, manufacturer_id, code]);
+  return getMfgCode(manufacturer_code_id);
+}
+
+async function deleteManufacturerCode(manufacturer_code_id) {
+  await pool.query("DELETE FROM  mfg_codes WHERE id = ?", [manufacturer_code_id]);
   return true;
-}
-
-async function deleteComponent(component_id) {
-  await pool.query('DELETE FROM aliases WHERE component_id = ?', [component_id]);
-  await pool.query('DELETE FROM notes WHERE component_id = ?', [component_id]);
-  await pool.query('DELETE FROM specs WHERE component_id = ?', [component_id]);
-  await pool.query('DELETE FROM pins WHERE component_id = ?', [component_id]);
-  await pool.query('DELETE FROM components WHERE id = ?', [component_id]);
-  return true
-}
-
-async function createChip(chip_number, family, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 1;
-  const component_id = await createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
-  await pool.query(`
-      INSERT INTO chips (component_id, family, datasheet)
-      VALUES (?, ?, ?)
-      `, [component_id, family, datasheet])
-  return getChip(component_id)
-}
-
-async function updateChip(component_id, chip_number, family, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 1;
-  await updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
-  await pool.query(`
-    UPDATE chips SET
-      family = ?, 
-      datasheet = ?
-    WHERE component_id = ?
-    `, [family, datasheet, component_id])
-  return getChip(component_id)
-}
-
-async function deleteChip(component_id) {
-  await pool.query('DELETE FROM chips WHERE component_id = ?', [component_id]);
-  await deleteComponent(component_id)
-  return true
-}
-
-async function createCrystal(chip_number, frequency, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 10;
-  const component_id = await createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
-  await pool.query(`
-      INSERT INTO crystals (component_id, frequency, datasheet)
-      VALUES (?, ?, ?)
-      `, [component_id, frequency, datasheet])
-  return getCrystal(component_id)
-}
-
-async function updateCrystal(component_id, chip_number, frequency, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 10;
-  await updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
-  await pool.query(`
-    UPDATE crystals SET
-      frequency = ?, 
-      datasheet = ?
-    WHERE component_id = ?
-    `, [frequency, datasheet, component_id])
-  return getCrystal(component_id)
-}
-
-async function deleteCrystal(component_id) {
-  await pool.query('DELETE FROM crystals WHERE component_id = ?', [component_id]);
-  await deleteComponent(component_id)
-  return true
 }
 
 async function createResistor(chip_number, package_type_id, component_sub_type_id, description, pin_count, resistance, unit_id, tolerance, power, datasheet) {
@@ -1555,7 +1590,7 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, deleteAliases, 
   getManufacturers, createManufacturer, getManufacturerList, getManufacturer, searchManufacturers, updateManufacturer,
-  getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode,
+  getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode, updateManufacturerCode, deleteManufacturerCode,
   getComponentTypeList, getComponentType, createComponentType, updateComponentType, 
   getComponentSubTypesForComponentType, createCompnentSubType, getComponentSubType, updateComponentSubType, deleteComponentSubType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
