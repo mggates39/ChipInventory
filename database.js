@@ -95,6 +95,13 @@ async function searchComponents(query, type, component_type_id) {
   return rows
 }
 
+async function getComponentList()  {
+  const [rows] = await pool.query(`SELECT c.*, ct.name component_type_name 
+FROM components c
+JOIN component_types ct ON ct.id = c.component_type_id
+ORDER BY c.name`);
+  return rows
+}
 async function getComponent(component_id) {
   const [rows] = await pool.query(`
   SELECT cmp.*, pt.name as package, ct.description as component, ct.table_name 
@@ -1390,7 +1397,8 @@ async function updateList(list_id, name, description) {
 }
 
 async function deleteList(list_id) {
-  const [result] = await pool.query("DELETE FROM lists WHERE id = ?", [list_id])
+  await pool.query("DELETE FROM list_entries WHERE list_id = ?", [list_id])
+  await pool.query("DELETE FROM lists WHERE id = ?", [list_id])
   return true
 }
 
@@ -1429,7 +1437,7 @@ async function updateListEntry(list_entry_id, list_id, sequence, name, descripti
 
 async function deleteListEntry(list_entry_id) {
   const [result] = await pool.query("DELETE FROM list_entries WHERE id = ?", [list_entry_id])
-  return true
+  return true;
 }
 
 async function getProjectList() {
@@ -1445,7 +1453,88 @@ async function getProjectList() {
   return rows;
 }
 
-module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInventoryCounts, getComponent, 
+async function getProject(project_id) {
+  const [rows] = await pool.query(`
+    SELECT p.*, le.name as status_value 
+    FROM projects p
+    JOIN list_entries le on le.id = p.status_id
+    WHERE p.id = ?
+    `, [project_id]);
+    return rows[0];  
+}
+
+async function createProject(name, description, status_id) {
+  const [result] = await pool.query("INSERT INTO projects (name, description, status_id) VALUES (?, ?, ?)", 
+    [name, description, status_id])
+  const project_id = result.insertId
+  return getProject(project_id)
+}
+
+async function updateProject(project_id, name, description, status_id) {
+  const [result] = await pool.query("UPDATE projects set name = ?, description = ?, status_id = ? WHERE id =?", 
+    [name, description, status_id, project_id])
+  return getProject(project_id)
+}
+
+async function deleteProject(project_id) {
+  await pool.query("DELETE FROM project_items WHERE project_id = ?", [project_id])
+  await pool.query("DELETE FROM projects WHERE id = ?", [project_id])
+  return true
+}
+
+async function getProjectItemsForProject(project_id) {
+  const [rows] = await pool.query(`
+    SELECT pi.*, c.name, c.description, i.full_number inventory_name
+    FROM project_items pi
+    JOIN components c ON c.id = pi.component_id
+    LEFT JOIN inventory i ON i.id = pi.inventory_id
+    WHERE pi.id = ?`, [project_id]);
+    return rows;
+}
+
+async function getProjectItem(project_item_id) {
+  const [rows] = await pool.query(`
+    SELECT pi.*, c.name, c.description, i.full_number inventory_name
+    FROM project_items pi
+    JOIN components c ON c.id = pi.component_id
+    LEFT JOIN inventory i ON i.id = pi.inventory_id
+    WHERE pi.id = ?
+    `, [project_item_id]);
+    return rows[0];  
+}
+
+async function createProjectItem(project_id, number, component_id, qty_needed, inventory_id, qty_available, qty_to_order) {
+  const [result] = await pool.query(`
+    INSERT INTO project_items 
+      (project_id, number, component_id, qty_needed, inventory_id, qty_available, qty_to_order) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)`, 
+    [project_id, number, component_id, qty_needed, inventory_id, qty_available, qty_to_order])
+  const project_item_id = result.insertId
+  return getProjectItem(project_item_id)
+}
+
+async function updateProjectItem(project_item_id, project_id, number, component_id, qty_needed, inventory_id, qty_available, qty_to_order) {
+  const [result] = await pool.query(`
+    UPDATE project_items set 
+      project_id = ?, 
+      number = ?, 
+      component_id = ?, 
+      qty_needed = ?, 
+      inventory_id = ?, 
+      qty_available = ?, 
+      qty_to_order = ? 
+    WHERE id =?`, 
+    [project_id, number, component_id, qty_needed, inventory_id, qty_available, qty_to_order, project_item_id])
+  return getProjectItem(project_item_id)
+}
+
+
+async function deleteProjectItem(project_item_id) {
+  await pool.query("DELETE FROM project_items WHERE id = ?", [project_item_id])
+  return true
+}
+
+module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInventoryCounts, getComponent, getComponentList, 
   searchComponents, getChip, createChip, updateChip, deleteChip, getPins, 
   createPin, updatePin, getDipLeftPins, getDipRightPins, getSipPins,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
@@ -1474,5 +1563,6 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getLocationList, getLocation, createLocation, updateLocation, deleteLocation, getChildLocationList,
   getPickListByName, getLists, getList, createList, updateList, deleteList,
   getListEntriesForList, getListEntry, createListEntry, updateListEntry, deleteListEntry,
-  getProjectList}
+  getProjectList, getProject, createProject, updateProject, deleteProject,
+  getProjectItemsForProject, getProjectItem, createProjectItem, updateProjectItem, deleteProjectItem}
 

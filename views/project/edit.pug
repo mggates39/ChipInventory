@@ -1,0 +1,24 @@
+extends ../layout
+
+block content
+  p Edit the project definition
+  form(action="/projects/"+project.id method="POST")
+    div.form-group
+      label(for="name") List Name:
+      input#name.form-control( type="text" placeholder="Ex) New PCB" name="name" value=project.name)
+    div.form-group
+      label(for="description") Description:
+      input#description.form-control( type="text" placeholder="Ex) Fun time circuit" name="description" value=project.description)
+    div.form-group
+      label(for="") Status:
+      select#status_id.form-control(type='select' placeholder='Select Component type' name='status_id' required='true')
+        for status in status_list
+          option(value=status.id selected= project.status_id == status.id) #{status.name}
+
+    button.btn.btn-default.btn-primary(type="submit") Submit
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#proj").addClass("active");
+    });

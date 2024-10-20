@@ -571,3 +571,12 @@ left join list_entries le on le.id = r.unit_id;
     LEFT JOIN project_items pi on pi.project_id = p.id
     GROUP BY  p.id, p.name, p.description, le.name 
     ORDER BY p.name;
+    
+select c.*, ct.name component_type_name 
+from components c
+join component_types ct on ct.id = c.component_type_id;
+
+select pi.*, c.name, c.description, i.full_number
+from project_items pi
+join components c on c.id = pi.component_id
+left join inventory i on i.id = pi.inventory_id
