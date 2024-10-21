@@ -54,8 +54,6 @@ router.get('/:id', async function(req, res, nest) {
   });
 
   layout_pins = [];
-  top_pins = [];
-  bottom_pins = [];
 
   if (data.package == 'SIP') {
     sip_pins.forEach(function(pin) {
