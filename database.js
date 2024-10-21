@@ -660,7 +660,6 @@ async function getNotes(component_id) {
   return rows
 }
 
-
 // Inventory related queries
 async function searchInventory(query, type, component_type_id) {
   if (query) {
@@ -855,7 +854,7 @@ async function getManufacturers() {
   return rows;
 }
 
-async function getMfgCodes() {
+async function getManufacturerCodes() {
   const [rows] = await pool.query(`
     select mfg_codes.id, concat(mfg_code, ' (', name, ')') display_name
     from manufacturer
@@ -872,7 +871,7 @@ async function getManufacturer(manufacturer_id) {
   return rows[0];
 }
 
-async function getMfgCodesForMfg(manufacturer_id) {
+async function getManufacturerCodesForMfg(manufacturer_id) {
   const [rows] = await pool.query(`
     select *
     from mfg_codes
@@ -881,7 +880,7 @@ async function getMfgCodesForMfg(manufacturer_id) {
   return rows;
 }
 
-async function getMfgCode(manufacturer_code_id) {
+async function getManufacturerCode(manufacturer_code_id) {
   const [rows] = await pool.query(`
     select *
     from mfg_codes
@@ -944,7 +943,7 @@ async function createManufacturerCode(manufacturer_id, code) {
     VALUES (?, ?)
     `, [manufacturer_id, code]);
   const manufacturer_code_id = result.insertId;
-  return getMfgCode(manufacturer_code_id)   ;
+  return getManufacturerCode(manufacturer_code_id)   ;
 }
 
 async function updateManufacturerCode(manufacturer_code_id, manufacturer_id, code) {
@@ -953,8 +952,8 @@ async function updateManufacturerCode(manufacturer_code_id, manufacturer_id, cod
       manufacturer_id = ?, 
       mfg_code = ?
     WHERE id = ?
-    `, [manufacturer_code_id, manufacturer_id, code]);
-  return getMfgCode(manufacturer_code_id);
+    `, [manufacturer_id, code, manufacturer_code_id]);
+  return getManufacturerCode(manufacturer_code_id);
 }
 
 async function deleteManufacturerCode(manufacturer_code_id) {
@@ -1595,7 +1594,7 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, deleteAliases, 
   getManufacturers, createManufacturer, getManufacturerList, getManufacturer, searchManufacturers, updateManufacturer,
-  getMfgCode, getMfgCodes, getMfgCodesForMfg, createManufacturerCode, updateManufacturerCode, deleteManufacturerCode,
+  getManufacturerCode, getManufacturerCodes, getManufacturerCodesForMfg, createManufacturerCode, updateManufacturerCode, deleteManufacturerCode,
   getComponentTypeList, getComponentType, createComponentType, updateComponentType, 
   getComponentSubTypesForComponentType, createCompnentSubType, getComponentSubType, updateComponentSubType, deleteComponentSubType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
