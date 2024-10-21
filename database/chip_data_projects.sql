@@ -18,29 +18,31 @@ USE `chip_data`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `location_types`
+-- Table structure for table `projects`
 --
 
-DROP TABLE IF EXISTS `location_types`;
+DROP TABLE IF EXISTS `projects`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `location_types` (
+CREATE TABLE `projects` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(16) NOT NULL,
-  `description` varchar(32) NOT NULL,
-  `tag` varchar(16) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `name` varchar(32) NOT NULL,
+  `description` varchar(64) NOT NULL,
+  `status_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `project_status_idx` (`status_id`),
+  CONSTRAINT `project_status_ibfk` FOREIGN KEY (`status_id`) REFERENCES `list_entries` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `location_types`
+-- Dumping data for table `projects`
 --
 
-LOCK TABLES `location_types` WRITE;
-/*!40000 ALTER TABLE `location_types` DISABLE KEYS */;
-INSERT INTO `location_types` VALUES (1,'Room','Room in a building','RM'),(2,'Bookshelf','Bookshelf','BS'),(3,'Bin','Storage Bin','BN'),(4,'Box','Storage Box','BX'),(5,'Shelf','Shelf','SH'),(6,'Building','Building','BLD'),(7,'Workbench','Workbench','WB'),(8,'Desk','Desk','DSK'),(9,'Drawer','Drawer','DWR'),(10,'Tray','Chip Tray','TR'),(11,'Basket','Basket','BSK'),(12,'Bag','Ant-static parts bag','BG');
-/*!40000 ALTER TABLE `location_types` ENABLE KEYS */;
+LOCK TABLES `projects` WRITE;
+/*!40000 ALTER TABLE `projects` DISABLE KEYS */;
+INSERT INTO `projects` VALUES (1,'68HC11_SBC','68HC11 development board',9),(2,'New PCB','Sample of the new Circit',9);
+/*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-20 23:12:20
+-- Dump completed on 2024-10-20 23:12:21

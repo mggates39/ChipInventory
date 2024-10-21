@@ -34,7 +34,7 @@ CREATE TABLE `list_entries` (
   PRIMARY KEY (`id`),
   KEY `list_idx` (`list_id`),
   CONSTRAINT `list_ibfk_1` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `list_entries` (
 
 LOCK TABLES `list_entries` WRITE;
 /*!40000 ALTER TABLE `list_entries` DISABLE KEYS */;
-INSERT INTO `list_entries` VALUES (1,1,1,'pF','pico-farad',-12),(2,1,2,'nF','nano-farad',-9),(3,1,3,'&micro;F','micro-farad',-6),(4,1,4,'mF','milli-farad',-3),(5,1,5,'F','farad',0),(6,2,1,'&Omega;','Ohm',0),(7,2,2,'k&Omega;','Kilo-Ohm',3),(8,2,2,'M&Omega;','Mega-Ohm',6);
+INSERT INTO `list_entries` VALUES (1,1,1,'pF','pico-farad',-12),(2,1,2,'nF','nano-farad',-9),(3,1,3,'&micro;F','micro-farad',-6),(4,1,4,'mF','milli-farad',-3),(5,1,5,'F','farad',0),(6,2,1,'&Omega;','Ohm',0),(7,2,2,'k&Omega;','Kilo-Ohm',3),(8,2,2,'M&Omega;','Mega-Ohm',6),(9,3,1,'Pending','Pending',0),(10,3,2,'Ordering','Ordering Parts',0),(11,3,3,'Ready','Ready to start',0),(12,3,4,'In Progress','In Progress',0),(13,3,5,'Completed','Completed',0),(14,3,6,'Canceled','No longer working',0),(15,3,0,'New','New Project',0);
 /*!40000 ALTER TABLE `list_entries` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-18 23:45:37
+-- Dump completed on 2024-10-20 23:12:20

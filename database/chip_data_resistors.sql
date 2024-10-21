@@ -45,7 +45,7 @@ CREATE TABLE `resistors` (
 
 LOCK TABLES `resistors` WRITE;
 /*!40000 ALTER TABLE `resistors` DISABLE KEYS */;
-INSERT INTO `resistors` VALUES (274,330.000,6,1,0.250,1,'https://www.seielect.com/catalog/sei-rnf_rnmf.pdf'),(276,10.000,8,5,0.350,1,'https://www.seielect.com/catalog/sei-cf_cfm.pdf'),(277,4.700,7,12,0.002,7,'https://www.bourns.com/docs/Product-Datasheets/4600x.pdf');
+INSERT INTO `resistors` VALUES (274,330.000,6,1,0.250,1,'https://www.seielect.com/catalog/sei-rnf_rnmf.pdf'),(276,10.000,8,5,0.250,1,'https://www.seielect.com/catalog/sei-cf_cfm.pdf'),(277,4.700,7,12,0.002,7,'https://www.bourns.com/docs/Product-Datasheets/4600x.pdf');
 /*!40000 ALTER TABLE `resistors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -58,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-18 23:45:37
+-- Dump completed on 2024-10-20 23:12:20

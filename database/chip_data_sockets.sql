@@ -38,7 +38,7 @@ CREATE TABLE `sockets` (
 
 LOCK TABLES `sockets` WRITE;
 /*!40000 ALTER TABLE `sockets` DISABLE KEYS */;
-INSERT INTO `sockets` VALUES (284,'https://app.adam-tech.com/products/download/data_sheet/199582/ics-3xx-t-data-sheet.pdf'),(285,'https://www.te.com/usa-en/product-1-2199298-3.datasheet.pdf'),(287,'https://www.on-shore.com/wp-content/uploads/2015/09/ipg2.pdf'),(288,'https://www.on-shore.com/wp-content/uploads/2015/09/ipg2.pdf'),(289,'https://app.adam-tech.com/products/download/data_sheet/199581/ics-6xx-t-data-sheet.pdf'),(290,'https://app.adam-tech.com/products/download/data_sheet/198231/plcc-52-at-data-sheet.pdf'),(291,'https://app.adam-tech.com/products/download/data_sheet/199582/ics-3xx-t-data-sheet.pdf');
+INSERT INTO `sockets` VALUES (284,'https://app.adam-tech.com/products/download/data_sheet/199582/ics-3xx-t-data-sheet.pdf'),(285,'https://www.te.com/usa-en/product-1-2199298-3.datasheet.pdf'),(287,'https://www.on-shore.com/wp-content/uploads/2015/09/ipg2.pdf'),(288,'https://www.on-shore.com/wp-content/uploads/2015/09/ipg2.pdf'),(289,'https://app.adam-tech.com/products/download/data_sheet/199581/ics-6xx-t-data-sheet.pdf'),(290,'https://app.adam-tech.com/products/download/data_sheet/198231/plcc-52-at-data-sheet.pdf'),(291,'https://app.adam-tech.com/products/download/data_sheet/199582/ics-3xx-t-data-sheet.pdf'),(293,'https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/693/4159_Web.pdf'),(294,'https://www.we-online.com/components/products/datasheet/6130xx11821.pdf');
 /*!40000 ALTER TABLE `sockets` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-18 23:45:37
+-- Dump completed on 2024-10-20 23:12:20

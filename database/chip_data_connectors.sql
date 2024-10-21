@@ -18,29 +18,27 @@ USE `chip_data`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `location_types`
+-- Table structure for table `connectors`
 --
 
-DROP TABLE IF EXISTS `location_types`;
+DROP TABLE IF EXISTS `connectors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `location_types` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(16) NOT NULL,
-  `description` varchar(32) NOT NULL,
-  `tag` varchar(16) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `connectors` (
+  `component_id` int NOT NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `connectors_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `location_types`
+-- Dumping data for table `connectors`
 --
 
-LOCK TABLES `location_types` WRITE;
-/*!40000 ALTER TABLE `location_types` DISABLE KEYS */;
-INSERT INTO `location_types` VALUES (1,'Room','Room in a building','RM'),(2,'Bookshelf','Bookshelf','BS'),(3,'Bin','Storage Bin','BN'),(4,'Box','Storage Box','BX'),(5,'Shelf','Shelf','SH'),(6,'Building','Building','BLD'),(7,'Workbench','Workbench','WB'),(8,'Desk','Desk','DSK'),(9,'Drawer','Drawer','DWR'),(10,'Tray','Chip Tray','TR'),(11,'Basket','Basket','BSK'),(12,'Bag','Ant-static parts bag','BG');
-/*!40000 ALTER TABLE `location_types` ENABLE KEYS */;
+LOCK TABLES `connectors` WRITE;
+/*!40000 ALTER TABLE `connectors` DISABLE KEYS */;
+/*!40000 ALTER TABLE `connectors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
