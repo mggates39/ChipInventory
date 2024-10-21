@@ -15,7 +15,7 @@ router.get('/new', async function(req, res, next) {
   const data = {
     name: '',
     description: '',
-    status_id: 9
+    status_id: 15
   };
   const status_list = await getPickListByName('ProjectStatus');
   res.render('project/new', {title: 'Project', project: data, status_list: status_list});
