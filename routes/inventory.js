@@ -60,7 +60,7 @@ router.post('/new', async function(req, res) {
   if (inv.length) {
     inv_id = inv[0].id;
     old_qty = parseInt(inv[0].quantity)
-    await updateInventory(inv_id, inv[0].chip_id, inv[0].full_number, inv[0].mfg_code_id, (old_qty + new_qty), data.location_id)
+    await updateInventory(inv_id, inv[0].component_id, inv[0].full_number, inv[0].mfg_code_id, (old_qty + new_qty), data.location_id)
   } else {
     const new_inv = await createInventory(data.chip_id, data.full_number, data.mfg_code_id, data.quantity, data.location_id);
     inv_id = new_inv.id;
@@ -101,7 +101,7 @@ router.post('/:id/newdate', async function(req, res, next) {
   var old_qty = 0;
   const inv = await getInventory(inv_id);
   old_qty = parseInt(inv.quantity)
-  await updateInventory(inv_id, inv.chip_id, inv.full_number, inv.mfg_code_id, (old_qty + new_qty))
+  await updateInventory(inv_id, inv.component_id, inv.full_number, inv.mfg_code_id, (old_qty + new_qty))
   const inv_date = await lookupInventoryDate(inv_id, data.date_code);
   if (inv_date.length) {
     old_qty = parseInt(inv_date[0].quantity)
