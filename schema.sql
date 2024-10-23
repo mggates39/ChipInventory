@@ -276,6 +276,19 @@ CREATE TABLE `project_items` (
     CONSTRAINT `prjct_itm_inv_ibfk_1` FOREIGN KEY (`inventory_id`) REFERENCES `inventory` (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `project_boms` (
+	`id` int NOT NULL AUTO_INCREMENT,
+    `project_id` INT NOT NULL,
+    `number` int NOT NULL,
+    `reference` text NULL,
+    `quantity` int NOT NULL,
+    `part_number` varchar(128) NULL,
+    `processed` tinyint(1) DEFAULT NULL,
+    PRIMARY KEY(`id`),
+    KEY `project_bom_idx` (`project_id`),
+	CONSTRAINT `project_bom_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`)
+) ENGINE=InnoDB;
+
 -- Create any Views
 -- DROP VIEW `component_search` ;
 CREATE VIEW `component_search` AS 

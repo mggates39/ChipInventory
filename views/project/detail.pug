@@ -43,12 +43,38 @@ block content
             |  
             a.btn.btn-secondary.btn-sm(href="/project_items/delete/"+n.id, role="button") Delete 
   br
-  button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#addProjectItemModal") Add Project Item
+  if project.status_id != 14
+    button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#addProjectItemModal") Add Project Item
+    | 
+    if !project_bom.length
+      button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#addProjectBomModal") Add BOM
+    else 
+      button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#processProjectBommModal") Process BOM
+
+    br
   br
-  br
+  
+  // Upload Project BOM Modal
+  div#addProjectBomModal.modal.fade(tabindex="-1" aria-labelledby="addProjectBomModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form#add(action="/projects/"+project.id+"/upload" method="POST" enctype="multipart/form-data")
+          div.modal-header
+            h5#addProjectBomModalLabel.modal-title Add a BOM for #{project.name}
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+
+          div.modal-body
+            div.container-fluid
+              input#file(type="file" name="file" required="true")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save
+
+  
   //- Add Project Item Modal
   div#addProjectItemModal.modal.fade(tabindex="-1" aria-labelledby="addProjectItemModalLabel" aria-hidden="true")
-    div.modal-dialog.modal-dialog-scrollable
+    div.modal-dialog.modal-dialog-scrollable.modal-lg
       div.modal-content
         form#add(action="/projects/"+project.id+"/newitem" method="POST")
           div.modal-header
@@ -76,7 +102,7 @@ block content
                 div.col-md-4
                   select#inventory_id.form-control(type='select' placeholder='Select Inventory' name='inventory_id')
                     for inventory in inventory_list
-                     option(value=inventory.id) #{inventory.full_number}
+                     option(value=inventory.id) #{inventory.chip_number} - #{inventory.full_number}
                 div.col-md-2
                   input#qty_needed.form-control(type="text" placeholder="How many" name="qty_needed")
 
@@ -86,7 +112,7 @@ block content
 
   //- Edit Sub Type Modal
   div#editProjectItemModal.modal.fade(tabindex="-1" aria-labelledby="editProjectItemModalLabel" aria-hidden="true")
-    div.modal-dialog.modal-dialog-scrollable
+    div.modal-dialog.modal-dialog-scrollable.modal-lg
       div.modal-content
         form#edit(action="/project_items/" method="POST")
           input#project_id(type="hidden" name="project_id" value=project.id)
@@ -101,7 +127,7 @@ block content
             div.container-fluid
               div.row
                 div.col-md-2
-                  label( for="numbrt") Num
+                  label( for="number") Num
                 div.col-md-4
                   label( for="component_id") Component
                 div.col-md-4
@@ -118,7 +144,7 @@ block content
                 div.col-md-4
                   select#inventory_id.form-control(type='select' placeholder='Select Inventory' name='inventory_id')
                     for inventory in inventory_list
-                     option(value=inventory.id) #{inventory.full_number}
+                     option(value=inventory.id) #{inventory.chip_number} - #{inventory.full_number}
                 div.col-md-2
                   input#qty_needed.form-control(type="text" placeholder="How many" name="qty_needed")
 
@@ -127,12 +153,104 @@ block content
             button.btn.btn-primary(type="submit" ) Save
 
 
+  //- Process Project BOM Modal
+  div#processProjectBommModal.modal.fade(tabindex="-1" aria-labelledby="processProjectBomModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable.modal-lg
+      div.modal-content
+        form#bom(action="/projects/"+project.id+"/bomitem" method="POST")
+          div.modal-header
+            h5#addProjectItemModalLabel.modal-title Add a Project Item for #{project.name}
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+
+          div.modal-body
+            div.container-fluid
+              div.row
+                div.col-md-1
+                  label( for="number") Num
+                div.col-md-2
+                  label( for="reference") Ref
+                div.col-md-2
+                  label( for="part_number") Part
+                div.col-md-3
+                  label( for="component_id") Component
+                div.col-md-3
+                  label( for="inventory_id") Inventory
+                div.col-md-1
+                  label( for="qty_needed") Qty 
+                div.row
+                  input#id(type="hidden" name="id" )
+                  div.col-md-1
+                    input#number.form-control(type="text" placeholder="1,2,3..." name="number" )
+                  div.col-md-2
+                    input#reference.form-control(type="text" placeholder="C1" name="reference" )
+                  div.col-md-2
+                    input#part_number.form-control(type="text" placeholder="C1" name="part_number" )
+                  div.col-md-3
+                    select#component_id.form-control(type='select' placeholder='Select Component' name='component_id')
+                      option(value='')
+                      for component in component_list
+                        option(value=component.id) #{component.name} - #{component.description}
+                  div.col-md-3
+                    select#inventory_id.form-control(type='select' placeholder='Select Inventory' name='inventory_id')
+                      option(value='')
+                      for inventory in inventory_list
+                        option(value=inventory.id) #{inventory.chip_number} - #{inventory.full_number}
+                  div.col-md-1
+                    input#qty_needed.form-control(type="text" placeholder="How many" name="qty_needed" )
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancel
+            button.btn.btn-secondary(type="button" onclick="next_bom()") Next
+            button.btn.btn-primary(type="submit" ) Save
+  
+
 block scripts
   script(type="text/javascript").
+
+    var bom_data = !{JSON.stringify(project_bom)};
+    var bom = 0;
+
     $( document ).ready(function() {
       $("#proj").addClass("active");
+      $("#add #component_id").change(function() {
+        // Code to execute when the value of #myInput changes
+        var component_id = this.value;
+        var $select = $('#add #inventory_id');
+        $select.find('option').remove(); 
+        $select.append(`<option value=""></option>`);
+        $.ajax({url: "/projects/inv_comp/" + component_id, success: function(result){
+          $.each(result, function(key, value) {
+            $select.append(`<option value="${value.id}">${value.chip_number} + " - " + ${value.full_number}</option>`);
+          });
+        }});
+      });
+      $("#edit #component_id").change(function() {
+        // Code to execute when the value of #myInput changes
+        var component_id = this.value;
+        var $select = $('#edit #inventory_id');
+        $select.find('option').remove(); 
+        $select.append(`<option value=""></option>`);
+        $.ajax({url: "/projects/inv_comp/" + component_id, success: function(result){
+          $.each(result, function(key, value) {
+            $select.append(`<option value="${value.id}">${value.chip_number+ " - " + value.full_number}</option>`);
+          });
+        }});
+      });
+      $("#bom #component_id").change(function() {
+        // Code to execute when the value of #myInput changes
+        var component_id = this.value;
+        var $select = $('#bom #inventory_id');
+        $select.find('option').remove(); 
+        $select.append(`<option value=""></option>`);
+        $.ajax({url: "/projects/inv_comp/" + component_id, success: function(result){
+          $.each(result, function(key, value) {
+            $select.append(`<option value="${value.id}">${value.chip_number+ " - " + value.full_number}</option>`);
+          });
+        }});
+     });
     });
-    // load the selected component sub type data on edit
+    
+    // load the selected project item data on edit
     $('#editProjectItemModal').on('shown.bs.modal', function (e) {
       // Your JavaScript code to execute here
       var id = e.relatedTarget.id;
@@ -145,6 +263,7 @@ block scripts
         $("#edit #qty_needed").val(result.qty_needed);
         $("#edit #qty_available").val(result.qty_available);
         $("#edit #qty_to_order").val(result.qty_to_order);
+        $("#edit #component_id").trigger("change");
         $("#edit #number").focus();
       }});
     });
@@ -154,3 +273,24 @@ block scripts
       // Your JavaScript code to execute here
       $(this).find('#number').focus();
     });
+
+    $('#processProjectBommModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+       load_bom(bom);
+       $(this).find('#number').focus();
+    });
+
+    function next_bom() {
+      bom += 1;
+      if (bom < bom_data.length) {
+        load_bom(bom);
+      }
+    }
+      
+    function load_bom(bom_number) {
+        $("#bom #id").val(bom_data[bom_number].id);
+        $("#bom #number").val(bom_data[bom_number].number);
+        $("#bom #qty_needed").val(bom_data[bom_number].quantity);
+        $("#bom #part_number").val(bom_data[bom_number].part_number);
+        $("#bom #reference").val(bom_data[bom_number].reference);
+    }

@@ -1531,7 +1531,8 @@ async function getProjectItemsForProject(project_id) {
     FROM project_items pi
     JOIN components c ON c.id = pi.component_id
     LEFT JOIN inventory i ON i.id = pi.inventory_id
-    WHERE pi.id = ?`, [project_id]);
+    WHERE pi.project_id = ?
+    ORDER BY pi.number`, [project_id]);
     return rows;
 }
 
@@ -1577,6 +1578,61 @@ async function deleteProjectItem(project_item_id) {
   return true
 }
 
+async function getProjectBomItemsForProject(project_id) {
+  const [rows] = await pool.query(`
+    SELECT *
+    FROM project_boms
+    WHERE project_id = ?
+    ORDER BY number`, [project_id]);
+    return rows;
+}
+
+async function getUnprocessedProjectBomItemsForProject(project_id) {
+  const [rows] = await pool.query(`
+    SELECT *
+    FROM project_boms
+    WHERE project_id = ?
+      AND processed = 0
+    ORDER BY number`, [project_id]);
+    return rows;
+}
+
+async function getProjectBomItem(project_bom_id) {
+  const [rows] = await pool.query("SELECT project_boms.* FROM project_boms WHERE id = ?", [project_bom_id]);
+    return rows[0];  
+}
+
+async function createProjectBomItem(project_id, number, reference, quantity, part_number) {
+  const [result] = await pool.query(`
+    INSERT INTO project_boms 
+      (project_id, number, reference, quantity, part_number, processed) 
+      VALUES (?, ?, ?, ?, ?, 0)`, 
+    [project_id, number, reference, quantity, part_number])
+  const project_bom_id = result.insertId
+  return getProjectBomItem(project_bom_id)
+}
+
+async function updateProjectBomItem(project_bom_id, project_id, number, reference, quantity, part_number, processed) {
+  const [result] = await pool.query(`
+    UPDATE project_boms set 
+      project_id = ?, 
+      number = ?, 
+      reference = ?, 
+      quantity = ?, 
+      part_number = ?, 
+      processed = ? 
+    WHERE id =?`, 
+    [project_id, number, reference, quantity, part_number, processed, project_bom_id])
+  return getProjectBomItem(project_bom_id)
+}
+
+async function deleteProjectBomItem(project_bom_id) {
+  await pool.query("DELETE FROM project_boms WHERE id = ?", [project_bom_id])
+  return true
+}
+
+
+
 module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInventoryCounts, getComponent, getComponentList, 
   searchComponents, getChip, createChip, updateChip, deleteChip, getPins, 
   createPin, updatePin, getDipLeftPins, getDipRightPins, getSipPins,
@@ -1607,5 +1663,7 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getPickListByName, getLists, getList, createList, updateList, deleteList,
   getListEntriesForList, getListEntry, createListEntry, updateListEntry, deleteListEntry,
   getProjectList, getProject, createProject, updateProject, deleteProject,
-  getProjectItemsForProject, getProjectItem, createProjectItem, updateProjectItem, deleteProjectItem}
+  getProjectItemsForProject, getProjectItem, createProjectItem, updateProjectItem, deleteProjectItem,
+  getProjectBomItemsForProject, getUnprocessedProjectBomItemsForProject, 
+  getProjectBomItem, createProjectBomItem, updateProjectBomItem, deleteProjectBomItem }
 

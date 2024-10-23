@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const upload = require('./upload');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -15,7 +16,7 @@ var resistorRouter = require('./routes/resistors');
 var resistorNetworkRouter = require('./routes/resistor_networks');
 var socketRouter = require('./routes/sockets');
 var inventoryRouter = require('./routes/inventory');
-var projectsRouter = require('./routes/projects');
+var {projectsRouter, loadBomIntoDatabase} = require('./routes/projects');
 var projectItemsRouter = require('./routes/project_items');
 var manufacturerRouter = require('./routes/manufacturer');
 var manufacturerCodesRouter = require('./routes/manufacturer_codes');
@@ -63,6 +64,32 @@ app.use('/location_types', locationTypesRouter);
 app.use('/locations', locationsRouter);
 app.use('/lists', listsRouters);
 app.use('/list_entries', listEntriesRouter);
+
+// Set up a route for file uploads
+// app.post('/projects/:id/upload', upload.single('file'), async function(req, res) {
+//   const project_id = req.params.id;
+//   // Handle the uploaded file
+//   // load the csv into the 
+//   console.log(req.file.originalname);
+//   // await loadBomIntoDatabase(project_id, req.file.originalname);
+//   res.redirect('/projects/'+project_id);
+// });
+
+app.post("/projects/:id/upload", async function (req, res, next) {
+  // Use Multer middleware to handle file upload
+  upload(req, res, async function (err) {
+      if (err) {
+          // Handle errors during file upload
+          res.send(err);
+      } else {
+          // Success message after a successful upload
+          const project_id = req.params.id;
+          console.log(req.file.originalname);
+          await loadBomIntoDatabase(project_id, req.file.originalname);
+          res.redirect('/projects/'+project_id);
+              }
+  });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
