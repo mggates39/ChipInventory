@@ -8,6 +8,7 @@ router.get('/', async function(req, res, next) {
   const counts = await getComponentCounts();
   const aliases = await getAliasCounts();
   const inventory = await getInventoryCounts();
+
   res.render('index', { title: 'Lab Management System', data: data, counts: counts, aliases: aliases, inventory: inventory });
 });
 
