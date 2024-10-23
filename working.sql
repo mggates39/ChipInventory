@@ -579,4 +579,14 @@ join component_types ct on ct.id = c.component_type_id;
 select pi.*, c.name, c.description, i.full_number
 from project_items pi
 join components c on c.id = pi.component_id
-left join inventory i on i.id = pi.inventory_id
+left join inventory i on i.id = pi.inventory_id;
+
+select *
+from project_boms
+order by project_id, number;
+
+SELECT *
+FROM project_boms
+WHERE project_id = 1
+  AND processed = 0
+ORDER BY number;
