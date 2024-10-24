@@ -504,6 +504,31 @@ async function getConnector(component_id) {
    return rows[0]
 }
 
+async function createConnector(component_type_id, connector_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_id = await createComponent(connector_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO connectors (component_id,  datasheet)
+      VALUES (?, ?)
+      `, [component_id, datasheet])
+  return getConnector(component_id)
+}
+
+async function updateConnector(component_id, component_type_id, connector_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  await updateComponent(component_id, connector_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE connectors SET
+      datasheet = ?
+    WHERE component_id = ?
+    `, [datasheet, component_id])
+  return getConnector(component_id)
+}
+
+async function deleteConnector(component_id) {
+  await pool.query('DELETE FROM connectors WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
 // Pin related queries
 async function getPins(component_id) {
   const [rows] = await pool.query(`
@@ -1722,6 +1747,7 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getCapacitor, createCapacitor, updateCapacitor, deleteCapacitor,
   getCapacitorNetwork, createCapacitorNetwork, updateCapacitorNetwork, deleteCapacitorNetwork,
   getSocket, createSocket, updateSocket, deleteSocket,
+  getConnector, createConnector, updateConnector, deleteConnector,
   getDiode, createDiode, updateDiode, deleteDiode,
   searchInventory, getInventoryList, getInventory, getInventoryByComponentList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
