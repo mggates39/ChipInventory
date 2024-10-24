@@ -37,33 +37,33 @@ async function getSystemData() {
 async function getComponentCounts() {
   const [rows] = await pool.query(`
     select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, 
-      table_name, count(cmp.id) ni
+      ct.id, table_name, count(cmp.id) ni
     from component_types ct
     join components cmp on ct.id = cmp.component_type_id
-    group by ct.description, table_name
+    group by ct.description, ct.id, table_name
     order by ct.description`);
   return rows;
 }
 
 async function getAliasCounts() {
   const [rows] = await pool.query(`
-    select concat(ct.description, ' Aliases') description, table_name, count(c.id) ni
+    select concat(ct.description, ' Aliases') description, ct.id, table_name, count(c.id) ni
     from component_types ct
     join components c on ct.id = c.component_type_id
     join aliases a on a.component_id = c.id
-    group by ct.description, table_name
+    group by ct.description, ct.id, table_name
     order by ct.description`);
   return rows;
 }
 
 async function getInventoryCounts() {
   const [rows] = await pool.query(`
-    select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, table_name, count(c.id) ni, sum(i.quantity) quantity
+    select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, ct.id, table_name, count(c.id) ni, sum(i.quantity) quantity
     from component_types ct
     join components c on ct.id = c.component_type_id
     join inventory i on i.component_id = c.id
     where c.id in (select distinct component_id from inventory)
-    group by ct.description, table_name
+    group by ct.description, ct.id, table_name
     order by ct.description`);
   return rows;
 }
