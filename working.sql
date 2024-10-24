@@ -590,3 +590,62 @@ FROM project_boms
 WHERE project_id = 1
   AND processed = 0
 ORDER BY number;
+
+SELECT *
+FROM inventory_dates
+where inventory_id = 111;
+
+select * from inventory where id =111;
+
+select * from locations;
+
+select * from project_items where qty_available = 0;
+
+
+
+WITH RECURSIVE cte_connect_by AS (
+	SELECT 1 AS level, cast(CONCAT('/', name) as char(4000)) AS connect_by_path, s.* 
+	FROM locations s WHERE id = 1
+	UNION ALL
+	SELECT level + 1 AS level, CONCAT(connect_by_path, '/', s.name) AS connect_by_path, s.* 
+	FROM cte_connect_by r 
+    INNER JOIN locations s ON  r.id = s.parent_location_id
+)
+SELECT p.name as project, pi.number, ct.name as type, c.name as component, i.full_number as part_number,
+	pi.qty_needed, ccb.connect_by_path
+FROM projects p
+JOIN project_items pi ON pi.project_id = p.id
+JOIN components c ON c.id = pi.component_id
+JOIN component_types ct ON ct.id = c.component_type_id
+LEFT JOIN inventory i ON i.id = pi.inventory_id
+LEFT JOIN cte_connect_by ccb ON ccb.id =  i.location_id
+WHERE p.id = 1
+ORDER BY pi.number;
+
+
+ with recursive cte (id, name, parent_location_id) as (
+  select     id,
+             name,
+             parent_location_id
+  from       locations
+  where      parent_location_id = 1
+  union all
+  select     l.id,
+             l.name,
+             l.parent_location_id
+  from       locations l
+  inner join cte
+          on l.parent_location_id = cte.id
+)
+select * from cte;
+
+
+  WITH RECURSIVE cte_connect_by AS (
+     SELECT 1 AS level, cast(CONCAT('/', name) as char(4000)) AS connect_by_path, s.* 
+       FROM locations s WHERE id = 1
+     UNION ALL
+     SELECT level + 1 AS level, CONCAT(connect_by_path, '/', s.name) AS connect_by_path, s.* 
+       FROM cte_connect_by r INNER JOIN locations s ON  r.id = s.parent_location_id
+  )
+  SELECT id, name, parent_location_id, level, connect_by_path path
+  FROM cte_connect_by

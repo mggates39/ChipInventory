@@ -1536,6 +1536,29 @@ async function getProjectItemsForProject(project_id) {
     return rows;
 }
 
+async function getProjectPicListForProject(project_id) {
+  const [rows] = await pool.query(`
+    WITH RECURSIVE cte_connect_by AS (
+      SELECT 1 AS level, cast(CONCAT('/', name) as char(4000)) AS connect_by_path, s.* 
+      FROM locations s WHERE id = 1
+      UNION ALL
+      SELECT level + 1 AS level, CONCAT(connect_by_path, '/', s.name) AS connect_by_path, s.* 
+      FROM cte_connect_by r 
+        INNER JOIN locations s ON  r.id = s.parent_location_id
+    )
+    SELECT p.name as project, pi.number, ct.name as type, c.name as component, i.full_number as part_number,
+      pi.qty_needed, ccb.connect_by_path
+    FROM projects p
+    JOIN project_items pi ON pi.project_id = p.id
+    JOIN components c ON c.id = pi.component_id
+    JOIN component_types ct ON ct.id = c.component_type_id
+    LEFT JOIN inventory i ON i.id = pi.inventory_id
+    LEFT JOIN cte_connect_by ccb ON ccb.id =  i.location_id
+    WHERE p.id = ?
+    ORDER BY pi.number`, [project_id]);
+    return rows;
+}
+
 async function getProjectItem(project_item_id) {
   const [rows] = await pool.query(`
     SELECT pi.*, c.name, c.description, i.full_number inventory_name
@@ -1664,6 +1687,6 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getListEntriesForList, getListEntry, createListEntry, updateListEntry, deleteListEntry,
   getProjectList, getProject, createProject, updateProject, deleteProject,
   getProjectItemsForProject, getProjectItem, createProjectItem, updateProjectItem, deleteProjectItem,
-  getProjectBomItemsForProject, getUnprocessedProjectBomItemsForProject, 
+  getProjectBomItemsForProject, getUnprocessedProjectBomItemsForProject, getProjectPicListForProject,
   getProjectBomItem, createProjectBomItem, updateProjectBomItem, deleteProjectBomItem }
 
