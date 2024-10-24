@@ -18,35 +18,34 @@ USE `chip_data`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `capacitors`
+-- Table structure for table `diodes`
 --
 
-DROP TABLE IF EXISTS `capacitors`;
+DROP TABLE IF EXISTS `diodes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `capacitors` (
+CREATE TABLE `diodes` (
   `component_id` int NOT NULL,
-  `capacitance` int unsigned NOT NULL,
-  `unit_id` int NOT NULL,
-  `working_voltage` float(7,3) NOT NULL,
-  `tolerance` float NOT NULL,
-  `number_capacitors` int DEFAULT NULL,
+  `forward_voltage` float(7,3) DEFAULT NULL,
+  `forward_unit_id` int DEFAULT NULL,
+  `reverse_voltage` float(7,3) DEFAULT NULL,
+  `reverse_unit_id` int DEFAULT NULL,
+  `light_color_id` int DEFAULT NULL,
+  `lens_color_id` int DEFAULT NULL,
   `datasheet` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`component_id`),
-  KEY `cap_unit_list_ibfk` (`unit_id`),
-  CONSTRAINT `cap_compnt_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`),
-  CONSTRAINT `cap_unit_list_ibfk` FOREIGN KEY (`unit_id`) REFERENCES `list_entries` (`id`)
+  CONSTRAINT `diodes_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `capacitors`
+-- Dumping data for table `diodes`
 --
 
-LOCK TABLES `capacitors` WRITE;
-/*!40000 ALTER TABLE `capacitors` DISABLE KEYS */;
-INSERT INTO `capacitors` VALUES (280,1,3,35.000,20,1,'https://datasheets.kyocera-avx.com/tap.pdf'),(281,100,3,25.000,20,1,'https://search.kemet.com/download/specsheet/ESK107M025AE3AA'),(282,10,3,65.000,20,1,'https://www.we-online.com/components/products/datasheet/860080772001.pdf'),(283,22,1,50.000,5,1,'https://product.tdk.com/en/system/files/dam/doc/product/capacitor/ceramic/lead-mlcc/catalog/leadmlcc_halogenfree_fg_en.pdf');
-/*!40000 ALTER TABLE `capacitors` ENABLE KEYS */;
+LOCK TABLES `diodes` WRITE;
+/*!40000 ALTER TABLE `diodes` DISABLE KEYS */;
+INSERT INTO `diodes` VALUES (296,2.200,23,0.000,NULL,16,25,'https://drive.google.com/file/d/11PHNHIeFlBkQRFFpD2ygJvA7-o9qc3DV/view');
+/*!40000 ALTER TABLE `diodes` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -58,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-23 23:39:43
+-- Dump completed on 2024-10-23 23:39:40
