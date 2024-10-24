@@ -24,7 +24,7 @@ block content
         for package_type in package_types
           option(value=package_type.id selected= data.package_type_id == package_type.id) #{package_type.name}
     div.form-group
-      label( for="capacitance") Capacitance &micro;F:
+      label( for="capacitance") Capacitance:
       div.input-group
         input#capacitance.form-control(type="text" placeholder="Ex) 220, 1000" name="capacitance" value=data.capacitance)
         select#unit_id.form-control(type='select' placeholder='Select units' name='unit_id' required='true')
