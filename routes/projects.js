@@ -123,7 +123,6 @@ async function loadBomIntoDatabase(project_id, filename) {
       quantity: row[2],
       part_number: row[3]
     }
-    console.log(line);
     createProjectBomItem(project_id, line.number, line.reference, line.quantity, line.part_number)
   });
 }

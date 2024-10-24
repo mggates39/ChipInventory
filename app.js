@@ -68,14 +68,6 @@ app.use('/lists', listsRouters);
 app.use('/list_entries', listEntriesRouter);
 
 // Set up a route for file uploads
-// app.post('/projects/:id/upload', upload.single('file'), async function(req, res) {
-//   const project_id = req.params.id;
-//   // Handle the uploaded file
-//   // load the csv into the 
-//   console.log(req.file.originalname);
-//   // await loadBomIntoDatabase(project_id, req.file.originalname);
-//   res.redirect('/projects/'+project_id);
-// });
 
 app.post("/projects/:id/upload", async function (req, res, next) {
   // Use Multer middleware to handle file upload
@@ -86,10 +78,9 @@ app.post("/projects/:id/upload", async function (req, res, next) {
       } else {
           // Success message after a successful upload
           const project_id = req.params.id;
-          console.log(req.file.originalname);
           await loadBomIntoDatabase(project_id, req.file.originalname);
           res.redirect('/projects/'+project_id);
-              }
+      }
   });
 });
 

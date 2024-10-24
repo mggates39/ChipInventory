@@ -468,7 +468,6 @@ async function createDiode(diode_number, pin_count, package_type_id, component_s
 
 async function updateDiode(component_id, diode_number, pin_count, package_type_id, component_sub_type_id, description, forward_voltage, forward_unit_id, reverse_voltage, reverse_unit_id, light_color_id, lens_color_id, datasheet) {
   const component_type_id = 6;
-  console.log([component_id, diode_number, pin_count, package_type_id, component_sub_type_id, description, forward_voltage, forward_unit_id, reverse_voltage, reverse_unit_id, light_color_id, lens_color_id, datasheet]);
   await updateComponent(component_id, diode_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
     UPDATE diodes SET
