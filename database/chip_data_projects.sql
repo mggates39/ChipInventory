@@ -41,7 +41,7 @@ CREATE TABLE `projects` (
 
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-INSERT INTO `projects` VALUES (1,'68HC11_SBC','68HC11 development board',15),(2,'New PCB','Sample of the new Circit',15);
+INSERT INTO `projects` VALUES (1,'68HC11_SBC','68HC11 development board',15),(2,'New PCB','Sample of the new Circuit',15);
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-23 23:39:43
+-- Dump completed on 2024-10-24 19:10:59

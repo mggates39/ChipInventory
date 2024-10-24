@@ -38,6 +38,7 @@ CREATE TABLE `connectors` (
 
 LOCK TABLES `connectors` WRITE;
 /*!40000 ALTER TABLE `connectors` DISABLE KEYS */;
+INSERT INTO `connectors` VALUES (293,'https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/693/4159_Web.pdf'),(294,'https://www.we-online.com/components/products/datasheet/6130xx11821.pdf');
 /*!40000 ALTER TABLE `connectors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-23 23:39:43
+-- Dump completed on 2024-10-24 19:10:59
