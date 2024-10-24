@@ -383,28 +383,12 @@ where cmp.component_sub_type_id is null
 group by family
 order by count(*) desc;
 
--- update components set component_sub_type_id = 10
--- where id in (select id from chips WHERE family like '%memory%');
--- commit;
--- update components set component_sub_type_id = 38
--- where id = 174;
--- update chips set family = 'Microship' where family like '%micro%';
--- commit;
 
 select cst.name, count(c.id) ni
 from component_sub_types cst
 left join components c on cst.id = c.component_sub_type_id
 group by cst.name
 order by cst.name;
-
-
--- alter table components add column pin_count INTEGER null;
--- UPDATE components
--- JOIN chips ON components.id = chips.id
--- SET components.pin_count = chips.pin_count;
--- commit;
--- alter table components modify column pin_count INTEGER NOT NULL;
--- alter table chips drop column pin_count;
 
 select * from components where pin_count is null;
 
@@ -648,4 +632,25 @@ select * from cte;
        FROM cte_connect_by r INNER JOIN locations s ON  r.id = s.parent_location_id
   )
   SELECT id, name, parent_location_id, level, connect_by_path path
-  FROM cte_connect_by
+  FROM cte_connect_by;
+  
+  
+SELECT d.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+FROM components cmp
+JOIN diodes d on d.component_id = cmp.id
+JOIN package_types pt on pt.id = cmp.package_type_id
+JOIN component_types ct on ct.id = cmp.component_type_id
+LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+LEFT JOIN list_entries fvu on fvu.id = d.forward_unit_id
+LEFT JOIN list_entries rvu on rvu.id = d.reverse_unit_id
+LEFT JOIN list_entries lic on lic.id = d.light_color_id
+LEFT JOIN list_entries lnc on lnc.id = d.lens_color_id
+WHERE d.component_id = 1;
+
+select * from component_types;
+select * from component_sub_types
+where component_type_id = 6;
+
+select * from components;
+-- delete from components where id = 295;
+-- commit;

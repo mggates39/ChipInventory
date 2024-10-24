@@ -437,6 +437,60 @@ async function deleteSocket(component_id) {
   return true
 }
 
+// Diode related queries
+async function getDiode(component_id) {
+  const [rows] = await pool.query(`
+    SELECT d.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
+      pt.name as package, cst.description as component_type, fvu.name as forward_units, rvu.name as reverse_units,
+      lic.name as light_color, lnc.name as lens_color 
+    FROM components cmp
+    JOIN diodes d on d.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    LEFT JOIN list_entries fvu on fvu.id = d.forward_unit_id
+    LEFT JOIN list_entries rvu on rvu.id = d.reverse_unit_id
+    LEFT JOIN list_entries lic on lic.id = d.light_color_id
+    LEFT JOIN list_entries lnc on lnc.id = d.lens_color_id
+    WHERE d.component_id = ?`, [component_id])
+   return rows[0]
+}
+
+async function createDiode(diode_number, pin_count, package_type_id, component_sub_type_id, description, forward_voltage, forward_unit_id, reverse_voltage, reverse_unit_id, light_color_id, lens_color_id, datasheet) {
+  const component_type_id = 6;
+  const component_id = await createComponent(diode_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO diodes (component_id, forward_voltage, forward_unit_id, reverse_voltage, reverse_unit_id, light_color_id, lens_color_id, datasheet)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `, [component_id, forward_voltage, forward_unit_id, reverse_voltage, reverse_unit_id, light_color_id, lens_color_id, datasheet])
+  return getDiode(component_id)
+}
+
+async function updateDiode(component_id, diode_number, pin_count, package_type_id, component_sub_type_id, description, forward_voltage, forward_unit_id, reverse_voltage, reverse_unit_id, light_color_id, lens_color_id, datasheet) {
+  const component_type_id = 6;
+  console.log([component_id, diode_number, pin_count, package_type_id, component_sub_type_id, description, forward_voltage, forward_unit_id, reverse_voltage, reverse_unit_id, light_color_id, lens_color_id, datasheet]);
+  await updateComponent(component_id, diode_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE diodes SET
+      forward_voltage = ?, 
+      forward_unit_id = ?, 
+      reverse_voltage = ?, 
+      reverse_unit_id = ?, 
+      light_color_id = ?, 
+      lens_color_id = ?,
+      datasheet = ?
+    WHERE component_id = ?
+    `, [forward_voltage, forward_unit_id, reverse_voltage, reverse_unit_id, light_color_id, lens_color_id, datasheet, component_id])
+  return getDiode(component_id)
+}
+
+async function deleteDiode(component_id) {
+  await pool.query('DELETE FROM diodes WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
+
 // Connector related queries
 async function getConnector(component_id) {
   const [rows] = await pool.query(`
@@ -1669,6 +1723,7 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getCapacitor, createCapacitor, updateCapacitor, deleteCapacitor,
   getCapacitorNetwork, createCapacitorNetwork, updateCapacitorNetwork, deleteCapacitorNetwork,
   getSocket, createSocket, updateSocket, deleteSocket,
+  getDiode, createDiode, updateDiode, deleteDiode,
   searchInventory, getInventoryList, getInventory, getInventoryByComponentList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, deleteAliases, 

@@ -118,6 +118,19 @@ CREATE TABLE `crystals` (
   CONSTRAINT `crystals_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `diodes` (
+  `component_id` int NOT NULL,
+  `forward_voltage` float(7,3) NULL,
+  `forward_unit_id` int NULL,
+  `reverse_voltage` float(7,3) NULL,
+  `reverse_unit_id` int NULL,
+  `light_color_id` int NULL,
+  `lens_color_id` int NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `diodes_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB;
+
 CREATE TABLE `resistors` (
   `component_id` int NOT NULL,
   `resistance` float(7,3) NOT NULL,
