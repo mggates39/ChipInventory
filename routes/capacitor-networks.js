@@ -58,6 +58,9 @@ router.get('/:id', async function(req, res, nest) {
   bottom_pins = [];
 
   if (data.package == 'SIP') {
+    if (data.pin_count > 12) {
+      iswide = 'dpindiagramwide';
+    }
     sip_pins.forEach(function(pin) {
       if (pin.pin_number == 1) {
         bull = '&nbsp;&#9679;'

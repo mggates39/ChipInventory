@@ -204,6 +204,9 @@ router.get('/:id', async function(req, res, next) {
     bottom_pins = [];
 
     if (socket.package == 'SIP') {
+      if (socket.pin_count > 12) {
+        iswide = 'dpindiagramwide';
+      }
       sip_pins.forEach(function(pin) {
         if (pin.pin_number == 1) {
           bull = '&nbsp;&#9679;'
@@ -214,6 +217,9 @@ router.get('/:id', async function(req, res, next) {
       });
   
     } else if (socket.package == 'PLCC') {
+      if (socket.pin_count > 40) {
+        iswide = 'dpindiagramwide';
+      }
       i = 0;
       plcc_left_pins.forEach(function(pin) {
         if (pin.pin_number == 1) {
@@ -247,6 +253,9 @@ router.get('/:id', async function(req, res, next) {
 
       });
     } else if ((socket.package == 'QFN') || (socket.package == 'QFP')) {
+      if (socket.pin_count > 40) {
+        iswide = 'dpindiagramwide';
+      }
       i = 0;
       quad_left_pins.forEach(function(pin) {
         if (pin.pin_number == 1) {
