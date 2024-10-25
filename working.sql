@@ -647,10 +647,11 @@ LEFT JOIN list_entries lic on lic.id = d.light_color_id
 LEFT JOIN list_entries lnc on lnc.id = d.lens_color_id
 WHERE d.component_id = 1;
 
-select * from component_types;
+select * from component_types
+order by name;
 select * from component_sub_types
 where component_type_id = 6;
 
 select * from components;
--- delete from components where id = 295;
--- commit;
+--  delete from components where id = 298;
+--  commit;

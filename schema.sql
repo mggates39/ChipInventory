@@ -172,9 +172,17 @@ CREATE TABLE `connectors` (
 
 CREATE TABLE `fuses` (
   `component_id` int NOT NULL,
+  `rating` float(7,3) NULL,
+  `rating_unit_id` int NULL,
+  `voltage` float(7,3) NULL,
+  `voltage_unit_id` int NULL,
   `datasheet` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`component_id`),
-  CONSTRAINT `fuses_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+  KEY `fuse_rating_units_idx` (`rating_unit_id`),
+  KEY `fuse_voltage_units_idx` (`voltage_unit_id`),
+  CONSTRAINT `fuses_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`),
+  CONSTRAINT `fuse_rating_units_ibfk` FOREIGN KEY (`rating_unit_id`) REFERENCES `list_entries` (`id`),
+  CONSTRAINT `fuse_voltage_units_ibfk` FOREIGN KEY (`voltage_unit_id`) REFERENCES `list_entries` (`id`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE `inductors` (

@@ -531,35 +531,42 @@ async function deleteConnector(component_id) {
 // Fuse related queries
 async function getFuse(component_id) {
   const [rows] = await pool.query(`
-    SELECT f.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    SELECT f.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
+      pt.name as package, cst.description as component_type, ru.name as rating_units, vu.name as voltage_units 
     FROM components cmp
     JOIN fuses f on f.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
     JOIN component_types ct on ct.id = cmp.component_type_id
     LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
-    WHERE s.component_id = ?
+    LEFT JOIN list_entries ru on ru.id = f.rating_unit_id
+    LEFT JOIN list_entries vu on vu.id = f.voltage_unit_id
+    WHERE f.component_id = ?
     `, [component_id])
    return rows[0]
 }
 
-async function createFuse(fuse_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+async function createFuse(fuse_number, pin_count, package_type_id, component_sub_type_id, rating, rating_unit_id, voltage, voltage_unit_id, datasheet, description) {
   const component_type_id = 13;
   const component_id = await createComponent(fuse_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
-      INSERT INTO fuses (component_id,  datasheet)
-      VALUES (?, ?)
-      `, [component_id, datasheet])
+      INSERT INTO fuses (component_id, rating, rating_unit_id, voltage, voltage_unit_id, datasheet)
+      VALUES (?, ?, ?, ?, ?, ?)
+      `, [component_id, rating, rating_unit_id, voltage, voltage_unit_id, datasheet])
   return getFuse(component_id)
 }
 
-async function updateFuse(component_id, fuse_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+async function updateFuse(component_id, fuse_number, pin_count, package_type_id, component_sub_type_id, rating, rating_unit_id, voltage, voltage_unit_id, datasheet, description) {
   const component_type_id = 13;
   await updateComponent(component_id, fuse_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
     UPDATE fuses SET
+      rating = ?,
+      rating_unit_id = ?,
+      voltage = ?,
+      voltage_unit_id = ?,
       datasheet = ?
     WHERE component_id = ?
-    `, [datasheet, component_id])
+    `, [rating, rating_unit_id, voltage, voltage_unit_id, datasheet, component_id])
   return getFuse(component_id)
 }
 
