@@ -172,10 +172,21 @@ router.post('/new', async function( req, res, next) {
   var pin=[];
   var sym = [];
   var descr = [];
-  for (var i = 0; i < req.body.pin_count; i++) {
-    pin.push(req.body["pin_"+i]);
-    sym.push(req.body["sym_"+i]);
-    descr.push(req.body["descr_"+i]);
+  if (req.body["pin_0"] == '1') {
+    for (var i = 0; i < req.body.pin_count; i++) {
+        pin.push(req.body["pin_"+i]);
+        sym.push(req.body["sym_"+i]);
+        descr.push(req.body["descr_"+i]);
+    }
+  } else {
+    pin.push(1);
+    sym.push("CM");
+    descr.push("Common");
+    for (var i = 1; i < req.body.pin_count; i++) {
+        pin.push(i+1);
+        sym.push("C"+i);
+        descr.push("Capacitor "+i);
+    }      
   }
   data['pin'] = pin;
   data['sym'] = sym;
