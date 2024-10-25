@@ -170,6 +170,48 @@ CREATE TABLE `connectors` (
   CONSTRAINT `connectors_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `fuses` (
+  `component_id` int NOT NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `fuses_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `inductors` (
+  `component_id` int NOT NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `inductors_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `switches` (
+  `component_id` int NOT NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `switches_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `transformers` (
+  `component_id` int NOT NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `transformers_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `transistors` (
+  `component_id` int NOT NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `transistors_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `wires` (
+  `component_id` int NOT NULL,
+  `datasheet` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`component_id`),
+  CONSTRAINT `wires_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
+) ENGINE=InnoDB;
+
 CREATE TABLE `notes` (
   `id` int NOT NULL AUTO_INCREMENT,
   `component_id` int NOT NULL,

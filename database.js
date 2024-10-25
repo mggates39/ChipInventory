@@ -489,7 +489,6 @@ async function deleteDiode(component_id) {
   return true
 }
 
-
 // Connector related queries
 async function getConnector(component_id) {
   const [rows] = await pool.query(`
@@ -525,6 +524,252 @@ async function updateConnector(component_id, component_type_id, connector_number
 
 async function deleteConnector(component_id) {
   await pool.query('DELETE FROM connectors WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
+// Fuse related queries
+async function getFuse(component_id) {
+  const [rows] = await pool.query(`
+    SELECT f.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    FROM components cmp
+    JOIN fuses f on f.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    WHERE s.component_id = ?
+    `, [component_id])
+   return rows[0]
+}
+
+async function createFuse(fuse_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 13;
+  const component_id = await createComponent(fuse_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO fuses (component_id,  datasheet)
+      VALUES (?, ?)
+      `, [component_id, datasheet])
+  return getFuse(component_id)
+}
+
+async function updateFuse(component_id, fuse_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 13;
+  await updateComponent(component_id, fuse_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE fuses SET
+      datasheet = ?
+    WHERE component_id = ?
+    `, [datasheet, component_id])
+  return getFuse(component_id)
+}
+
+async function deleteFuse(component_id) {
+  await pool.query('DELETE FROM fuses WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
+// Inductor related queries
+async function getInductor(component_id) {
+  const [rows] = await pool.query(`
+    SELECT i.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    FROM components cmp
+    JOIN inductors i on i.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    WHERE s.component_id = ?
+    `, [component_id])
+   return rows[0]
+}
+
+async function createInductor(inductor_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 13;
+  const component_id = await createComponent(inductor_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO inductors (component_id,  datasheet)
+      VALUES (?, ?)
+      `, [component_id, datasheet])
+  return getInductor(component_id)
+}
+
+async function updateInductor(component_id, inductor_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 13;
+  await updateComponent(component_id, inductor_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE inductors SET
+      datasheet = ?
+    WHERE component_id = ?
+    `, [datasheet, component_id])
+  return getInductor(component_id)
+}
+
+async function deleteInductor(component_id) {
+  await pool.query('DELETE FROM inductors WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
+// Switch related queries
+async function getSwitch(component_id) {
+  const [rows] = await pool.query(`
+    SELECT s.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    FROM components cmp
+    JOIN switches s on s.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    WHERE s.component_id = ?
+    `, [component_id])
+   return rows[0]
+}
+
+async function createSwitch(switche_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 13;
+  const component_id = await createComponent(switche_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO switches (component_id,  datasheet)
+      VALUES (?, ?)
+      `, [component_id, datasheet])
+  return getSwitch(component_id)
+}
+
+async function updateSwitch(component_id, switche_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 13;
+  await updateComponent(component_id, switche_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE switches SET
+      datasheet = ?
+    WHERE component_id = ?
+    `, [datasheet, component_id])
+  return getSwitch(component_id)
+}
+
+async function deleteSwitch(component_id) {
+  await pool.query('DELETE FROM switches WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
+// Transformer related queries
+async function getTransformer(component_id) {
+  const [rows] = await pool.query(`
+    SELECT t.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    FROM components cmp
+    JOIN transformers t on t.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    WHERE s.component_id = ?
+    `, [component_id])
+   return rows[0]
+}
+
+async function createTransformer(transformer_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 13;
+  const component_id = await createComponent(transformer_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO transformers (component_id,  datasheet)
+      VALUES (?, ?)
+      `, [component_id, datasheet])
+  return getTransformer(component_id)
+}
+
+async function updateTransformer(component_id, transformer_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 13;
+  await updateComponent(component_id, transformer_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE transformers SET
+      datasheet = ?
+    WHERE component_id = ?
+    `, [datasheet, component_id])
+  return getTransformer(component_id)
+}
+
+async function deleteTransformer(component_id) {
+  await pool.query('DELETE FROM transformers WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
+// Transistor related queries
+async function getTransistor(component_id) {
+  const [rows] = await pool.query(`
+    SELECT t.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    FROM components cmp
+    JOIN transistors t on t.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    WHERE s.component_id = ?
+    `, [component_id])
+   return rows[0]
+}
+
+async function createTransistor(transistor_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 13;
+  const component_id = await createComponent(transistor_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO transistors (component_id,  datasheet)
+      VALUES (?, ?)
+      `, [component_id, datasheet])
+  return getTransistor(component_id)
+}
+
+async function updateTransistor(component_id, transistor_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 13;
+  await updateComponent(component_id, transistor_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE transistors SET
+      datasheet = ?
+    WHERE component_id = ?
+    `, [datasheet, component_id])
+  return getTransistor(component_id)
+}
+
+async function deleteTransistor(component_id) {
+  await pool.query('DELETE FROM transistors WHERE component_id = ?', [component_id]);
+  await deleteComponent(component_id)
+  return true
+}
+
+// Wire related queries
+async function getWire(component_id) {
+  const [rows] = await pool.query(`
+    SELECT w.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    FROM components cmp
+    JOIN wires w on w.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    WHERE s.component_id = ?
+    `, [component_id])
+   return rows[0]
+}
+
+async function createWire(wire_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 13;
+  const component_id = await createComponent(wire_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+      INSERT INTO wires (component_id,  datasheet)
+      VALUES (?, ?)
+      `, [component_id, datasheet])
+  return getWire(component_id)
+}
+
+async function updateWire(component_id, wire_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+  const component_type_id = 13;
+  await updateComponent(component_id, wire_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await pool.query(`
+    UPDATE wires SET
+      datasheet = ?
+    WHERE component_id = ?
+    `, [datasheet, component_id])
+  return getWire(component_id)
+}
+
+async function deleteWire(component_id) {
+  await pool.query('DELETE FROM wires WHERE component_id = ?', [component_id]);
   await deleteComponent(component_id)
   return true
 }
@@ -1749,6 +1994,12 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getSocket, createSocket, updateSocket, deleteSocket,
   getConnector, createConnector, updateConnector, deleteConnector,
   getDiode, createDiode, updateDiode, deleteDiode,
+  getFuse, createFuse, updateFuse, deleteFuse,
+  getInductor, createInductor, updateInductor, deleteInductor,
+  getSwitch, createSwitch, updateSwitch, deleteSwitch,
+  getTransformer, createTransformer, updateTransformer, deleteTransformer,
+  getTransistor, createTransistor, updateTransistor, deleteTransistor,
+  getWire, createWire, updateWire, deleteWire, 
   searchInventory, getInventoryList, getInventory, getInventoryByComponentList, lookupInventory, createInventory, updateInventory,
   createInventoryDate, updateInventoryDate, getInventoryDates, getInventoryDate, lookupInventoryDate,
   createAlias, getAliases, deleteAliases, 
