@@ -86,7 +86,7 @@ block content
             td.leftpinsym &nbsp;
             td.leftpinnum &nbsp;
             each n, index in top_pins 
-              if (resistor.package == 'PLCC')
+              if (crystal.package == 'PLCC')
                 td #{n.pin} !{n.bull}
               else 
                 td !{n.bull}#{n.pin}
