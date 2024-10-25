@@ -585,7 +585,7 @@ async function getInductor(component_id) {
     JOIN package_types pt on pt.id = cmp.package_type_id
     JOIN component_types ct on ct.id = cmp.component_type_id
     LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
-    WHERE s.component_id = ?
+    WHERE i.component_id = ?
     `, [component_id])
    return rows[0]
 }
@@ -667,7 +667,7 @@ async function getTransformer(component_id) {
     JOIN package_types pt on pt.id = cmp.package_type_id
     JOIN component_types ct on ct.id = cmp.component_type_id
     LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
-    WHERE s.component_id = ?
+    WHERE t.component_id = ?
     `, [component_id])
    return rows[0]
 }
@@ -708,7 +708,7 @@ async function getTransistor(component_id) {
     JOIN package_types pt on pt.id = cmp.package_type_id
     JOIN component_types ct on ct.id = cmp.component_type_id
     LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
-    WHERE s.component_id = ?
+    WHERE t.component_id = ?
     `, [component_id])
    return rows[0]
 }
@@ -749,7 +749,7 @@ async function getWire(component_id) {
     JOIN package_types pt on pt.id = cmp.package_type_id
     JOIN component_types ct on ct.id = cmp.component_type_id
     LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
-    WHERE s.component_id = ?
+    WHERE w.component_id = ?
     `, [component_id])
    return rows[0]
 }
