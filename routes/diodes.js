@@ -25,7 +25,7 @@ router.get('/new', async function(req, res, next) {
 
   const package_types = await getPackageTypesForComponentType(6);
   const component_sub_types = await getComponentSubTypesForComponentType(6);
-  const unit_list = await getPickListByName('DiodeVoltage');
+  const unit_list = await getPickListByName('Voltages');
   const light_colors = await getPickListByName('LEDColor');
   const lens_colors = await getPickListByName('LensColor');
 
@@ -105,7 +105,7 @@ router.get('/edit/:id', async function(req, res, next) {
   const aliases = await getAliases(diode_id);
   const package_types = await getPackageTypesForComponentType(6);
   const component_sub_types = await getComponentSubTypesForComponentType(6);
-  const unit_list = await getPickListByName('DiodeVoltage');
+  const unit_list = await getPickListByName('Voltages');
   const light_colors = await getPickListByName('LEDColor');
   const lens_colors = await getPickListByName('LensColor');
 
@@ -171,7 +171,7 @@ router.post('/new', async function( req, res, next) {
 
   const package_types = await getPackageTypesForComponentType(6);
   const component_sub_types = await getComponentSubTypesForComponentType(6);
-  const unit_list = await getPickListByName('DiodeVoltage');
+  const unit_list = await getPickListByName('Voltages');
   const light_colors = await getPickListByName('LEDColor');
   const lens_colors = await getPickListByName('LensColor');
 
