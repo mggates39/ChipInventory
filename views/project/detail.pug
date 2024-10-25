@@ -209,6 +209,7 @@ block scripts
 
     var bom_data = !{JSON.stringify(project_bom)};
     var bom = 0;
+    var old_id = 0;
 
     $( document ).ready(function() {
       $("#proj").addClass("active");
@@ -220,7 +221,7 @@ block scripts
         $select.append(`<option value=""></option>`);
         $.ajax({url: "/projects/inv_comp/" + component_id, success: function(result){
           $.each(result, function(key, value) {
-            $select.append(`<option value="${value.id}">${value.chip_number} + " - " + ${value.full_number}</option>`);
+            $select.append(`<option value="${value.id}">${value.chip_number} - ${value.full_number}</option>`);
           });
         }});
       });
@@ -234,6 +235,7 @@ block scripts
           $.each(result, function(key, value) {
             $select.append(`<option value="${value.id}">${value.chip_number+ " - " + value.full_number}</option>`);
           });
+          $select.val(old_id);
         }});
       });
       $("#bom #component_id").change(function() {
@@ -263,6 +265,7 @@ block scripts
         $("#edit #qty_needed").val(result.qty_needed);
         $("#edit #qty_available").val(result.qty_available);
         $("#edit #qty_to_order").val(result.qty_to_order);
+        old_id = result.inventory_id;
         $("#edit #component_id").trigger("change");
         $("#edit #number").focus();
       }});
