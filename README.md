@@ -41,8 +41,9 @@ The easiest way is to use MySQL Workbench and import the data from the project's
 
 Eventually we will release the system without my inventory related data.  Until then, to remove my inventory, project and location information from the system run the following SQL statements:
 ```
-DELETE FROM project_items WHERE 1=1;
-DELETE FROM projects WHERE 1=1;
+DELETE FROM project_items WHERE 1 = 1;
+DELETE FROM project_boms where 1 = 1;
+DELETE FROM projects WHERE 1 = 1;
 DELETE FROM inventory_dates WHERE 1 = 1;
 DELETE FROM inventory WHERE 1 = 1;
 DELETE FROM locations WHERE 1 = 1;
