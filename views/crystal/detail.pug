@@ -48,20 +48,28 @@ block content
       if (crystal.package == 'Radial')
         tr
           th.lefttoppinnum &nbsp;
+          td.lefttoppinnum &nbsp;
           each n, index in layout_pins 
             td.lefttoppinnum &nbsp;
+          td.lefttoppinnum &nbsp;
           th.righttoppinnum &nbsp;
 
         tr
           td.leftsipedge &nbsp;
           each n, index in layout_pins 
             td.leftbottompinnum #{n.pin}!{n.bull}
+            if (index == 0)
+              td.rightbottompinnum &nbsp;
+              td.rightbottompinnum &nbsp;
           td.rightsipedge &nbsp;
 
         tr
           td.leftbottompinnum &nbsp;
           each n, index in layout_pins 
             td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
+            if (index == 0)
+              td.rightbottompinnum &nbsp;
+              td.rightbottompinnum &nbsp;
           td.rightbottompinnum &nbsp;
 
       else 
