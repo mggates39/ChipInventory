@@ -1383,9 +1383,12 @@ async function getAlias(alias_id) {
 }
 
 async function getComponentTypeList() {
-  const [rows] = await pool.query(`SELECT ct.* , (select count(*) ni from component_sub_types where component_type_id = ct.id) num
-FROM component_types ct
-ORDER BY description`);
+  const [rows] = await pool.query(`
+    SELECT ct.*, 
+      (select count(*) ni from component_sub_types where component_type_id = ct.id) num_sub_types,
+      (select count(*) ni from components where component_type_id = ct.id) num_components
+    FROM component_types ct
+    ORDER BY description`);
   return rows
 }
 
