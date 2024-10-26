@@ -1,10 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const {  getCapacitor, getPins, getDipLeftPins, getDipRightPins, 
-  getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins, 
-  getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
+const {  getCapacitor, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createCapacitor, updateCapacitor, createPin, updatePin,
-  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType} = require('../database');
+  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType,
+  getPickListByName} = require('../database');
 const {parse_symbol} = require('../utility');
 
 /* GET new item page */
@@ -15,6 +14,7 @@ router.get('/new', async function(req, res, next) {
     pin_count: 2,
     component_sub_type_id: '',
     capacitance: '',
+    unit_id: 3,
     tolerance: '',
     working_voltage: '',
     datasheet: '',
@@ -36,8 +36,10 @@ router.get('/new', async function(req, res, next) {
 
   const package_types = await getPackageTypesForComponentType(2);
   const component_sub_types = await getComponentSubTypesForComponentType(2);
+  const unit_list = await getPickListByName('Capacitance');
 
-  res.render('capacitor/new', {title: 'New Capacitor Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('capacitor/new', {title: 'New Capacitor Definition', data: data, package_types: package_types, 
+    component_sub_types: component_sub_types, unit_list: unit_list});
 });
   
 /* GET item page */
@@ -45,16 +47,9 @@ router.get('/:id', async function(req, res, nest) {
   const id = req.params.id;
   const data = await getCapacitor(id);
   const pins = await getPins(id);
+  const sip_pins = await getSipPins(id);
   const dip_left_pins = await getDipLeftPins(id);
   const dip_right_pins = await getDipRightPins(id);
-  const plcc_left_pins = await getPllcLeftPins(id);
-  const plcc_right_pins = await getPllcRightPins(id);
-  const plcc_top_pins = await getPllcTopPins(id);
-  const plcc_bottom_pins = await getPllcBottomPins(id);
-  const quad_left_pins = await getQuadLeftPins(id);
-  const quad_right_pins = await getQuadRightPins(id);
-  const quad_top_pins = await getQuadTopPins(id);
-  const quad_bottom_pins = await getQuadBottomPins(id);
   const specs = await getSpecs(id);
   const notes = await getNotes(id);
   const inventory = await getInventoryByComponentList(id);
@@ -74,72 +69,16 @@ router.get('/:id', async function(req, res, nest) {
   layout_pins = [];
   top_pins = [];
   bottom_pins = [];
-  if (data.package == 'PLCC') {
-    i = 0;
-    plcc_left_pins.forEach(function(pin) {
+  if (data.package == 'Radial') {
+    sip_pins.forEach(function(pin) {
       if (pin.pin_number == 1) {
         bull = '&nbsp;&#9679;'
       } else {
         bull = ''
       }
-      layout_pins.push(
-        {'left_pin': pin.pin_number, 'bull': bull, 'right_pin': plcc_right_pins[i].pin_number, 
-        'left_sym': parse_symbol(pin.pin_symbol), 'right_sym': parse_symbol(plcc_right_pins[i].pin_symbol),
-      });
-      i++;
+      layout_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
     });
-
-    plcc_top_pins.forEach(function(pin) {
-      if (pin.pin_number == 1) {
-        bull = '&#9679;&nbsp;'
-      } else {
-        bull = ''
-      }
-      top_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
-    });
-
-    plcc_bottom_pins.forEach(function(pin) {
-      if (pin.pin_number == 1) {
-        bull = '&#9679;&nbsp;'
-      } else {
-        bull = ''
-      }
-      bottom_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
-
-    });
-  } else if  ((data.package == 'QFN') || (data.package == 'QFP')) {
-    i = 0;
-    quad_left_pins.forEach(function(pin) {
-      if (pin.pin_number == 1) {
-        bull = '&#9679;'
-      } else {
-        bull = ''
-      }
-      layout_pins.push(
-        {'left_pin': pin.pin_number, 'bull': bull, 'right_pin': quad_right_pins[i].pin_number, 
-        'left_sym': parse_symbol(pin.pin_symbol), 'right_sym': parse_symbol(quad_right_pins[i].pin_symbol),
-      });
-      i++;
-    });
-
-    quad_top_pins.forEach(function(pin) {
-      if (pin.pin_number == 1) {
-        bull = '&#9679;&nbsp;'
-      } else {
-        bull = ''
-      }
-      top_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
-    });
-
-    quad_bottom_pins.forEach(function(pin) {
-      if (pin.pin_number == 1) {
-        bull = '&#9679;&nbsp;'
-      } else {
-        bull = ''
-      }
-      bottom_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
-
-    });
+  
   } else {
     i = 0;
     dip_left_pins.forEach(function(pin) {
@@ -164,7 +103,7 @@ router.get('/:id', async function(req, res, nest) {
   })
 
   res.render('capacitor/detail', { title: data.chip_number + ' - ' + data.description, capacitor: data, 
-    pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
+    pins: fixed_pins, layout_pins: layout_pins,
     specs: clean_specs, notes: notes, aliases: aliases, inventory: inventory });
 });
 
@@ -176,6 +115,7 @@ router.get('/edit/:id', async function(req, res, next) {
   const aliases = await getAliases(capacitor_id);
   const package_types = await getPackageTypesForComponentType(2);
   const component_sub_types = await getComponentSubTypesForComponentType(2);
+  const unit_list = await getPickListByName('Capacitance');
 
   aliasList = "";
   sep = "";
@@ -189,6 +129,7 @@ router.get('/edit/:id', async function(req, res, next) {
     chip_number: capacitor.chip_number,
     aliases: aliasList,
     capacitance: capacitor.capacitance,
+    unit_id: capacitor.unit_id,
     tolerance: capacitor.tolerance,
     working_voltage: capacitor.working_voltage,
     package_type_id: capacitor.package_type_id,
@@ -214,13 +155,15 @@ router.get('/edit/:id', async function(req, res, next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  res.render('capacitor/edit', {title: 'Edit Capacitor Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('capacitor/edit', {title: 'Edit Capacitor Definition', data: data, package_types: package_types, 
+    component_sub_types: component_sub_types, unit_list: unit_list});
 })
   
 router.post('/new', async function( req, res, next) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     capacitance: req.body.capacitance,
+    unit_id: req.body.unit_id,
     tolerance: req.body.tolerance,
     working_voltage: req.body.working_voltage,
     package_type_id: req.body.package_type_id,
@@ -245,7 +188,8 @@ router.post('/new', async function( req, res, next) {
 
   if (descr[req.body.pin_count-1]) {
     
-    const capacitor = await createCapacitor(data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, data.capacitance, data.tolerance, data.working_voltage, data.datasheet);
+    const capacitor = await createCapacitor(data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, 
+      data.capacitance, data.unit_id, data.working_voltage, data.tolerance, data.datasheet);
     capacitor_id = capacitor.component_id;
 
     for (var i = 0; i < req.body.pin_count; i++) {
@@ -270,6 +214,7 @@ router.post('/:id', async function( req, res, next) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     capacitance: req.body.capacitance,
+    unit_id: req.body.unit_id,
     tolerance: req.body.tolerance,
     working_voltage: req.body.working_voltage,
     package_type_id: req.body.package_type_id,
@@ -293,7 +238,8 @@ router.post('/:id', async function( req, res, next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const capacitor = await updateCapacitor(id, data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, data.capacitance, data.tolerance, data.working_voltage, data.datasheet);
+  const capacitor = await updateCapacitor(id, data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, 
+    data.capacitance, data.unit_id, data.working_voltage, data.tolerance, data.datasheet);
   capacitor_id =capacitor.component_id;
 
   for (var i = 0; i < req.body.pin_count; i++) {

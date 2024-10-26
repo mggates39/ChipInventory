@@ -2,30 +2,60 @@ extends ../layout
 
 block content
   h3 !{mfg.name}
-
+  br
   a.btn.btn-primary(href="/manufacturers/edit/"+mfg.id, role="button") Edit 
-
-  div(id='codes')
-    table.available 
-      tr 
-        th Code
-          each n in codes 
-            tr 
-              td
-                a(href="/manufacturer/code/" + n.id target="_blank") #{n.mfg_code}
+  br
+  br
+  H6 Manufacturer Codes
+  div#codes 
+    div.container
+      div.row
+        div.col-md-3
+          strong Code
+        div.col-md-3
+          strong Action
+      each n in codes
+        div.row 
+          div.col-md-3=n.mfg_code
+          div.col-md-3
+            button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#editCodeModal" id=n.id) Edit 
+            |  
+            a.btn.btn-secondary.btn-sm(href="/manufacturer_codes/delete/"+n.id, role="button") Delete 
 
   br
-  button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#codeModal") Add Code
+  button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#addCodeModal") Add Code
   br
 
 
-  //- Note Modal
-  div#codeModal.modal.fade(tabindex="-1" aria-labelledby="codeModalLabel" aria-hidden="true")
+  //- Add Code Modal
+  div#addCodeModal.modal.fade(tabindex="-1" aria-labelledby="addCodeModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        form(action="/manufacturers/"+mfg.id+"/newcode" method="POST")
+        form#add(action="/manufacturers/"+mfg.id+"/newcode" method="POST")
           div.modal-header
-            h5#codeModalLabel.modal-title Add a Manufacture Code
+            h5#addCodeModalLabel.modal-title Add a Manufacturer Code
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+          div.modal-body
+              div.row
+                div.col-md-12.ms-auto 
+                  label( for="code") Code
+              div.row
+                div.col-md-12.ms-auto 
+                  input#code.form-control(type="text" placeholder="Ex) SN" name="code")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save
+            
+  //- Edit Code Modal
+  div#editCodeModal.modal.fade(tabindex="-1" aria-labelledby="editCodeModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form#edit(action="/manufacturer_codes/" method="POST")
+          input#id(type="hidden" name="id")
+          input#manufacturer_id(type="hidden" name="manufacturer_id" value=mfg.id)
+          div.modal-header
+            h5#editCodeModalLabel.modal-title Edit Manufacturer Code
             button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
           div.modal-body
               div.row
@@ -47,7 +77,20 @@ block scripts
       $("#mfg").addClass("active");
     });
 
-    $('#codeModal').on('shown.bs.modal', function (e) {
+    // load the selected component sub type data on edit
+    $('#editCodeModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      var id = e.relatedTarget.id;
+      $("#edit").attr("action", "/manufacturer_codes/" + id);
+      $("#edit #id").val(id);
+      $.ajax({url: "/manufacturer_codes/" + id, success: function(result){
+        $("#edit #code").val(result.mfg_code);
+        $("#edit #code").focus();
+      }});
+    });
+
+
+    $('#addCodeModal').on('shown.bs.modal', function (e) {
       // Your JavaScript code to execute here
       $(this).find('#code').focus();
     });

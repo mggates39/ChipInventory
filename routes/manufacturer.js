@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const {createManufacturer, updateManufacturer, getManufacturer, searchManufacturers, getMfgCodesForMfg, createManufacturerCode} = require('../database');
+const {createManufacturer, updateManufacturer, getManufacturer, searchManufacturers, getManufacturerCodesForMfg, createManufacturerCode} = require('../database');
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
@@ -31,7 +31,7 @@ router.get('/new/', async function(req, res, next) {
 router.get('/:id', async function(req, res, next) {
     const id = req.params.id;
     const mfg = await getManufacturer(id);
-    const codes = await getMfgCodesForMfg(id);
+    const codes = await getManufacturerCodesForMfg(id);
     res.render('manufacturer/detail', { title: 'Manufacturer Codes', mfg: mfg, codes: codes });
 });
 

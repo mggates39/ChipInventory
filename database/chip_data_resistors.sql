@@ -26,12 +26,15 @@ DROP TABLE IF EXISTS `resistors`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `resistors` (
   `component_id` int NOT NULL,
-  `resistance` int unsigned NOT NULL,
+  `resistance` float(7,3) NOT NULL,
+  `unit_id` int NOT NULL,
   `tolerance` float NOT NULL,
   `power` float(7,3) NOT NULL,
   `number_resistors` int DEFAULT NULL,
   `datasheet` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`component_id`),
+  KEY `res_unit_list_idx` (`unit_id`),
+  CONSTRAINT `res_unit_list_ibfk` FOREIGN KEY (`unit_id`) REFERENCES `list_entries` (`id`),
   CONSTRAINT `resistor_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -42,7 +45,7 @@ CREATE TABLE `resistors` (
 
 LOCK TABLES `resistors` WRITE;
 /*!40000 ALTER TABLE `resistors` DISABLE KEYS */;
-INSERT INTO `resistors` VALUES (274,330,1,0.250,1,'https://www.seielect.com/catalog/sei-rnf_rnmf.pdf'),(276,10000000,5,0.350,1,'https://www.seielect.com/catalog/sei-cf_cfm.pdf'),(277,4700,12,0.002,7,'https://www.bourns.com/docs/Product-Datasheets/4600x.pdf');
+INSERT INTO `resistors` VALUES (274,330.000,6,1,0.250,1,'https://www.seielect.com/catalog/sei-rnf_rnmf.pdf'),(276,10.000,8,5,0.250,1,'https://www.seielect.com/catalog/sei-cf_cfm.pdf'),(277,4.700,7,12,0.002,7,'https://www.bourns.com/docs/Product-Datasheets/4600x.pdf');
 /*!40000 ALTER TABLE `resistors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-17 18:49:11
+-- Dump completed on 2024-10-25 22:13:22

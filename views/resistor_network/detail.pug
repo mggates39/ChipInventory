@@ -18,7 +18,7 @@ block content
   p #[strong Component] #{resistor.component_type}
   p #[strong Package] #{resistor.package}
   p #[strong Pin Count] #{resistor.pin_count}
-  p #[strong Resistance] #{resistor.resistance} &Omega;
+  p #[strong Resistance] #{resistor.resistance} !{resistor.unit_label}
   p #[strong Tolerance] #{resistor.tolerance} %
   p #[strong Power] #{resistor.power} W
   p #[strong Number of Resistors] #{resistor.number_resistors}
@@ -33,7 +33,7 @@ block content
       h4 Available Resistors
       table.available 
         tr 
-          th Resistor Number 
+          th Part Number 
           th Manufacturer
           th Quantity 
 
@@ -71,46 +71,19 @@ block content
         tr
           th.leftpinsym &nbsp;
           th.lefttoppinnum &nbsp;
-          each n, index in top_pins 
-            td.lefttoppinnum.toppinsym !{n.sym} &#9616;
           th.righttoppinnum &nbsp;
           th.rightpinsym &nbsp;
-
-        if (top_pins.length)
-          tr
-            td.leftpinsym &nbsp;
-            td.leftpinnum &nbsp;
-            each n, index in top_pins 
-              if (resistor.package == 'PLCC')
-                td #{n.pin} !{n.bull}
-              else 
-                td !{n.bull}#{n.pin}
-            td.rightpinnum &nbsp;
-            td.rightpinsym &nbsp;
 
         each n, index in layout_pins
           tr
             td.leftpinsym !{n.left_sym} &#9616;
             td.leftpinnum #{n.left_pin} !{n.bull}
-            for m, m_index in top_pins 
-              td.spacerpin &nbsp;
             td.rightpinnum #{n.right_pin}
             td.rightpinsym &#9612; !{n.right_sym}
-
-        if (top_pins.length)
-          tr
-            td.leftpinsym &nbsp;
-            td.leftpinnum &nbsp;
-            each n, index in bottom_pins 
-              td.lefttoppinnum #{n.pin} !{n.bull}
-            td.rightpinnum &nbsp;
-            td.rightpinsym &nbsp;
 
         tr
           td.leftpinsym &nbsp;
           td.leftbottompinnum &nbsp;
-          each n, index in bottom_pins 
-            td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
           td.rightbottompinnum &nbsp;
           td.rightpinsym &nbsp;
  

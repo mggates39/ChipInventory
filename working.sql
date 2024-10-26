@@ -383,28 +383,12 @@ where cmp.component_sub_type_id is null
 group by family
 order by count(*) desc;
 
--- update components set component_sub_type_id = 10
--- where id in (select id from chips WHERE family like '%memory%');
--- commit;
--- update components set component_sub_type_id = 38
--- where id = 174;
--- update chips set family = 'Microship' where family like '%micro%';
--- commit;
 
 select cst.name, count(c.id) ni
 from component_sub_types cst
 left join components c on cst.id = c.component_sub_type_id
 group by cst.name
 order by cst.name;
-
-
--- alter table components add column pin_count INTEGER null;
--- UPDATE components
--- JOIN chips ON components.id = chips.id
--- SET components.pin_count = chips.pin_count;
--- commit;
--- alter table components modify column pin_count INTEGER NOT NULL;
--- alter table chips drop column pin_count;
 
 select * from components where pin_count is null;
 
@@ -528,3 +512,150 @@ SELECT ol.id, ol.parent_location_id, ol.location_type_id, ol.name, ol.descriptio
     LEFT JOIN locations pl on pl.id = ol.parent_location_id
     LEFT JOIN location_types lt on lt.id = ol.location_type_id
     ORDER BY ol.name;
+    
+    
+SELECT ol.*, lt.name as location_type, 
+ 	(select sum(quantity) from inventory where inventory.location_id = ol.id) num_items,
+    (select sum(1) from locations cl where cl.parent_location_id = ol.id) num_child_locations
+    FROM locations ol
+    LEFT JOIN location_types lt on lt.id = ol.location_type_id
+    WHERE ol.parent_location_id = 5
+    ORDER BY ol.name;    
+
+SELECT le.*
+FROM list_entries le
+JOIN lists l on l.id = le.list_id
+WHERE l.name = 'ProjectStatus'
+ORDER BY le.sequence;
+
+select r.*, c.name, c.description 
+from resistors r
+join components c on c.id = r.component_id;
+
+SELECT l.id, l.name, l.description, count(le.id) num_entries 
+FROM lists l 
+LEFT JOIN list_entries le on le.list_id = l.id
+GROUP BY l.id, l.name, l.description
+ORDER BY l.name;
+
+select r.component_id, r.capacitance, le.name unit_label, c.name, c.description
+from capacitors r
+join components c on c.id = r.component_id
+left join list_entries le on le.id = r.unit_id;
+
+select r.component_id, r.resistance, le.name unit_label, c.name, c.description
+from resistors r
+join components c on c.id = r.component_id
+left join list_entries le on le.id = r.unit_id;
+
+   SELECT p.id, p.name, p.description, le.name as status_value,  count(pi.id) num_items, 
+      sum(qty_needed) needed, sum(qty_available) available, sum(qty_to_order) on_order
+    FROM projects p 
+    JOIN list_entries le on le.id = p.status_id
+    LEFT JOIN project_items pi on pi.project_id = p.id
+    GROUP BY  p.id, p.name, p.description, le.name 
+    ORDER BY p.name;
+    
+select c.*, ct.name component_type_name 
+from components c
+join component_types ct on ct.id = c.component_type_id;
+
+select pi.*, c.name, c.description, i.full_number
+from project_items pi
+join components c on c.id = pi.component_id
+left join inventory i on i.id = pi.inventory_id;
+
+select *
+from project_boms
+order by project_id, number;
+
+SELECT *
+FROM project_boms
+WHERE project_id = 1
+  AND processed = 0
+ORDER BY number;
+
+SELECT *
+FROM inventory_dates
+where inventory_id = 111;
+
+select * from inventory where id =111;
+
+select * from locations;
+
+select * from project_items where qty_available = 0;
+
+
+
+WITH RECURSIVE cte_connect_by AS (
+	SELECT 1 AS level, cast(CONCAT('/', name) as char(4000)) AS connect_by_path, s.* 
+	FROM locations s WHERE id = 1
+	UNION ALL
+	SELECT level + 1 AS level, CONCAT(connect_by_path, '/', s.name) AS connect_by_path, s.* 
+	FROM cte_connect_by r 
+    INNER JOIN locations s ON  r.id = s.parent_location_id
+)
+SELECT p.name as project, pi.number, ct.name as type, c.name as component, i.full_number as part_number,
+	pi.qty_needed, ccb.connect_by_path
+FROM projects p
+JOIN project_items pi ON pi.project_id = p.id
+JOIN components c ON c.id = pi.component_id
+JOIN component_types ct ON ct.id = c.component_type_id
+LEFT JOIN inventory i ON i.id = pi.inventory_id
+LEFT JOIN cte_connect_by ccb ON ccb.id =  i.location_id
+WHERE p.id = 1
+ORDER BY pi.number;
+
+
+ with recursive cte (id, name, parent_location_id) as (
+  select     id,
+             name,
+             parent_location_id
+  from       locations
+  where      parent_location_id = 1
+  union all
+  select     l.id,
+             l.name,
+             l.parent_location_id
+  from       locations l
+  inner join cte
+          on l.parent_location_id = cte.id
+)
+select * from cte;
+
+
+  WITH RECURSIVE cte_connect_by AS (
+     SELECT 1 AS level, cast(CONCAT('/', name) as char(4000)) AS connect_by_path, s.* 
+       FROM locations s WHERE id = 1
+     UNION ALL
+     SELECT level + 1 AS level, CONCAT(connect_by_path, '/', s.name) AS connect_by_path, s.* 
+       FROM cte_connect_by r INNER JOIN locations s ON  r.id = s.parent_location_id
+  )
+  SELECT id, name, parent_location_id, level, connect_by_path path
+  FROM cte_connect_by;
+  
+  
+SELECT d.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+FROM components cmp
+JOIN diodes d on d.component_id = cmp.id
+JOIN package_types pt on pt.id = cmp.package_type_id
+JOIN component_types ct on ct.id = cmp.component_type_id
+LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+LEFT JOIN list_entries fvu on fvu.id = d.forward_unit_id
+LEFT JOIN list_entries rvu on rvu.id = d.reverse_unit_id
+LEFT JOIN list_entries lic on lic.id = d.light_color_id
+LEFT JOIN list_entries lnc on lnc.id = d.lens_color_id
+WHERE d.component_id = 1;
+
+select ct.id, ct.name, ct.description, count(c.id) ni
+from component_types ct
+left join components c on c.component_type_id = ct.id
+group by ct.id, ct.name, ct.description
+having count(c.id) = 0
+order by name;
+
+select * from component_sub_types
+where component_type_id = 6;
+
+select * from components;
+

@@ -26,8 +26,12 @@ block content
       label( for="pin_count") Pin Count:
       input#pin_count.form-control(type="text" placeholder="Ex) 14,18, 20" name="pin_count" value=data.pin_count)
     div.form-group
-      label( for="capacitance") Capacitance &micro;F:
-      input#capacitance.form-control(type="text" placeholder="Ex) 220, 1000" name="capacitance" value=data.capacitance)
+      label( for="capacitance") Capacitance:
+      div.input-group
+        input#capacitance.form-control(type="text" placeholder="Ex) 220, 1000" name="capacitance" value=data.capacitance)
+        select#unit_id.form-control(type='select' placeholder='Select units' name='unit_id' required='true')
+            for unit in unit_list
+                option(value=unit.id selected= data.unit_id == unit.id) !{unit.name} - #{unit.description}
     div.form-group
       label( for="tolerance") Tolerance %:
       input#tolerance.form-control(type="text" placeholder="Ex) 0.5. 1. 10 " name="tolerance" value=data.tolerance)

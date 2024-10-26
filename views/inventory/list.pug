@@ -20,6 +20,8 @@ block content
         INPUT.btn.btn-primary.mb-3(TYPE="submit" VALUE="Search")
   
 
+  a.btn.btn-primary(href="/inventory/new/", role="button") New Inventory
+
   table.table.table-striped
     tr
       th Base
@@ -46,8 +48,6 @@ block content
       tr
         td(span=5) No inventory found &nbsp;
   
-  a.btn.btn-primary(href="/inventory/new/", role="button") New Inventory
-
 block scripts
   script(type="text/javascript").
     $( document ).ready(function() {

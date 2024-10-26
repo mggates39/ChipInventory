@@ -1,22 +1,17 @@
 extends ../layout
 
 block content
-  p Enter the new Capacitor Network defintion
-  form(action="/capacitor_networks/new/" method="POST")
+  p Edit the Jack defintion
+  form(action="/connector_jacks/"+data.id method="POST")
     div.form-group
-      label(for="chip_number") Capacitor Network Number:
-      input#chip_number.form-control( type="text" placeholder="Ex) 7425" name="chip_number" value=data.chip_number)
+      label(for="connector_number") Jack Number:
+      input#connector_number.form-control( type="text" placeholder="Ex) 7425" name="connector_number" value=data.connector_number)
     div.form-group
       label( for="aliases") Aliases:
       input#aliases.form-control(type="text" placeholder="Ex) 74HTC25, 74LS25" name="aliases" value=data.aliases)
     div.form-group
       label( for="description") Description:
-      input#description.form-control(type="text" placeholder="Summary of what the chip does" name="description" value=data.description)
-    div.form-group
-      label( for="component_sub_type_id") Type:
-      select#component_sub_type_id.form-control(type='select' placeholder='Select Component type' name='component_sub_type_id' required='true')
-        for component_sub_type in component_sub_types
-          option(value=component_sub_type.id selected= data.component_sub_type_id == component_sub_type.id) #{component_sub_type.name}
+      input#description.form-control(type="text" placeholder="Summary of what the connector_jack is used for" name="description" value=data.description)
     div.form-group
       label( for="package_type_id") Package:
       select#package_type_id.form-control(type='select' placeholder='Select package type' name='package_type_id' required='true')
@@ -26,14 +21,10 @@ block content
       label( for="pin_count") Pin Count:
       input#pin_count.form-control(type="text" placeholder="Ex) 14,18, 20" name="pin_count" value=data.pin_count)
     div.form-group
-      label( for="capacitance") Capacitance &micro;F:
-      input#capacitance.form-control(type="text" placeholder="Ex) 220, 1000" name="capacitance" value=data.capacitance)
-    div.form-group
-      label( for="tolerance") Tolerance %:
-      input#tolerance.form-control(type="text" placeholder="Ex) 0.5. 1. 10 " name="tolerance" value=data.tolerance)
-    div.form-group
-      label( for="working_voltage") Working Voltage V:
-      input#working_voltage.form-control(type="text" placeholder="Ex) 0.25" name="working_voltage" value=data.working_voltage)
+      label( for="component_sub_type_id") Pin Type:
+      select#component_sub_type_id.form-control(type='select' placeholder='Select Component type' name='component_sub_type_id' required='true')
+        for component_sub_type in component_sub_types
+          option(value=component_sub_type.id selected= data.component_sub_type_id == component_sub_type.id) #{component_sub_type.name}
     div.form-group
       label( for="datasheet") Datasheet:
       input#datasheet.form-control(type="text" placeholder="URL to datasheet" name="datasheet" value=data.datasheet)
@@ -42,6 +33,7 @@ block content
     - var n = 0
     - while (n < data.pin_count)
       div.row 
+        input(type="hidden" id="pin_id_"+n name="pin_id_"+n value=data.pin_id[n])
         div.col 
           input.form-control(type="text" id="pin_"+n name="pin_"+n value=(n+1))
         div.col 

@@ -4,7 +4,8 @@ const {  getResistor, getPins, getDipLeftPins, getDipRightPins,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins, 
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createResistor, updateResistor, createPin, updatePin,
-  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType} = require('../database');
+  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType,
+  getPickListByName} = require('../database');
 const {parse_symbol} = require('../utility');
 
 /* GET new item page */
@@ -15,6 +16,7 @@ router.get('/new', async function(req, res, next) {
     pin_count: 2,
     component_sub_type_id: '',
     resistance: '',
+    unit_id: 6, 
     tolerance: '',
     power: '',
     datasheet: '',
@@ -36,8 +38,10 @@ router.get('/new', async function(req, res, next) {
 
   const package_types = await getPackageTypesForComponentType(4);
   const component_sub_types = await getComponentSubTypesForComponentType(4);
+  const unit_list = await getPickListByName('Resistance');
 
-  res.render('resistor/new', {title: 'New Resistor Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('resistor/new', {title: 'New Resistor Definition', data: data, package_types: package_types, 
+    component_sub_types: component_sub_types, unit_list: unit_list});
 });
   
 /* GET item page */
@@ -176,6 +180,7 @@ router.get('/edit/:id', async function(req, res, next) {
   const aliases = await getAliases(resistor_id);
   const package_types = await getPackageTypesForComponentType(4);
   const component_sub_types = await getComponentSubTypesForComponentType(4);
+  const unit_list = await getPickListByName('Resistance');
 
   aliasList = "";
   sep = "";
@@ -189,6 +194,7 @@ router.get('/edit/:id', async function(req, res, next) {
     chip_number: resistor.chip_number,
     aliases: aliasList,
     resistance: resistor.resistance,
+    unit_id: resistor.unit_id, 
     tolerance: resistor.tolerance,
     power: resistor.power,
     package_type_id: resistor.package_type_id,
@@ -214,13 +220,15 @@ router.get('/edit/:id', async function(req, res, next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  res.render('resistor/edit', {title: 'Edit Resistor Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('resistor/edit', {title: 'Edit Resistor Definition', data: data, package_types: package_types, 
+    component_sub_types: component_sub_types, unit_list: unit_list});
 })
   
 router.post('/new', async function( req, res, next) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     resistance: req.body.resistance,
+    unit_id: req.body.unit_id, 
     tolerance: req.body.tolerance,
     power: req.body.power,
     package_type_id: req.body.package_type_id,
@@ -231,6 +239,8 @@ router.post('/new', async function( req, res, next) {
   }
   const package_types = await getPackageTypesForComponentType(4);
   const component_sub_types = await getComponentSubTypesForComponentType(4);
+  const unit_list = await getPickListByName('Resistance');
+
   var pin=[];
   var sym = [];
   var descr = [];
@@ -245,7 +255,8 @@ router.post('/new', async function( req, res, next) {
 
   if (descr[req.body.pin_count-1]) {
     
-    const resistor = await createResistor(data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, data.resistance, data.tolerance, data.power, data.datasheet);
+    const resistor = await createResistor(data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, 
+      data.resistance, data.unit_id, data.tolerance, data.power, data.datasheet);
     resistor_id = resistor.component_id;
 
     for (var i = 0; i < req.body.pin_count; i++) {
@@ -261,7 +272,8 @@ router.post('/new', async function( req, res, next) {
 
     res.redirect('/resistors/'+resistor_id);
   } else {
-    res.render('resistor/new', {title: 'New Resistor Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+    res.render('resistor/new', {title: 'New Resistor Definition', data: data, package_types: package_types, 
+      component_sub_types: component_sub_types, unit_list: unit_list});
   }
 });
 
@@ -270,6 +282,7 @@ router.post('/:id', async function( req, res, next) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     resistance: req.body.resistance,
+    unit_id: req.body.unit_id, 
     tolerance: req.body.tolerance,
     power: req.body.power,
     package_type_id: req.body.package_type_id,
@@ -293,7 +306,8 @@ router.post('/:id', async function( req, res, next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const resistor = await updateResistor(id, data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, data.resistance, data.tolerance, data.power, data.datasheet);
+  const resistor = await updateResistor(id, data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, 
+    data.resistance, data.unit_id, data.tolerance, data.power, data.datasheet);
   resistor_id =resistor.component_id;
 
   for (var i = 0; i < req.body.pin_count; i++) {

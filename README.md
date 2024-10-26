@@ -9,6 +9,7 @@ Includes data from the [ChipDb](https://www.msarnoff.org/chipdb/) project by Mat
 source data [github repository](https://github.com/74hc595/chipdb).
 
 # Installation
+The application can be cloned from this git repository.  It includes an initial database load of component defintions along with my inventory, location and project data.
 ## Setup the Database
 You will need a MySQL/Maria DB database server setup.
 
@@ -38,8 +39,11 @@ MYSQL_DATABASE='chip_data'
 ## Load the initial data
 The easiest way is to use MySQL Workbench and import the data from the project's database folder into the chip_data database.  The workbench handles creating all the schmas and loading the data while managing all of the foreign key relationships.
 
-Eventually we will release the system without my inventory related data.  Until then, to remove my inventory and location information from the system run the following SQL statements:
+Eventually we will release the system without my inventory related data.  Until then, to remove my inventory, project and location information from the system run the following SQL statements:
 ```
+DELETE FROM project_items WHERE 1 = 1;
+DELETE FROM project_boms where 1 = 1;
+DELETE FROM projects WHERE 1 = 1;
 DELETE FROM inventory_dates WHERE 1 = 1;
 DELETE FROM inventory WHERE 1 = 1;
 DELETE FROM locations WHERE 1 = 1;
@@ -54,4 +58,8 @@ Any errors and console logs will appear in the terminal window.
 The system will restart it after every code change is saved.
 
 The application can be reached in your browser on localhost port 3000. 
+
 ![Image of the application main page in a browser](public/images/main_page.png "Main Page")
+
+# Application Instruction
+Here will be how to use the variious sections.

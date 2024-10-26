@@ -1,9 +1,9 @@
 extends ../layout
 
 block content
-  h3 !{capacitor.description}
+  h3 !{connector_jack.description}
     |  
-    a.btn.btn-primary.btn-sm(href="/capacitor_networks/edit/"+capacitor.component_id, role="button") Edit 
+    a.btn.btn-primary.btn-sm(href="/connector_jacks/edit/"+connector_jack.component_id, role="button") Edit 
   br
   if (aliases.length) 
     - var sep = ''
@@ -15,24 +15,21 @@ block content
   button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#aliasModal") Add alias
   br
   br
-  p #[strong Component] #{capacitor.component_type}
-  p #[strong Package] #{capacitor.package}
-  p #[strong Pin Count] #{capacitor.pin_count}
-  p #[strong Capacitance] #{capacitor.capacitance} &micro;F
-  p #[strong Tolerance] #{capacitor.tolerance} %
-  p #[strong Working Voltage] #{capacitor.working_voltage} V
-  if capacitor.datasheet
+  p #[strong Package] #{connector_jack.package}
+  p #[strong Pin Count] #{connector_jack.pin_count}
+  p #[strong Pin Type] #{connector_jack.component_type}
+  if connector_jack.datasheet
     p 
-      a(target='_blank' href= capacitor.datasheet) Datasheet PDF
+      a(target='_blank' href= connector_jack.datasheet) Datasheet PDF
 
-  a.btn.btn-secondary.btn-sm(href="/inventory/new/"+capacitor.component_id, role="button") Add Inventory
+  a.btn.btn-secondary.btn-sm(href="/inventory/new/"+connector_jack.component_id, role="button") Add Inventory
 
   if (inventory.length)
     div(id='inventory')
-      h4 Available Capacitor Networks
+      h4 Available Sockets
       table.available 
         tr 
-          th Capacitor Network Number 
+          th Part Number 
           th Manufacturer
           th Quantity 
 
@@ -47,51 +44,78 @@ block content
 
   div(id=iswide)
     table.pindiagram
-      tr
-        th.leftpinsym &nbsp;
-        th.lefttoppinnum &nbsp;
-        each n, index in top_pins 
-          td.lefttoppinnum.toppinsym !{n.sym} &#9616;
-        th.righttoppinnum &nbsp;
-        th.rightpinsym &nbsp;
-
-      if (top_pins.length)
+      if (connector_jack.package == 'SIP')
         tr
-          td.leftpinsym &nbsp;
-          td.leftpinnum &nbsp;
+          th.lefttoppinnum &nbsp;
+          each n, index in layout_pins 
+            td.lefttoppinnum &nbsp;
+          th.righttoppinnum &nbsp;
+
+        tr
+          td.leftsipedge &nbsp;
+          each n, index in layout_pins 
+            td.leftbottompinnum #{n.pin}!{n.bull}
+          td.rightsipedge &nbsp;
+
+        tr
+          td.leftbottompinnum &nbsp;
+          each n, index in layout_pins 
+            td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
+          td.rightbottompinnum &nbsp;
+
+      else 
+
+        tr
+          th.leftpinsym &nbsp;
+          th.lefttoppinnum &nbsp;
           each n, index in top_pins 
-            if (capacitor.package == 'PLCC')
-              td #{n.pin} !{n.bull}
+            td.lefttoppinnum.toppinsym !{n.sym} &#9616;
+          th.righttoppinnum &nbsp;
+          th.rightpinsym &nbsp;
+
+        if (top_pins.length)
+          tr
+            td.leftpinsym &nbsp;
+            td.leftpinnum &nbsp;
+            each n, index in top_pins 
+              if (connector_jack.package == 'PLCC')
+                td #{n.pin} !{n.bull}
+              else 
+                td !{n.bull}#{n.pin}
+            td.rightpinnum &nbsp;
+            td.rightpinsym &nbsp;
+
+        each n, index in layout_pins
+          tr
+            if (n.left_sym)
+              td.leftpinsym !{n.left_sym} &#9616;
             else 
-              td !{n.bull}#{n.pin}
-          td.rightpinnum &nbsp;
-          td.rightpinsym &nbsp;
+              td.leftpinsym &nbsp;
+            td.leftpinnum #{n.left_pin} !{n.bull}
+            for m, m_index in top_pins 
+              td.spacerpin &nbsp;
+            td.rightpinnum #{n.right_pin}
+            if (n.right_sym)
+              td.rightpinsym &#9612; !{n.right_sym}
+            else
+              td.rightpinsym &nbsp;
 
-      each n, index in layout_pins
-        tr
-          td.leftpinsym !{n.left_sym} &#9616;
-          td.leftpinnum #{n.left_pin} !{n.bull}
-          for m, m_index in top_pins 
-            td.spacerpin &nbsp;
-          td.rightpinnum #{n.right_pin}
-          td.rightpinsym &#9612; !{n.right_sym}
+        if (top_pins.length)
+          tr
+            td.leftpinsym &nbsp;
+            td.leftpinnum &nbsp;
+            each n, index in bottom_pins 
+              td.lefttoppinnum #{n.pin} !{n.bull}
+            td.rightpinnum &nbsp;
+            td.rightpinsym &nbsp;
 
-      if (top_pins.length)
         tr
           td.leftpinsym &nbsp;
-          td.leftpinnum &nbsp;
+          td.leftbottompinnum &nbsp;
           each n, index in bottom_pins 
-            td.lefttoppinnum #{n.pin} !{n.bull}
-          td.rightpinnum &nbsp;
+            td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
+          td.rightbottompinnum &nbsp;
           td.rightpinsym &nbsp;
-
-      tr
-        td.leftpinsym &nbsp;
-        td.leftbottompinnum &nbsp;
-        each n, index in bottom_pins 
-          td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
-        td.rightbottompinnum &nbsp;
-        td.rightpinsym &nbsp;
 
   div#dpintable
     table.pintable
@@ -128,7 +152,7 @@ block content
             td 
               button.btn.btn-secondary.btn-sm(type="button") Edit 
               |  
-              a.btn.btn-secondary.btn-sm(href="/components/"+capacitor.component_id+"/delspec/"+n.id, role="button") Delete 
+              a.btn.btn-secondary.btn-sm(href="/components/"+connector_jack.component_id+"/delspec/"+n.id, role="button") Delete 
   br
   button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#specModal") Add specifications
 
@@ -148,7 +172,7 @@ block content
   div#specModal.modal.fade(tabindex="-1" aria-labelledby="specModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        form(action="/components/"+capacitor.component_id+"/newspec" method="POST")
+        form(action="/components/"+connector_jack.component_id+"/newspec" method="POST")
           div.modal-header
             h5#specModalLabel.modal-title Add a Specification
             button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
@@ -178,7 +202,7 @@ block content
   div#noteModal.modal.fade(tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        form(action="/components/"+capacitor.component_id+"/newnote" method="POST")
+        form(action="/components/"+connector_jack.component_id+"/newnote" method="POST")
           div.modal-header
             h5#noteModalLabel.modal-title Add a Note
             button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
@@ -198,7 +222,7 @@ block content
   div#aliasModal.modal.fade(tabindex="-1" aria-labelledby="aliasModalLabel" aria-hidden="true")
     div.modal-dialog.modal-dialog-scrollable
       div.modal-content
-        form(action="/components/"+capacitor.component_id+"/newalias" method="POST")
+        form(action="/components/"+connector_jack.component_id+"/newalias" method="POST")
           div.modal-header
             h5#aliasModalLabel.modal-title Add an Alias
             button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")

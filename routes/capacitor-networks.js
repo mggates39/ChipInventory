@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const {  getCapacitorNetwork, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createCapacitorNetwork, updateCapacitorNetwork, createPin, updatePin,
-  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType} = require('../database');
+  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType, getPickListByName} = require('../database');
 const {parse_symbol} = require('../utility');
 
 /* GET new item page */
@@ -13,6 +13,7 @@ router.get('/new', async function(req, res, next) {
     pin_count: '',
     component_sub_type_id: '',
     capacitance: '',
+    unit_id: 3,
     tolerance: '',
     working_voltage: '',
     number_capacitors: '',
@@ -22,8 +23,10 @@ router.get('/new', async function(req, res, next) {
 
   const package_types = await getPackageTypesForComponentType(3);
   const component_sub_types = await getComponentSubTypesForComponentType(3);
+  const unit_list = await getPickListByName('Capacitance');
 
-  res.render('capacitor_network/new', {title: 'New Capacitor Network Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('capacitor_network/new', {title: 'New Capacitor Network Definition', data: data, package_types: package_types, 
+    component_sub_types: component_sub_types, unit_list: unit_list});
 });
   
 /* GET item page */
@@ -55,6 +58,9 @@ router.get('/:id', async function(req, res, nest) {
   bottom_pins = [];
 
   if (data.package == 'SIP') {
+    if (data.pin_count > 12) {
+      iswide = 'dpindiagramwide';
+    }
     sip_pins.forEach(function(pin) {
       if (pin.pin_number == 1) {
         bull = '&nbsp;&#9679;'
@@ -100,6 +106,7 @@ router.get('/edit/:id', async function(req, res, next) {
   const aliases = await getAliases(capacitor_id);
   const package_types = await getPackageTypesForComponentType(3);
   const component_sub_types = await getComponentSubTypesForComponentType(3);
+  const unit_list = await getPickListByName('Capacitance');
 
   aliasList = "";
   sep = "";
@@ -113,6 +120,7 @@ router.get('/edit/:id', async function(req, res, next) {
     chip_number: capacitor.chip_number,
     aliases: aliasList,
     capacitance: capacitor.capacitance,
+    unit_id: capacitor.unit_id,
     tolerance: capacitor.tolerance,
     working_voltage: capacitor.working_voltage,
     number_capacitors: capacitor.number_capacitors,
@@ -139,13 +147,15 @@ router.get('/edit/:id', async function(req, res, next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  res.render('capacitor_network/edit', {title: 'Edit Capacitor Network Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('capacitor_network/edit', {title: 'Edit Capacitor Network Definition', data: data, package_types: package_types, 
+    component_sub_types: component_sub_types, unit_list: unit_list});
 })
   
 router.post('/new', async function( req, res, next) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     capacitance: req.body.capacitance,
+    unit_id: req.body.unit_id,
     tolerance: req.body.tolerance,
     working_voltage: req.body.working_voltage,
     number_capacitors: req.body.number_capacitors,
@@ -157,13 +167,26 @@ router.post('/new', async function( req, res, next) {
   }
   const package_types = await getPackageTypesForComponentType(3);
   const component_sub_types = await getComponentSubTypesForComponentType(3);
+  const unit_list = await getPickListByName('Capacitance');
+
   var pin=[];
   var sym = [];
   var descr = [];
-  for (var i = 0; i < req.body.pin_count; i++) {
-    pin.push(req.body["pin_"+i]);
-    sym.push(req.body["sym_"+i]);
-    descr.push(req.body["descr_"+i]);
+  if (req.body["pin_0"] == '1') {
+    for (var i = 0; i < req.body.pin_count; i++) {
+        pin.push(req.body["pin_"+i]);
+        sym.push(req.body["sym_"+i]);
+        descr.push(req.body["descr_"+i]);
+    }
+  } else {
+    pin.push(1);
+    sym.push("CM");
+    descr.push("Common");
+    for (var i = 1; i < req.body.pin_count; i++) {
+        pin.push(i+1);
+        sym.push("C"+i);
+        descr.push("Capacitor "+i);
+    }      
   }
   data['pin'] = pin;
   data['sym'] = sym;
@@ -171,7 +194,8 @@ router.post('/new', async function( req, res, next) {
 
   if (descr[req.body.pin_count-1]) {
     
-    const capacitor = await createCapacitorNetwork(data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, data.capacitance, data.tolerance, data.working_voltage, data.number_capacitors, data.datasheet);
+    const capacitor = await createCapacitorNetwork(data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, 
+      data.capacitance, data.unit_id, data.working_voltage, data.tolerance, data.number_capacitors, data.datasheet);
     capacitor_id = capacitor.component_id;
 
     for (var i = 0; i < req.body.pin_count; i++) {
@@ -187,7 +211,8 @@ router.post('/new', async function( req, res, next) {
 
     res.redirect('/capacitor_networks/'+capacitor_id);
   } else {
-    res.render('capacitor_network/new', {title: 'New Capacitor Network Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+    res.render('capacitor_network/new', {title: 'New Capacitor Network Definition', data: data, package_types: package_types, 
+      component_sub_types: component_sub_types, unit_list: unit_list});
   }
 });
 
@@ -196,6 +221,7 @@ router.post('/:id', async function( req, res, next) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     capacitance: req.body.capacitance,
+    unit_id: req.body.unit_id,
     tolerance: req.body.tolerance,
     working_voltage: req.body.working_voltage,
     number_capacitors: req.body.number_capacitors,
@@ -220,7 +246,8 @@ router.post('/:id', async function( req, res, next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const capacitor = await updateCapacitorNetwork(id, data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, data.capacitance, data.tolerance, data.working_voltage, data.number_capacitors, data.datasheet);
+  const capacitor = await updateCapacitorNetwork(id, data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, 
+    data.capacitance, data.unit_id, data.working_voltage, data.tolerance, data.number_capacitors, data.datasheet);
   capacitor_id =capacitor.component_id;
 
   for (var i = 0; i < req.body.pin_count; i++) {

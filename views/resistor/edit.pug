@@ -24,8 +24,12 @@ block content
         for package_type in package_types
           option(value=package_type.id selected= data.package_type_id == package_type.id) #{package_type.name}
     div.form-group
-      label( for="resistance") Resistance Ohm:
-      input#resistance.form-control(type="text" placeholder="Ex) 220, 1000" name="resistance" value=data.resistance)
+      label( for="resistance") Resistance:
+      div.input-group
+        input#resistance.form-control(type="text" placeholder="Ex) 220, 1000" name="resistance" value=data.resistance)
+        select#unit_id.form-control(type='select' placeholder='Select units' name='unit_id' required='true')
+            for unit in unit_list
+                option(value=unit.id selected= data.unit_id == unit.id) !{unit.name} - #{unit.description}
     div.form-group
       label( for="tolerance") Tolerance %:
       input#tolerance.form-control(type="text" placeholder="Ex) 0.5. 1. 10 " name="tolerance" value=data.tolerance)

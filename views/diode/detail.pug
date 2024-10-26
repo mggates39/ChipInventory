@@ -1,0 +1,264 @@
+extends ../layout
+
+block content
+  h3 !{diode.description}
+    |  
+    a.btn.btn-primary.btn-sm(href="/diodes/edit/"+diode.component_id, role="button") Edit 
+  br
+  if (aliases.length) 
+    - var sep = ''
+    p #[strong Aliases] 
+      each alias in aliases
+        = sep + alias.alias_chip_number 
+        - sep = ', '
+
+  button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#aliasModal") Add alias
+  br
+  br
+  p #[strong Diode Type] #{diode.component_type}
+  p #[strong Package] #{diode.package}
+  p #[strong Forward Voltage] #{diode.forward_voltage}#{diode.forward_units}
+  if (diode.component_sub_type_id != '66')
+    p #[strong Reverse Voltage] #{diode.reverse_voltage}#{diode.reverse_units}
+  else
+    p #[strong Light Color] #{diode.light_color}
+    p #[strong Lens Color] #{diode.lens_color}
+  p #[strong Pin Count] #{diode.pin_count}
+  if diode.datasheet
+    p 
+      a(target='_blank' href= diode.datasheet) Datasheet PDF
+
+  a.btn.btn-secondary.btn-sm(href="/inventory/new/"+diode.component_id, role="button") Add Inventory
+
+  if (inventory.length)
+    div(id='inventory')
+      h4 Available Diodes
+      table.available 
+        tr 
+          th Part Number 
+          th Manufacturer
+          th Quantity 
+
+        each n in inventory 
+          tr 
+            td
+              a(href="/inventory/" + n.id target="_blank") #{n.full_number}
+            td= n.mfg_code+' ('+n.name+')'
+            td= n.quantity 
+  else
+    br
+
+  div(id=iswide)
+    table.pindiagram
+      if (diode.package == 'Radial')
+        tr
+          th.lefttoppinnum &nbsp;
+          td.lefttoppinnum &nbsp;
+          each n, index in layout_pins 
+            td.lefttoppinnum &nbsp;
+          td.lefttoppinnum &nbsp;
+          th.righttoppinnum &nbsp;
+
+        tr
+          td.leftsipedge &nbsp;
+          each n, index in layout_pins 
+            td.leftbottompinnum #{n.pin}!{n.bull}
+            if (index == 0)
+              td.leftbottompinnum &nbsp;
+              td.leftbottompinnum &nbsp;
+          td.rightsipedge &nbsp;
+
+        tr
+          td.leftbottompinnum &nbsp;
+          each n, index in layout_pins 
+            td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
+            if (index == 0)
+              td.rightbottompinnum &nbsp;
+              td.rightbottompinnum &nbsp;
+          td.rightbottompinnum &nbsp;
+
+      else 
+        tr
+          th.leftpinsym &nbsp;
+          th.lefttoppinnum &nbsp;
+          each n, index in top_pins 
+            td.lefttoppinnum.toppinsym !{n.sym} &#9616;
+          th.righttoppinnum &nbsp;
+          th.rightpinsym &nbsp;
+
+        if (top_pins.length)
+          tr
+            td.leftpinsym &nbsp;
+            td.leftpinnum &nbsp;
+            each n, index in top_pins 
+              if (diode.package == 'PLCC')
+                td #{n.pin} !{n.bull}
+              else 
+                td !{n.bull}#{n.pin}
+            td.rightpinnum &nbsp;
+            td.rightpinsym &nbsp;
+
+        each n, index in layout_pins
+          tr
+            td.leftpinsym !{n.left_sym} &#9616;
+            td.leftpinnum #{n.left_pin} !{n.bull}
+            for m, m_index in top_pins 
+              td.spacerpin &nbsp;
+            td.rightpinnum #{n.right_pin}
+            td.rightpinsym &#9612; !{n.right_sym}
+
+        if (top_pins.length)
+          tr
+            td.leftpinsym &nbsp;
+            td.leftpinnum &nbsp;
+            each n, index in bottom_pins 
+              td.lefttoppinnum #{n.pin} !{n.bull}
+            td.rightpinnum &nbsp;
+            td.rightpinsym &nbsp;
+
+        tr
+          td.leftpinsym &nbsp;
+          td.leftbottompinnum &nbsp;
+          each n, index in bottom_pins 
+            td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
+          td.rightbottompinnum &nbsp;
+          td.rightpinsym &nbsp;
+
+  div#dpintable
+    table.pintable
+      tr
+        th(style="min-width:50px;") Pin
+        th(style="min-width:100px;") Symbol
+        th(style="min-width:250px;") Description
+
+      each n in pins
+        tr
+          td= n.pin_number
+          td !{n.pin_symbol}
+          td !{n.pin_description}
+
+
+
+  if (specs.length)
+    br
+    div(id='dspecs')
+      h3 Specifications
+      span.spcaption (typical values under recommended operating conditions, unless specified)
+      table.specstable
+        tr
+          th(style="min-width:300px;") Parameter
+          th Value
+          th(style="min-width:70px;") Unit
+          th Options
+
+        each n in specs
+          tr
+            td !{n.parameter}
+            td(style="text-align:right;") !{n.value}
+            td !{n.unit}
+            td 
+              button.btn.btn-secondary.btn-sm(type="button") Edit 
+              |  
+              a.btn.btn-secondary.btn-sm(href="/components/"+diode.component_id+"/delspec/"+n.id, role="button") Delete 
+  br
+  button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#specModal") Add specifications
+
+  br
+  if (notes.length)
+    br
+    div(id='notes')
+      h3 Notes
+      ul
+        each n in notes
+          li !{n.note}
+  br
+  button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#noteModal") Add notes
+  br
+
+  //- Specification Modal
+  div#specModal.modal.fade(tabindex="-1" aria-labelledby="specModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form(action="/components/"+diode.component_id+"/newspec" method="POST")
+          div.modal-header
+            h5#specModalLabel.modal-title Add a Specification
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+
+          div.modal-body
+            div.container-fluid
+              div.row
+                div.col-md-3.ms-auto 
+                  label( for="param") Parameter
+                div.col-md-3.ms-auto 
+                  label( for="value") Value
+                div.col-md-3.ms-auto 
+                  label( for="units") Units
+              div.row
+                div.col-md-3.ms-auto 
+                  input#param.form-control(type="text" placeholder="Operating Voltage" name="param")
+                div.col-md-3.ms-auto
+                  input#value.form-control(type="text" placeholder="3-7" name="value")
+                div.col-md-3.ms-auto
+                  input#units.form-control(type="text" placeholder="V DC" name="units")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save
+
+  //- Note Modal
+  div#noteModal.modal.fade(tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form(action="/components/"+diode.component_id+"/newnote" method="POST")
+          div.modal-header
+            h5#noteModalLabel.modal-title Add a Note
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+          div.modal-body
+              div.row
+                div.col-md-12.ms-auto 
+                  label( for="note") Note
+              div.row
+                div.col-md-12.ms-auto 
+                  input#note.form-control(type="text" placeholder="Note contents" name="note")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save
+            
+  //- Alias Modal
+  div#aliasModal.modal.fade(tabindex="-1" aria-labelledby="aliasModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form(action="/components/"+diode.component_id+"/newalias" method="POST")
+          div.modal-header
+            h5#aliasModalLabel.modal-title Add an Alias
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+          div.modal-body
+              div.row
+                div.col-md-12.ms-auto 
+                  label( for="alias") Alias
+              div.row
+                div.col-md-12.ms-auto 
+                  input#alias.form-control(type="text" placeholder="Aliases (comma separated)" name="alias")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Save
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#cmf").addClass("active");
+    });
+    $('#specModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      $(this).find('#param').focus();
+    });
+    $('#noteModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      $(this).find('#note').focus();
+    });
+    $('#aliasModal').on('shown.bs.modal', function (e) {
+      // Your JavaScript code to execute here
+      $(this).find('#alias').focus();
+    });
