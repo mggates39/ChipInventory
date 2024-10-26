@@ -47,51 +47,45 @@ block content
 
   div(id=iswide)
     table.pindiagram
-      tr
-        th.leftpinsym &nbsp;
-        th.lefttoppinnum &nbsp;
-        each n, index in top_pins 
-          td.lefttoppinnum.toppinsym !{n.sym} &#9616;
-        th.righttoppinnum &nbsp;
-        th.rightpinsym &nbsp;
+      if (capacitor.package == 'SIP')
+        tr
+          th.lefttoppinnum &nbsp;
+          each n, index in layout_pins 
+            td.lefttoppinnum &nbsp;
+          th.righttoppinnum &nbsp;
 
-      if (top_pins.length)
+        tr
+          td.leftsipedge &nbsp;
+          each n, index in layout_pins 
+            td.leftbottompinnum #{n.pin}!{n.bull}
+          td.rightsipedge &nbsp;
+
+        tr
+          td.leftbottompinnum &nbsp;
+          each n, index in layout_pins 
+            td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
+          td.rightbottompinnum &nbsp;
+
+      else 
+        tr
+          th.leftpinsym &nbsp;
+          th.lefttoppinnum &nbsp;
+          th.righttoppinnum &nbsp;
+          th.rightpinsym &nbsp;
+
+        each n, index in layout_pins
+          tr
+            td.leftpinsym !{n.left_sym} &#9616;
+            td.leftpinnum #{n.left_pin} !{n.bull}
+            td.rightpinnum #{n.right_pin}
+            td.rightpinsym &#9612; !{n.right_sym}
+
         tr
           td.leftpinsym &nbsp;
-          td.leftpinnum &nbsp;
-          each n, index in top_pins 
-            if (capacitor.package == 'PLCC')
-              td #{n.pin} !{n.bull}
-            else 
-              td !{n.bull}#{n.pin}
-          td.rightpinnum &nbsp;
+          td.leftbottompinnum &nbsp;
+          td.rightbottompinnum &nbsp;
           td.rightpinsym &nbsp;
-
-      each n, index in layout_pins
-        tr
-          td.leftpinsym !{n.left_sym} &#9616;
-          td.leftpinnum #{n.left_pin} !{n.bull}
-          for m, m_index in top_pins 
-            td.spacerpin &nbsp;
-          td.rightpinnum #{n.right_pin}
-          td.rightpinsym &#9612; !{n.right_sym}
-
-      if (top_pins.length)
-        tr
-          td.leftpinsym &nbsp;
-          td.leftpinnum &nbsp;
-          each n, index in bottom_pins 
-            td.lefttoppinnum #{n.pin} !{n.bull}
-          td.rightpinnum &nbsp;
-          td.rightpinsym &nbsp;
-
-      tr
-        td.leftpinsym &nbsp;
-        td.leftbottompinnum &nbsp;
-        each n, index in bottom_pins 
-          td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
-        td.rightbottompinnum &nbsp;
-        td.rightpinsym &nbsp;
+ 
 
   div#dpintable
     table.pintable
