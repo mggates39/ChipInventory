@@ -45,7 +45,7 @@ CREATE TABLE `capacitors` (
 
 LOCK TABLES `capacitors` WRITE;
 /*!40000 ALTER TABLE `capacitors` DISABLE KEYS */;
-INSERT INTO `capacitors` VALUES (280,1,3,35.000,20,1,'https://datasheets.kyocera-avx.com/tap.pdf'),(281,100,3,25.000,20,1,'https://search.kemet.com/download/specsheet/ESK107M025AE3AA'),(282,10,3,65.000,20,1,'https://www.we-online.com/components/products/datasheet/860080772001.pdf'),(283,22,1,50.000,5,1,'https://product.tdk.com/en/system/files/dam/doc/product/capacitor/ceramic/lead-mlcc/catalog/leadmlcc_halogenfree_fg_en.pdf');
+INSERT INTO `capacitors` VALUES (280,1,3,35.000,20,1,'https://datasheets.kyocera-avx.com/tap.pdf'),(281,100,3,25.000,20,1,'https://search.kemet.com/download/specsheet/ESK107M025AE3AA'),(282,10,3,65.000,20,1,'https://www.we-online.com/components/products/datasheet/860080772001.pdf'),(283,22,1,50.000,5,1,'https://product.tdk.com/en/system/files/dam/doc/product/capacitor/ceramic/lead-mlcc/catalog/leadmlcc_halogenfree_fg_en.pdf'),(300,220,1,50.000,20,NULL,'https://www.vishay.com/docs/31522/cs201.pdf');
 /*!40000 ALTER TABLE `capacitors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -58,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-24 19:10:59
+-- Dump completed on 2024-10-25 22:13:22

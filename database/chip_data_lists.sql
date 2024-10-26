@@ -29,7 +29,7 @@ CREATE TABLE `lists` (
   `name` varchar(16) NOT NULL,
   `description` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `lists` (
 
 LOCK TABLES `lists` WRITE;
 /*!40000 ALTER TABLE `lists` DISABLE KEYS */;
-INSERT INTO `lists` VALUES (1,'Capacitance','Suffix for capacitor values in Farads'),(2,'Resistance','Suffix for resistor values in ohms'),(3,'ProjectStatus','Project Statuses'),(4,'LEDColor','LED light color'),(5,'DiodeVoltage','Suffice for various diode voltages'),(6,'LensColor','Lens Color');
+INSERT INTO `lists` VALUES (1,'Capacitance','Suffix for capacitor values in Farads'),(2,'Resistance','Suffix for resistor values in ohms'),(3,'ProjectStatus','Project Statuses'),(4,'LEDColor','LED light color'),(5,'Voltages','Suffix for various  voltages'),(6,'LensColor','Lens Color'),(7,'FuseRating','Amp Rating for fuse');
 /*!40000 ALTER TABLE `lists` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-24 19:10:58
+-- Dump completed on 2024-10-25 22:13:21
