@@ -26,10 +26,21 @@ html(lang="en")
             li.nav-item
               a#proj.nav-link(href='/projects') My Projects 
             li.nav-item.dropdown
-              a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") Settings
+              a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") Utilities
               ul.dropdown-menu
                 li
                   a#mfg.dropdown-item(href="/manufacturers") Manufacturers
+                li
+                  a#list.dropdown-item(href="/lists") List Management
+                li
+                  hr.dropdown-divider
+                li
+                  a#import.dropdown-item(href="/imports") Import Chip Definitions
+                li
+                  a#export.dropdown-item(href="/exports") Export Chip Definitions
+            li.nav-item.dropdown
+              a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") Settings
+              ul.dropdown-menu
                 li
                   a#mount.dropdown-item(href="/mounting_types") Mounting Types
                 li
@@ -38,10 +49,6 @@ html(lang="en")
                   a#package.dropdown-item(href="/package_types") Package Types
                 li
                   a#loctype.dropdown-item(href="/location_types") Location Types
-                li
-                  hr.dropdown-divider
-                li
-                  a#list.dropdown-item(href="/lists") List Management
 
     div.container
       h1.mb-4 !{title}

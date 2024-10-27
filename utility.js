@@ -1,6 +1,10 @@
 
 function parse_symbol(symbol)
 {
+  // Bail if string is empty
+  if (!symbol) {
+    return symbol;
+  }
   // process __ for subscripts
   let newsym = '';
   if (symbol.includes('__')){
@@ -40,6 +44,10 @@ function parse_symbol(symbol)
         } else {
           negsym += '</span>'
         }
+      } else if ((newsym[i] == ' ' || newsym[i] == '/') && found) {
+        negsym += '</span>';
+        found = false;
+        negsym += newsym[i];
       } else {
         negsym += newsym[i];
       }

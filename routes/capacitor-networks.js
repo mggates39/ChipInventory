@@ -93,9 +93,16 @@ router.get('/:id', async function(req, res, nest) {
     )
   })
 
+  clean_notes = [];
+  notes.forEach(function(note) {
+    clean_notes.push(
+      {id: note.id, note: parse_symbol(note.note)}
+    )
+  })
+
   res.render('capacitor_network/detail', { title: data.chip_number + ' - ' + data.description, capacitor: data, 
     pins: fixed_pins, layout_pins: layout_pins,
-    specs: clean_specs, notes: notes, aliases: aliases, inventory: inventory });
+    specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
 
 /* GET Edit item page */

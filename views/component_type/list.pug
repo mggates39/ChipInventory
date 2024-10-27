@@ -9,6 +9,7 @@ block content
       th Symbol
       th Table
       th Number of Sub Types
+      th Number of Components
 
     each n in component_types
       tr
@@ -17,7 +18,8 @@ block content
         td= n.description
         td= n.symbol
         td= n.table_name
-        td= n.num
+        td= n.num_sub_types 
+        td= n.num_components
 
     if component_types.length == 0
       tr

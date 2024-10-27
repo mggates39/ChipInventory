@@ -310,10 +310,17 @@ router.get('/:id', async function(req, res, next) {
         {id: spec.id, parameter: parse_symbol(spec.parameter), unit: parse_symbol(spec.unit), value: parse_symbol(spec.value)}
       )
     })
+  
+    clean_notes = [];
+    notes.forEach(function(note) {
+      clean_notes.push(
+        {id: note.id, note: parse_symbol(note.note)}
+      )
+    })
 
     res.render('socket/detail', { title: socket.chip_number + ' - ' + socket.description, socket: socket, 
       pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
-      specs: clean_specs, notes: notes, aliases: aliases, inventory: inventory });
+      specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
   
 module.exports = router;

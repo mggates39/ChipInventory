@@ -1,0 +1,42 @@
+extends ../layout
+
+block content
+  p Import a new YAML file chip definition as defined in the 
+    a(href="https://github.com/mggates39/ChipInventory" target="_blank") contributing documentation.
+
+  form(action="/imports/new/" method="POST")
+    button.btn.btn-default.btn-primary(type="submit") Import 
+    | 
+    button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#importYamlDefModal") Choose File
+    br
+    br
+    input#name(type="hidden" name="name" value=data.name)
+    div.form-group
+      label( for="yaml_file") YAML File:
+      textarea#yaml_file.form-control.yaml_layout(rows="30" style="overflow:auto;" placeholder="Upload a YAML file to import" name="yaml_file")= data.yaml_file
+    br
+
+
+  // Upload YAML Definition Modal
+  div#importYamlDefModal.modal.fade(tabindex="-1" aria-labelledby="importYamlDefModalLabel" aria-hidden="true")
+    div.modal-dialog.modal-dialog-scrollable
+      div.modal-content
+        form#add(action="/imports/upload" method="POST" enctype="multipart/form-data")
+          div.modal-header
+            h5#importYamlDefModalLabel.modal-title Add a component definition
+            button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+
+          div.modal-body
+            div.container-fluid
+              input#file(type="file" name="file" required="true")
+
+          div.modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Discard
+            button.btn.btn-primary(type="submit" ) Upload
+
+
+block scripts
+  script(type="text/javascript").
+    $( document ).ready(function() {
+      $("#import").addClass("active");
+    });

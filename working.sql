@@ -379,10 +379,17 @@ order by cmp.name;
 select family, count(*) ni
 from chips c
 join components cmp on cmp.id = c.component_id
-where cmp.component_sub_type_id is null
+-- where cmp.component_sub_type_id is null
 group by family
 order by count(*) desc;
 
+select family, count(*) ni
+from chips c
+join components cmp on cmp.id = c.component_id
+group by family
+order by family;
+
+select * from package_types;
 
 select cst.name, count(c.id) ni
 from component_sub_types cst
@@ -658,4 +665,35 @@ select * from component_sub_types
 where component_type_id = 6;
 
 select * from components;
+
+SELECT ct.*, 
+  (select count(*) ni from component_sub_types where component_type_id = ct.id) num_sub_types,
+  (select count(*) ni from components where component_type_id = ct.id) num_components
+FROM component_types ct
+ORDER BY description;
+
+SELECT pt.*,  ct.name component_type
+FROM package_types pt
+JOIN component_packages cp on cp.package_type_id = pt.id
+JOIN component_types ct on ct.id = cp.component_type_id
+WHERE pt.name = 'DIP'
+  AND ct.id = 1;
+
+SELECT cst.id, cst.name, cst.description
+FROM component_sub_types cst
+WHERE cst.component_type_id = 1
+  AND cst.name = 'memory';
+
+select *
+from specs
+where component_id = 244;
+
+select n.*, c.name
+from notes n
+join components c on c.id = n.component_id
+where n.note like '%\_\_%' or n.note like '%~%';
+
+Select name, replace(name, 'MEGA', 'mega') newname
+from components
+where name like 'ATM%';
 

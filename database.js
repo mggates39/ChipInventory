@@ -109,6 +109,17 @@ JOIN component_types ct ON ct.id = c.component_type_id
 ORDER BY c.name`);
   return rows
 }
+
+async function getComponentListByType(component_type_id)  {
+  const [rows] = await pool.query(`
+    SELECT c.*, ct.name component_type_name 
+    FROM components c
+    JOIN component_types ct ON ct.id = c.component_type_id
+    WHERE c.component_type_id = ?
+    ORDER BY c.name`, [component_type_id]);
+  return rows
+}
+
 async function getComponent(component_id) {
   const [rows] = await pool.query(`
   SELECT cmp.*, pt.name as package, ct.description as component, ct.table_name 
@@ -143,11 +154,16 @@ async function updateComponent(component_id, chip_number, component_type_id, pac
   return true;
 }
 
-async function deleteComponent(component_id) {
+async function deleteComponentRelated(component_id) {
   await pool.query('DELETE FROM aliases WHERE component_id = ?', [component_id]);
   await pool.query('DELETE FROM notes WHERE component_id = ?', [component_id]);
   await pool.query('DELETE FROM specs WHERE component_id = ?', [component_id]);
   await pool.query('DELETE FROM pins WHERE component_id = ?', [component_id]);
+  return true
+}
+
+async function deleteComponent(component_id) {
+  await deleteComponentRelated(component_id);
   await pool.query('DELETE FROM components WHERE id = ?', [component_id]);
   return true
 }
@@ -1383,9 +1399,12 @@ async function getAlias(alias_id) {
 }
 
 async function getComponentTypeList() {
-  const [rows] = await pool.query(`SELECT ct.* , (select count(*) ni from component_sub_types where component_type_id = ct.id) num
-FROM component_types ct
-ORDER BY description`);
+  const [rows] = await pool.query(`
+    SELECT ct.*, 
+      (select count(*) ni from component_sub_types where component_type_id = ct.id) num_sub_types,
+      (select count(*) ni from components where component_type_id = ct.id) num_components
+    FROM component_types ct
+    ORDER BY description`);
   return rows
 }
 
@@ -1408,6 +1427,16 @@ async function getComponentSubTypesForComponentType(component_type_id) {
     ORDER BY cst.name
     `, [component_type_id])
     return rows;
+}
+
+async function lookupComponentSubType(component_type_id, component_sub_type_name) {
+  const [rows] = await pool.query(`
+    SELECT cst.id, cst.name, cst.description
+    FROM component_sub_types cst
+    WHERE cst.component_type_id = ?
+       AND cst.name = ?
+    `, [component_type_id, component_sub_type_name])
+    return rows[0];
 }
 
 async function setComponentPackageTypes( component_type_id, package_types) {
@@ -1631,6 +1660,17 @@ async function getPackageTypeList() {
     ORDER BY p.name, m.name`);
   return rows
 }
+
+async function lookupPackageType(component_type_id, package_type_name) {
+  const [rows] = await pool.query(`SELECT pt.*,  ct.name component_type
+    FROM package_types pt
+    JOIN component_packages cp on cp.package_type_id = pt.id
+    JOIN component_types ct on ct.id = cp.component_type_id
+    WHERE pt.name = ?
+      AND ct.id = ?
+  `, [package_type_name, component_type_id])
+  return rows[0]
+};
 
 async function getPackageType(package_type_id) {
   const [rows] = await pool.query(`SELECT p.*, m.name mounting_type  
@@ -1987,7 +2027,7 @@ async function deleteProjectBomItem(project_bom_id) {
 
 
 module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInventoryCounts, getComponent, getComponentList, 
-  searchComponents, getChip, createChip, updateChip, deleteChip, getPins, 
+  searchComponents, getChip, createChip, updateChip, deleteChip, getPins, deleteComponentRelated, getComponentListByType, 
   createPin, updatePin, getDipLeftPins, getDipRightPins, getSipPins,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
@@ -2016,7 +2056,7 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getComponentSubTypesForComponentType, createCompnentSubType, getComponentSubType, updateComponentSubType, deleteComponentSubType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
   updateMountingType, createMountingType, getInventoryByLocationList,
-  getPackageTypeList, getPackageType, updatePackageType, createPackageType, 
+  getPackageTypeList, getPackageType, updatePackageType, createPackageType, lookupPackageType, lookupComponentSubType,
   getPackageTypesForComponentType, getSelectedPackageTypesForComponentType,
   getComponentTypesForPackageType, getSelectedComponentTypesForPackageType,
   getLocationTypeList, getLocationType, createLocationType, updateLocationType, deleteLocationType,

@@ -4,7 +4,7 @@ block content
   p Create new component type definition
   form(action="/component_types/new/" method="POST")
     div.form-group
-      label(for="description") Component:
+      label(for="name") Component:
       input#name.form-control( type="text" placeholder="Ex) IC" name="name" value=component_type.name)
     div.form-group
       label(for="description") Description:
@@ -29,4 +29,5 @@ block scripts
   script(type="text/javascript").
     $( document ).ready(function() {
       $("#comp").addClass("active");
+      $("#name").focus();
     });

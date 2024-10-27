@@ -254,10 +254,17 @@ router.get('/:id', async function(req, res, next) {
         {id: spec.id, parameter: parse_symbol(spec.parameter), unit: parse_symbol(spec.unit), value: parse_symbol(spec.value)}
       )
     })
+  
+    clean_notes = [];
+    notes.forEach(function(note) {
+      clean_notes.push(
+        {id: note.id, note: parse_symbol(note.note)}
+      )
+    })
 
     res.render('fuse/detail', { title: fuse.chip_number + ' - ' + fuse.description, fuse: fuse, 
       pins: fixed_pins, layout_pins: layout_pins, 
-      specs: clean_specs, notes: notes, aliases: aliases, inventory: inventory });
+      specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
   
 module.exports = router;
