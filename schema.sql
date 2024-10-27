@@ -233,7 +233,7 @@ CREATE TABLE `specs` (
   `id` int NOT NULL AUTO_INCREMENT,
   `component_id` int NOT NULL,
   `parameter` varchar(128) NOT NULL,
-  `unit` varchar(32) NOT NULL,
+  `unit` varchar(32) NULL,
   `value` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `component_idx` (`component_id`),
