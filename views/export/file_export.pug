@@ -5,15 +5,15 @@ block content
     a(href="https://github.com/74hc595/chipdb" target="_blank") here.
 
   form(action="/exports/" method="POST")
-    button.btn.btn-default.btn-primary(type="submit") Export 
-    br
-    br
 
     div.form-group
       label( for="chip_id") Select Chip:
       select#chip_id.form-control(type='select' placeholder='Select Component' name='chip_id' required='true')
         for chip in chips
           option(value=chip.id selected= data.chip_id == chip.id) #{chip.name}
+    br
+    button.btn.btn-default.btn-primary(type="submit") Generate YAML 
+    br
     div.form-group
       label( for="yaml_file") YAML File:
       textarea#yaml_file.form-control.yaml_layout(rows="30" style="overflow:auto;" placeholder="Upload a YAML file to import" name="yaml_file")= data.yaml_file
@@ -23,4 +23,5 @@ block scripts
   script(type="text/javascript").
     $( document ).ready(function() {
       $("#export").addClass("active");
+      $("#chip_id").focus();
     });
