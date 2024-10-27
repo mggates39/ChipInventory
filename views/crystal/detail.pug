@@ -76,46 +76,25 @@ block content
         tr
           th.leftpinsym &nbsp;
           th.lefttoppinnum &nbsp;
-          each n, index in top_pins 
-            td.lefttoppinnum.toppinsym !{n.sym} &#9616;
           th.righttoppinnum &nbsp;
           th.rightpinsym &nbsp;
 
-        if (top_pins.length)
-          tr
-            td.leftpinsym &nbsp;
-            td.leftpinnum &nbsp;
-            each n, index in top_pins 
-              if (crystal.package == 'PLCC')
-                td #{n.pin} !{n.bull}
-              else 
-                td !{n.bull}#{n.pin}
-            td.rightpinnum &nbsp;
-            td.rightpinsym &nbsp;
-
         each n, index in layout_pins
           tr
-            td.leftpinsym !{n.left_sym} &#9616;
+            if (n.left_sym)
+              td.leftpinsym !{n.left_sym} &#9616;
+            else 
+              td.leftpinsym &nbsp;
             td.leftpinnum #{n.left_pin} !{n.bull}
-            for m, m_index in top_pins 
-              td.spacerpin &nbsp;
             td.rightpinnum #{n.right_pin}
-            td.rightpinsym &#9612; !{n.right_sym}
-
-        if (top_pins.length)
-          tr
-            td.leftpinsym &nbsp;
-            td.leftpinnum &nbsp;
-            each n, index in bottom_pins 
-              td.lefttoppinnum #{n.pin} !{n.bull}
-            td.rightpinnum &nbsp;
-            td.rightpinsym &nbsp;
+            if (n.right_sym)
+              td.rightpinsym &#9612; !{n.right_sym}
+            else
+              td.rightpinsym &nbsp;
 
         tr
           td.leftpinsym &nbsp;
           td.leftbottompinnum &nbsp;
-          each n, index in bottom_pins 
-            td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
           td.rightbottompinnum &nbsp;
           td.rightpinsym &nbsp;
 
