@@ -8,6 +8,9 @@ The layout uses bootstrap CSS.
 Includes data from the [ChipDb](https://www.msarnoff.org/chipdb/) project by Matt Sarnoff and it's 
 source data [github repository](https://github.com/74hc595/chipdb).
 
+## Contributing Componet Defintions
+If you wish to contribute componet defintions, they can be transfered via YAML files as described in the [contribution documentation](CONTRIBUTING.md)
+
 # Installation
 The application can be cloned from this git repository.  It includes an initial database load of component defintions along with my inventory, location and project data.
 ## Setup the Database
@@ -40,7 +43,7 @@ MYSQL_DATABASE='chip_data'
 The easiest way is to use MySQL Workbench and import the data from the project's database folder into the chip_data database.  The workbench handles creating all the schmas and loading the data while managing all of the foreign key relationships.
 
 Eventually we will release the system without my inventory related data.  Until then, to remove my inventory, project and location information from the system run the following SQL statements:
-```
+``` SQL
 DELETE FROM project_items WHERE 1 = 1;
 DELETE FROM project_boms where 1 = 1;
 DELETE FROM projects WHERE 1 = 1;
@@ -49,6 +52,8 @@ DELETE FROM inventory WHERE 1 = 1;
 DELETE FROM locations WHERE 1 = 1;
 COMMIT;
 ```
+
+
 # Launch the application
 You can start the application with this command
 ```

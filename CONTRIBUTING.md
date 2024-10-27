@@ -2,7 +2,8 @@
 over{
     text-decoration: overline;
 }
-</style># Contributing to Chip Inventory
+</style>
+# Contributing to Chip Inventory
 
 You can contribute to Chip Inventory by updating/enhancing existing data, or by adding new parts definitions. Parts are specified using [YAML](http://yaml.org).
 
@@ -15,6 +16,26 @@ File contents should consist of 7-bit ASCII characters only. All special charact
 ## Definition syntax
 At the root of the file should be a dictionary with the following fields:
 
+#### `type`
+
+Required. This identifed the type of component being descirbed in this file.  It can be one of the following values:
+- `IC` - Integrated Circuit
+- `Cap` - Capacitor
+- `CN` - Capacitor Network
+- `Diode` - Diode
+- `Res` - Resistor
+- `RN` - Resistor Network
+- `Transisstor` - Transistor
+- `Inductor` - Inductor
+- `Xtal` - Crystal
+- `Jack` - Connector Jack
+- `Plug` - Connector Plug
+- `XFMR` - Transformer
+- `Fuse` - Fuse
+- `Wire` - Wire
+- `Switch` - Switch
+- `Socket` - Socket
+
 #### `name`
 
 Optional. Use if the properly-formatted part name is different from the filename. For example, `ATMEGA168.yaml` defines `name: ATmega168` because filenames should only include uppercase letters.
@@ -25,7 +46,84 @@ Required. A one-line description of the part, such as: `"8-bit shift register wi
 
 #### `package`
 
-Required. This field was intended to indicate how the pin diagram of this part should be drawn. The only value used in the original database was `DIP`.
+Required. This field indicates how the pin diagram of this part should be drawn. The allowed values used in this database depend on the component type:
+- Capacitor
+  - `Axial` - Leads on the ends
+  - `Chassis` - Chassis mount
+  - `Radial` - Leads on the edges
+  - `SMD` - Surface Mount Device
+- Capacitor Network
+  - `SIP` - Single In-line Package
+  - `SMD` - Surface Mount Device
+  - `THD` - Through Hole Device
+- Diode
+  - `Axial` - Leads on the ends
+  - `Radial` - Leads on the edges
+  - `SMD` - Surface Mount Device
+  - `SOD` - Small Outline Diode
+  - `TO-XX` - Transistor Outline
+- Fuse
+  - `Axial` - Leads on the ends
+  - `Clamp` - Fuse Clamp
+  - `Radial` - Leads on the edges
+  - `SMD` - Surface Mount Device
+  - `THD` - Through Hole Device
+- Integrated Circuit
+  - `DIP` - Dual In-Line Package
+  - `PGA` - Pin Grid Array
+  - `PLCC` - Plastic Leaded Chip Carrier
+  - `QFN` - Quad Flat No-Leads Package
+  - `QFP` - Quad Flat Package
+  - `QIP` - Quad in-line package
+  - `SIP` - Single In-line Package
+  - `SOIC` - Small Outline Integrated Circuit
+  - `SOP` - Small Outline Package
+- Inductor
+  - `Axial` - Leads on the ends
+  - `Radial` - Leads on the edges
+  - `THD` - Through Hole Device
+- Jack
+  - `SIP` - Single In-line Package
+  - `SMD` - Surface Mount Device
+  - `THD` - Through Hole Device
+- Plug
+  - `SIP` - Single In-line Package
+  - `SMD` - Surface Mount Device
+  - `THD` - Through Hole Device
+- Resistor
+  - `Axial` - Leads on the ends
+  - `Chassis` - Chassis mount
+  - `MELF` - Metal Electrode Leadless Face
+  - `Radial` - Leads on the edges
+  - `SMD` - Surface Mount Device
+  - `THD` - Through Hole Device
+- Resistor Network
+  - `DIP` - Dual In-Line Package
+  - `SIP` - Single In-line Package
+  - `SMD` - Surface Mount Device
+  - `SOP` - Small Outline Package
+  - `THD` - Through Hole Device
+- Socket
+  - `DIP` - Dual In-Line Package
+  - `PLCC` - Plastic Leaded Chip Carrier
+  - `SIP` - Single In-line Package
+  - `SOIC` - Small Outline Integrated Circuit
+- Switch
+  - `THD` - Through Hole Device
+- Transisstor
+  - `SMD` - Surface Mount Device
+  - `SOT` - Small Outline Transistor
+  - `THD` - Through Hole Device
+  - `TO-XX` - Transistor Outline
+  - Wire
+  - `Axial` - Leads on the ends
+- Transformer
+  - `THD` - Through Hole Device
+- Crystal
+  - `DIP` - Dual In-Line Package
+  - `Radial` - Leads on the edges
+  - `SMD` - Surface Mount Device
+  - `THD` - Through Hole Device
 
 #### `pincount`
 
