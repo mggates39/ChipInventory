@@ -76,7 +76,7 @@ router.get('/', async function(req, res, next) {
         name: '',
         yaml_file: ''
     };
-    res.render('imports/file_import', { title: 'Import', data: data});
+    res.render('import/file_import', { title: 'Import', data: data});
   });
 
 /* GET home page with a file name to load. */
@@ -88,7 +88,7 @@ router.get('/:file_name', async function(req, res, next) {
         name: name,
         yaml_file: file
     };
-    res.render('imports/file_import', { title: 'Import', data: data});
+    res.render('import/file_import', { title: 'Import', data: data});
   });
 
 router.post('/new', async function(req, res, next) {
