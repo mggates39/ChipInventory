@@ -1,5 +1,5 @@
 var express = require('express');
-var projectsRouter = express.Router();
+var router = express.Router();
 const fs = require("fs");
 const { parse } = require("csv-parse");
 const { getProjectList, getProject, createProject, updateProject, getProjectItemsForProject, 
@@ -8,13 +8,13 @@ const { getProjectList, getProject, createProject, updateProject, getProjectItem
 
 
 /* GET home page. */
-projectsRouter.get('/', async function(req, res, next) {
+router.get('/', async function(req, res, next) {
   const data = await getProjectList();
   res.render('project/list', { title: 'Projects', projects: data});
 });
 
 // Start a new Project
-projectsRouter.get('/new', async function(req, res, next) {
+router.get('/new', async function(req, res, next) {
   const data = {
     name: '',
     description: '',
@@ -25,7 +25,7 @@ projectsRouter.get('/new', async function(req, res, next) {
 });
 
 /* GET item page */
-projectsRouter.get('/:id', async function(req, res, next) {
+router.get('/:id', async function(req, res, next) {
   const id = req.params.id;
   const data = await getProject(id);
   const project_items = await getProjectItemsForProject(id);
@@ -37,27 +37,27 @@ projectsRouter.get('/:id', async function(req, res, next) {
 });
   
 /* GET Edit item page */
-projectsRouter.get('/edit/:id', async function(req, res, next) {
+router.get('/edit/:id', async function(req, res, next) {
   const id = req.params.id;
   const data = await getProject(id);
   const status_list = await getPickListByName('ProjectStatus');
   res.render('project/edit', {title: 'Project', project: data, status_list: status_list});
 })
 
-projectsRouter.post('/new', async function( req, res, next) {
+router.post('/new', async function( req, res, next) {
   const project = await createProject(req.body.name, req.body.description, req.body.status_id);
   const id = project.id
   res.redirect('/projects/'+id);
 });
 
 /* POST existing item update */
-projectsRouter.post('/:id', async function( req, res, next) {
+router.post('/:id', async function( req, res, next) {
   const id = req.params.id;
   await updateProject(id, req.body.name, req.body.description, req.body.status_id);
   res.redirect('/projects/'+id);
 })
 
-projectsRouter.post('/:id/newitem/', async function(req, res, next) {
+router.post('/:id/newitem/', async function(req, res, next) {
   const id = req.params.id;
   var inventory_id = req.body.inventory_id;
   const qty_needed = req.body.qty_needed;
@@ -79,7 +79,7 @@ projectsRouter.post('/:id/newitem/', async function(req, res, next) {
   res.redirect('/projects/'+id);
 });
 
-projectsRouter.post('/:id/bomitem/', async function(req, res, next) {
+router.post('/:id/bomitem/', async function(req, res, next) {
   const project_id = req.params.id;
   const project_bom_id = req.body.id;
   var inventory_id = req.body.inventory_id;
@@ -107,7 +107,7 @@ projectsRouter.post('/:id/bomitem/', async function(req, res, next) {
   res.redirect('/projects/'+project_id);
 });
 
-projectsRouter.get('/inv_comp/:id', async function(req, res, next) {
+router.get('/inv_comp/:id', async function(req, res, next) {
   const id = req.params.id;
   const inventory_list = await getInventoryByComponentList(id);
   res.send(inventory_list);
@@ -127,4 +127,4 @@ async function loadBomIntoDatabase(project_id, filename) {
   });
 }
 
-module.exports = {projectsRouter, loadBomIntoDatabase};
+module.exports = {router, loadBomIntoDatabase};

@@ -1,5 +1,5 @@
 var express = require('express');
-var importRouter = express.Router();
+var router = express.Router();
 const yaml = require('js-yaml');
 const fs = require('node:fs/promises');
 const path = require('path');
@@ -71,7 +71,7 @@ async function import_chip(name, data) {
 }
 
 /* GET home page. */
-importRouter.get('/', async function(req, res, next) {
+router.get('/', async function(req, res, next) {
     const data = {
         name: '',
         yaml_file: ''
@@ -80,7 +80,7 @@ importRouter.get('/', async function(req, res, next) {
   });
 
 /* GET home page with a file name to load. */
-importRouter.get('/:file_name', async function(req, res, next) {
+router.get('/:file_name', async function(req, res, next) {
     const filename = req.params.file_name;
     var file = await get_file("./upload/" + filename);
     const name = path.parse(filename).name;
@@ -91,7 +91,7 @@ importRouter.get('/:file_name', async function(req, res, next) {
     res.render('imports/file_import', { title: 'Import', data: data});
   });
 
-importRouter.post('/new', async function(req, res, next) {
+router.post('/new', async function(req, res, next) {
     const data = req.body.yaml_file;
     const name = req.body.name;
     try {
@@ -105,4 +105,4 @@ importRouter.post('/new', async function(req, res, next) {
       }
 });
 
-  module.exports = importRouter;
+  module.exports = router;
