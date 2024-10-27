@@ -33,6 +33,7 @@ var locationsRouter = require('./routes/locations');
 var listsRouters = require('./routes/lists');
 var listEntriesRouter = require('./routes/list_entries');
 var importRouter = require('./routes/imports');
+var exportRouter = require('./routes/exports');
 var app = express();
 
 // view engine setup
@@ -73,6 +74,7 @@ app.use('/locations', locationsRouter);
 app.use('/lists', listsRouters);
 app.use('/list_entries', listEntriesRouter);
 app.use('/imports', importRouter);
+app.use('/exports', exportRouter);
 
 // Set up a route for BOM file uploads
 app.post("/projects/:id/upload", async function (req, res, next) {

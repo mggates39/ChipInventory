@@ -109,6 +109,17 @@ JOIN component_types ct ON ct.id = c.component_type_id
 ORDER BY c.name`);
   return rows
 }
+
+async function getComponentListByType(component_type_id)  {
+  const [rows] = await pool.query(`
+    SELECT c.*, ct.name component_type_name 
+    FROM components c
+    JOIN component_types ct ON ct.id = c.component_type_id
+    WHERE c.component_type_id = ?
+    ORDER BY c.name`, [component_type_id]);
+  return rows
+}
+
 async function getComponent(component_id) {
   const [rows] = await pool.query(`
   SELECT cmp.*, pt.name as package, ct.description as component, ct.table_name 
@@ -2016,7 +2027,7 @@ async function deleteProjectBomItem(project_bom_id) {
 
 
 module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInventoryCounts, getComponent, getComponentList, 
-  searchComponents, getChip, createChip, updateChip, deleteChip, getPins, deleteComponentRelated,
+  searchComponents, getChip, createChip, updateChip, deleteChip, getPins, deleteComponentRelated, getComponentListByType, 
   createPin, updatePin, getDipLeftPins, getDipRightPins, getSipPins,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
