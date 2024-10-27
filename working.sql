@@ -687,3 +687,13 @@ WHERE cst.component_type_id = 1
 select *
 from specs
 where component_id = 244;
+
+select n.*, c.name
+from notes n
+join components c on c.id = n.component_id
+where n.note like '%\_\_%' or n.note like '%~%';
+
+Select name, replace(name, 'MEGA', 'mega') newname
+from components
+where name like 'ATM%';
+
