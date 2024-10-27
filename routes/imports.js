@@ -23,13 +23,18 @@ async function import_chip(name, data) {
 
     const components = await searchComponents(name, 'p', component_type_id);
     var chip_id = 0;
+    var chip_number = name;
+
+    if (data.name) {
+        chip_number = data.name;
+    }
 
     if (components) {
         chip_id = components[0].id;
         await deleteComponentRelated(chip_id);
-        await updateChip(chip_id, name, data.family, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        await updateChip(chip_id, chip_number, data.family, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
     } else {
-        const chip = await createChip(name, data.family, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        const chip = await createChip(chip_number, data.family, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
         chip_id = chip.component_id;    
     }
   
@@ -96,8 +101,6 @@ router.post('/new', async function(req, res, next) {
     const name = req.body.name;
     try {
         const doc = yaml.load(data);
-        console.log(name);
-        console.log(doc);
         chip_id = await import_chip(name, doc);
         res.redirect('/chips/'+chip_id);
       } catch (e) {
