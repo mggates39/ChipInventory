@@ -32,7 +32,7 @@ var locationTypesRouter = require('./routes/location_types');
 var locationsRouter = require('./routes/locations');
 var listsRouters = require('./routes/lists');
 var listEntriesRouter = require('./routes/list_entries');
-
+var importRouter = require('./routes/imports');
 var app = express();
 
 // view engine setup
@@ -72,9 +72,9 @@ app.use('/location_types', locationTypesRouter);
 app.use('/locations', locationsRouter);
 app.use('/lists', listsRouters);
 app.use('/list_entries', listEntriesRouter);
+app.use('/imports', importRouter);
 
-// Set up a route for file uploads
-
+// Set up a route for BOM file uploads
 app.post("/projects/:id/upload", async function (req, res, next) {
   // Use Multer middleware to handle file upload
   upload(req, res, async function (err) {
@@ -87,6 +87,20 @@ app.post("/projects/:id/upload", async function (req, res, next) {
           await loadBomIntoDatabase(project_id, req.file.originalname);
           res.redirect('/projects/'+project_id);
       }
+  });
+});
+
+// Set up a route for YAML file uploads
+app.post("/imports/upload", async function(req, res, next) {
+  // Use Multer middleware to handle file upload
+  upload(req, res, async function (err) {
+    if (err) {
+        // Handle errors during file upload
+        res.send(err);
+    } else {
+        // Success message after a successful upload
+        res.redirect('/imports/'+req.file.originalname);
+    }
   });
 });
 

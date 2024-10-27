@@ -143,11 +143,16 @@ async function updateComponent(component_id, chip_number, component_type_id, pac
   return true;
 }
 
-async function deleteComponent(component_id) {
+async function deleteComponentRelated(component_id) {
   await pool.query('DELETE FROM aliases WHERE component_id = ?', [component_id]);
   await pool.query('DELETE FROM notes WHERE component_id = ?', [component_id]);
   await pool.query('DELETE FROM specs WHERE component_id = ?', [component_id]);
   await pool.query('DELETE FROM pins WHERE component_id = ?', [component_id]);
+  return true
+}
+
+async function deleteComponent(component_id) {
+  await deleteComponentRelated(component_id);
   await pool.query('DELETE FROM components WHERE id = ?', [component_id]);
   return true
 }
@@ -1413,6 +1418,16 @@ async function getComponentSubTypesForComponentType(component_type_id) {
     return rows;
 }
 
+async function lookupComponentSubType(component_type_id, component_sub_type_name) {
+  const [rows] = await pool.query(`
+    SELECT cst.id, cst.name, cst.description
+    FROM component_sub_types cst
+    WHERE cst.component_type_id = ?
+       AND cst.name = ?
+    `, [component_type_id, component_sub_type_name])
+    return rows[0];
+}
+
 async function setComponentPackageTypes( component_type_id, package_types) {
   const insertSql = 'INSERT INTO component_packages (component_type_id, package_type_id) VALUES (?, ?)';
 
@@ -1634,6 +1649,17 @@ async function getPackageTypeList() {
     ORDER BY p.name, m.name`);
   return rows
 }
+
+async function lookupPackageType(component_type_id, package_type_name) {
+  const [rows] = await pool.query(`SELECT pt.*,  ct.name component_type
+    FROM package_types pt
+    JOIN component_packages cp on cp.package_type_id = pt.id
+    JOIN component_types ct on ct.id = cp.component_type_id
+    WHERE pt.name = ?
+      AND ct.id = ?
+  `, [package_type_name, component_type_id])
+  return rows[0]
+};
 
 async function getPackageType(package_type_id) {
   const [rows] = await pool.query(`SELECT p.*, m.name mounting_type  
@@ -1990,7 +2016,7 @@ async function deleteProjectBomItem(project_bom_id) {
 
 
 module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInventoryCounts, getComponent, getComponentList, 
-  searchComponents, getChip, createChip, updateChip, deleteChip, getPins, 
+  searchComponents, getChip, createChip, updateChip, deleteChip, getPins, deleteComponentRelated,
   createPin, updatePin, getDipLeftPins, getDipRightPins, getSipPins,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
@@ -2019,7 +2045,7 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getComponentSubTypesForComponentType, createCompnentSubType, getComponentSubType, updateComponentSubType, deleteComponentSubType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
   updateMountingType, createMountingType, getInventoryByLocationList,
-  getPackageTypeList, getPackageType, updatePackageType, createPackageType, 
+  getPackageTypeList, getPackageType, updatePackageType, createPackageType, lookupPackageType, lookupComponentSubType,
   getPackageTypesForComponentType, getSelectedPackageTypesForComponentType,
   getComponentTypesForPackageType, getSelectedComponentTypesForPackageType,
   getLocationTypeList, getLocationType, createLocationType, updateLocationType, deleteLocationType,

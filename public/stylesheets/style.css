@@ -156,6 +156,12 @@ html>body #dpindiagram {
   margin-right: 5px;
 }
 
+.yaml_layout  
+{  
+   font-family: 'Courier New', Courier, monospace;  
+   font-size: 10pt;   
+}
+
 .resist_pink {
   background-color: #d8a0a6;
 }
