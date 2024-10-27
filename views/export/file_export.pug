@@ -13,6 +13,9 @@ block content
           option(value=chip.id selected= data.chip_id == chip.id) #{chip.name}
     br
     button.btn.btn-default.btn-primary(type="submit") Generate YAML 
+    if data.chip_number != ''
+        | 
+        a.btn.btn-secondary.btn-sm(href=data.file_name download=data.chip_number+".yaml" role="button") Download 
     br
     div.form-group
       label( for="yaml_file") YAML File:

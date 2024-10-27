@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const yaml = require('js-yaml');
+const fs = require('node:fs/promises');
 const { getComponentListByType, getChip, getPins, getSpecs, getNotes, getAliases } = require('../database');
   
 
@@ -9,6 +10,8 @@ router.get('/', async function(req, res, next) {
     const compnent_type_id = 1;
     const chips = await getComponentListByType(compnent_type_id);
     const data = {
+        file_name: '',
+        chip_number: '',
         chip_id: '',
         yaml_file: ''
     };
@@ -26,6 +29,7 @@ router.post('/', async function(req, res, next) {
     const notes = await getNotes(id);
     const aliases = await getAliases(id);
 
+    file_name = "/files/" + chip.chip_number.toUpperCase(); + ".yaml"
     chip_data = {
         name: chip.chip_number,
         description: chip.description,
@@ -71,8 +75,12 @@ router.post('/', async function(req, res, next) {
     }
 
     yaml_data = yaml.dump(chip_data, {lineWidth: -1, flowLevel: 3});
+    await fs.writeFile("./public/"+file_name, yaml_data);
+
 
     const data = {
+        file_name: file_name,
+        chip_number: chip.chip_number.toUpperCase(),
         chip_id: id,
         yaml_file: yaml_data
     };

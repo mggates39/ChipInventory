@@ -42,6 +42,9 @@ typings/
 # Uploaded file directory
 upload/
 
+# Generated files for download
+public/files/
+
 # Optional npm cache directory
 .npm
 
