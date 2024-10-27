@@ -40,6 +40,9 @@ function parse_symbol(symbol)
         } else {
           negsym += '</span>'
         }
+      } else if (newsym[i] == ' ' && found) {
+        negsym += '</span> ';
+        found = false;
       } else {
         negsym += newsym[i];
       }
