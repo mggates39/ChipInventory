@@ -17,7 +17,7 @@ The application can be cloned from this git repository.  It includes an initial 
 You will need a MySQL/Maria DB database server setup.
 
 Using a tool such as MySQL Workbench, connect to the database server with an admin user and run these commands to create the initial database and application user.  
-```
+``` SQL
 CREATE DATABASE chip_data;
 CREATE USER 'chip_app'@'localhost' IDENTIFIED BY 'password';
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, REFERENCES, INDEX, ALTER, CREATE VIEW, SHOW VIEW ON chip_data.* TO `chip_app`@`localhost`;

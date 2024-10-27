@@ -1,8 +1,3 @@
-<style>
-over{
-    text-decoration: overline;
-}
-</style>
 # Contributing to Chip Inventory
 
 You can contribute to Chip Inventory by updating/enhancing existing data, or by adding new parts definitions. Parts are specified using [YAML](http://yaml.org).
@@ -197,8 +192,8 @@ If a sequence of non-whitespace characters is preceded by two underscores, it wi
 
 #### Overbars
 
-Tildes can be used to add overbars to characters. If a sequence of non-whitespace characters is preceded by a tilde, a line will be drawn above them. Example: `~OE` becomes <over>OE</over>.
+Tildes can be used to add overbars to characters. If a sequence of non-whitespace characters is preceded by a tilde, a line will be drawn above them. Example: `~OE` becomes <span style="text-decoration: overline;">OE</span>.
 
-To add an overbar to a portion of a word, surround it with tildes. Example: `~RESET~/SYNC` becomes <over>RESET</over>/SYNC, and `~CP~__0` becomes <over>CP</over><sub>0</sub>
+To add an overbar to a portion of a word, surround it with tildes. Example: `~RESET~/SYNC` becomes <span style="text-decoration: overline;">RESET</span>/SYNC, and `~CP~__0` becomes <span style="text-decoration: overline;">CP</span><sub>0</sub>
 
 To include a literal tilde in the definition, use the HTML entity `&#126;`. If for some bizarre reason you want two or more literal underscores next to each other, use the HTML entity for underscore: `&#95;`.
