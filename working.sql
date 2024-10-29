@@ -665,6 +665,8 @@ select * from component_sub_types
 where component_type_id = 6;
 
 select * from components;
+select name, description from component_types;
+select name, description from package_types order by name;
 
 SELECT ct.*, 
   (select count(*) ni from component_sub_types where component_type_id = ct.id) num_sub_types,
@@ -672,12 +674,13 @@ SELECT ct.*,
 FROM component_types ct
 ORDER BY description;
 
-SELECT pt.*,  ct.name component_type
+SELECT pt.name, pt.description,  ct.name component_type
 FROM package_types pt
 JOIN component_packages cp on cp.package_type_id = pt.id
 JOIN component_types ct on ct.id = cp.component_type_id
-WHERE pt.name = 'DIP'
-  AND ct.id = 1;
+-- WHERE pt.name = 'DIP'
+--   AND ct.id = 1
+ORDER BY ct.name, pt.name;
 
 SELECT cst.id, cst.name, cst.description
 FROM component_sub_types cst
@@ -697,3 +700,14 @@ Select name, replace(name, 'MEGA', 'mega') newname
 from components
 where name like 'ATM%';
 
+  SELECT cmp.*, pt.name as package, ct.description as component, ct.table_name, ct.name as type, cst.name as sub_type 
+  FROM components cmp
+  JOIN package_types pt on pt.id = cmp.package_type_id
+  JOIN component_types ct on ct.id = cmp.component_type_id
+  LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+  WHERE cmp.id = 302;
+  
+select * from component_sub_types
+order by component_type_id, name;
+
+select * from package_types;
