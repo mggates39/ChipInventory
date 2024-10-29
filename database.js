@@ -122,10 +122,11 @@ async function getComponentListByType(component_type_id)  {
 
 async function getComponent(component_id) {
   const [rows] = await pool.query(`
-  SELECT cmp.*, pt.name as package, ct.description as component, ct.table_name 
+  SELECT cmp.*, pt.name as package, ct.description as component, ct.table_name, ct.name as type, cst.name as sub_type  
   FROM components cmp
   JOIN package_types pt on pt.id = cmp.package_type_id
   JOIN component_types ct on ct.id = cmp.component_type_id
+  LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
   WHERE cmp.id = ?
   `, [component_id])
   return rows[0]
@@ -171,7 +172,8 @@ async function deleteComponent(component_id) {
 // Chip related queries
 async function getChip(component_id) {
   const [rows] = await pool.query(`
-    SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
+      pt.name as package, cst.description as component_type, ct.name as type, cst.name as chip_type 
     FROM components cmp
     JOIN chips c on c.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -1429,6 +1431,15 @@ async function getComponentSubTypesForComponentType(component_type_id) {
     return rows;
 }
 
+async function lookupComponentype(component_type_name) {
+  const [rows] = await pool.query(`
+    SELECT ct.id, ct.name, ct.description
+    FROM component_types ct
+    WHERE ct.name = ?
+    `, [component_type_name])
+    return rows[0];
+}
+
 async function lookupComponentSubType(component_type_id, component_sub_type_name) {
   const [rows] = await pool.query(`
     SELECT cst.id, cst.name, cst.description
@@ -1763,7 +1774,7 @@ async function getPackageTypesForMountingType(mounting_type_id) {
     FROM package_types
     WHERE mounting_type_id = ?
     ORDER BY name
-  `, [mounting_type_id])
+  `, [mounting_type_id]);
   return rows
 }
 
@@ -1773,8 +1784,18 @@ async function getPickListByName(pick_list_name) {
     JOIN lists l on l.id = le.list_id
     WHERE l.name = ?
     ORDER BY le.sequence
-  `, [pick_list_name])
+  `, [pick_list_name]);
   return rows
+}
+
+async function lookupPickListEntryByName(pick_list_name, pick_list_entry_name) {
+  const [rows] = await pool.query(`SELECT le.*
+    FROM list_entries le
+    JOIN lists l on l.id = le.list_id
+    WHERE l.name = ?
+      AND le.name = ?
+  `, [pick_list_name, pick_list_entry_name]);
+  return rows[0]
 }
 
 async function getLists() {
@@ -2056,13 +2077,13 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getComponentSubTypesForComponentType, createCompnentSubType, getComponentSubType, updateComponentSubType, deleteComponentSubType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
   updateMountingType, createMountingType, getInventoryByLocationList,
-  getPackageTypeList, getPackageType, updatePackageType, createPackageType, lookupPackageType, lookupComponentSubType,
+  getPackageTypeList, getPackageType, updatePackageType, createPackageType, lookupPackageType, lookupComponentype, lookupComponentSubType,
   getPackageTypesForComponentType, getSelectedPackageTypesForComponentType,
   getComponentTypesForPackageType, getSelectedComponentTypesForPackageType,
   getLocationTypeList, getLocationType, createLocationType, updateLocationType, deleteLocationType,
   getLocationList, getLocation, createLocation, updateLocation, deleteLocation, getChildLocationList,
   getPickListByName, getLists, getList, createList, updateList, deleteList,
-  getListEntriesForList, getListEntry, createListEntry, updateListEntry, deleteListEntry,
+  getListEntriesForList, getListEntry, createListEntry, updateListEntry, deleteListEntry, lookupPickListEntryByName,
   getProjectList, getProject, createProject, updateProject, deleteProject,
   getProjectItemsForProject, getProjectItem, createProjectItem, updateProjectItem, deleteProjectItem,
   getProjectBomItemsForProject, getUnprocessedProjectBomItemsForProject, getProjectPicListForProject,

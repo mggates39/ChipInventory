@@ -8,15 +8,23 @@ block content
   form(action="/exports/" method="POST")
 
     div.form-group
-      label( for="chip_id") Select Chip:
-      select#chip_id.form-control(type='select' placeholder='Select Component' name='chip_id' required='true')
+      label( for="component_type_id") Select Component Type:
+      select#component_type_id.form-control(type='select' placeholder='Select Component' name='component_type_id' required='true')
+        option(value=0) All Components
+        for component_type in component_types
+          option(value=component_type.id selected= data.component_type_id == component_type.id) #{component_type.name} - #{component_type.description}
+    br
+    div.form-group
+      label( for="component_id") Select Component:
+      select#component_id.form-control(type='select' placeholder='Select Component' name='component_id' required='true')
+        option(value='') Select a Component
         for chip in chips
-          option(value=chip.id selected= data.chip_id == chip.id) #{chip.name}
+          option(value=chip.id selected= data.component_id == chip.id) #{chip.chip_number} - #{chip.description}
     br
     button.btn.btn-default.btn-primary(type="submit") Generate YAML 
     if data.chip_number != ''
         | 
-        a.btn.btn-secondary.btn-sm(href=data.file_name download=data.chip_number+".yaml" role="button") Download 
+        a#download.btn.btn-secondary.btn-sm(href=data.file_name download=data.chip_number+".yaml" role="button") Download 
     br
     div.form-group
       label( for="yaml_file") YAML File:
@@ -27,5 +35,20 @@ block scripts
   script(type="text/javascript").
     $( document ).ready(function() {
       $("#export").addClass("active");
-      $("#chip_id").focus();
+      $("#component_type_id").focus();
+
+      $("#component_type_id").change(function() {
+        // Code to execute when the value of #myInput changes
+        var component_type_id = this.value;
+        var $select = $('#component_id');
+        $('#download').hide();
+        $select.find('option').remove(); 
+        $.ajax({url: "/components/get_components/" + component_type_id, success: function(result){
+          $select.append("<option value=''> Select a Component");
+          $.each(result, function(key, value) {
+            $select.append(`<option value="${value.id}">${value.chip_number+ " - " + value.description}</option>`);
+          });
+        }});
+      });
+
     });
