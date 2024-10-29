@@ -3,7 +3,8 @@ var router = express.Router();
 const yaml = require('js-yaml');
 const fs = require('node:fs/promises');
 const { getComponentTypeList, searchComponents, getComponent, getPins, getSpecs, getNotes, getAliases,
-    getChip, getCapacitor, getCapacitorNetwork, getResistor, getResistorNetwork, getCrystal, getConnector, getSocket } = require('../database');
+    getChip, getCapacitor, getCapacitorNetwork, getResistor, getResistorNetwork, getCrystal, getConnector, getSocket, 
+    getDiode, getFuse } = require('../database');
 
 
 async function export_chip(component_id) {
@@ -82,7 +83,6 @@ async function export_chip(component_id) {
 
     if (component.type == 'Socket') {
         const xtal = await getSocket(component_id);
-        component_data['frequency'] = xtal.frequency;
         component_data['datasheet'] = xtal.datasheet;
     }
 
@@ -90,6 +90,28 @@ async function export_chip(component_id) {
         const xtal = await getCrystal(component_id);
         component_data['frequency'] = xtal.frequency;
         component_data['datasheet'] = xtal.datasheet;
+    }
+
+    if (component.type == 'Diode') {
+        const xtal = await getDiode(component_id);
+        component_data['forward_voltage'] = xtal.forward_voltage;
+        component_data['forward_units'] = xtal.forward_units;
+        component_data['reverse_voltage'] = xtal.reverse_voltage;
+        if (xtal.reverse_units) {
+            component_data['reverse_units'] = xtal.reverse_units;
+        }
+        component_data['light_color'] = xtal.light_color;
+        component_data['lens_color'] = xtal.lens_color;
+        component_data['datasheet'] = xtal.datasheet;
+    }
+
+    if (component.type == 'Fuse') {
+        const fuse = await getFuse(component_id);
+        component_data['rating'] = fuse.rating;
+        component_data['rating_units'] = fuse.rating_units;
+        component_data['voltage'] = fuse.voltage;
+        component_data['voltage_units'] = fuse.voltage_units;
+        component_data['datasheet'] = fuse.datasheet;
     }
 
     if (aliases.length) {
@@ -145,7 +167,7 @@ router.get('/', async function(req, res, next) {
         component_type_id: component_type_id,
         yaml_file: ''
     };
-    res.render('export/file_export', { title: 'Export selected chip', data: data, chips: chips, component_types: component_types});
+    res.render('export/file_export', { title: 'Export selected component', data: data, chips: chips, component_types: component_types});
 });
 
 /* GET all export. */
@@ -169,7 +191,7 @@ router.get('/all', async function(req, res, next) {
         component_type_id: component_type_id,
         yaml_file: ''
     };
-    res.render('export/file_export', { title: 'Export selected chip', data: data, chips: chips, component_types: component_types});
+    res.render('export/file_export', { title: 'Export selected component', data: data, chips: chips, component_types: component_types});
 });
 
 router.post('/', async function(req, res, next) {
@@ -188,7 +210,7 @@ router.post('/', async function(req, res, next) {
         component_type_id: component_type_id,
         yaml_file: yaml_data
     };
-    res.render('export/file_export', { title: 'Export selected chip', data: data, chips: chips, component_types: component_types});
+    res.render('export/file_export', { title: 'Export selected component', data: data, chips: chips, component_types: component_types});
 });
 
 module.exports = router;

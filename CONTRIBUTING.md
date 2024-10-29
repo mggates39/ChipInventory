@@ -143,6 +143,7 @@ Required. This field indicates how the pin diagram of this part should be drawn.
   - `Radial` - Leads on the edges
   - `SMD` - Surface Mount Device
 - Capacitor Network
+  - `DIP` - Dual In-Line Package
   - `SIP` - Single In-line Package
   - `SMD` - Surface Mount Device
   - `THD` - Through Hole Device
