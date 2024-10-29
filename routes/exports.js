@@ -3,7 +3,7 @@ var router = express.Router();
 const yaml = require('js-yaml');
 const fs = require('node:fs/promises');
 const { getComponentTypeList, searchComponents, getComponent, getPins, getSpecs, getNotes, getAliases,
-    getChip, getCapacitor, getCapacitorNetwork, getResistor, getResistorNetwork, getCrystal } = require('../database');
+    getChip, getCapacitor, getCapacitorNetwork, getResistor, getResistorNetwork, getCrystal, getConnector, getSocket } = require('../database');
 
 
 async function export_chip(component_id) {
@@ -68,6 +68,22 @@ async function export_chip(component_id) {
         component_data['tolerance'] = res.tolerance;
         component_data['number_resistors'] = res.number_resistors;
         component_data['datasheet'] = res.datasheet;
+    }
+
+    if (component.type == 'Jack') {
+        const xtal = await getConnector(component_id);
+        component_data['datasheet'] = xtal.datasheet;
+    }
+
+    if (component.type == 'Plug') {
+        const xtal = await getConnector(component_id);
+        component_data['datasheet'] = xtal.datasheet;
+    }
+
+    if (component.type == 'Socket') {
+        const xtal = await getSocket(component_id);
+        component_data['frequency'] = xtal.frequency;
+        component_data['datasheet'] = xtal.datasheet;
     }
 
     if (component.type == 'Xtal') {
@@ -150,7 +166,7 @@ router.get('/all', async function(req, res, next) {
         file_name: '',
         chip_number: '',
         component_id: '',
-        component_type_id: compnent_type_id,
+        component_type_id: component_type_id,
         yaml_file: ''
     };
     res.render('export/file_export', { title: 'Export selected chip', data: data, chips: chips, component_types: component_types});
