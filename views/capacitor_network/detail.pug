@@ -21,6 +21,8 @@ block content
   p #[strong Capacitance] #{capacitor.capacitance} !{capacitor.unit_label}
   p #[strong Tolerance] #{capacitor.tolerance} %
   p #[strong Working Voltage] #{capacitor.working_voltage} V
+  p #[strong Number of Capacitors] #{capacitor.number_capacitors}
+
   if capacitor.datasheet
     p 
       a(target='_blank' href= capacitor.datasheet) Datasheet PDF

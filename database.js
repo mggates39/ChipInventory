@@ -383,7 +383,7 @@ async function updateCapacitor(component_id, chip_number, package_type_id, compo
 }
 
 async function updateCapacitorNetwork(component_id, chip_number, package_type_id, component_sub_type_id, description, pin_count, capacitance, unit_id, working_voltage, tolerance, number_capacitors, datasheet) {
-  const component_type_id = 2;
+  const component_type_id = 3;
   return await updateCapacitor_internal(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count, capacitance, unit_id, working_voltage, tolerance, number_capacitors, datasheet);
 }
 
