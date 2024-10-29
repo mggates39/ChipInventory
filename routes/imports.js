@@ -4,6 +4,7 @@ const yaml = require('js-yaml');
 const fs = require('node:fs/promises');
 const path = require('path');
 const { searchComponents, createChip, updateChip, createCapacitor, updateCapacitor, createCapacitorNetwork, updateCapacitorNetwork,
+    createResistor, updateResistor, createResistorNetwork, updateResistorNetwork, 
     lookupComponentType, lookupPickListEntryByName,
     createPin, createAlias, createNote, createSpec, deleteComponentRelated, lookupPackageType, lookupComponentSubType } = require('../database');
   
@@ -22,17 +23,31 @@ async function createNewComponent(component_name, data, package_type, component_
     var component_id = 0;
     if (component_type.name == 'IC') {
         const chip = await createChip(component_name, data.family, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
-        component_id = chip.component_id;       
+        component_id = chip.component_id;
+
     } else if (component_type.name == 'Cap') {
         const capUnit = await lookupPickListEntryByName('Capacitance', data.units);
         const capacitor = await createCapacitor(component_name, package_type.id, component_sub_type.id, data.description, data.pin_count, 
             data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data.datasheet);
         component_id = capacitor.component_id;
+
     } else if (component_type.name == 'CN') {
         const capUnit = await lookupPickListEntryByName('Capacitance', data.units);
         const capacitor = await createCapacitorNetwork(component_name, package_type.id, component_sub_type.id, data.description, data.pin_count, 
             data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data/number_capacitors, data.datasheet);
         component_id = capacitor.component_id;
+
+    } else if (component_type.name == 'Res') {
+        const resUnit = await lookupPickListEntryByName('Resistance', data.units);
+        const resistor = await createResistor(component_name, package_type.id, component_sub_type_.d, data.description, data.pin_count, 
+            data.resistance, resUnit.id, data.tolerance, data.power, data.datasheet);
+            component_id = resistor.component_id;
+
+    } else if (component_type.name == 'Res') {
+        const resUnit = await lookupPickListEntryByName('Resistance', data.units);
+        const resistor = await createResistorNetwork(component_name, package_type.id, component_sub_type_.d, data.description, data.pin_count, 
+            data.resistance, resUnit.id, data.tolerance, data.power, data.number_resistors, data.datasheet);
+            component_id = resistor.component_id;
     }
     return component_id;
 }
@@ -40,15 +55,27 @@ async function createNewComponent(component_name, data, package_type, component_
 async function updateExistingComponent(component_id, component_name, data, package_type, component_type, component_sub_type) {
     if (component_type.name == 'IC') {
         await updateChip(component_id, component_name, data.family, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        
     } else if (component_type.name == 'Cap') {
         const capUnit = await lookupPickListEntryByName('Capacitance', data.units);
-        await updateCapacitor(component_id, data.chip_number, package_type.id, component_sub_type.id, data.description, data.pin_count, 
+        await updateCapacitor(component_id, component_name, package_type.id, component_sub_type.id, data.description, data.pin_count, 
             data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data.datasheet);
-        } else if (component_type.name == 'Cap') {
-            const capUnit = await lookupPickListEntryByName('Capacitance', data.units);
-            await updateCapacitorNetwork(component_id, data.chip_number, package_type.id, component_sub_type.id, data.description, data.pin_count, 
-                data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data.number_capacitors, data.datasheet);
-        }
+
+    } else if (component_type.name == 'Cap') {
+        const capUnit = await lookupPickListEntryByName('Capacitance', data.units);
+        await updateCapacitorNetwork(component_id, component_name, package_type.id, component_sub_type.id, data.description, data.pin_count, 
+            data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data.number_capacitors, data.datasheet);
+
+    } else if (component_type.name == 'Res') {
+        const resUnit = await lookupPickListEntryByName('Resistance', data.units);
+        await updateResistor(component_id, component_name, package_type.id, component_sub_type_.d, data.description, data.pin_count, 
+            data.resistance, resUnit.id, data.tolerance, data.power, data.datasheet);
+
+    } else if (component_type.name == 'Res') {
+        const resUnit = await lookupPickListEntryByName('Resistance', data.units);
+        await updateResistorNetwork(component_id, component_name, package_type.id, component_sub_type_.d, data.description, data.pin_count, 
+            data.resistance, resUnit.id, data.tolerance, data.power, data.number_resistors, data.datasheet);
+    }
 }
 
 async function import_component(name, data) {
