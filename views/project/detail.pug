@@ -279,15 +279,16 @@ block scripts
 
     $('#processProjectBommModal').on('shown.bs.modal', function (e) {
       // Your JavaScript code to execute here
-       load_bom(bom);
-       $(this).find('#number').focus();
+      load_bom(bom);
+      $(this).find('#number').focus();
     });
 
     function next_bom() {
       bom += 1;
-      if (bom < bom_data.length) {
-        load_bom(bom);
+      if (bom >= bom_data.length) {
+        bom = 0;
       }
+      load_bom(bom);
     }
       
     function load_bom(bom_number) {
