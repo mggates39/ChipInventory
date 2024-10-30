@@ -4,7 +4,8 @@ const yaml = require('js-yaml');
 const fs = require('node:fs/promises');
 const path = require('path');
 const { searchComponents, createChip, updateChip, createCapacitor, updateCapacitor, createCapacitorNetwork, updateCapacitorNetwork,
-    createResistor, updateResistor, createResistorNetwork, updateResistorNetwork, createDiode, updateDiode,
+    createResistor, updateResistor, createResistorNetwork, updateResistorNetwork, createDiode, updateDiode, createFuse, updateFuse,
+    createSocket, updateSocket, createConnector, updateConnector, createCrystal, updateCrystal,
     lookupComponentType, lookupPickListEntryByName,
     createPin, createAlias, createNote, createSpec, deleteComponentRelated, lookupPackageType, lookupComponentSubType } = require('../database');
   
@@ -50,12 +51,21 @@ async function createNewComponent(component_name, data, package_type, component_
             component_id = resistor.component_id;
 
     } else if (component_type.name = "Diode") {
-        const fvUnit = await lookupPickListEntryByName('Voltage', data.forward_units);
-        const rvUnit = await lookupPickListEntryByName('Voltage', data.reverse_units);
+        const fvUnits = await lookupPickListEntryByName('Voltages', data.forward_units);
+        const rvUnits = await lookupPickListEntryByName('Voltages', data.reverse_units);
+        const lightColor = await lookupPickListEntryByName('LEDColor', data.light_color);
+        const lensColor = await lookupPickListEntryByName('LensColor', data.lens_color);
         const diode = await createDiode(component_name, data.pin_count, package_type.id, component_sub_type.id, data.description, 
-            data.forward_voltage, fvUnit.id, data.reverse_voltage, rvUnit.id, data.light_color_id, data.lens_color_id, data.datasheet);
+            data.forward_voltage, fvUnits.id, data.reverse_voltage, rvUnits.id, lightColor.id, lensColor.id, data.datasheet);
         component_id = diode.component_id;
       
+    } else if (component_type.name = "Fuse") {
+        const ratingUnits = await lookupPickListEntryByName('FuseRating', data.rating_units);
+        const voltages = await lookupPickListEntryByName('Voltages', data.voltage_units);
+        const fuse = await createFuse(component_name, data.pin_count, package_type.id, component_sub_type.id, 
+            data.rating, ratingUnits,id, data.voltage, voltages.id, data.datasheet, data.description);
+        component_id = fuse.component_id;
+            
     }
     return component_id;
 }
@@ -85,11 +95,19 @@ async function updateExistingComponent(component_id, component_name, data, packa
             data.resistance, resUnit.id, data.tolerance, data.power, data.number_resistors, data.datasheet);
 
     } else if (component_type.name = "Diode") {
-        const fvUnit = await lookupPickListEntryByName('Voltage', data.forward_units);
-        const rvUnit = await lookupPickListEntryByName('Voltage', data.reverse_units);
+        const fvUnits = await lookupPickListEntryByName('Voltages', data.forward_units);
+        const rvUnits = await lookupPickListEntryByName('Voltages', data.reverse_units);
+        const lightColor = await lookupPickListEntryByName('LEDColor', data.light_color);
+        const lensColor = await lookupPickListEntryByName('LensColor', data.lens_color);
         await updateDiode(component_id, component_name, data.pin_count, package_type.id, component_sub_type.id, data.description, 
-            data.forward_voltage, fvUnit.id, data.reverse_voltage, rvUnit.id, data.light_color_id, data.lens_color_id, data.datasheet);
+            data.forward_voltage, fvUnits.id, data.reverse_voltage, rvUnits.id, lightColor.id, lensColor.id, data.datasheet);
 
+    } else if (component_type.name = "Fuse") {
+        const ratingUnits = await lookupPickListEntryByName('FuseRating', data.rating_units);
+        const voltages = await lookupPickListEntryByName('Voltages', data.voltage_units);
+        await updateFuse(component_id, component_name, data.pin_count, package_type.id, component_sub_type.id, 
+            data.rating, ratingUnits,id, data.voltage, voltages.id, data.datasheet, data.description);
+            
     }
 }
 
