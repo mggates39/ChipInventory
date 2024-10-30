@@ -4,7 +4,7 @@ const yaml = require('js-yaml');
 const fs = require('node:fs/promises');
 const path = require('path');
 const { searchComponents, createChip, updateChip, createCapacitor, updateCapacitor, createCapacitorNetwork, updateCapacitorNetwork,
-    createResistor, updateResistor, createResistorNetwork, updateResistorNetwork, 
+    createResistor, updateResistor, createResistorNetwork, updateResistorNetwork, createDiode, updateDiode,
     lookupComponentType, lookupPickListEntryByName,
     createPin, createAlias, createNote, createSpec, deleteComponentRelated, lookupPackageType, lookupComponentSubType } = require('../database');
   
@@ -48,6 +48,14 @@ async function createNewComponent(component_name, data, package_type, component_
         const resistor = await createResistorNetwork(component_name, package_type.id, component_sub_type_.d, data.description, data.pin_count, 
             data.resistance, resUnit.id, data.tolerance, data.power, data.number_resistors, data.datasheet);
             component_id = resistor.component_id;
+
+    } else if (component_type.name = "Diode") {
+        const fvUnit = await lookupPickListEntryByName('Voltage', data.forward_units);
+        const rvUnit = await lookupPickListEntryByName('Voltage', data.reverse_units);
+        const diode = await createDiode(component_name, data.pin_count, package_type.id, component_sub_type.id, data.description, 
+            data.forward_voltage, fvUnit.id, data.reverse_voltage, rvUnit.id, data.light_color_id, data.lens_color_id, data.datasheet);
+        component_id = diode.component_id;
+      
     }
     return component_id;
 }
@@ -75,6 +83,13 @@ async function updateExistingComponent(component_id, component_name, data, packa
         const resUnit = await lookupPickListEntryByName('Resistance', data.units);
         await updateResistorNetwork(component_id, component_name, package_type.id, component_sub_type_.d, data.description, data.pin_count, 
             data.resistance, resUnit.id, data.tolerance, data.power, data.number_resistors, data.datasheet);
+
+    } else if (component_type.name = "Diode") {
+        const fvUnit = await lookupPickListEntryByName('Voltage', data.forward_units);
+        const rvUnit = await lookupPickListEntryByName('Voltage', data.reverse_units);
+        await updateDiode(component_id, component_name, data.pin_count, package_type.id, component_sub_type.id, data.description, 
+            data.forward_voltage, fvUnit.id, data.reverse_voltage, rvUnit.id, data.light_color_id, data.lens_color_id, data.datasheet);
+
     }
 }
 
