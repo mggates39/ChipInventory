@@ -65,7 +65,23 @@ async function createNewComponent(component_name, data, package_type, component_
         const fuse = await createFuse(component_name, data.pin_count, package_type.id, component_sub_type.id, 
             data.rating, ratingUnits,id, data.voltage, voltages.id, data.datasheet, data.description);
         component_id = fuse.component_id;
-            
+      
+    } else if (component_type.name = "Socket") {
+        const socket = await createSocket(component_name, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        component_id = socket.component_id;
+                
+    } else if (component_type.name = "Jack") {
+        const jack = await createConnector(component_type.id, component_name, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        component_id = jack.component_id;
+                
+    } else if (component_type.name = "Plug") {
+        const plug = await createConnector(component_type.id, component_name, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        component_id = plug.component_id;
+                
+    } else if (component_type.name = "Xtal") {
+        const crystal = createCrystal(component_name, data.frequency, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        cpmponent_id = crystal.compnent_id;
+        
     }
     return component_id;
 }
@@ -107,7 +123,19 @@ async function updateExistingComponent(component_id, component_name, data, packa
         const voltages = await lookupPickListEntryByName('Voltages', data.voltage_units);
         await updateFuse(component_id, component_name, data.pin_count, package_type.id, component_sub_type.id, 
             data.rating, ratingUnits,id, data.voltage, voltages.id, data.datasheet, data.description);
-            
+
+    } else if (component_type.name = "Socket") {
+        await updateSocket(component_id, component_name, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+                
+    } else if (component_type.name = "Jack") {
+        await updateConnector(component_id, component_type.id, component_name, data.pin_count, package_typeiid, component_sub_type.id, data.datasheet, data.description);
+                
+    } else if (component_type.name = "Plug") {
+        await updateConnector(component_id, component_type.id, component_name, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+
+    } else if (component_type.name = "Crystal") {
+        await updateCrystal(component_id, component_name, data.frequency, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+
     }
 }
 
