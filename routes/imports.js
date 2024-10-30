@@ -81,7 +81,7 @@ async function createNewComponent(component_name, data, package_type, component_
     } else if (component_type.name = "Xtal") {
         const crystal = createCrystal(component_name, data.frequency, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
         cpmponent_id = crystal.compnent_id;
-        
+
     }
     return component_id;
 }
@@ -177,7 +177,11 @@ async function import_component(name, data) {
   
     var pins = data.pins;
     for (const pin of pins) {
-        await createPin(component_id, pin.num, pin.sym, pin.desc);
+        var symbol = pin.sym;
+        if (symbol == '') {
+            symbol = null;
+        }
+        await createPin(component_id, pin.num, symbol, pin.desc);
     }
 
     aliases = data.aliases;
