@@ -33,7 +33,7 @@ block content
       label( for="reverse_voltage") Reverse Voltage:
       div.input-group
         input#reverse_voltage.form-control(type="text" placeholder="Ex) 220, 1000" name="reverse_voltage" value=data.reverse_voltage)
-        select#freverse_unit_id.form-control(type='select' placeholder='Select units' name='freverse_unit_id')
+        select#freverse_unit_id.form-control(type='select' placeholder='Select units' name='reverse_unit_id')
             for unit in unit_list
                 option(value=unit.id selected= data.freverse_unit_id == unit.id) !{unit.name} - #{unit.description}
     div.form-group

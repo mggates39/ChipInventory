@@ -707,7 +707,14 @@ where name like 'ATM%';
   LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
   WHERE cmp.id = 302;
   
-select * from component_sub_types
-order by component_type_id, name;
+select ct.description, cst.name, cst.description
+from component_sub_types cst
+join component_types ct on ct.id = cst.component_type_id
+order by ct.name, cst.name;
 
 select * from package_types;
+
+select * from components where component_sub_type_id = 48;
+select * from chips where component_id = 64;
+select * from wires;
+select * from diodes;
