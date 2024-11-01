@@ -2,13 +2,16 @@ extends ../layout
 
 block content
   p Edit the #{data.component_name} defintion
-  form(action="/"+data.table_name+"/"+data.id method="POST")
+  form(action="/"+data.table_name+"/"+data.component_id method="POST")
     div.form-group
       label(for="chip_number") Component Number:
       input#chip_number.form-control( type="text" placeholder="Ex) 7425" name="chip_number" value=data.chip_number)
     div.form-group
       label( for="aliases") Aliases:
       input#aliases.form-control(type="text" placeholder="Ex) 74HTC25, 74LS25" name="aliases" value=data.aliases)
+    div.form-group
+      label( for="description") Description:
+      input#description.form-control(type="text" placeholder="Summary of what the chip does" name="description" value=data.description)
     div.form-group
       label( for="component_sub_type_id") #{data.component_name} Type:
       select#component_sub_type_id.form-control(type='select' placeholder='Select Component type' name='component_sub_type_id' required='true')
@@ -28,9 +31,6 @@ block content
     div.form-group
       label( for="datasheet") Datasheet:
       input#datasheet.form-control(type="text" placeholder="URL to datasheet" name="datasheet" value=data.datasheet)
-    div.form-group
-      label( for="description") Description:
-      textarea#description.form-control(rows="5" placeholder="Summary of what the chip does" name="description")= data.description
     br
     h4 Pins 
     - var n = 0

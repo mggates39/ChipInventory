@@ -13,7 +13,7 @@ var router = express.Router();
 router.get('/edit/:id', async function(req,res,next) {
   const chip_id = req.params.id;
 
-  const chip = await getChip(chip_id);
+  const data = await getChip(chip_id);
   const pins = await getPins(chip_id);
   const aliases = await getAliases(chip_id);
   const package_types = await getPackageTypesForComponentType(1);
@@ -26,19 +26,7 @@ router.get('/edit/:id', async function(req,res,next) {
     sep = ", ";
   })
   
-  data = {
-    id: chip_id,
-    chip_number: chip.chip_number,
-    aliases: aliasList,
-    family: chip.family,
-    package_type_id: chip.package_type_id,
-    component_sub_type_id: chip.component_sub_type_id,
-    pin_count: chip.pin_count,
-    datasheet: chip.datasheet,
-    description: chip.description,
-    component_name: chip.component_name,
-    table_name: chip.table_name,
-  }
+  data['aliases'] = aliasList;
 
   var pin_id=[];
   var pin_num=[];
