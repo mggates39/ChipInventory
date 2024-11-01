@@ -173,7 +173,7 @@ async function deleteComponent(component_id) {
 async function getChip(component_id) {
   const [rows] = await pool.query(`
     SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
-      pt.name as package, cst.description as component_type, ct.name as type, cst.name as chip_type 
+      pt.name as package, cst.description as component_type, ct.name as type, cst.name as chip_type, ct.table_name 
     FROM components cmp
     JOIN chips c on c.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -216,7 +216,7 @@ async function deleteChip(component_id) {
 async function getCrystal(component_id) {
   const [rows] = await pool.query(`
     SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
-      pt.name as package, cst.description as component_type, le.name as units 
+      pt.name as package, cst.description as component_type, le.name as units, ct.table_name 
     FROM components cmp
     JOIN crystals c on c.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -269,7 +269,7 @@ async function getResistorNetwork(component_id) {
 async function getResistor_internall(component_id) {
   const [rows] = await pool.query(`
     SELECT r.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, 
-      cmp.pin_count, pt.name as package, cst.description as component_type, le.name as unit_label 
+      cmp.pin_count, pt.name as package, cst.description as component_type, le.name as unit_label, ct.table_name 
     FROM components cmp
     JOIN resistors r on r.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -349,7 +349,7 @@ async function getCapacitorNetwork(component_id) {
 async function getCapacitor_internall(component_id) {
   const [rows] = await pool.query(`
     SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, 
-      cmp.pin_count, pt.name as package, cst.description as component_type, le.name as unit_label 
+      cmp.pin_count, pt.name as package, cst.description as component_type, le.name as unit_label, ct.table_name 
     FROM components cmp
     JOIN capacitors c on c.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -420,7 +420,8 @@ async function deleteCapacitorNetwork(component_id) {
 // Socket related queries
 async function getSocket(component_id) {
   const [rows] = await pool.query(`
-    SELECT s.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    SELECT s.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
+      pt.name as package, cst.description as component_type, ct.table_name 
     FROM components cmp
     JOIN sockets s on s.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -463,7 +464,7 @@ async function getDiode(component_id) {
   const [rows] = await pool.query(`
     SELECT d.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
       pt.name as package, cst.description as component_type, fvu.name as forward_units, rvu.name as reverse_units,
-      lic.name as light_color, lnc.name as lens_color 
+      lic.name as light_color, lnc.name as lens_color, ct.table_name 
     FROM components cmp
     JOIN diodes d on d.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -513,7 +514,8 @@ async function deleteDiode(component_id) {
 // Connector related queries
 async function getConnector(component_id) {
   const [rows] = await pool.query(`
-    SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, 
+      cmp.pin_count, pt.name as package, cst.description as component_type, ct.table_name 
     FROM components cmp
     JOIN connectors c on c.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -553,7 +555,7 @@ async function deleteConnector(component_id) {
 async function getFuse(component_id) {
   const [rows] = await pool.query(`
     SELECT f.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
-      pt.name as package, cst.description as component_type, ru.name as rating_units, vu.name as voltage_units 
+      pt.name as package, cst.description as component_type, ru.name as rating_units, vu.name as voltage_units, ct.table_name 
     FROM components cmp
     JOIN fuses f on f.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -600,7 +602,8 @@ async function deleteFuse(component_id) {
 // Inductor related queries
 async function getInductor(component_id) {
   const [rows] = await pool.query(`
-    SELECT i.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    SELECT i.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
+      pt.name as package, cst.description as component_type, ct.table_name 
     FROM components cmp
     JOIN inductors i on i.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -641,7 +644,8 @@ async function deleteInductor(component_id) {
 // Switch related queries
 async function getSwitch(component_id) {
   const [rows] = await pool.query(`
-    SELECT s.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    SELECT s.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
+      pt.name as package, cst.description as component_type, ct.table_name 
     FROM components cmp
     JOIN switches s on s.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -652,9 +656,9 @@ async function getSwitch(component_id) {
    return rows[0]
 }
 
-async function createSwitch(switche_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+async function createSwitch(switch_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
   const component_type_id = 13;
-  const component_id = await createComponent(switche_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  const component_id = await createComponent(switch_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
       INSERT INTO switches (component_id,  datasheet)
       VALUES (?, ?)
@@ -662,9 +666,9 @@ async function createSwitch(switche_number, pin_count, package_type_id, componen
   return getSwitch(component_id)
 }
 
-async function updateSwitch(component_id, switche_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+async function updateSwitch(component_id, switch_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
   const component_type_id = 13;
-  await updateComponent(component_id, switche_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
+  await updateComponent(component_id, switch_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
     UPDATE switches SET
       datasheet = ?
@@ -682,7 +686,8 @@ async function deleteSwitch(component_id) {
 // Transformer related queries
 async function getTransformer(component_id) {
   const [rows] = await pool.query(`
-    SELECT t.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    SELECT t.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
+      pt.name as package, cst.description as component_type, ct.table_name 
     FROM components cmp
     JOIN transformers t on t.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -723,7 +728,8 @@ async function deleteTransformer(component_id) {
 // Transistor related queries
 async function getTransistor(component_id) {
   const [rows] = await pool.query(`
-    SELECT t.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    SELECT t.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
+      pt.name as package, cst.description as component_type, ct.table_name 
     FROM components cmp
     JOIN transistors t on t.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
@@ -764,7 +770,8 @@ async function deleteTransistor(component_id) {
 // Wire related queries
 async function getWire(component_id) {
   const [rows] = await pool.query(`
-    SELECT w.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    SELECT w.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
+      pt.name as package, cst.description as component_type, ct.table_name 
     FROM components cmp
     JOIN wires w on w.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
