@@ -93,7 +93,7 @@ router.get('/:id', async function(req, res, nest) {
       )
     })
     
-    res.render('crystal/detail', { title: data.chip_number + ' - ' + data.description, crystal: data, 
+    res.render('crystal/detail', { title: data.chip_number + ' - ' + data.description, data: data, 
       pins: fixed_pins, layout_pins: layout_pins, 
       specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
