@@ -18,14 +18,14 @@ router.get('/new', async function(req, res, next) {
 router.get('/:id', async function(req, res, nest) {
     const id = req.params.id;
     const data = await gettransister(id);
-    res.render('transister/detail', {title: 'transister', transister: data});
+    res.render('transister/detail', {title: 'transister', data: data});
 });
 
 /* GET Edit item page */
 router.get('/edit/:id', async function(req, res, next) {
     const id = req.params.id;
     const data = await gettransister(id);
-    res.render('transister/edit', {title: 'transister', transister: data});
+    res.render('transister/edit', {title: 'transister', data: data});
   })
   
 router.post('/new', async function( req, res, next) {

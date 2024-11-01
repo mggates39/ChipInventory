@@ -18,14 +18,14 @@ router.get('/new', async function(req, res, next) {
 router.get('/:id', async function(req, res, nest) {
     const id = req.params.id;
     const data = await getinductor(id);
-    res.render('inductor/detail', {title: 'inductor', inductor: data});
+    res.render('inductor/detail', {title: 'inductor', data: data});
 });
 
 /* GET Edit item page */
 router.get('/edit/:id', async function(req, res, next) {
     const id = req.params.id;
     const data = await getinductor(id);
-    res.render('inductor/edit', {title: 'inductor', inductor: data});
+    res.render('inductor/edit', {title: 'inductor', data: data});
   })
   
 router.post('/new', async function( req, res, next) {

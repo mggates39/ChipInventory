@@ -18,7 +18,7 @@ router.get('/new', async function(req, res, next) {
 router.get('/:id', async function(req, res, nest) {
     const id = req.params.id;
     const data = await getTransformer(id);
-    res.render('transformer/detail', {title: 'transformer', transformer: data});
+    res.render('transformer/detail', {title: 'transformer', data: data});
 });
 
 /* GET Edit item page */

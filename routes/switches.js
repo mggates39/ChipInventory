@@ -18,7 +18,7 @@ router.get('/new', async function(req, res, next) {
 router.get('/:id', async function(req, res, nest) {
     const id = req.params.id;
     const data = await getSwitch(id);
-    res.render('switch/detail', {title: 'switch', switch: data});
+    res.render('switch/detail', {title: 'switch', data: data});
 });
 
 /* GET Edit item page */
