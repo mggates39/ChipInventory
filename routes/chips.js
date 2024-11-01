@@ -314,7 +314,7 @@ router.get('/:id', async function(req, res, next) {
       )
     })
 
-    res.render('chip/detail', { title: chip.chip_number + ' - ' + chip.description, chip: chip, 
+    res.render('chip/detail', { title: chip.chip_number + ' - ' + chip.description, data: chip, 
       pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
       specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
