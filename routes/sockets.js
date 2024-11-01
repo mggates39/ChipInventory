@@ -4,19 +4,20 @@ const { getSocket, createSocket, updateSocket, getPins, createPin, updatePin,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, 
-  getComponentSubTypesForComponentType,
+  getComponentSubTypesForComponentType, getComponentType, 
   getAliases, createAlias, deleteAliases } = require('../database');
 const {parse_symbol} = require('../utility');
 var router = express.Router();
 
 router.get('/edit/:id', async function(req,res,next) {
   const socket_id = req.params.id;
+  const component_type_id = 16;
 
-  const socket = await getSocket(socket_id);
+  const data = await getSocket(socket_id);
   const pins = await getPins(socket_id);
   const aliases = await getAliases(socket_id);
-  const package_types = await getPackageTypesForComponentType(16);
-  const component_sub_types = await getComponentSubTypesForComponentType(16);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
 
   aliasList = "";
   sep = "";
@@ -25,16 +26,7 @@ router.get('/edit/:id', async function(req,res,next) {
     sep = ", ";
   })
   
-  data = {
-    id: socket_id,
-    socket_number: socket.chip_number,
-    aliases: aliasList,
-    package_type_id: socket.package_type_id,
-    component_sub_type_id: socket.component_sub_type_id,
-    pin_count: socket.pin_count,
-    datasheet: socket.datasheet,
-    description: socket.description,
-  }
+  data['aliases'] = aliasList;
 
   var pin_id=[];
   var pin_num=[];
@@ -57,31 +49,42 @@ router.get('/edit/:id', async function(req,res,next) {
 
 /* GET new socket entry page */
 router.get('/new', async function(req, res, next) {
-  data = {socket_number: '',
+  const component_type_id = 16;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+
+   data = {chip_number: '',
     aliases: '',
     package_type_id: '',
     component_sub_type_id: '',
     pin_count: '',
     datasheet: '',
-    description: ''
-  }
-  const package_types = await getPackageTypesForComponentType(16);
-  const component_sub_types = await getComponentSubTypesForComponentType(16);
+    description: '',
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
+  };
 
-  res.render('socket/new', {title: 'New Socket Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+ res.render('socket/new', {title: 'New Socket Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
 });
 
 router.post('/new', async function(req, res) {
-  data = {socket_number: req.body.socket_number,
+  const component_type_id = 16;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+
+  data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(16);
-  const component_sub_types = await getComponentSubTypesForComponentType(16);
+
   var pin=[];
   var sym = [];
   var descr = [];
@@ -103,7 +106,7 @@ router.post('/new', async function(req, res) {
   data['descr'] = descr;
 
   if (descr[req.body.pin_count-1]) {
-    const socket = await createSocket(data.socket_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+    const socket = await createSocket(data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
     socket_id = socket.component_id;
 
     for (var i = 0; i < req.body.pin_count; i++) {
@@ -125,7 +128,7 @@ router.post('/new', async function(req, res) {
 
 router.post('/:id', async function(req, res) {
   const id = req.params.id;
-  data = {socket_number: req.body.socket_number,
+  data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
@@ -148,7 +151,7 @@ router.post('/:id', async function(req, res) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const socket = await updateSocket(id, data.socket_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+  const socket = await updateSocket(id, data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
   socket_id = socket.component_id;
 
   for (var i = 0; i < req.body.pin_count; i++) {
