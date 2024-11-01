@@ -15,7 +15,7 @@ block content
   button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#aliasModal") Add alias
   br
   br
-  p #[strong Component] #{data.component_type}
+  p #[strong #{data.component_name} type] #{data.component_type}
   p #[strong Package] #{data.package}
   p #[strong Pin Count] #{data.pin_count}
   
@@ -113,6 +113,26 @@ block content
               td.rightpinsym &#9612; !{n.right_sym}
             else
               td.rightpinsym &nbsp;
+
+        tr
+          td.leftpinsym &nbsp;
+          td.leftbottompinnum &nbsp;
+          td.rightbottompinnum &nbsp;
+          td.rightpinsym &nbsp;
+
+      else if (data.package = 'Axial')
+        tr
+          th.leftpinsym &nbsp;
+          th.lefttoppinnum &nbsp;
+          th.righttoppinnum &nbsp;
+          th.rightpinsym &nbsp;
+
+        each n, index in layout_pins
+          tr
+            td.leftpinsym !{n.left_sym} &#9616;
+            td.leftpinnum #{n.left_pin} !{n.bull}
+            td.rightpinnum #{n.right_pin}
+            td.rightpinsym &#9612; !{n.right_sym}
 
         tr
           td.leftpinsym &nbsp;

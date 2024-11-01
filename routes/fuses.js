@@ -262,7 +262,7 @@ router.get('/:id', async function(req, res, next) {
       )
     })
 
-    res.render('fuse/detail', { title: fuse.chip_number + ' - ' + fuse.description, fuse: fuse, 
+    res.render('fuse/detail', { title: fuse.chip_number + ' - ' + fuse.description, data: fuse, 
       pins: fixed_pins, layout_pins: layout_pins, 
       specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
