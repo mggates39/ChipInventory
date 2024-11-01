@@ -112,7 +112,8 @@ CREATE TABLE `chips` (
 
 CREATE TABLE `crystals` (
   `component_id` int NOT NULL,
-  `frequency` varchar(32) NOT NULL,
+  `frequency` float(8,4) NOT NULL,
+  `unit_id` int NOT NULL,
   `datasheet` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`component_id`),
   CONSTRAINT `crystals_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)

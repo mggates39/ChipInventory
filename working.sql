@@ -718,3 +718,8 @@ select * from components where component_sub_type_id = 48;
 select * from chips where component_id = 64;
 select * from wires;
 select * from diodes;
+
+select * from lists where name = 'Frequency';
+select * from list_entries where list_id = 8;
+
+

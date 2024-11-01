@@ -89,6 +89,7 @@ async function export_chip(component_id) {
     if (component.type == 'Xtal') {
         const xtal = await getCrystal(component_id);
         component_data['frequency'] = xtal.frequency;
+        component_data['units'] = xtal.units;
         component_data['datasheet'] = xtal.datasheet;
     }
 

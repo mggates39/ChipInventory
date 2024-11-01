@@ -11,7 +11,11 @@ block content
       input#aliases.form-control(type="text" placeholder="Ex) 74HTC25, 74LS25" name="aliases" value=data.aliases)
     div.form-group
       label( for="frequency") Frequency:
-      input#frequency.form-control(type="text" placeholder="Ex) 7400" name="frequency" value=data.frequency)
+      div.input-group
+        input#frequency.form-control(type="text" placeholder="Ex) 32.0524" name="frequency" value=data.frequency)
+        select#unit_id.form-control(type='select' placeholder='Select units' name='unit_id' required='true')
+            for unit in unit_list
+                option(value=unit.id selected= data.unit_id == unit.id) !{unit.name} - #{unit.description}
     div.form-group
       label( for="component_sub_type_id") Component:
       select#component_sub_type_id.form-control(type='select' placeholder='Select Component type' name='component_sub_type_id' required='true')

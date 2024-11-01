@@ -215,36 +215,39 @@ async function deleteChip(component_id) {
 // Crystal related queries
 async function getCrystal(component_id) {
   const [rows] = await pool.query(`
-    SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, pt.name as package, cst.description as component_type 
+    SELECT c.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
+      pt.name as package, cst.description as component_type, le.name as units 
     FROM components cmp
     JOIN crystals c on c.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
     JOIN component_types ct on ct.id = cmp.component_type_id
     LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    LEFT JOIN list_entries le on le.id = c.unit_id
     WHERE c.component_id = ?
     `, [component_id])
    return rows[0]
 }
 
-async function createCrystal(chip_number, frequency, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+async function createCrystal(chip_number, frequency, unit_id, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
   const component_type_id = 10;
   const component_id = await createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
-      INSERT INTO crystals (component_id, frequency, datasheet)
+      INSERT INTO crystals (component_id, frequency, unit_id, datasheet)
       VALUES (?, ?, ?)
-      `, [component_id, frequency, datasheet])
+      `, [component_id, frequency, unit_id, datasheet])
   return getCrystal(component_id)
 }
 
-async function updateCrystal(component_id, chip_number, frequency, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+async function updateCrystal(component_id, chip_number, frequency, unit_id, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
   const component_type_id = 10;
   await updateComponent(component_id, chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
     UPDATE crystals SET
       frequency = ?, 
+      unit_id = ?,
       datasheet = ?
     WHERE component_id = ?
-    `, [frequency, datasheet, component_id])
+    `, [frequency, unit_id, datasheet, component_id])
   return getCrystal(component_id)
 }
 

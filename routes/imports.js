@@ -134,7 +134,8 @@ async function updateExistingComponent(component_id, component_name, data, packa
         await updateConnector(component_id, component_type.id, component_name, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
 
     } else if (component_type.name = "Crystal") {
-        await updateCrystal(component_id, component_name, data.frequency, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        const units = await lookupPickListEntryByName('Frequency', data.units);
+        await updateCrystal(component_id, component_name, data.frequency, units.id, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
 
     }
 }
