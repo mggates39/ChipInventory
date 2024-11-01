@@ -322,7 +322,7 @@ router.get('/:id', async function(req, res, next) {
       )
     })
   
-    res.render('connector_jack/detail', { title: connector.chip_number + ' - ' + connector.description, connector_jack: connector, 
+    res.render('connector_jack/detail', { title: connector.chip_number + ' - ' + connector.description, data: connector, 
       pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
       specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });

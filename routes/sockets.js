@@ -318,7 +318,7 @@ router.get('/:id', async function(req, res, next) {
       )
     })
 
-    res.render('socket/detail', { title: socket.chip_number + ' - ' + socket.description, socket: socket, 
+    res.render('socket/detail', { title: socket.chip_number + ' - ' + socket.description, data: socket, 
       pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
       specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
