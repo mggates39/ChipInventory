@@ -1,56 +1,6 @@
-extends ../layout
+extends ../component/edit
 
-block content
-  p Edit the chip defintion
-  form(action="/chips/"+data.id method="POST")
-    div.form-group
-      label(for="chip_number") Chip Number:
-      input#chip_number.form-control( type="text" placeholder="Ex) 7425" name="chip_number" value=data.chip_number)
-    div.form-group
-      label( for="aliases") Aliases:
-      input#aliases.form-control(type="text" placeholder="Ex) 74HTC25, 74LS25" name="aliases" value=data.aliases)
+block component_specific
     div.form-group
       label( for="family") Family:
       input#family.form-control(type="text" placeholder="Ex) 7400" name="family" value=data.family)
-    div.form-group
-      label( for="component_sub_type_id") Component:
-      select#component_sub_type_id.form-control(type='select' placeholder='Select Component type' name='component_sub_type_id' required='true')
-        for component_sub_type in component_sub_types
-          option(value=component_sub_type.id selected= data.component_sub_type_id == component_sub_type.id) #{component_sub_type.name}
-    div.form-group
-      label( for="package_type_id") Package:
-      select#package_type_id.form-control(type='select' placeholder='Select package type' name='package_type_id' required='true')
-        for package_type in package_types
-          option(value=package_type.id selected= data.package_type_id == package_type.id) #{package_type.name}
-    div.form-group
-      label( for="pin_count") Pin Count:
-      input#pin_count.form-control(type="text" placeholder="Ex) 14,18, 20" name="pin_count" value=data.pin_count)
-    div.form-group
-      label( for="datasheet") Datasheet:
-      input#datasheet.form-control(type="text" placeholder="URL to datasheet" name="datasheet" value=data.datasheet)
-    div.form-group
-      label( for="description") Description:
-      textarea#description.form-control(rows="5" placeholder="Summary of what the chip does" name="description")= data.description
-    br
-    h4 Pins 
-    - var n = 0
-    - while (n < data.pin_count)
-      div.row 
-        input(type="hidden" id="pin_id_"+n name="pin_id_"+n value=data.pin_id[n])
-        div.col 
-          input.form-control(type="text" id="pin_"+n name="pin_"+n value=(n+1))
-        div.col 
-          input.form-control(type="text" id="sym_"+n name="sym_"+n placeholder="Symbol" value=data.sym[n])
-        div.col 
-          input.form-control(type="text" id="descr_"+n name="descr_"+n placeholder="Description" value=data.descr[n])
-
-      - n++
-
-    button.btn.btn-default.btn-primary(type="submit") Submit
-
-block scripts
-  script(type="text/javascript").
-    $( document ).ready(function() {
-      $("#cmf").addClass("active");
-      $("#chip_number").focus();
-    });

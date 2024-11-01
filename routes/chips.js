@@ -5,7 +5,8 @@ const { getChip, createChip, updateChip, getPins, createPin, updatePin,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, 
   getComponentTypeList, getComponentSubTypesForComponentType,
-  getAliases, createAlias, deleteAliases } = require('../database');
+  getAliases, createAlias, deleteAliases, 
+  getComponentType} = require('../database');
 const {parse_symbol} = require('../utility');
 var router = express.Router();
 
@@ -35,6 +36,8 @@ router.get('/edit/:id', async function(req,res,next) {
     pin_count: chip.pin_count,
     datasheet: chip.datasheet,
     description: chip.description,
+    component_name: chip.component_name,
+    table_name: chip.table_name,
   }
 
   var pin_id=[];
@@ -53,11 +56,13 @@ router.get('/edit/:id', async function(req,res,next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  res.render('chip/edit', {title: 'Edit Chip Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('chip/edit', {title: 'Edit Integrated Circuit Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
 })
 
 /* GET new chip entry page */
 router.get('/new', async function(req, res, next) {
+  const component_type_id = 1;
+  const component_type = await getComponentType(component_type_id);
   data = {chip_number: '',
     aliases: '',
     family: '',
@@ -65,15 +70,19 @@ router.get('/new', async function(req, res, next) {
     component_sub_type_id: '',
     pin_count: '',
     datasheet: '',
-    description: ''
+    description: '',
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(1);
-  const component_sub_types = await getComponentSubTypesForComponentType(1);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
 
-  res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('chip/new', {title: 'New Integrated Circuit Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
 });
 
 router.post('/new', async function(req, res) {
+  const component_type_id = 1;
+  const component_type = await getComponentType(component_type_id);
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     family: req.body.family,
@@ -82,9 +91,11 @@ router.post('/new', async function(req, res) {
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
+    component_name: component_type.description,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(1);
-  const component_sub_types = await getComponentSubTypesForComponentType(1);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
   var pin=[];
   var sym = [];
   var descr = [];
@@ -114,7 +125,7 @@ router.post('/new', async function(req, res) {
 
     res.redirect('/chips/'+chip_id);
   } else {
-    res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+    res.render('chip/new', {title: 'New Integrated Circuit Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
   }
 });
 
