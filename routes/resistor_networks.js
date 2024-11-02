@@ -2,11 +2,18 @@ var express = require('express');
 var router = express.Router();
 const {getResistorNetwork, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createResistorNetwork, updateResistorNetwork, createPin, updatePin,
-  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType, getPickListByName} = require('../database');
+  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType, 
+  getPickListByName, getComponentType} = require('../database');
 const {parse_symbol} = require('../utility');
 
 /* GET new item page */
 router.get('/new', async function(req, res, next) {
+  const component_type_id = 4;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const unit_list = await getPickListByName('Resistance');
+
   data = {chip_number: '',
     aliases: '',
     package_type_id: '',
@@ -18,12 +25,10 @@ router.get('/new', async function(req, res, next) {
     power: '',
     number_resistors: '',
     datasheet: '',
-    description: ''
+    description: '',
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   };
-
-  const package_types = await getPackageTypesForComponentType(5);
-  const component_sub_types = await getComponentSubTypesForComponentType(5);
-  const unit_list = await getPickListByName('Resistance');
 
   res.render('resistor_network/new', {title: 'New Resistor Network Definition', data: data, package_types: package_types, 
     component_sub_types: component_sub_types, unit_list: unit_list});
@@ -106,7 +111,7 @@ router.get('/:id', async function(req, res, nest) {
 /* GET Edit item page */
 router.get('/edit/:id', async function(req, res, next) {
   const resistor_id = req.params.id;
-  const resistor = await getResistorNetwork(resistor_id);
+  const data = await getResistorNetwork(resistor_id);
   const pins = await getPins(resistor_id);
   const aliases = await getAliases(resistor_id);
   const package_types = await getPackageTypesForComponentType(5);
@@ -120,21 +125,7 @@ router.get('/edit/:id', async function(req, res, next) {
     sep = ", ";
   })
   
-  data = {
-    id: resistor_id,
-    chip_number: resistor.chip_number,
-    aliases: aliasList,
-    resistance: resistor.resistance,
-    unit_id: resistor.unit_id,
-    tolerance: resistor.tolerance,
-    power: resistor.power,
-    number_resistors: resistor.number_resistors,
-    package_type_id: resistor.package_type_id,
-    component_sub_type_id: resistor.component_sub_type_id,
-    pin_count: resistor.pin_count,
-    datasheet: resistor.datasheet,
-    description: resistor.description,
-  }
+  data['aliases'] = aliasList;
 
   var pin_id=[];
   var pin_num=[];
@@ -157,6 +148,12 @@ router.get('/edit/:id', async function(req, res, next) {
 })
   
 router.post('/new', async function( req, res, next) {
+  const component_type_id = 4;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const unit_list = await getPickListByName('Resistance');
+
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     resistance: req.body.resistance,
@@ -169,10 +166,9 @@ router.post('/new', async function( req, res, next) {
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(5);
-  const component_sub_types = await getComponentSubTypesForComponentType(5);
-  const unit_list = await getPickListByName('Resistance');
 
   var pin=[];
   var sym = [];
