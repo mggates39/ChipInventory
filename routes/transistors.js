@@ -1,11 +1,10 @@
 var express = require('express');
 const { getTransistor, createTransistor, updateTransistor, getPins, createPin, updatePin, 
   getDipLeftPins, getDipRightPins, getSipPins,
-  getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
-  getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, 
   getComponentSubTypesForComponentType, getComponentType, 
-  getAliases, createAlias, deleteAliases } = require('../database');
+  getAliases, createAlias, deleteAliases, 
+  getPickListByName} = require('../database');
 const {parse_symbol} = require('../utility');
 var router = express.Router();
 
@@ -18,6 +17,9 @@ router.get('/edit/:id', async function(req,res,next) {
   const aliases = await getAliases(transistor_id);
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const usage_list = await getPickListByName('TransistorUsage');
+  const power_units = await getPickListByName('Power');
+  const threshold_units = await getPickListByName('Voltages');
 
   aliasList = "";
   sep = "";
@@ -44,7 +46,8 @@ router.get('/edit/:id', async function(req,res,next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  res.render('transistor/edit', {title: 'Edit Transistor Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('transistor/edit', {title: 'Edit Transistor Definition', data: data, package_types: package_types, 
+    component_sub_types: component_sub_types, usage_list: usage_list, power_units: power_units, threshold_units: threshold_units});
 })
 
 /* GET new transistor entry page */
@@ -53,19 +56,28 @@ router.get('/new', async function(req, res, next) {
   const component_type = await getComponentType(component_type_id);
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const usage_list = await getPickListByName('TransistorUsage');
+  const power_units = await getPickListByName('Power');
+  const threshold_units = await getPickListByName('Voltages');
 
    data = {chip_number: '',
     aliases: '',
+    description: '',
     package_type_id: '',
     component_sub_type_id: '',
     pin_count: '',
+    usage_id: '',
+    power_rating: '',
+    power_unit_id: '',
+    threshold: '', 
+    threshold_unit_id: '',
     datasheet: '',
-    description: '',
     component_name: component_type.decscription,
     table_name: component_type.table_name,
   };
 
- res.render('transistor/new', {title: 'New Transistor Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+ res.render('transistor/new', {title: 'New Transistor Definition', data: data, package_types: package_types, 
+  component_sub_types: component_sub_types, usage_list: usage_list, power_units: power_units, threshold_units: threshold_units});
 });
 
 router.post('/new', async function(req, res) {
@@ -73,14 +85,22 @@ router.post('/new', async function(req, res) {
   const component_type = await getComponentType(component_type_id);
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const usage_list = await getPickListByName('TransistorUsage');
+  const power_units = await getPickListByName('Power');
+  const threshold_units = await getPickListByName('Voltages');
 
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
+    description: req.body.description,
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
     pin_count: req.body.pin_count,
+    usage_id: req.body.usage_id,
+    power_rating: req.body.power_rating,
+    power_unit_id: req.body.power_unit_id,
+    threshold: req.body.threshold,
+    threshold_unit_id: req.body.threshold_unit_id,
     datasheet: req.body.datasheet,
-    description: req.body.description,
     component_name: component_type.decscription,
     table_name: component_type.table_name,
   }
@@ -95,18 +115,37 @@ router.post('/new', async function(req, res) {
         descr.push(req.body["descr_"+i]);
     }
   } else {
-    for (var i = 0; i < req.body.pin_count; i++) {
-        pin.push(i+1);
-        sym.push("P");
-        descr.push("Pin");
-    }      
+    if (data.component_sub_type_id == 54) {
+      // Bipoler
+      pin.push(1);
+      sym.push('B');
+      descr.push('Base')
+      pin.push(2);
+      sym.push('E');
+      descr.push('Emitter')
+      pin.push(3);
+      sym.push('C');
+      descr.push('Collector')
+    } else {
+      // FET
+      pin.push(1);
+      sym.push('G');
+      descr.push('Gate')
+      pin.push(2);
+      sym.push('S');
+      descr.push('Source')
+      pin.push(3);
+      sym.push('D');
+      descr.push('Drain')
+    }
   }
   data['pin'] = pin;
   data['sym'] = sym;
   data['descr'] = descr;
 
   if (descr[req.body.pin_count-1]) {
-    const transistor = await createTransistor(data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+    const transistor = await createTransistor(data.chip_number, data.description, data.pin_count, data.package_type_id, data.component_sub_type_id, 
+      data.usage_id, data.power_rating, data.power_unit_id, data.threshold, data.threshold_unit_id, data.datasheet);
     transistor_id = transistor.component_id;
 
     for (var i = 0; i < req.body.pin_count; i++) {
@@ -122,7 +161,8 @@ router.post('/new', async function(req, res) {
 
     res.redirect('/transistors/'+transistor_id);
   } else {
-    res.render('transistor/new', {title: 'New Transistor Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+    res.render('transistor/new', {title: 'New Transistor Definition', data: data, package_types: package_types, 
+      component_sub_types: component_sub_types, usage_list: usage_list, power_units: power_units, threshold_units: threshold_units});
   }
 });
 
@@ -130,12 +170,18 @@ router.post('/:id', async function(req, res) {
   const id = req.params.id;
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
+    description: req.body.description,
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
     pin_count: req.body.pin_count,
+    usage_id: req.body.usage_id,
+    power_rating: req.body.power_rating,
+    power_unit_id: req.body.power_unit_id,
+    threshold: req.body.threshold,
+    threshold_unit_id: req.body.threshold_unit_id,
     datasheet: req.body.datasheet,
-    description: req.body.description,
   }
+
   var pin_id=[];
   var pin=[];
   var sym = [];
@@ -151,7 +197,8 @@ router.post('/:id', async function(req, res) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const transistor = await updateTransistor(id, data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+  const transistor = await updateTransistor(id, data.chip_number, data.description, data.pin_count, data.package_type_id, data.component_sub_type_id, 
+    data.usage_id, data.power_rating, data.power_unit_id, data.threshold, data.threshold_unit_id, data.datasheet);
   transistor_id = transistor.component_id;
 
   for (var i = 0; i < req.body.pin_count; i++) {
@@ -178,14 +225,6 @@ router.get('/:id', async function(req, res, next) {
     const dip_left_pins = await getDipLeftPins(id);
     const dip_right_pins = await getDipRightPins(id);
     const sip_pins = await getSipPins(id);
-    const plcc_left_pins = await getPllcLeftPins(id);
-    const plcc_right_pins = await getPllcRightPins(id);
-    const plcc_top_pins = await getPllcTopPins(id);
-    const plcc_bottom_pins = await getPllcBottomPins(id);
-    const quad_left_pins = await getQuadLeftPins(id);
-    const quad_right_pins = await getQuadRightPins(id);
-    const quad_top_pins = await getQuadTopPins(id);
-    const quad_bottom_pins = await getQuadBottomPins(id);
     const specs = await getSpecs(id);
     const notes = await getNotes(id);
     const inventory = await getInventoryByComponentList(id);
@@ -206,7 +245,7 @@ router.get('/:id', async function(req, res, next) {
     top_pins = [];
     bottom_pins = [];
 
-    if (transistor.package == 'SIP') {
+    if (transistor.package != 'DIP') {
       if (transistor.pin_count > 12) {
         iswide = 'dpindiagramwide';
       }
@@ -219,78 +258,6 @@ router.get('/:id', async function(req, res, next) {
         layout_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
       });
   
-    } else if (transistor.package == 'PLCC') {
-      if (transistor.pin_count > 40) {
-        iswide = 'dpindiagramwide';
-      }
-      i = 0;
-      plcc_left_pins.forEach(function(pin) {
-        if (pin.pin_number == 1) {
-          bull = '&nbsp;&#9679;'
-        } else {
-          bull = ''
-        }
-        layout_pins.push(
-          {'left_pin': pin.pin_number, 'bull': bull, 'right_pin': plcc_right_pins[i].pin_number, 
-          'left_sym': parse_symbol(pin.pin_symbol), 'right_sym': parse_symbol(plcc_right_pins[i].pin_symbol),
-        });
-        i++;
-      });
-
-      plcc_top_pins.forEach(function(pin) {
-        if (pin.pin_number == 1) {
-          bull = '&#9679;&nbsp;'
-        } else {
-          bull = ''
-        }
-        top_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
-      });
-  
-      plcc_bottom_pins.forEach(function(pin) {
-        if (pin.pin_number == 1) {
-          bull = '&#9679;&nbsp;'
-        } else {
-          bull = ''
-        }
-        bottom_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
-
-      });
-    } else if ((transistor.package == 'QFN') || (transistor.package == 'QFP')) {
-      if (transistor.pin_count > 40) {
-        iswide = 'dpindiagramwide';
-      }
-      i = 0;
-      quad_left_pins.forEach(function(pin) {
-        if (pin.pin_number == 1) {
-          bull = '&#9679;'
-        } else {
-          bull = ''
-        }
-        layout_pins.push(
-          {'left_pin': pin.pin_number, 'bull': bull, 'right_pin': quad_right_pins[i].pin_number, 
-          'left_sym': parse_symbol(pin.pin_symbol), 'right_sym': parse_symbol(quad_right_pins[i].pin_symbol),
-        });
-        i++;
-      });
-
-      quad_top_pins.forEach(function(pin) {
-        if (pin.pin_number == 1) {
-          bull = '&#9679;&nbsp;'
-        } else {
-          bull = ''
-        }
-        top_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
-      });
-  
-      quad_bottom_pins.forEach(function(pin) {
-        if (pin.pin_number == 1) {
-          bull = '&#9679;&nbsp;'
-        } else {
-          bull = ''
-        }
-        bottom_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
-
-      });
     } else {
       i = 0;
       dip_left_pins.forEach(function(pin) {
@@ -322,7 +289,7 @@ router.get('/:id', async function(req, res, next) {
     })
 
     res.render('transistor/detail', { title: transistor.chip_number + ' - ' + transistor.description, data: transistor, 
-      pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
+      pins: fixed_pins, layout_pins: layout_pins,
       specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
   
