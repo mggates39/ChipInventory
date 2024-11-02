@@ -1,27 +1,32 @@
 var express = require('express');
 var router = express.Router();
-const { getMountingTypeList, 
-  getCrystal, getPins, getDipLeftPins, getDipRightPins, getSipPins,
+const { getCrystal, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createCrystal, updateCrystal, createPin, updatePin,
-  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType,
-  getPickListByName} = require('../database');
+  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType, 
+  getPickListByName, getComponentType } = require('../database');
 const {parse_symbol} = require('../utility');
 
 /* GET new item page */
 router.get('/new', async function(req, res, next) {
+  const component_type_id = 10;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const units = await getPickListByName('Frequency');
+  const kilohertz_id = 37;
+
   data = {chip_number: '',
     aliases: '',
     frequency: '',
-    unit_id: 37,
+    unit_id: kilohertz_id,
     package_type_id: '',
     component_sub_type_id: '',
     pin_count: '',
     datasheet: '',
-    description: ''
+    description: '',
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(10);
-  const component_sub_types = await getComponentSubTypesForComponentType(10);
-  const units = await getPickListByName('Frequency');
 
   res.render('crystal/new', {title: 'New Crystal Definition', data: data, package_types: package_types, 
     component_sub_types: component_sub_types, unit_list: units});
@@ -101,7 +106,7 @@ router.get('/:id', async function(req, res, nest) {
 /* GET Edit item page */
 router.get('/edit/:id', async function(req, res, next) {
     const crystal_id = req.params.id;
-    const crystal = await getCrystal(crystal_id);
+    const data = await getCrystal(crystal_id);
     const pins = await getPins(crystal_id);
     const aliases = await getAliases(crystal_id);
     const package_types = await getPackageTypesForComponentType(10);
@@ -115,18 +120,7 @@ router.get('/edit/:id', async function(req, res, next) {
       sep = ", ";
     })
     
-    data = {
-      id: crystal_id,
-      chip_number: crystal.chip_number,
-      aliases: aliasList,
-      frequency: crystal.frequency,
-      unit_id: crystal.unit_id, 
-      package_type_id: crystal.package_type_id,
-      component_sub_type_id: crystal.component_sub_type_id,
-      pin_count: crystal.pin_count,
-      datasheet: crystal.datasheet,
-      description: crystal.description,
-    }
+    data['aliases'] = aliasList;
   
     var pin_id=[];
     var pin_num=[];
@@ -149,6 +143,12 @@ router.get('/edit/:id', async function(req, res, next) {
 });
   
 router.post('/new', async function( req, res, next) {
+  const component_type_id = 10;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const units = await getPickListByName('Frequency');
+
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     frequency: req.body.frequency,
@@ -158,10 +158,9 @@ router.post('/new', async function( req, res, next) {
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(10);
-  const component_sub_types = await getComponentSubTypesForComponentType(10);
-  const units = await getPickListByName('Frequency');
 
   var pin=[];
   var sym = [];
