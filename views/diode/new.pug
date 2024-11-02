@@ -1,27 +1,6 @@
-extends ../layout
+extends ../component/new
 
-block content
-  p Enter the new diode defintion
-  form(action="/diodes/new/" method="POST")
-    div.form-group
-      label(for="chip_number") Chip Number:
-      input#chip_number.form-control( type="text" placeholder="Ex) 7425" name="chip_number" value=data.chip_number)
-    div.form-group
-      label( for="aliases") Aliases:
-      input#aliases.form-control(type="text" placeholder="Ex) 74HTC25, 74LS25" name="aliases" value=data.aliases)
-    div.form-group
-      label( for="description") Description:
-      input#description.form-control(type="text" placeholder="Summary of what the diode does" name="description" value=data.description)
-    div.form-group
-      label( for="component_sub_type_id") Diode Type:
-      select#component_sub_type_id.form-control(type='select' placeholder='Select Component type' name='component_sub_type_id' required='true')
-        for component_sub_type in component_sub_types
-          option(value=component_sub_type.id selected= data.component_sub_type_id == component_sub_type.id) #{component_sub_type.name}
-    div.form-group
-      label( for="package_type_id") Package:
-      select#package_type_id.form-control(type='select' placeholder='Select package type' name='package_type_id' required='true')
-        for package_type in package_types
-          option(value=package_type.id selected= data.package_type_id == package_type.id) #{package_type.name}
+block component_specific
     div.form-group
       label( for="forward_voltage") Forward Voltage:
       div.input-group
@@ -46,31 +25,3 @@ block content
       select#lens_color_id.form-control(type='select' placeholder='Select package type' name='lens_color_id')
         for lens_color in lens_colors
           option(value=lens_color.id selected= data.lens_color_id == lens_color.id) #{lens_color.name}
-    div.form-group
-      label( for="pin_count") Pin Count:
-      input#pin_count.form-control(type="text" placeholder="Ex) 14,18, 20" name="pin_count" value=data.pin_count)
-    div.form-group
-      label( for="datasheet") Datasheet:
-      input#datasheet.form-control(type="text" placeholder="URL to datasheet" name="datasheet" value=data.datasheet)
-    br
-    h4 Pins 
-    - var n = 0
-    - while (n < data.pin_count)
-      div.row 
-        div.col 
-          input.form-control(type="text" id="pin_"+n name="pin_"+n value=(n+1))
-        div.col 
-          input.form-control(type="text" id="sym_"+n name="sym_"+n placeholder="Symbol" value=data.sym[n])
-        div.col 
-          input.form-control(type="text" id="descr_"+n name="descr_"+n placeholder="Description" value=data.descr[n])
-
-      - n++
-
-    button.btn.btn-default.btn-primary(type="submit") Submit
-
-block scripts
-  script(type="text/javascript").
-    $( document ).ready(function() {
-      $("#cmf").addClass("active");
-      $("#chip_number").focus();
-    });
