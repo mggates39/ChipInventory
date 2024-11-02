@@ -615,7 +615,7 @@ async function getInductor(component_id) {
 }
 
 async function createInductor(inductor_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 13;
+  const component_type_id = 8;
   const component_id = await createComponent(inductor_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
       INSERT INTO inductors (component_id,  datasheet)
@@ -625,7 +625,7 @@ async function createInductor(inductor_number, pin_count, package_type_id, compo
 }
 
 async function updateInductor(component_id, inductor_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 13;
+  const component_type_id = 8;
   await updateComponent(component_id, inductor_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
     UPDATE inductors SET
@@ -657,7 +657,7 @@ async function getSwitch(component_id) {
 }
 
 async function createSwitch(switch_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 13;
+  const component_type_id = 9;
   const component_id = await createComponent(switch_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
       INSERT INTO switches (component_id,  datasheet)
@@ -667,7 +667,7 @@ async function createSwitch(switch_number, pin_count, package_type_id, component
 }
 
 async function updateSwitch(component_id, switch_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 13;
+  const component_type_id = 9;
   await updateComponent(component_id, switch_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
     UPDATE switches SET
@@ -699,7 +699,7 @@ async function getTransformer(component_id) {
 }
 
 async function createTransformer(transformer_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 13;
+  const component_type_id = 14;
   const component_id = await createComponent(transformer_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
       INSERT INTO transformers (component_id,  datasheet)
@@ -709,7 +709,7 @@ async function createTransformer(transformer_number, pin_count, package_type_id,
 }
 
 async function updateTransformer(component_id, transformer_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 13;
+  const component_type_id = 14;
   await updateComponent(component_id, transformer_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
     UPDATE transformers SET
@@ -741,7 +741,7 @@ async function getTransistor(component_id) {
 }
 
 async function createTransistor(transistor_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 13;
+  const component_type_id = 7;
   const component_id = await createComponent(transistor_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
       INSERT INTO transistors (component_id,  datasheet)
@@ -751,7 +751,7 @@ async function createTransistor(transistor_number, pin_count, package_type_id, c
 }
 
 async function updateTransistor(component_id, transistor_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 13;
+  const component_type_id = 7;
   await updateComponent(component_id, transistor_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
     UPDATE transistors SET
@@ -783,7 +783,7 @@ async function getWire(component_id) {
 }
 
 async function createWire(wire_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 13;
+  const component_type_id = 15;
   const component_id = await createComponent(wire_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
       INSERT INTO wires (component_id,  datasheet)
@@ -793,7 +793,7 @@ async function createWire(wire_number, pin_count, package_type_id, component_sub
 }
 
 async function updateWire(component_id, wire_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
-  const component_type_id = 13;
+  const component_type_id = 15;
   await updateComponent(component_id, wire_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
     UPDATE wires SET
