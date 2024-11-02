@@ -4,14 +4,14 @@ const { getFuse, createFuse, updateFuse, getPins, createPin, updatePin,
   getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, 
   getComponentSubTypesForComponentType,
   getAliases, createAlias, deleteAliases, 
-  getPickListByName} = require('../database');
+  getPickListByName, getComponentType } = require('../database');
 const {parse_symbol} = require('../utility');
 var router = express.Router();
 
 router.get('/edit/:id', async function(req,res,next) {
   const fuse_id = req.params.id;
 
-  const fuse = await getFuse(fuse_id);
+  const data = await getFuse(fuse_id);
   const pins = await getPins(fuse_id);
   const aliases = await getAliases(fuse_id);
   const package_types = await getPackageTypesForComponentType(13);
@@ -26,20 +26,7 @@ router.get('/edit/:id', async function(req,res,next) {
     sep = ", ";
   })
   
-  data = {
-    id: fuse_id,
-    fuse_number: fuse.chip_number,
-    aliases: aliasList,
-    package_type_id: fuse.package_type_id,
-    component_sub_type_id: fuse.component_sub_type_id,
-    pin_count: fuse.pin_count,
-    rating: fuse.rating,
-    rating_unit_id: fuse.rating_unit_id,
-    voltage: fuse.voltage,
-    voltage_unit_id: fuse.voltage_unit_id,
-    datasheet: fuse.datasheet,
-    description: fuse.description,
-  }
+  data['aliases'] = aliasList;
 
   var pin_id=[];
   var pin_num=[];
@@ -63,7 +50,14 @@ router.get('/edit/:id', async function(req,res,next) {
 
 /* GET new fuse entry page */
 router.get('/new', async function(req, res, next) {
-  data = {fuse_number: '',
+  const component_type_id = 13;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const rating_units = await getPickListByName('FuseRating');
+  const voltage_units = await getPickListByName('Voltages');
+
+data = {chip_number: '',
     aliases: '',
     package_type_id: '',
     component_sub_type_id: '',
@@ -73,19 +67,24 @@ router.get('/new', async function(req, res, next) {
     voltage: '',
     voltage_unit_id: '',
     datasheet: '',
-    description: ''
+    description: '',
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(13);
-  const component_sub_types = await getComponentSubTypesForComponentType(13);
-  const rating_units = await getPickListByName('FuseRating');
-  const voltage_units = await getPickListByName('Voltages');
 
   res.render('fuse/new', {title: 'New Fuse Definition', data: data, package_types: package_types, 
     component_sub_types: component_sub_types, rating_units: rating_units, voltage_units: voltage_units});
 });
 
 router.post('/new', async function(req, res) {
-  data = {fuse_number: req.body.fuse_number,
+  const component_type_id = 13;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const rating_units = await getPickListByName('FuseRating');
+  const voltage_units = await getPickListByName('Voltages');
+
+  data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
@@ -96,11 +95,9 @@ router.post('/new', async function(req, res) {
     voltage_unit_id: req.body.voltage_unit_id,
     datasheet: req.body.datasheet,
     description: req.body.description,
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(13);
-  const component_sub_types = await getComponentSubTypesForComponentType(13);
-  const rating_units = await getPickListByName('FuseRating');
-  const voltage_units = await getPickListByName('Voltages');
 
   var pin=[];
   var sym = [];
@@ -123,7 +120,7 @@ router.post('/new', async function(req, res) {
   data['descr'] = descr;
 
   if (descr[req.body.pin_count-1]) {
-    const fuse = await createFuse(data.fuse_number, data.pin_count, data.package_type_id, data.component_sub_type_id, 
+    const fuse = await createFuse(data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, 
       data.rating, data.rating_unit_id, data.voltage, data.voltage_unit_id, data.datasheet, data.description);
     fuse_id = fuse.component_id;
 
@@ -147,7 +144,7 @@ router.post('/new', async function(req, res) {
 
 router.post('/:id', async function(req, res) {
   const id = req.params.id;
-  data = {fuse_number: req.body.fuse_number,
+  data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
@@ -174,7 +171,7 @@ router.post('/:id', async function(req, res) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const fuse = await updateFuse(id, data.fuse_number, data.pin_count, data.package_type_id, data.component_sub_type_id, 
+  const fuse = await updateFuse(id, data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, 
     data.rating, data.rating_unit_id, data.voltage, data.voltage_unit_id, data.datasheet, data.description);
   fuse_id = fuse.component_id;
 
