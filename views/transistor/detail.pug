@@ -1,3 +1,6 @@
 extends ../component/detail
 
 block component_specific
+  p #[strong Usage] #{data.usages}
+  p #[strong Power Rating] #{data.power_rating} !{data.power_units}
+  p #[strong Threshold] #{data.threshold} !{data.threshold_units}

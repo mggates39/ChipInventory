@@ -662,7 +662,7 @@ having count(c.id) = 0
 order by name;
 
 select * from component_sub_types
-where component_type_id = 6;
+where component_type_id = 7;
 
 select * from components;
 select name, description from component_types;
@@ -722,4 +722,23 @@ select * from diodes;
 select * from lists where name = 'Frequency';
 select * from list_entries where list_id = 8;
 
+-- 15
+select * from components where id = 64;
+update components set component_type_id = 15 where  id = 64;
+commit;
+
+    SELECT t.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
+      pt.name as package, cst.description as component_type, ct.table_name, ct.description component_name,
+      us.name usages, pru.name power_units, tu.name threshold_units 
+    FROM components cmp
+    JOIN transistors t on t.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    LEFT JOIN list_entries us ON us.id = t.usage_id
+    LEFT JOIN list_entries pru ON pru.id = t.power_unit_id
+    LEFT JOIN list_entries tu ON tu.id = t.threshold_unit_id
+    WHERE t.component_id = 308;
+    
+select * from transistors;
 

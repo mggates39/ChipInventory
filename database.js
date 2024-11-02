@@ -729,35 +729,46 @@ async function deleteTransformer(component_id) {
 async function getTransistor(component_id) {
   const [rows] = await pool.query(`
     SELECT t.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
-      pt.name as package, cst.description as component_type, ct.table_name, ct.description component_name 
+      pt.name as package, cst.description as component_type, ct.table_name, ct.description component_name,
+      us.name usages, pru.name power_units, tu.name threshold_units 
     FROM components cmp
     JOIN transistors t on t.component_id = cmp.id
     JOIN package_types pt on pt.id = cmp.package_type_id
     JOIN component_types ct on ct.id = cmp.component_type_id
     LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    LEFT JOIN list_entries us ON us.id = t.usage_id
+    LEFT JOIN list_entries pru ON pru.id = t.power_unit_id
+    LEFT JOIN list_entries tu ON tu.id = t.threshold_unit_id
     WHERE t.component_id = ?
     `, [component_id])
    return rows[0]
 }
 
-async function createTransistor(transistor_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+async function createTransistor(transistor_number, description, pin_count, package_type_id, component_sub_type_id, 
+  usage_id, power_rating, power_unit_id, threshold, threshold_unit_id, datasheet) {
   const component_type_id = 7;
   const component_id = await createComponent(transistor_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
-      INSERT INTO transistors (component_id,  datasheet)
-      VALUES (?, ?)
-      `, [component_id, datasheet])
+      INSERT INTO transistors (component_id, usage_id, power_rating, power_unit_id, threshold, threshold_unit_id, datasheet)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+      `, [component_id, usage_id, power_rating, power_unit_id, threshold, threshold_unit_id, datasheet])
   return getTransistor(component_id)
 }
 
-async function updateTransistor(component_id, transistor_number, pin_count, package_type_id, component_sub_type_id, datasheet, description) {
+async function updateTransistor(component_id, transistor_number, description, pin_count, package_type_id, component_sub_type_id,
+  usage_id, power_rating, power_unit_id, threshold, threshold_unit_id, datasheet) {
   const component_type_id = 7;
   await updateComponent(component_id, transistor_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
     UPDATE transistors SET
+      usage_id = ?,
+      power_rating = ?,
+      power_unit_id = ?,
+      threshold = ?,
+      threshold_unit_id = ?,
       datasheet = ?
     WHERE component_id = ?
-    `, [datasheet, component_id])
+    `, [usage_id, power_rating, power_unit_id, threshold, threshold_unit_id, datasheet, component_id])
   return getTransistor(component_id)
 }
 
