@@ -198,7 +198,7 @@ router.get('/:id', async function(req, res, next) {
     top_pins = [];
     bottom_pins = [];
 
-    if (chip.package == 'SIP') {
+    if ((chip.package == 'SIP') || (chip.package == 'TO-XX')) {
       if (chip.pin_count > 12) {
         iswide = 'dpindiagramwide';
       }
