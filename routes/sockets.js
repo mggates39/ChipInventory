@@ -22,7 +22,7 @@ router.get('/edit/:id', async function(req,res,next) {
   aliasList = "";
   sep = "";
   aliases.forEach(function(alias) {
-    aliasList += (sep + alias.alias_socket_number);
+    aliasList += (sep + alias.alias_chip_number);
     sep = ", ";
   })
   
