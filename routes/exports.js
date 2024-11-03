@@ -4,7 +4,7 @@ const yaml = require('js-yaml');
 const fs = require('node:fs/promises');
 const { getComponentTypeList, searchComponents, getComponent, getPins, getSpecs, getNotes, getAliases,
     getChip, getCapacitor, getCapacitorNetwork, getResistor, getResistorNetwork, getCrystal, getConnector, getSocket, 
-    getDiode, getFuse } = require('../database');
+    getDiode, getFuse, getTransistor } = require('../database');
 
 
 async function export_chip(component_id) {
@@ -113,6 +113,16 @@ async function export_chip(component_id) {
         component_data['voltage'] = fuse.voltage;
         component_data['voltage_units'] = fuse.voltage_units;
         component_data['datasheet'] = fuse.datasheet;
+    }
+
+    if (component.type == 'Transistor') {
+        const transistor = await getTransistor(component_id);
+        component_data['usage'] = transistor.usages;
+        component_data['power_rating'] = transistor.power_rating;
+        component_data['power_units'] = transistor.power_units;
+        component_data['threshold'] = transistor.threshold;
+        component_data['threshold_units'] = transistor.threshold_units;
+        component_data['datasheet'] = transistor.datasheet;
     }
 
     if (aliases.length) {
