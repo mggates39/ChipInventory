@@ -169,6 +169,7 @@ Required. This field indicates how the pin diagram of this part should be drawn.
   - `SIP` - Single In-line Package
   - `SOIC` - Small Outline Integrated Circuit
   - `SOP` - Small Outline Package
+  - `TO-XX` - Transistor Outline
 - Inductor
   - `Axial` - Leads on the ends
   - `Radial` - Leads on the edges
@@ -202,9 +203,7 @@ Required. This field indicates how the pin diagram of this part should be drawn.
 - Switch
   - `THD` - Through Hole Device
 - Transisstor
-  - `SMD` - Surface Mount Device
   - `SOT` - Small Outline Transistor
-  - `THD` - Through Hole Device
   - `TO-XX` - Transistor Outline
   - Wire
   - `Axial` - Leads on the ends
