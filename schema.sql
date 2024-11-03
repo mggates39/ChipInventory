@@ -112,7 +112,8 @@ CREATE TABLE `chips` (
 
 CREATE TABLE `crystals` (
   `component_id` int NOT NULL,
-  `frequency` varchar(32) NOT NULL,
+  `frequency` float(8,4) NOT NULL,
+  `unit_id` int NOT NULL,
   `datasheet` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`component_id`),
   CONSTRAINT `crystals_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
@@ -208,6 +209,11 @@ CREATE TABLE `transformers` (
 
 CREATE TABLE `transistors` (
   `component_id` int NOT NULL,
+  `usage_id` int NOT NULL,
+  `power_rating` float(7,3) NOT NULL,
+  `power_unit_id` int NOT NULL,
+  `threshold` float(7,3) NOT NULL,
+  `threshold_unit_id` int NOT NULL,
   `datasheet` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`component_id`),
   CONSTRAINT `transistors_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)

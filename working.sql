@@ -662,9 +662,11 @@ having count(c.id) = 0
 order by name;
 
 select * from component_sub_types
-where component_type_id = 6;
+where component_type_id = 7;
 
 select * from components;
+select name, description from component_types;
+select name, description from package_types order by name;
 
 SELECT ct.*, 
   (select count(*) ni from component_sub_types where component_type_id = ct.id) num_sub_types,
@@ -672,12 +674,13 @@ SELECT ct.*,
 FROM component_types ct
 ORDER BY description;
 
-SELECT pt.*,  ct.name component_type
+SELECT pt.name, pt.description,  ct.name component_type
 FROM package_types pt
 JOIN component_packages cp on cp.package_type_id = pt.id
 JOIN component_types ct on ct.id = cp.component_type_id
-WHERE pt.name = 'DIP'
-  AND ct.id = 1;
+-- WHERE pt.name = 'DIP'
+--   AND ct.id = 1
+ORDER BY ct.name, pt.name;
 
 SELECT cst.id, cst.name, cst.description
 FROM component_sub_types cst
@@ -696,4 +699,46 @@ where n.note like '%\_\_%' or n.note like '%~%';
 Select name, replace(name, 'MEGA', 'mega') newname
 from components
 where name like 'ATM%';
+
+  SELECT cmp.*, pt.name as package, ct.description as component, ct.table_name, ct.name as type, cst.name as sub_type 
+  FROM components cmp
+  JOIN package_types pt on pt.id = cmp.package_type_id
+  JOIN component_types ct on ct.id = cmp.component_type_id
+  LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+  WHERE cmp.id = 302;
+  
+select ct.description, cst.name, cst.description
+from component_sub_types cst
+join component_types ct on ct.id = cst.component_type_id
+order by ct.name, cst.name;
+
+select * from package_types;
+
+select * from components where component_sub_type_id = 48;
+select * from chips where component_id = 64;
+select * from wires;
+select * from diodes;
+
+select * from lists where name = 'Frequency';
+select * from list_entries where list_id = 8;
+
+-- 15
+select * from components where id = 64;
+update components set component_type_id = 15 where  id = 64;
+commit;
+
+    SELECT t.*, cmp.name as chip_number, cmp.description, cmp.package_type_id, cmp.component_sub_type_id, cmp.pin_count, 
+      pt.name as package, cst.description as component_type, ct.table_name, ct.description component_name,
+      us.name usages, pru.name power_units, tu.name threshold_units 
+    FROM components cmp
+    JOIN transistors t on t.component_id = cmp.id
+    JOIN package_types pt on pt.id = cmp.package_type_id
+    JOIN component_types ct on ct.id = cmp.component_type_id
+    LEFT JOIN component_sub_types cst on cst.id = cmp.component_sub_type_id
+    LEFT JOIN list_entries us ON us.id = t.usage_id
+    LEFT JOIN list_entries pru ON pru.id = t.power_unit_id
+    LEFT JOIN list_entries tu ON tu.id = t.threshold_unit_id
+    WHERE t.component_id = 308;
+    
+select * from transistors;
 

@@ -70,4 +70,13 @@ router.post('/:id/newalias', async function(req, res) {
   res.redirect('/components/'+chip_id);
 });
 
+/* Add a note to the selected component */
+router.get('/get_components/:id', async function(req, res) {
+  const component_type_id = req.params.id;
+  const components = await searchComponents('', 'p', component_type_id);
+  res.send(components);
+});
+
+
+
 module.exports = router;

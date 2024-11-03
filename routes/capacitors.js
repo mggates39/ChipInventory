@@ -3,11 +3,13 @@ var router = express.Router();
 const {  getCapacitor, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createCapacitor, updateCapacitor, createPin, updatePin,
   getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType,
-  getPickListByName} = require('../database');
+  getPickListByName, getComponentType} = require('../database');
 const {parse_symbol} = require('../utility');
 
 /* GET new item page */
 router.get('/new', async function(req, res, next) {
+  const component_type_id = 2;
+  const component_type = await getComponentType(component_type_id);
   data = {chip_number: '',
     aliases: '',
     package_type_id: '',
@@ -18,7 +20,9 @@ router.get('/new', async function(req, res, next) {
     tolerance: '',
     working_voltage: '',
     datasheet: '',
-    description: ''
+    description: '',
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   };
   var pin=[];
   var sym = [];
@@ -34,8 +38,8 @@ router.get('/new', async function(req, res, next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const package_types = await getPackageTypesForComponentType(2);
-  const component_sub_types = await getComponentSubTypesForComponentType(2);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
   const unit_list = await getPickListByName('Capacitance');
 
   res.render('capacitor/new', {title: 'New Capacitor Definition', data: data, package_types: package_types, 
@@ -109,7 +113,7 @@ router.get('/:id', async function(req, res, nest) {
     )
   })
 
-  res.render('capacitor/detail', { title: data.chip_number + ' - ' + data.description, capacitor: data, 
+  res.render('capacitor/detail', { title: data.chip_number + ' - ' + data.description, data: data, 
     pins: fixed_pins, layout_pins: layout_pins,
     specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
@@ -144,7 +148,9 @@ router.get('/edit/:id', async function(req, res, next) {
     pin_count: capacitor.pin_count,
     datasheet: capacitor.datasheet,
     description: capacitor.description,
-  }
+    component_name: capacitor.component_name,
+    table_name: capacitor.table_name,
+ }
 
   var pin_id=[];
   var pin_num=[];
@@ -167,6 +173,8 @@ router.get('/edit/:id', async function(req, res, next) {
 })
   
 router.post('/new', async function( req, res, next) {
+  const component_type_id = 2;
+  const component_type = await getComponentType(component_type_id);
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     capacitance: req.body.capacitance,
@@ -178,9 +186,11 @@ router.post('/new', async function( req, res, next) {
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(2);
-  const component_sub_types = await getComponentSubTypesForComponentType(2);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
   var pin=[];
   var sym = [];
   var descr = [];

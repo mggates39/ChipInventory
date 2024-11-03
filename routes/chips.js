@@ -5,14 +5,15 @@ const { getChip, createChip, updateChip, getPins, createPin, updatePin,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, 
   getComponentTypeList, getComponentSubTypesForComponentType,
-  getAliases, createAlias, deleteAliases } = require('../database');
+  getAliases, createAlias, deleteAliases, 
+  getComponentType} = require('../database');
 const {parse_symbol} = require('../utility');
 var router = express.Router();
 
 router.get('/edit/:id', async function(req,res,next) {
   const chip_id = req.params.id;
 
-  const chip = await getChip(chip_id);
+  const data = await getChip(chip_id);
   const pins = await getPins(chip_id);
   const aliases = await getAliases(chip_id);
   const package_types = await getPackageTypesForComponentType(1);
@@ -25,17 +26,7 @@ router.get('/edit/:id', async function(req,res,next) {
     sep = ", ";
   })
   
-  data = {
-    id: chip_id,
-    chip_number: chip.chip_number,
-    aliases: aliasList,
-    family: chip.family,
-    package_type_id: chip.package_type_id,
-    component_sub_type_id: chip.component_sub_type_id,
-    pin_count: chip.pin_count,
-    datasheet: chip.datasheet,
-    description: chip.description,
-  }
+  data['aliases'] = aliasList;
 
   var pin_id=[];
   var pin_num=[];
@@ -53,11 +44,13 @@ router.get('/edit/:id', async function(req,res,next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  res.render('chip/edit', {title: 'Edit Chip Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('chip/edit', {title: 'Edit Integrated Circuit Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
 })
 
 /* GET new chip entry page */
 router.get('/new', async function(req, res, next) {
+  const component_type_id = 1;
+  const component_type = await getComponentType(component_type_id);
   data = {chip_number: '',
     aliases: '',
     family: '',
@@ -65,15 +58,19 @@ router.get('/new', async function(req, res, next) {
     component_sub_type_id: '',
     pin_count: '',
     datasheet: '',
-    description: ''
+    description: '',
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(1);
-  const component_sub_types = await getComponentSubTypesForComponentType(1);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
 
-  res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('chip/new', {title: 'New Integrated Circuit Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
 });
 
 router.post('/new', async function(req, res) {
+  const component_type_id = 1;
+  const component_type = await getComponentType(component_type_id);
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     family: req.body.family,
@@ -82,9 +79,11 @@ router.post('/new', async function(req, res) {
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
+    component_name: component_type.description,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(1);
-  const component_sub_types = await getComponentSubTypesForComponentType(1);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
   var pin=[];
   var sym = [];
   var descr = [];
@@ -114,7 +113,7 @@ router.post('/new', async function(req, res) {
 
     res.redirect('/chips/'+chip_id);
   } else {
-    res.render('chip/new', {title: 'New Chip Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+    res.render('chip/new', {title: 'New Integrated Circuit Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
   }
 });
 
@@ -199,7 +198,7 @@ router.get('/:id', async function(req, res, next) {
     top_pins = [];
     bottom_pins = [];
 
-    if (chip.package == 'SIP') {
+    if ((chip.package == 'SIP') || (chip.package == 'TO-XX')) {
       if (chip.pin_count > 12) {
         iswide = 'dpindiagramwide';
       }
@@ -314,7 +313,7 @@ router.get('/:id', async function(req, res, next) {
       )
     })
 
-    res.render('chip/detail', { title: chip.chip_number + ' - ' + chip.description, chip: chip, 
+    res.render('chip/detail', { title: chip.chip_number + ' - ' + chip.description, data: chip, 
       pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
       specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });

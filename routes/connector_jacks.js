@@ -4,7 +4,7 @@ const { getConnector, createConnector, updateConnector, getPins, createPin, upda
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, 
-  getComponentSubTypesForComponentType,
+  getComponentSubTypesForComponentType, getComponentType,
   getAliases, createAlias, deleteAliases } = require('../database');
 const {parse_symbol} = require('../utility');
 var router = express.Router();
@@ -12,7 +12,8 @@ var router = express.Router();
 router.get('/edit/:id', async function(req,res,next) {
   const connector_id = req.params.id;
   const component_type_id = 11;
-  const connector = await getConnector(connector_id);
+  
+  const data = await getConnector(connector_id);
   const pins = await getPins(connector_id);
   const aliases = await getAliases(connector_id);
   const package_types = await getPackageTypesForComponentType(component_type_id);
@@ -21,20 +22,11 @@ router.get('/edit/:id', async function(req,res,next) {
   aliasList = "";
   sep = "";
   aliases.forEach(function(alias) {
-    aliasList += (sep + alias.alias_connector_number);
+    aliasList += (sep + alias.alias_chip_number);
     sep = ", ";
   })
   
-  data = {
-    id: connector_id,
-    connector_number: connector.chip_number,
-    aliases: aliasList,
-    package_type_id: connector.package_type_id,
-    component_sub_type_id: connector.component_sub_type_id,
-    pin_count: connector.pin_count,
-    datasheet: connector.datasheet,
-    description: connector.description,
-  }
+  data['aliases'] = aliasList;
 
   var pin_id=[];
   var pin_num=[];
@@ -57,33 +49,42 @@ router.get('/edit/:id', async function(req,res,next) {
 
 /* GET new connector entry page */
 router.get('/new', async function(req, res, next) {
-  data = {connector_number: '',
+  const component_type_id = 11;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+
+  data = {chip_number: '',
     aliases: '',
     package_type_id: '',
     component_sub_type_id: '',
     pin_count: '',
     datasheet: '',
-    description: ''
+    description: '',
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const component_type_id = 11;
-  const package_types = await getPackageTypesForComponentType(component_type_id);
-  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
 
   res.render('connector_jack/new', {title: 'New Jack Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
 });
 
 router.post('/new', async function(req, res) {
-  data = {connector_number: req.body.connector_number,
+  const component_type_id = 11;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+
+  data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const component_type_id = 11;
-  const package_types = await getPackageTypesForComponentType(component_type_id);
-  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+
   var pin=[];
   var sym = [];
   var descr = [];
@@ -105,7 +106,7 @@ router.post('/new', async function(req, res) {
   data['descr'] = descr;
 
   if (descr[req.body.pin_count-1]) {
-    const connector = await createConnector(component_type_id, data.connector_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+    const connector = await createConnector(component_type_id, data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
     connector_id = connector.component_id;
 
     for (var i = 0; i < req.body.pin_count; i++) {
@@ -129,7 +130,7 @@ router.post('/:id', async function(req, res) {
   const id = req.params.id;
   const component_type_id = 11;
 
-  data = {connector_number: req.body.connector_number,
+  data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
@@ -137,6 +138,7 @@ router.post('/:id', async function(req, res) {
     datasheet: req.body.datasheet,
     description: req.body.description,
   }
+  
   var pin_id=[];
   var pin=[];
   var sym = [];
@@ -152,7 +154,7 @@ router.post('/:id', async function(req, res) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const connector = await updateConnector(id, component_type_id, data.connector_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+  const connector = await updateConnector(id, component_type_id, data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
   connector_id = connector.component_id;
 
   for (var i = 0; i < req.body.pin_count; i++) {
@@ -322,7 +324,7 @@ router.get('/:id', async function(req, res, next) {
       )
     })
   
-    res.render('connector_jack/detail', { title: connector.chip_number + ' - ' + connector.description, connector_jack: connector, 
+    res.render('connector_jack/detail', { title: connector.chip_number + ' - ' + connector.description, data: connector, 
       pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
       specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });

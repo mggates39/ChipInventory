@@ -1,26 +1,35 @@
 var express = require('express');
 var router = express.Router();
-const { getMountingTypeList, 
-  getCrystal, getPins, getDipLeftPins, getDipRightPins, getSipPins,
+const { getCrystal, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createCrystal, updateCrystal, createPin, updatePin,
-  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType} = require('../database');
+  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType, 
+  getPickListByName, getComponentType } = require('../database');
 const {parse_symbol} = require('../utility');
 
 /* GET new item page */
 router.get('/new', async function(req, res, next) {
+  const component_type_id = 10;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const units = await getPickListByName('Frequency');
+  const kilohertz_id = 37;
+
   data = {chip_number: '',
     aliases: '',
     frequency: '',
+    unit_id: kilohertz_id,
     package_type_id: '',
     component_sub_type_id: '',
     pin_count: '',
     datasheet: '',
-    description: ''
+    description: '',
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(10);
-  const component_sub_types = await getComponentSubTypesForComponentType(10);
 
-  res.render('crystal/new', {title: 'New Crystal Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('crystal/new', {title: 'New Crystal Definition', data: data, package_types: package_types, 
+    component_sub_types: component_sub_types, unit_list: units});
 });
   
 /* GET item page */
@@ -89,7 +98,7 @@ router.get('/:id', async function(req, res, nest) {
       )
     })
     
-    res.render('crystal/detail', { title: data.chip_number + ' - ' + data.description, crystal: data, 
+    res.render('crystal/detail', { title: data.chip_number + ' - ' + data.description, data: data, 
       pins: fixed_pins, layout_pins: layout_pins, 
       specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
@@ -97,11 +106,12 @@ router.get('/:id', async function(req, res, nest) {
 /* GET Edit item page */
 router.get('/edit/:id', async function(req, res, next) {
     const crystal_id = req.params.id;
-    const crystal = await getCrystal(crystal_id);
+    const data = await getCrystal(crystal_id);
     const pins = await getPins(crystal_id);
     const aliases = await getAliases(crystal_id);
     const package_types = await getPackageTypesForComponentType(10);
     const component_sub_types = await getComponentSubTypesForComponentType(10);
+    const units = await getPickListByName('Frequency');
   
     aliasList = "";
     sep = "";
@@ -110,17 +120,7 @@ router.get('/edit/:id', async function(req, res, next) {
       sep = ", ";
     })
     
-    data = {
-      id: crystal_id,
-      chip_number: crystal.chip_number,
-      aliases: aliasList,
-      frequency: crystal.frequency,
-      package_type_id: crystal.package_type_id,
-      component_sub_type_id: crystal.component_sub_type_id,
-      pin_count: crystal.pin_count,
-      datasheet: crystal.datasheet,
-      description: crystal.description,
-    }
+    data['aliases'] = aliasList;
   
     var pin_id=[];
     var pin_num=[];
@@ -138,21 +138,30 @@ router.get('/edit/:id', async function(req, res, next) {
     data['sym'] = sym;
     data['descr'] = descr;
   
-    res.render('crystal/edit', {title: 'Edit Chip Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+    res.render('crystal/edit', {title: 'Edit Crystal Definition', data: data, package_types: package_types, 
+      component_sub_types: component_sub_types, unit_list: units});
 });
   
 router.post('/new', async function( req, res, next) {
+  const component_type_id = 10;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const units = await getPickListByName('Frequency');
+
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     frequency: req.body.frequency,
+    unit_id: req.body.unit_id, 
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-  const package_types = await getPackageTypesForComponentType(10);
-  const component_sub_types = await getComponentSubTypesForComponentType(10);
+
   var pin=[];
   var sym = [];
   var descr = [];
@@ -166,7 +175,7 @@ router.post('/new', async function( req, res, next) {
   data['descr'] = descr;
 
   if (descr[req.body.pin_count-1]) {
-    const crystal = await createCrystal(data.chip_number, data.frequency, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+    const crystal = await createCrystal(data.chip_number, data.frequency, data.unit_id, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
     crystal_id = crystal.component_id;
 
     for (var i = 0; i < req.body.pin_count; i++) {
@@ -182,7 +191,8 @@ router.post('/new', async function( req, res, next) {
 
     res.redirect('/crystals/'+crystal_id);
   } else {
-    res.render('crystal/new', {title: 'New crystal Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+    res.render('crystal/new', {title: 'New crystal Definition', data: data, package_types: package_types, 
+      component_sub_types: component_sub_types, unit_list: units});
   }
 });
 
@@ -191,6 +201,7 @@ router.post('/:id', async function( req, res, next) {
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     frequency: req.body.frequency,
+    unit_id: req.body.unit_id, 
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
     pin_count: req.body.pin_count,
@@ -212,7 +223,7 @@ router.post('/:id', async function( req, res, next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const crystal = await updateCrystal(id, data.chip_number, data.frequency, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+  const crystal = await updateCrystal(id, data.chip_number, data.frequency, data.unit_id, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
   crystal_id =crystal.component_id;
 
   for (var i = 0; i < req.body.pin_count; i++) {

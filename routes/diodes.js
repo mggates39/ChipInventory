@@ -3,11 +3,19 @@ var router = express.Router();
 const {  getDiode, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createDiode, updateDiode, createPin, updatePin,
   getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType,
-  getPickListByName} = require('../database');
+  getPickListByName, getComponentType } = require('../database');
 const {parse_symbol} = require('../utility');
 
 /* GET new item page */
 router.get('/new', async function(req, res, next) {
+  const component_type_id = 6;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const unit_list = await getPickListByName('Voltages');
+  const light_colors = await getPickListByName('LEDColor');
+  const lens_colors = await getPickListByName('LensColor');
+
   data = {chip_number: '',
     aliases: '',
     package_type_id: '',
@@ -20,14 +28,10 @@ router.get('/new', async function(req, res, next) {
     light_color_id: '',
     lens_color_id: '',
     datasheet: '',
-    description: ''
+    description: '',
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   };
-
-  const package_types = await getPackageTypesForComponentType(6);
-  const component_sub_types = await getComponentSubTypesForComponentType(6);
-  const unit_list = await getPickListByName('Voltages');
-  const light_colors = await getPickListByName('LEDColor');
-  const lens_colors = await getPickListByName('LensColor');
 
   res.render('diode/new', {title: 'New Diode Definition', data: data, package_types: package_types, 
     component_sub_types: component_sub_types, unit_list: unit_list, light_colors: light_colors, lens_colors: lens_colors});
@@ -99,19 +103,20 @@ router.get('/:id', async function(req, res, nest) {
     )
   })
 
-  res.render('diode/detail', { title: data.chip_number + ' - ' + data.description, diode: data, 
+  res.render('diode/detail', { title: data.chip_number + ' - ' + data.description, data: data, 
     pins: fixed_pins, layout_pins: layout_pins, 
     specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
 
 /* GET Edit item page */
 router.get('/edit/:id', async function(req, res, next) {
+  const component_type_id = 6;
   const diode_id = req.params.id;
-  const diode = await getDiode(diode_id);
+  const data = await getDiode(diode_id);
   const pins = await getPins(diode_id);
   const aliases = await getAliases(diode_id);
-  const package_types = await getPackageTypesForComponentType(6);
-  const component_sub_types = await getComponentSubTypesForComponentType(6);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
   const unit_list = await getPickListByName('Voltages');
   const light_colors = await getPickListByName('LEDColor');
   const lens_colors = await getPickListByName('LensColor');
@@ -123,22 +128,7 @@ router.get('/edit/:id', async function(req, res, next) {
     sep = ", ";
   })
   
-  data = {
-    component_id: diode_id,
-    chip_number: diode.chip_number,
-    aliases: aliasList,
-    package_type_id: diode.package_type_id,
-    pin_count: diode.pin_count,
-    component_sub_type_id: diode.component_sub_type_id,
-    forward_voltage: diode.forward_voltage,
-    forward_unit_id: diode.forward_unit_id,
-    reverse_voltage: diode.reverse_voltage,
-    reverse_unit_id: diode.reverse_unit_id,
-    light_color_id: diode.light_color_id,
-    lens_color_id: diode.lens_color_id,
-    datasheet: diode.datasheet,
-    description: diode.description,
-  };
+  data['aliases'] = aliasList;
 
   var pin_id=[];
   var pin_num=[];
@@ -161,6 +151,14 @@ router.get('/edit/:id', async function(req, res, next) {
 })
   
 router.post('/new', async function( req, res, next) {
+  const component_type_id = 6;
+  const component_type = await getComponentType(component_type_id);
+  const package_types = await getPackageTypesForComponentType(6);
+  const component_sub_types = await getComponentSubTypesForComponentType(6);
+  const unit_list = await getPickListByName('Voltages');
+  const light_colors = await getPickListByName('LEDColor');
+  const lens_colors = await getPickListByName('LensColor');
+
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     package_type_id: req.body.package_type_id,
@@ -174,13 +172,9 @@ router.post('/new', async function( req, res, next) {
     lens_color_id: req.body.lens_color_id,
     datasheet: req.body.datasheet,
     description: req.body.description,
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   }
-
-  const package_types = await getPackageTypesForComponentType(6);
-  const component_sub_types = await getComponentSubTypesForComponentType(6);
-  const unit_list = await getPickListByName('Voltages');
-  const light_colors = await getPickListByName('LEDColor');
-  const lens_colors = await getPickListByName('LensColor');
 
   let pin_count = 2;
   light_colors.forEach(function(color) {

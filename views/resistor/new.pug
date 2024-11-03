@@ -1,28 +1,6 @@
-extends ../layout
+extends ../component/new
 
-block content
-  p Enter the new Resistor defintion
-  form(action="/resistors/new/" method="POST")
-    input#pin_count(type="hidden" name="pin_count" value=data.pin_count)
-    div.form-group
-      label(for="chip_number") Resistor Number:
-      input#chip_number.form-control( type="text" placeholder="Ex) 7425" name="chip_number" value=data.chip_number)
-    div.form-group
-      label( for="aliases") Aliases:
-      input#aliases.form-control(type="text" placeholder="Ex) 74HTC25, 74LS25" name="aliases" value=data.aliases)
-    div.form-group
-      label( for="description") Description:
-      input#description.form-control(type="text" placeholder="Summary of what the chip does" name="description" value=data.description)
-    div.form-group
-      label( for="component_sub_type_id") Type:
-      select#component_sub_type_id.form-control(type='select' placeholder='Select Component type' name='component_sub_type_id' required='true')
-        for component_sub_type in component_sub_types
-          option(value=component_sub_type.id selected= data.component_sub_type_id == component_sub_type.id) #{component_sub_type.name}
-    div.form-group
-      label( for="package_type_id") Package:
-      select#package_type_id.form-control(type='select' placeholder='Select package type' name='package_type_id' required='true')
-        for package_type in package_types
-          option(value=package_type.id selected= data.package_type_id == package_type.id) #{package_type.name}
+block component_specific
     div.form-group
       label( for="resistance") Resistance:
       div.input-group
@@ -36,28 +14,3 @@ block content
     div.form-group
       label( for="power") Power W:
       input#power.form-control(type="text" placeholder="Ex) 0.25" name="power" value=data.power)
-    div.form-group
-      label( for="datasheet") Datasheet:
-      input#datasheet.form-control(type="text" placeholder="URL to datasheet" name="datasheet" value=data.datasheet)
-    br
-    h4 Pins 
-    - var n = 0
-    - while (n < data.pin_count)
-      div.row 
-        div.col 
-          input.form-control(type="text" id="pin_"+n name="pin_"+n value=(n+1))
-        div.col 
-          input.form-control(type="text" id="sym_"+n name="sym_"+n placeholder="Symbol" value=data.sym[n])
-        div.col 
-          input.form-control(type="text" id="descr_"+n name="descr_"+n placeholder="Description" value=data.descr[n])
-
-      - n++
-
-    button.btn.btn-default.btn-primary(type="submit") Submit
-
-block scripts
-  script(type="text/javascript").
-    $( document ).ready(function() {
-      $("#cmf").addClass("active");
-      $("#chip_number").focus();
-    });

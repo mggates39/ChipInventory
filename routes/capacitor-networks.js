@@ -2,11 +2,14 @@ var express = require('express');
 var router = express.Router();
 const {  getCapacitorNetwork, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createCapacitorNetwork, updateCapacitorNetwork, createPin, updatePin,
-  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType, getPickListByName} = require('../database');
+  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType, 
+  getPickListByName, getComponentType} = require('../database');
 const {parse_symbol} = require('../utility');
 
 /* GET new item page */
 router.get('/new', async function(req, res, next) {
+  const component_type_id = 3;
+  const component_type = await getComponentType(component_type_id);
   data = {chip_number: '',
     aliases: '',
     package_type_id: '',
@@ -18,11 +21,13 @@ router.get('/new', async function(req, res, next) {
     working_voltage: '',
     number_capacitors: '',
     datasheet: '',
-    description: ''
+    description: '',
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
   };
 
-  const package_types = await getPackageTypesForComponentType(3);
-  const component_sub_types = await getComponentSubTypesForComponentType(3);
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
   const unit_list = await getPickListByName('Capacitance');
 
   res.render('capacitor_network/new', {title: 'New Capacitor Network Definition', data: data, package_types: package_types, 
@@ -100,7 +105,7 @@ router.get('/:id', async function(req, res, nest) {
     )
   })
 
-  res.render('capacitor_network/detail', { title: data.chip_number + ' - ' + data.description, capacitor: data, 
+  res.render('capacitor_network/detail', { title: data.chip_number + ' - ' + data.description, data: data, 
     pins: fixed_pins, layout_pins: layout_pins,
     specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
@@ -108,7 +113,7 @@ router.get('/:id', async function(req, res, nest) {
 /* GET Edit item page */
 router.get('/edit/:id', async function(req, res, next) {
   const capacitor_id = req.params.id;
-  const capacitor = await getCapacitorNetwork(capacitor_id);
+  const data = await getCapacitorNetwork(capacitor_id);
   const pins = await getPins(capacitor_id);
   const aliases = await getAliases(capacitor_id);
   const package_types = await getPackageTypesForComponentType(3);
@@ -122,21 +127,7 @@ router.get('/edit/:id', async function(req, res, next) {
     sep = ", ";
   })
   
-  data = {
-    component_id: capacitor_id,
-    chip_number: capacitor.chip_number,
-    aliases: aliasList,
-    capacitance: capacitor.capacitance,
-    unit_id: capacitor.unit_id,
-    tolerance: capacitor.tolerance,
-    working_voltage: capacitor.working_voltage,
-    number_capacitors: capacitor.number_capacitors,
-    package_type_id: capacitor.package_type_id,
-    component_sub_type_id: capacitor.component_sub_type_id,
-    pin_count: capacitor.pin_count,
-    datasheet: capacitor.datasheet,
-    description: capacitor.description,
-  }
+  data['aliases'] = aliasList;
 
   var pin_id=[];
   var pin_num=[];
@@ -159,6 +150,8 @@ router.get('/edit/:id', async function(req, res, next) {
 })
   
 router.post('/new', async function( req, res, next) {
+  const component_type_id = 3;
+  const component_type = await getComponentType(component_type_id);
   data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     capacitance: req.body.capacitance,
@@ -171,9 +164,11 @@ router.post('/new', async function( req, res, next) {
     pin_count: req.body.pin_count,
     datasheet: req.body.datasheet,
     description: req.body.description,
-  }
-  const package_types = await getPackageTypesForComponentType(3);
-  const component_sub_types = await getComponentSubTypesForComponentType(3);
+    component_name: component_type.decscription,
+    table_name: component_type.table_name,
+}
+  const package_types = await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
   const unit_list = await getPickListByName('Capacitance');
 
   var pin=[];

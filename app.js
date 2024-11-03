@@ -34,6 +34,10 @@ var listsRouters = require('./routes/lists');
 var listEntriesRouter = require('./routes/list_entries');
 var importRouter = require('./routes/imports');
 var exportRouter = require('./routes/exports');
+var inductorRouter = require('./routes/inductors');
+var transformerRouter = require('./routes/transformers');
+var transistorRouter = require('./routes/transistors');
+var wireRouter = require('./routes/wires');
 var app = express();
 
 // view engine setup
@@ -75,6 +79,10 @@ app.use('/lists', listsRouters);
 app.use('/list_entries', listEntriesRouter);
 app.use('/imports', importRouter);
 app.use('/exports', exportRouter);
+app.use('/inductors', inductorRouter);
+app.use('/transformers', transformerRouter);
+app.use('/transistors', transistorRouter);
+app.use('/wires', wireRouter);
 
 // Set up a route for BOM file uploads
 app.post("/projects/:id/upload", async function (req, res, next) {

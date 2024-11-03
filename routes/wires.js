@@ -1,5 +1,5 @@
 var express = require('express');
-const { getSocket, createSocket, updateSocket, getPins, createPin, updatePin, 
+const { getWire, createWire, updateWire, getPins, createPin, updatePin, 
   getDipLeftPins, getDipRightPins, getSipPins,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
@@ -10,12 +10,12 @@ const {parse_symbol} = require('../utility');
 var router = express.Router();
 
 router.get('/edit/:id', async function(req,res,next) {
-  const socket_id = req.params.id;
-  const component_type_id = 16;
+  const wire_id = req.params.id;
+  const component_type_id = 15;
 
-  const data = await getSocket(socket_id);
-  const pins = await getPins(socket_id);
-  const aliases = await getAliases(socket_id);
+  const data = await getWire(wire_id);
+  const pins = await getPins(wire_id);
+  const aliases = await getAliases(wire_id);
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
 
@@ -44,12 +44,12 @@ router.get('/edit/:id', async function(req,res,next) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  res.render('socket/edit', {title: 'Edit Socket Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+  res.render('wire/edit', {title: 'Edit Wire Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
 })
 
-/* GET new socket entry page */
+/* GET new wire entry page */
 router.get('/new', async function(req, res, next) {
-  const component_type_id = 16;
+  const component_type_id = 15;
   const component_type = await getComponentType(component_type_id);
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
@@ -65,11 +65,11 @@ router.get('/new', async function(req, res, next) {
     table_name: component_type.table_name,
   };
 
- res.render('socket/new', {title: 'New Socket Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+ res.render('wire/new', {title: 'New Wire Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
 });
 
 router.post('/new', async function(req, res) {
-  const component_type_id = 16;
+  const component_type_id = 15;
   const component_type = await getComponentType(component_type_id);
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
@@ -106,23 +106,23 @@ router.post('/new', async function(req, res) {
   data['descr'] = descr;
 
   if (descr[req.body.pin_count-1]) {
-    const socket = await createSocket(data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
-    socket_id = socket.component_id;
+    const wire = await createWire(data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+    wire_id = wire.component_id;
 
     for (var i = 0; i < req.body.pin_count; i++) {
-      await createPin(socket_id, pin[i], sym[i], descr[i]);
+      await createPin(wire_id, pin[i], sym[i], descr[i]);
     }
 
     aliases = data.aliases.split(',');
     for( const alias of aliases) {
       if (alias.length > 0) {
-        await createAlias(socket_id, alias.trim());
+        await createAlias(wire_id, alias.trim());
       }
     }
 
-    res.redirect('/sockets/'+socket_id);
+    res.redirect('/wires/'+wire_id);
   } else {
-    res.render('socket/new', {title: 'New Socket Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
+    res.render('wire/new', {title: 'New Wire Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
   }
 });
 
@@ -151,29 +151,29 @@ router.post('/:id', async function(req, res) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const socket = await updateSocket(id, data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
-  socket_id = socket.component_id;
+  const wire = await updateWire(id, data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+  wire_id = wire.component_id;
 
   for (var i = 0; i < req.body.pin_count; i++) {
-    await updatePin(pin_id[i], socket_id, pin[i], sym[i], descr[i]);
+    await updatePin(pin_id[i], wire_id, pin[i], sym[i], descr[i]);
   }
 
-  await deleteAliases(socket_id);
+  await deleteAliases(wire_id);
 
   aliases = data.aliases.split(',');
   for( const alias of aliases) {
     if (alias.length > 0) {
-      await createAlias(socket_id, alias.trim());
+      await createAlias(wire_id, alias.trim());
     }
   }
 
-  res.redirect('/sockets/'+id);
+  res.redirect('/wires/'+id);
 });
 
-/* GET socket detail page. */
+/* GET wire detail page. */
 router.get('/:id', async function(req, res, next) {
     const id = req.params.id;
-    const socket = await getSocket(id);
+    const wire = await getWire(id);
     const pins = await getPins(id);
     const dip_left_pins = await getDipLeftPins(id);
     const dip_right_pins = await getDipRightPins(id);
@@ -206,8 +206,8 @@ router.get('/:id', async function(req, res, next) {
     top_pins = [];
     bottom_pins = [];
 
-    if (socket.package == 'SIP') {
-      if (socket.pin_count > 12) {
+    if (wire.package == 'SIP') {
+      if (wire.pin_count > 12) {
         iswide = 'dpindiagramwide';
       }
       sip_pins.forEach(function(pin) {
@@ -219,8 +219,8 @@ router.get('/:id', async function(req, res, next) {
         layout_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
       });
   
-    } else if (socket.package == 'PLCC') {
-      if (socket.pin_count > 40) {
+    } else if (wire.package == 'PLCC') {
+      if (wire.pin_count > 40) {
         iswide = 'dpindiagramwide';
       }
       i = 0;
@@ -255,8 +255,8 @@ router.get('/:id', async function(req, res, next) {
         bottom_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
 
       });
-    } else if ((socket.package == 'QFN') || (socket.package == 'QFP')) {
-      if (socket.pin_count > 40) {
+    } else if ((wire.package == 'QFN') || (wire.package == 'QFP')) {
+      if (wire.pin_count > 40) {
         iswide = 'dpindiagramwide';
       }
       i = 0;
@@ -321,7 +321,7 @@ router.get('/:id', async function(req, res, next) {
       )
     })
 
-    res.render('socket/detail', { title: socket.chip_number + ' - ' + socket.description, data: socket, 
+    res.render('wire/detail', { title: wire.chip_number + ' - ' + wire.description, data: wire, 
       pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
       specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });

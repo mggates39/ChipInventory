@@ -31,6 +31,101 @@ Required. This identifed the type of component being descirbed in this file.  It
 - `Switch` - Switch
 - `Socket` - Socket
 
+#### `subtype`
+Optional.  The sub-type is used to distenguish between major features or attributes of a given type and as such are type dependent:
+- Capacitor
+  - `Ceramic` - Ceramic Capacitor
+  - `Electrolytic` - Polarized Electrolytic Capacitor
+  - `Film` - Film Capacitor
+  - `Polymer` - Polymer Capacitor
+  - `Super Cap` - Polarized Super Capacitor
+  - `Tantalum` - Polarized Tantalum Capacitor
+  - `Trimmer` - Trimmer Capacitor
+  - `Variable` - Variable Capacitor
+- Capacitor Network
+  - `Ceramic` - Ceramic Capacitor
+  - `Film` - Thick Film Capacitor
+  - `Poly` - Polypropylene Capacitor
+- Diode
+  - `General` - General
+  - `LED` - Light Emitting Diode
+  - `Schotkey` - Schotkey
+  - `Zener` - Zener
+- Fuse
+  - `Fast Blow` - Fast Blow
+  - `Medium Blow` - Medium Blow
+  - `Slow Blow` - Slow Blow
+- Integrated Circuit
+  - `4000` - 4000 series of chips
+  - `5400` - 5400 series of chips
+  - `7400` - 7400 series of chips
+  - `Analog` - Analog Support chips
+  - `Atmel` - Atmel AVR MCU
+  - `Audio` - Audio chips
+  - `Driver` - Signal or bus driver chips
+  - `I2C` - I2C Support chips
+  - `LED Display` - LED Segmented Display
+  - `Linear` - Linear chips
+  - `MAX` - Maxim Communication Line Driver Chips
+  - `Memory` - Memory chips
+  - `MPU` - Micro Processor Unit chips
+  - `Op Amp` - Operational Amplifiers
+  - `Optical` - Optical Support Chips
+  - `PIA` - Peripheral Interface Adapter chips 
+  - `PIC` - PIC Micro-controller
+  - `Power` - Power related chips
+  - `Sensor` - Data Collection chips
+  - `Timer` - Timer and related chips
+  - `UART` - UART Support Chips
+  - `Video` - Video related
+- Connector Jack
+  - `Gold` - Gold Leads
+  - `Tin` - Tin Leads
+- Connector Plug
+  - `Gold` - Gold Leads
+  - `Tin` - Tin Leads
+- Resistor
+  - `Carbon` - Carbon Composite Resistor
+  - `Carbon Film` - Carbon Film Resistor
+  - `Metal Film` - Metal Film Resistor
+  - `Photo` - Photo Resistor
+  - `Thermistor` - Thermistor
+  - `Variable` - Variable Resistor
+  - `Wire Wound` - Wire Wound Resistor
+- Resistor Network
+  - `Bussed` - Bussed Common
+  - `Decade Resistor` - Decade Resistor
+  - `Dual Terminator` - Dual-line termination
+  - `Isolated` - Individual resistors
+  - `R2R Ladder` - R–2R ladder D to A Conversion
+  - `Voltage Divider` - Series with taps
+- Socket
+  - `Gold` - Gold Leads
+  - `Tin` - Tin Leads
+  - `TIn-Lead` - Tin-Lead Leads
+- Switch
+  - `Momentary` - Momentary
+  - `Rotary` - Rotary
+  - `Slide` - Slide
+  - `Toggle` - Toggle
+- Transistor
+  - `BJT` - Bipolar Junction Transistor 
+  - `FET` - Field Effect Transistor
+  - `JFET` - Junction Field Effect Transistor
+  - `MOSFET` - Metal-Oxide-Semiconductor Field-Effect Transistor
+- Wire
+  - `F/F` - Female to Female
+  - `F/M` - Female to Male
+  - `M/M` - Male to Male
+  - `Solid` - Solid Core
+  - `Stranded` - Stranded Core
+- Crystal
+  - `OCXO` - Oven-Controlled Crystal Oscillator
+  - `TCXO` - Temperature-Compensated Crystal Oscillator
+  - `VCTCXO` - Voltage-Controlled Temperature-Compensated Crystal Oscillator
+  - `VCXO` - Voltage-Controlled Crystal Oscillator)
+
+
 #### `name`
 
 Optional. Use if the properly-formatted part name is different from the filename. For example, `ATMEGA168.yaml` defines `name: ATmega168` because filenames should only include uppercase letters.
@@ -48,6 +143,7 @@ Required. This field indicates how the pin diagram of this part should be drawn.
   - `Radial` - Leads on the edges
   - `SMD` - Surface Mount Device
 - Capacitor Network
+  - `DIP` - Dual In-Line Package
   - `SIP` - Single In-line Package
   - `SMD` - Surface Mount Device
   - `THD` - Through Hole Device
@@ -73,6 +169,7 @@ Required. This field indicates how the pin diagram of this part should be drawn.
   - `SIP` - Single In-line Package
   - `SOIC` - Small Outline Integrated Circuit
   - `SOP` - Small Outline Package
+  - `TO-XX` - Transistor Outline
 - Inductor
   - `Axial` - Leads on the ends
   - `Radial` - Leads on the edges
@@ -106,9 +203,7 @@ Required. This field indicates how the pin diagram of this part should be drawn.
 - Switch
   - `THD` - Through Hole Device
 - Transisstor
-  - `SMD` - Surface Mount Device
   - `SOT` - Small Outline Transistor
-  - `THD` - Through Hole Device
   - `TO-XX` - Transistor Outline
   - Wire
   - `Axial` - Leads on the ends
@@ -126,7 +221,7 @@ Required. The total number of pins.
 
 #### `family`
 
-Optional. If the part belongs to a large family, like the 7400 or 4000 series, it can be specified with this parameter. It is currently unused by Chip Inventory but could be used by other frontends to group parts by family. Currently defined families include `7400`, `4000`, `linear`, and `Atmel`.
+Optional. For integrated circuits only. If the part belongs to a large family, like the 7400 or 4000 series, it can be specified with this parameter. It is currently unused by Chip Inventory but could be used by other frontends to group parts by family. Currently defined families include `7400`, `4000`, `linear`, and `Atmel`.
 
 #### `datasheet`
 
