@@ -742,3 +742,12 @@ commit;
     
 select * from transistors;
 
+select cmp.*, cp.*
+from components cmp
+join component_types ct on ct.id = cmp.component_type_id
+left join chips cp on cp.component_id = cmp.id
+where ct.name = 'IC'
+-- and cp.component_id is null
+and cmp.name = '4N35M';
+
+
