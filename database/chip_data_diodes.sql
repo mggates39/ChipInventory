@@ -44,7 +44,7 @@ CREATE TABLE `diodes` (
 
 LOCK TABLES `diodes` WRITE;
 /*!40000 ALTER TABLE `diodes` DISABLE KEYS */;
-INSERT INTO `diodes` VALUES (296,2.200,23,0.000,NULL,16,25,'https://drive.google.com/file/d/11PHNHIeFlBkQRFFpD2ygJvA7-o9qc3DV/view');
+INSERT INTO `diodes` VALUES (296,2.200,23,0.000,23,16,25,'https://drive.google.com/file/d/11PHNHIeFlBkQRFFpD2ygJvA7-o9qc3DV/view');
 /*!40000 ALTER TABLE `diodes` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-27  2:24:51
+-- Dump completed on 2024-11-03 22:10:29

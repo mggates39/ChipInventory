@@ -41,7 +41,7 @@ CREATE TABLE `package_types` (
 
 LOCK TABLES `package_types` WRITE;
 /*!40000 ALTER TABLE `package_types` DISABLE KEYS */;
-INSERT INTO `package_types` VALUES (1,'DIP','Dual In-Line Package',1),(2,'Axial','Axial',1),(3,'Radial','Radial',1),(4,'PLCC','Plastic Leaded Chip Carrier',2),(5,'Chassis','Chassis',4),(6,'SIP','Single In-line Package',1),(7,'SMD','Surface Mount Device',3),(8,'MELF','Metal Electrode Leadless Face',3),(9,'SOIC','Small Outline Integrated Circuit',3),(10,'SOP','Small Outline Package',3),(11,'SOT','Small Outline Transistor',3),(12,'SOD','Small Outline Diode',3),(13,'QFP','Quad Flat Package',3),(14,'QFN','Quad Flat No-Leads Package',3),(15,'THD','Through Hole Device',1),(16,'QIP','Quad in-line package',1),(17,'TO-XX','Transistor Outline',1),(18,'Clamp','Fuse Clamp',1),(19,'PGA','Pin Grid Array',2);
+INSERT INTO `package_types` VALUES (1,'DIP','Dual In-line Package',1),(2,'Axial','Axial',1),(3,'Radial','Radial',1),(4,'PLCC','Plastic Leaded Chip Carrier',2),(5,'Chassis','Chassis',4),(6,'SIP','Single In-line Package',1),(7,'SMD','Surface Mount Device',3),(8,'MELF','Metal Electrode Leadless Face',3),(9,'SOIC','Small Outline Integrated Circuit',3),(10,'SOP','Small Outline Package',3),(11,'SOT','Small Outline Transistor',3),(12,'SOD','Small Outline Diode',3),(13,'QFP','Quad Flat Package',3),(14,'QFN','Quad Flat No-Leads Package',3),(15,'THD','Through Hole Device',1),(16,'QIP','Quad in-line package',1),(17,'TO-XX','Transistor Outline',1),(18,'Clamp','Fuse Clamp',1),(19,'PGA','Pin Grid Array',2);
 /*!40000 ALTER TABLE `package_types` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-27  2:24:51
+-- Dump completed on 2024-11-03 22:10:29

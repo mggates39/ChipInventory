@@ -40,7 +40,7 @@ CREATE TABLE `component_types` (
 
 LOCK TABLES `component_types` WRITE;
 /*!40000 ALTER TABLE `component_types` DISABLE KEYS */;
-INSERT INTO `component_types` VALUES (1,'IC','Integrated Circuit','U','chips'),(2,'Cap','Capacitor','C','capacitors'),(3,'CN','Capacitor Network','CN','capacitor_networks'),(4,'Res','Resistor','R','resistors'),(5,'RN','Resistor Network','RN','resistor_networks'),(6,'Diode','Diode','D','diodes'),(7,'Transisstor','Transistor','Q','transistors'),(8,'Inductor','Inductor','L','inductors'),(9,'Switch','Switch','SW','switches'),(10,'Xtal','Crystal','Y','crystals'),(11,'Jack','Connector Jack','J','connector_jacks'),(12,'Plug','Connector Plug','JP','connector_plugs'),(13,'Fuse','Fuse','F','fuses'),(14,'XFMR','Transformer','T','transformers'),(15,'Wire','Wire','W','wires'),(16,'Socket','Socket','ICS','sockets');
+INSERT INTO `component_types` VALUES (1,'IC','Integrated Circuit','U','chips'),(2,'Cap','Capacitor','C','capacitors'),(3,'CN','Capacitor Network','CN','capacitor_networks'),(4,'Res','Resistor','R','resistors'),(5,'RN','Resistor Network','RN','resistor_networks'),(6,'Diode','Diode','D','diodes'),(7,'Transistor','Transistor','Q','transistors'),(8,'Inductor','Inductor','L','inductors'),(9,'Switch','Switch','SW','switches'),(10,'Xtal','Crystal','Y','crystals'),(11,'Jack','Connector Jack','J','connector_jacks'),(12,'Plug','Connector Plug','JP','connector_plugs'),(13,'Fuse','Fuse','F','fuses'),(14,'XFMR','Transformer','T','transformers'),(15,'Wire','Wire','W','wires'),(16,'Socket','Socket','ICS','sockets');
 /*!40000 ALTER TABLE `component_types` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-27  2:24:51
+-- Dump completed on 2024-11-03 22:10:29

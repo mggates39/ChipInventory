@@ -26,7 +26,8 @@ DROP TABLE IF EXISTS `crystals`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `crystals` (
   `component_id` int NOT NULL,
-  `frequency` varchar(32) NOT NULL,
+  `frequency` float(8,4) NOT NULL,
+  `unit_id` int NOT NULL,
   `datasheet` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`component_id`),
   CONSTRAINT `crystals_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
@@ -39,7 +40,7 @@ CREATE TABLE `crystals` (
 
 LOCK TABLES `crystals` WRITE;
 /*!40000 ALTER TABLE `crystals` DISABLE KEYS */;
-INSERT INTO `crystals` VALUES (174,'32.768kHz','https://www.analog.com/media/jp/technical-documentation/data-sheets/2940.pdf'),(268,'8.0000000 MHz','https://www.we-online.com/components/products/datasheet/830003147B.pdf');
+INSERT INTO `crystals` VALUES (174,32.7680,36,'https://www.analog.com/media/jp/technical-documentation/data-sheets/2940.pdf'),(268,8.0000,37,'https://www.we-online.com/components/products/datasheet/830003147B.pdf');
 /*!40000 ALTER TABLE `crystals` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-27  2:24:52
+-- Dump completed on 2024-11-03 22:10:30
