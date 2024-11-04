@@ -1,0 +1,38 @@
+type: Jack
+subtype: Gold
+name: SKT-1-10
+description: CONN HDR 10POS 0.1 GOLD PCB
+package: SIP
+pincount: 10
+datasheet: https://www.we-online.com/components/products/datasheet/6130xx11821.pdf
+pins:
+  - num: 1
+    sym: P
+    desc: Pin
+  - num: 2
+    sym: P
+    desc: Pin
+  - num: 3
+    sym: P
+    desc: Pin
+  - num: 4
+    sym: P
+    desc: Pin
+  - num: 5
+    sym: P
+    desc: Pin
+  - num: 6
+    sym: P
+    desc: Pin
+  - num: 7
+    sym: P
+    desc: Pin
+  - num: 8
+    sym: P
+    desc: Pin
+  - num: 9
+    sym: P
+    desc: Pin
+  - num: 10
+    sym: P
+    desc: Pin

@@ -1,0 +1,134 @@
+type: IC
+subtype: Video
+name: TMS9928A
+description: Video Display Processor (component output)
+package: DIP
+pincount: 40
+family: Texas Instruments
+datasheet: http://www.cs.columbia.edu/~sedwards/papers/TMS9918.pdf
+aliases:
+  - TMS9929A
+pins:
+  - num: 1
+    sym: ~RAS
+    desc: VRAM row address strobe
+  - num: 2
+    sym: ~CAS
+    desc: VRAM column address strobe
+  - num: 3
+    sym: AD__7
+    desc: VRAM address/data bus (least significant bit)
+  - num: 4
+    sym: AD__6
+    desc: VRAM address/data bus
+  - num: 5
+    sym: AD__5
+    desc: VRAM address/data bus
+  - num: 6
+    sym: AD__4
+    desc: VRAM address/data bus
+  - num: 7
+    sym: AD__3
+    desc: VRAM address/data bus
+  - num: 8
+    sym: AD__2
+    desc: VRAM address/data bus
+  - num: 9
+    sym: AD__1
+    desc: VRAM address/data bus
+  - num: 10
+    sym: AD__0
+    desc: VRAM address/data bus (most significant bit)
+  - num: 11
+    sym: R/~W
+    desc: VRAM write strobe
+  - num: 12
+    sym: GND
+    desc: ground
+  - num: 13
+    sym: MODE
+    desc: CPU interface mode select (usu. a CPU address line)
+  - num: 14
+    sym: ~CSW
+    desc: CPU-VDP write strobe
+  - num: 15
+    sym: ~CSR
+    desc: CPU-VDP read strobe
+  - num: 16
+    sym: ~INT
+    desc: CPU interrupt output
+  - num: 17
+    sym: CD__7
+    desc: CPU data bus (least significant bit)
+  - num: 18
+    sym: CD__6
+    desc: CPU data bus
+  - num: 19
+    sym: CD__5
+    desc: CPU data bus
+  - num: 20
+    sym: CD__4
+    desc: CPU data bus
+  - num: 21
+    sym: CD__3
+    desc: CPU data bus
+  - num: 22
+    sym: CD__2
+    desc: CPU data bus
+  - num: 23
+    sym: CD__1
+    desc: CPU data bus
+  - num: 24
+    sym: CD__0
+    desc: CPU data bus (most significant bit)
+  - num: 25
+    sym: RD__7
+    desc: VRAM read data bus (least significant bit)
+  - num: 26
+    sym: RD__6
+    desc: VRAM read data bus
+  - num: 27
+    sym: RD__5
+    desc: VRAM read data bus
+  - num: 28
+    sym: RD__4
+    desc: VRAM read data bus
+  - num: 29
+    sym: RD__3
+    desc: VRAM read data bus
+  - num: 30
+    sym: RD__2
+    desc: VRAM read data bus
+  - num: 31
+    sym: RD__1
+    desc: VRAM read data bus
+  - num: 32
+    sym: RD__0
+    desc: VRAM read data bus (most significant bit)
+  - num: 33
+    sym: V__CC
+    desc: supply voltage
+  - num: 34
+    sym: ~RESET~/SYNC
+    desc: reset (active low; when above +9V, sync input for ext. video)
+  - num: 35
+    sym: B-Y
+    desc: B-Y color difference output
+  - num: 36
+    sym: 'Y'
+    desc: luminance/sync output
+  - num: 37
+    sym: GROMCLK
+    desc: VDP output clock; XTAL/24
+  - num: 38
+    sym: R-Y
+    desc: R-Y color difference output
+  - num: 39
+    sym: XTAL1
+    desc: crystal input
+  - num: 40
+    sym: XTAL2
+    desc: crystal input
+notes:
+  - See <a href='TMS9918A'>TMS9918A</a>
+  - TMS9928A outputs 60Hz video, TMS9929A outputs 50Hz video

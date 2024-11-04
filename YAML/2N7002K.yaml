@@ -1,0 +1,22 @@
+type: Transistor
+subtype: FET N-Channel
+name: 2N7002K
+description: MOSFET SOT-23 N Channel 60V
+package: SOT
+pincount: 3
+usage: General
+power_rating: 500
+power_units: mW
+threshold: 60
+threshold_units: V
+datasheet: https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/5337/SOT232N70S702K.pdf
+pins:
+  - num: 1
+    sym: G
+    desc: Gate
+  - num: 2
+    sym: S
+    desc: Source
+  - num: 3
+    sym: D
+    desc: Drain

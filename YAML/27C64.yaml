@@ -1,0 +1,93 @@
+type: IC
+subtype: Memory
+name: 27C64
+description: 64K (8K x 8) CMOS EPROM
+package: DIP
+pincount: 28
+family: Memory
+datasheet: https://ww1.microchip.com/downloads/en/devicedoc/11107M.pdf
+pins:
+  - num: 1
+    sym: V__PP
+    desc: Programming Voltage
+  - num: 2
+    sym: A__12
+    desc: Address Input
+  - num: 3
+    sym: A__7
+    desc: Address Input
+  - num: 4
+    sym: A__6
+    desc: Address Input
+  - num: 5
+    sym: A__5
+    desc: Address Input
+  - num: 6
+    sym: A__4
+    desc: Address Input
+  - num: 7
+    sym: A__3
+    desc: Address Input
+  - num: 8
+    sym: A__2
+    desc: Address Input
+  - num: 9
+    sym: A__1
+    desc: Address Input
+  - num: 10
+    sym: A__0
+    desc: Address Input
+  - num: 11
+    sym: O__0
+    desc: Data Output
+  - num: 12
+    sym: O__1
+    desc: Data Input/Output
+  - num: 13
+    sym: O__2
+    desc: Data Input/Output
+  - num: 14
+    sym: V__SS
+    desc: Ground
+  - num: 15
+    sym: O__3
+    desc: Data Input/Output
+  - num: 16
+    sym: O__4
+    desc: Data Input/Output
+  - num: 17
+    sym: O__5
+    desc: Data Input/Output
+  - num: 18
+    sym: O__6
+    desc: Data Input/Output
+  - num: 19
+    sym: O__7
+    desc: Data Input/Output
+  - num: 20
+    sym: ~CE
+    desc: Chip Enable (active low)
+  - num: 21
+    sym: A__10
+    desc: Address Input
+  - num: 22
+    sym: ~OE
+    desc: Output Enable (active low)
+  - num: 23
+    sym: A__11
+    desc: Address Input
+  - num: 24
+    sym: A__9
+    desc: Address Input
+  - num: 25
+    sym: A__8
+    desc: Address Input
+  - num: 26
+    sym: NC
+    desc: No Connection
+  - num: 27
+    sym: ~PGM
+    desc: Program Enable (active low)
+  - num: 28
+    sym: V__CC
+    desc: Supply Voltage

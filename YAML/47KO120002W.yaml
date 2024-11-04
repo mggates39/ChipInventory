@@ -1,0 +1,37 @@
+type: RN
+subtype: Bussed
+name: 4.7KO 12% 0.002W
+description: RES ARRAY 7 RES 4.7K OHM 8SIP
+package: SIP
+pincount: 8
+resistance: 4.7
+units: k&Omega;
+power: 0.002
+tolerance: 12
+number_resistors: 7
+datasheet: https://www.bourns.com/docs/Product-Datasheets/4600x.pdf
+pins:
+  - num: 1
+    sym: CMN
+    desc: Common
+  - num: 2
+    sym: R1
+    desc: Resistor 1
+  - num: 3
+    sym: R2
+    desc: Resistor 2
+  - num: 4
+    sym: R3
+    desc: Resistor 3
+  - num: 5
+    sym: R4
+    desc: Resistor 4
+  - num: 6
+    sym: R5
+    desc: Resistor 5
+  - num: 7
+    sym: R6
+    desc: Resistor 6
+  - num: 8
+    sym: R7
+    desc: Resistor 7

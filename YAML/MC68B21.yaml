@@ -1,0 +1,129 @@
+type: IC
+subtype: PIA
+name: MC68B21
+description: Peripheral Interface Adapter
+package: DIP
+pincount: 40
+family: PIA
+datasheet: https://www.jameco.com/Jameco/Products/ProdDS/43414.pdf?srsltid=AfmBOoqzPhop_UEnShvbuJDfZP7k6PyVpjThAxfPZ1VqWxR_kS1HUvr_
+pins:
+  - num: 1
+    sym: V__SS
+    desc: Supply Voltage
+  - num: 2
+    sym: PA__0
+    desc: Bidirectional Port A
+  - num: 3
+    sym: PA__1
+    desc: Bidirectional Port A
+  - num: 4
+    sym: PA__2
+    desc: Bidirectional Port A
+  - num: 5
+    sym: PA__3
+    desc: Bidirectional Port A
+  - num: 6
+    sym: PA__4
+    desc: Bidirectional Port A
+  - num: 7
+    sym: PA__5
+    desc: Bidirectional Port A
+  - num: 8
+    sym: PA__6
+    desc: Bidirectional Port A
+  - num: 9
+    sym: PA__7
+    desc: Bidirectional Port A
+  - num: 10
+    sym: PB__0
+    desc: Bidirectional Port B
+  - num: 11
+    sym: PB__1
+    desc: Bidirectional Port B
+  - num: 12
+    sym: PB__2
+    desc: Bidirectional Port B
+  - num: 13
+    sym: PB__3
+    desc: Bidirectional Port B
+  - num: 14
+    sym: PB__4
+    desc: Bidirectional Port B
+  - num: 15
+    sym: PB__5
+    desc: Bidirectional Port B
+  - num: 16
+    sym: PB__6
+    desc: Bidirectional Port B
+  - num: 17
+    sym: PB__7
+    desc: Bidirectional Port B
+  - num: 18
+    sym: CB1
+    desc: Interrupt Input
+  - num: 19
+    sym: CB2
+    desc: Peripheral Control
+  - num: 20
+    sym: V__CC
+    desc: Ground
+  - num: 21
+    sym: R/~W
+    desc: Read Write
+  - num: 22
+    sym: CS0
+    desc: Chip Select (active high)
+  - num: 23
+    sym: ~CS2
+    desc: Chip Select (active low)
+  - num: 24
+    sym: CS1
+    desc: Chip Select (active high)
+  - num: 25
+    sym: E
+    desc: Enable
+  - num: 26
+    sym: D__7
+    desc: Bidirectional Data
+  - num: 27
+    sym: D__6
+    desc: Bidirectional Data
+  - num: 28
+    sym: D__5
+    desc: Bidirectional Data
+  - num: 29
+    sym: D__4
+    desc: Bidirectional Data
+  - num: 30
+    sym: D__3
+    desc: Bidirectional Data
+  - num: 31
+    sym: D__2
+    desc: Data Input/Output
+  - num: 32
+    sym: D__1
+    desc: Bidirectional Data
+  - num: 33
+    sym: D__0
+    desc: Bidirectional Data
+  - num: 34
+    sym: ~RESET
+    desc: Reset (active low)
+  - num: 35
+    sym: RS1
+    desc: Register Select
+  - num: 36
+    sym: RS0
+    desc: Register Select
+  - num: 37
+    sym: ~IRQB
+    desc: Interrupt Request B (active low)
+  - num: 38
+    sym: ~IRQA
+    desc: Interrupt Request A (active low)
+  - num: 39
+    sym: CA2
+    desc: Peripheral Control
+  - num: 40
+    sym: CA1
+    desc: Interrupt Input

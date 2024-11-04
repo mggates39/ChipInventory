@@ -1,0 +1,74 @@
+type: IC
+subtype: '7400'
+name: '744078'
+description: 8 -Input NOR/OR Gate
+package: DIP
+pincount: 14
+family: '7400'
+datasheet: https://pdf.datasheetcatalog.com/datasheet/motorola/MC74HC4078D.pdf
+aliases:
+  - MC74HC4078
+pins:
+  - num: 1
+    sym: X
+    desc: OR Output
+  - num: 2
+    sym: A
+    desc: Data Input
+  - num: 3
+    sym: B
+    desc: Data Input
+  - num: 4
+    sym: C
+    desc: Data Input
+  - num: 5
+    sym: D
+    desc: Data Input
+  - num: 6
+    sym: NC
+    desc: No Connection
+  - num: 7
+    sym: GND
+    desc: Ground
+  - num: 8
+    sym: NC
+    desc: No Connection
+  - num: 9
+    sym: E
+    desc: Data Input
+  - num: 10
+    sym: F
+    desc: Data Input
+  - num: 11
+    sym: G
+    desc: Data Input
+  - num: 12
+    sym: H
+    desc: Data Input
+  - num: 13
+    sym: 'Y'
+    desc: NOR Output
+  - num: 14
+    sym: V__CC
+    desc: Supply Voltage
+notes:
+  - 'Output Drive Capability: 10 LSTTL Loads'
+  - Outputs Directly Interface to CMOS, NMOS, and TTL
+  - 'Low Input Current: 1 &micro;A'
+  - High Noise Immunity Characteristic of CMOS Devices
+specs:
+  - param: V__CC
+    val: 2 to 6
+    unit: V
+  - param: V__IN
+    val: 0 to V__CC
+    unit: V
+  - param: V__OUT
+    val: 0 to V__CC
+    unit: V
+  - param: Operating temp
+    val: '-55 to +125'
+    unit: '&deg;C'
+  - param: Input Rise and Fall Time
+    val: ['V__CC = 2.0V:  0 to 1000', 'V__CC = 4.5V: 0 to 500', 'V__CC = 6.0V: 0 to 400']
+    unit: ns

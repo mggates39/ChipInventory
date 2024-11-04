@@ -1,0 +1,18 @@
+type: Res
+subtype: Metal Film
+name: 330O 1% 0.25W
+description: RES 330 OHM 1% 1/4 W AXIAL
+package: Axial
+pincount: 2
+resistance: 330
+units: '&Omega;'
+power: 0.25
+tolerance: 1
+datasheet: https://www.seielect.com/catalog/sei-rnf_rnmf.pdf
+pins:
+  - num: 1
+    sym: L
+    desc: Left Pin
+  - num: 2
+    sym: R
+    desc: Rigth Pin

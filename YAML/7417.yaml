@@ -1,0 +1,51 @@
+type: IC
+subtype: '7400'
+name: '7417'
+description: Hex Buffers with High Voltage Open-Collector Outputs
+package: DIP
+pincount: 14
+family: '7400'
+datasheet: https://www.mouser.com/datasheet/2/308/7417-1190062.pdf
+pins:
+  - num: 1
+    sym: A__1
+    desc: Input
+  - num: 2
+    sym: Y__1
+    desc: Output
+  - num: 3
+    sym: A__2
+    desc: Input
+  - num: 4
+    sym: Y__2
+    desc: Output
+  - num: 5
+    sym: A__3
+    desc: Input
+  - num: 6
+    sym: Y__3
+    desc: Output
+  - num: 7
+    sym: GND
+    desc: Ground
+  - num: 8
+    sym: Y__4
+    desc: Output
+  - num: 9
+    sym: A__4
+    desc: Input
+  - num: 10
+    sym: Y__5
+    desc: Output
+  - num: 11
+    sym: A__5
+    desc: Input
+  - num: 12
+    sym: Y__6
+    desc: Output
+  - num: 13
+    sym: A__6
+    desc: Input
+  - num: 14
+    sym: V__CC
+    desc: Supply Voltage

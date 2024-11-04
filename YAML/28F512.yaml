@@ -1,0 +1,107 @@
+type: IC
+subtype: Memory
+name: 28F512
+description: 512K-Bit (8 X 64) CMOS Flash Memory
+package: DIP
+pincount: 32
+family: memory
+datasheet: https://community.intel.com/cipcp26785/attachments/cipcp26785/programmable-devices/89914/2/TP28F512-120.pdf
+aliases:
+  - P28F512
+pins:
+  - num: 1
+    sym: V__PP
+    desc: Program/Erase Voltage Supply
+  - num: 2
+    sym: NC
+    desc: No Connection
+  - num: 3
+    sym: A__15
+    desc: ' Address Inputs'
+  - num: 4
+    sym: A__12
+    desc: ' Address Inputs'
+  - num: 5
+    sym: A__7
+    desc: ' Address Inputs'
+  - num: 6
+    sym: A__6
+    desc: ' Address Inputs'
+  - num: 7
+    sym: A__5
+    desc: ' Address Inputs'
+  - num: 8
+    sym: A__4
+    desc: ' Address Inputs'
+  - num: 9
+    sym: A__3
+    desc: ' Address Inputs'
+  - num: 10
+    sym: A__2
+    desc: ' Address Inputs'
+  - num: 11
+    sym: A__1
+    desc: ' Address Inputs'
+  - num: 12
+    sym: A__0
+    desc: ' Address Inputs'
+  - num: 13
+    sym: I/O__0
+    desc: Data Input/Output
+  - num: 14
+    sym: I/O__1
+    desc: Data Input/Output
+  - num: 15
+    sym: I/O__2
+    desc: Data Input/Output
+  - num: 16
+    sym: V__SS
+    desc: Ground
+  - num: 17
+    sym: I/O__3
+    desc: Data Input/Output
+  - num: 18
+    sym: I/O__4
+    desc: Data Input/Output
+  - num: 19
+    sym: I/O__5
+    desc: Data Input/Output
+  - num: 20
+    sym: I/O__6
+    desc: Data Input/Output
+  - num: 21
+    sym: I/O__7
+    desc: Data Input/Output
+  - num: 22
+    sym: ~CE
+    desc: Chip Enable (active low)
+  - num: 23
+    sym: A__10
+    desc: ' Address Inputs'
+  - num: 24
+    sym: ~OE
+    desc: Output Enable (active low)
+  - num: 25
+    sym: A__11
+    desc: ' Address Inputs'
+  - num: 26
+    sym: A__9
+    desc: ' Address Inputs'
+  - num: 27
+    sym: A__8
+    desc: ' Address Inputs'
+  - num: 28
+    sym: A__13
+    desc: ' Address Inputs'
+  - num: 29
+    sym: A__14
+    desc: ' Address Inputs'
+  - num: 30
+    sym: NC
+    desc: No Connection
+  - num: 31
+    sym: ~WE
+    desc: Write Enable (active low)
+  - num: 32
+    sym: V__CC
+    desc: Voltage Supply

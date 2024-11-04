@@ -1,0 +1,57 @@
+type: IC
+subtype: Power
+name: UCN5800A
+description: BiMOS II LATCHED DRIVERS
+package: DIP
+pincount: 14
+family: power
+datasheet: https://semiconductors.es/semiconductors.php?id=500445
+aliases:
+  - UCN5800L
+pins:
+  - num: 1
+    sym: Clear
+    desc: Clear
+  - num: 2
+    sym: Strobe
+    desc: Strobe
+  - num: 3
+    sym: IN__1
+    desc: Data in
+  - num: 4
+    sym: IN__2
+    desc: Data in
+  - num: 5
+    sym: IN__3
+    desc: Data in
+  - num: 6
+    sym: IN__4
+    desc: Data In
+  - num: 7
+    sym: GND
+    desc: Ground
+  - num: 8
+    sym: Common
+    desc: Common high voltage in
+  - num: 9
+    sym: OUT__4
+    desc: Out high voltage
+  - num: 10
+    sym: OUT__3
+    desc: Out high voltage
+  - num: 11
+    sym: OUT__2
+    desc: Out high voltage
+  - num: 12
+    sym: OUT__1
+    desc: Out high voltage
+  - num: 13
+    sym: V__DD
+    desc: Supply voltage
+  - num: 14
+    sym: ~OE
+    desc: Output Enable
+specs:
+  - param: Input Voltage Range,
+    val: '-0.3 to V__DD + 0.3'
+    unit: V

@@ -1,0 +1,53 @@
+type: IC
+subtype: '7400'
+name: '7487'
+description: 4-Bit True/Complement, Zero/One Elements
+package: DIP
+pincount: 14
+family: '7400'
+datasheet: https://www.digchip.com/datasheets/parts/datasheet/477/SN74H87-pdf.php
+aliases:
+  - SN74H87
+pins:
+  - num: 1
+    sym: C
+    desc: Output comp low, true high
+  - num: 2
+    sym: A__1
+    desc: Data In
+  - num: 3
+    sym: Y__1
+    desc: Data Out
+  - num: 4
+    sym: NC
+    desc: No Connection
+  - num: 5
+    sym: A__2
+    desc: Data In
+  - num: 6
+    sym: Y__2
+    desc: Data Out
+  - num: 7
+    sym: GND
+    desc: Ground
+  - num: 8
+    sym: B
+    desc: Latch data low, invert C high
+  - num: 9
+    sym: Y__3
+    desc: Data Out
+  - num: 10
+    sym: A__3
+    desc: Data In
+  - num: 11
+    sym: NC
+    desc: No Connection
+  - num: 12
+    sym: Y__4
+    desc: Data Out
+  - num: 13
+    sym: A__4
+    desc: Data In
+  - num: 14
+    sym: V__CC
+    desc: Supply Voltage

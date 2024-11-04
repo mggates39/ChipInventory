@@ -1,0 +1,18 @@
+type: Cap
+subtype: Electrolytic
+name: 100uF 20% 25V
+description: CAP ALUM 100UF 20% 25V RADIAL TH
+package: Radial
+pincount: 2
+capacitance: 100
+units: '&micro;F'
+working_voltage: 25
+tolerance: 20
+datasheet: https://search.kemet.com/download/specsheet/ESK107M025AE3AA
+pins:
+  - num: 1
+    sym: LL-
+    desc: NegativeLead
+  - num: 2
+    sym: LL+
+    desc: Positive  Lead

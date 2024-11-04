@@ -1,0 +1,36 @@
+type: IC
+subtype: Driver
+name: DS8921
+description: Differential Line Driver and Receiver Pair
+package: DIP
+pincount: 8
+family: Driver
+datasheet: https://www.ti.com/lit/ds/symlink/ds8921.pdf
+aliases:
+  - DS8921A
+  - DS8921AT
+pins:
+  - num: 1
+    sym: V__CC
+    desc: Supply Voltage
+  - num: 2
+    sym: RO
+    desc: Receiver Output
+  - num: 3
+    sym: DI
+    desc: Driver Input
+  - num: 4
+    sym: GND
+    desc: Ground
+  - num: 5
+    sym: DO -
+    desc: Driver Output inverted
+  - num: 6
+    sym: DO+
+    desc: Driver Output
+  - num: 7
+    sym: RI-
+    desc: Receiver Input inverted
+  - num: 8
+    sym: RI+
+    desc: Receiver input

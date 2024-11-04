@@ -1,0 +1,18 @@
+type: Cap
+subtype: Tantalum
+name: 1uf 20% 35V
+description: CAP TANT 1UF 20% 35V RADIAL
+package: Radial
+pincount: 2
+capacitance: 1
+units: '&micro;F'
+working_voltage: 35
+tolerance: 20
+datasheet: https://datasheets.kyocera-avx.com/tap.pdf
+pins:
+  - num: 1
+    sym: L
+    desc: Left Pin
+  - num: 2
+    sym: R
+    desc: Rigth Pin

@@ -1,0 +1,16 @@
+type: Xtal
+subtype: TCXO
+name: HC8.0MHZ
+description: WE-XTAL QUARTZ CRYSTAL 8.0 MHZ
+package: Radial
+pincount: 2
+frequency: 8
+units: mHz
+datasheet: https://www.we-online.com/components/products/datasheet/830003147B.pdf
+pins:
+  - num: 1
+    sym: XTAL__1
+    desc: Crystal pin 1
+  - num: 2
+    sym: XTAL__2
+    desc: Crystal pin 2

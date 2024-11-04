@@ -1,0 +1,62 @@
+type: IC
+subtype: '7400'
+name: '744046'
+description: High-Speed CMOS Logic Phase-Locked Loop with VCO
+package: DIP
+pincount: 16
+family: '7400'
+datasheet: https://www.ti.com/lit/ds/symlink/cd74hc4046a.pdf
+aliases:
+  - 54HC4046A
+  - 74HC4046A
+  - 54HCT4046A
+  - 74HCT4046A
+pins:
+  - num: 1
+    sym: PCP__OUT
+    desc: Phase Comparator Pulse Output
+  - num: 2
+    sym: PC1__OUT
+    desc: Phase Comparator 1 Output
+  - num: 3
+    sym: COMP__IN
+    desc: Comparator Input
+  - num: 4
+    sym: VCO__OUT
+    desc: VCO Output
+  - num: 5
+    sym: INH
+    desc: Inhibit Input
+  - num: 6
+    sym: C1__A
+    desc: Capacitor C1 Connection A
+  - num: 7
+    sym: C1__B
+    desc: Capacitor C1 Connection B
+  - num: 8
+    sym: GND
+    desc: Ground
+  - num: 9
+    sym: VCO__IN
+    desc: VCO Input
+  - num: 10
+    sym: DEM__OUT
+    desc: Demodulator Output
+  - num: 11
+    sym: R__1
+    desc: Resistor R1 Connection
+  - num: 12
+    sym: R__2
+    desc: Resistor R2 Connection
+  - num: 13
+    sym: PC2__OUT
+    desc: Phase Comparator 2 Output
+  - num: 14
+    sym: SIG__IN
+    desc: Signal Input
+  - num: 15
+    sym: PC3__OUT
+    desc: Phase Comparator 3 Output
+  - num: 16
+    sym: V__CC
+    desc: Positive Supply Voltage

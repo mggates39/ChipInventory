@@ -1,0 +1,18 @@
+type: Res
+subtype: Carbon Film
+name: 10MO 5% 0.35W
+description: RES 10M OHM 5% 1/4W AXIAL
+package: Axial
+pincount: 2
+resistance: 10
+units: M&Omega;
+power: 0.25
+tolerance: 5
+datasheet: https://www.seielect.com/catalog/sei-cf_cfm.pdf
+pins:
+  - num: 1
+    sym: L
+    desc: Left Pin
+  - num: 2
+    sym: R
+    desc: Rigth Pin

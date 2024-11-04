@@ -1,0 +1,18 @@
+type: Cap
+subtype: Electrolytic
+name: 10uF 20% 63V
+description: CAP ALUM 10UF 20% 63V RADIAL TH
+package: Radial
+pincount: 2
+capacitance: 10
+units: '&micro;F'
+working_voltage: 65
+tolerance: 20
+datasheet: https://www.we-online.com/components/products/datasheet/860080772001.pdf
+pins:
+  - num: 1
+    sym: LL-
+    desc: Negative Lead
+  - num: 2
+    sym: LL+
+    desc: Positive Lead
