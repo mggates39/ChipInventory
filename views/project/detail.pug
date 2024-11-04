@@ -74,7 +74,7 @@ block content
   
   //- Add Project Item Modal
   div#addProjectItemModal.modal.fade(tabindex="-1" aria-labelledby="addProjectItemModalLabel" aria-hidden="true")
-    div.modal-dialog.modal-dialog-scrollable.modal-lg
+    div.modal-dialog.modal-dialog-scrollable
       div.modal-content
         form#add(action="/projects/"+project.id+"/newitem" method="POST")
           div.modal-header

@@ -3,15 +3,15 @@ extends ../layout
 block content
   p Edit the project definition
   form(action="/projects/"+project.id method="POST")
-    div.form-group
-      label(for="name") List Name:
-      input#name.form-control( type="text" placeholder="Ex) New PCB" name="name" value=project.name)
-    div.form-group
-      label(for="description") Description:
-      input#description.form-control( type="text" placeholder="Ex) Fun time circuit" name="description" value=project.description)
-    div.form-group
-      label(for="") Status:
-      select#status_id.form-control(type='select' placeholder='Select Component type' name='status_id' required='true')
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="name") List Name:
+      input#name.col-sm-2( type="text" placeholder="Ex) New PCB" name="name" value=project.name)
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="description") Description:
+      input#description.col-sm-4( type="text" placeholder="Ex) Fun time circuit" name="description" value=project.description)
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="") Status:
+      select#status_id.col-sm-2(type='select' placeholder='Select Component type' name='status_id' required='true')
         for status in status_list
           option(value=status.id selected= project.status_id == status.id) #{status.name}
 

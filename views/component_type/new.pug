@@ -3,25 +3,25 @@ extends ../layout
 block content
   p Create new component type definition
   form(action="/component_types/new/" method="POST")
-    div.form-group
-      label(for="name") Component:
-      input#name.form-control( type="text" placeholder="Ex) IC" name="name" value=component_type.name)
-    div.form-group
-      label(for="description") Description:
-      input#description.form-control( type="text" placeholder="Ex) Integrated Circuit" name="description" value=component_type.description)
-    div.form-group
-      label( for="symbol") Symbol:
-      input#symbol.form-control(type="text" placeholder="Ex) R" name="symbol" value=component_type.symbol)
-    div.form-group
-      label( for="table_name") Table Name:
-      input#table_name.form-control(type="text" placeholder="Ex) passives" name="table_name" value=component_type.table_name)
-    div.form-group
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="name") Component:
+      input#name.col-sm-2( type="text" placeholder="Ex) IC" name="name" value=component_type.name)
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="description") Description:
+      input#description.col-sm-4( type="text" placeholder="Ex) Integrated Circuit" name="description" value=component_type.description)
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="symbol") Symbol:
+      input#symbol.col-sm-2(type="text" placeholder="Ex) R" name="symbol" value=component_type.symbol)
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="table_name") Table Name:
+      input#table_name.col-sm-2(type="text" placeholder="Ex) passives" name="table_name" value=component_type.table_name)
+    div.row.mb-3
       label Available Package Types:
       for package_type in package_types
-        br
-        input#package_type_selection(type="checkbox" name="package_type_selection" value=package_type.id checked= 'true' == package_type.used)
-        | 
-        label(for=package_type_selection) #{package_type.name} - #{package_type.description}
+        div.col-sm-10.offset-sm-2
+          div.form-check
+            input#package_type_selection.form-check-input(type="checkbox" name="package_type_selection" value=package_type.id checked= 'true' == package_type.used)
+            label.col-sm-4.form-check-label(for=package_type_selection) #{package_type.name} - #{package_type.description}
 
     button.btn.btn-default.btn-primary(type="submit") Submit
 

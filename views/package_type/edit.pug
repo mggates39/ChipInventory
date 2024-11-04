@@ -3,24 +3,24 @@ extends ../layout
 block content
   p Edit the package type definition
   form(action="/package_types/"+package_type.id method="POST")
-    div.form-group
-      label(for="name") Package:
-      input#name.form-control( type="text" placeholder="Ex) Resistor" name="name" value=package_type.name)
-    div.form-group
-      label( for="description") Description:
-      input#description.form-control(type="text" placeholder="Ex) R" name="description" value=package_type.description)
-    div.form-group
-      label( for="mounting_type_id") Mounting Type:
-      select#mounting_type_id.form-control(type='select' placeholder='Select mounting type' name='mounting_type_id' required='true')
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="name") Package:
+      input#name.col-sm-2( type="text" placeholder="Ex) Resistor" name="name" value=package_type.name)
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="description") Description:
+      input#description.col-sm-2(type="text" placeholder="Ex) R" name="description" value=package_type.description)
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="mounting_type_id") Mounting Type:
+      select#mounting_type_id.col-sm-2(type='select' placeholder='Select mounting type' name='mounting_type_id' required='true')
         for mounting_type in mounting_types
           option(value=mounting_type.id selected= package_type.mounting_type_id == mounting_type.id) #{mounting_type.name}
-    div.form-group
+    div.row.mb-3
       label Available Component Types:
       for component_type in component_types
-        br
-        input#component_type_selection(type="checkbox" name="component_type_selection" value=component_type.id checked= 'true' == component_type.used)
-        | 
-        label(for=component_type_selection) #{component_type.description} - #{component_type.symbol}
+        div.col-sm-10.offset-sm-2
+          div.form-check
+            input#component_type_selection.form-check-input(type="checkbox" name="component_type_selection" value=component_type.id checked= 'true' == component_type.used)
+            label.col-sm-4.form-check-label(for=component_type_selection) #{component_type.description} - #{component_type.symbol}
 
     button.btn.btn-default.btn-primary(type="submit") Submit
 

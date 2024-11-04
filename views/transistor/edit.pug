@@ -1,22 +1,22 @@
 extends ../component/edit
 
 block component_specific
-    div.form-group
-       label( for="usage_id") Usage:
-       select#usage_id.form-control(type='select' placeholder='Select Usage' name='usage_id' required='true')
+    div.row.mb-3
+       label.col-sm-2.col-form-label( for="usage_id") Usage:
+       select#usage_id.col-sm-2(type='select' placeholder='Select Usage' name='usage_id' required='true')
           for usage in usage_list
             option(value=usage.id selected= data.usage_id == usage.id) !{usage.name} - #{usage.description}
-    div.form-group
-      label( for="power_rating") Power Rating:
-      div.input-group
-        input#power_rating.form-control(type="text" placeholder="Ex) 220, 1000" name="power_rating" value=data.power_rating)
-        select#power_unit_id.form-control(type='select' placeholder='Select units' name='power_unit_id' required='true')
-          for unit in power_units
-            option(value=unit.id selected= data.power_unit_id == unit.id) !{unit.name} - #{unit.description}
-    div.form-group
-      label( for="threshold") Threshold:
-      div.input-group
-        input#threshold.form-control(type="text" placeholder="Ex) 220, 1000" name="threshold" value=data.threshold)
-        select#threshold_unit_id.form-control(type='select' placeholder='Select units' name='threshold_unit_id' required='true')
-          for unit in threshold_units
-            option(value=unit.id selected= data.threshold_unit_id == unit.id) !{unit.name} - #{unit.description}
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="power_rating") Power Rating:
+      input#power_rating.col-sm-2(type="text" placeholder="Ex) 220, 1000" name="power_rating" value=data.power_rating)
+      | &nbsp;
+      select#power_unit_id.col-sm-2(type='select' placeholder='Select units' name='power_unit_id' required='true')
+        for unit in power_units
+          option(value=unit.id selected= data.power_unit_id == unit.id) !{unit.name} - #{unit.description}
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="threshold") Threshold:
+      input#threshold.col-sm-2(type="text" placeholder="Ex) 220, 1000" name="threshold" value=data.threshold)
+      | &nbsp;
+      select#threshold_unit_id.col-sm-2(type='select' placeholder='Select units' name='threshold_unit_id' required='true')
+        for unit in threshold_units
+          option(value=unit.id selected= data.threshold_unit_id == unit.id) !{unit.name} - #{unit.description}

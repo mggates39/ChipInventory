@@ -3,22 +3,27 @@ extends ../layout
 block content
   p Edit the mounting type definition
   form(action="/mounting_types/"+mounting_type.id method="POST")
-    div.form-group
-      label(for="name") Name:
-      input#name.form-control( type="text" placeholder="Ex) Through Hole" name="name" value=mounting_type.name)
-    div.form-group
-      input#is_through_hole(type="checkbox" name="is_through_hole" value=1 checked= '1' == mounting_type.is_through_hole)
-      | 
-      label(for="is_through_hole") Is Through Hole?
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="name") Name:
+      input#name.col-sm-2( type="text" placeholder="Ex) Through Hole" name="name" value=mounting_type.name)
 
-    div.form-group
-      input#is_surface_mount(type="checkbox" name="is_surface_mount" value=1 checked= '1' == mounting_type.is_surface_mount)
-      | 
-      label( for="is_surface_mount") Is Surface Mount?
-    div.form-group
-      input#is_chassis_mount(type="checkbox" name="is_chassis_mount" value=1 checked= '1' == mounting_type.is_chassis_mount)
-      | 
-      label( for="is_through_hole") Is Chassis Mount?
+    div.row.mb-3
+      div.col-sm-10.offset-sm-2
+        div.form-check
+          input#is_through_hole.form-check-input(type="checkbox" name="is_through_hole" value=1 checked= '1' == mounting_type.is_through_hole)
+          label.col-sm-4.form-check-label(for=is_through_hole) Is Through Hole?
+
+    div.row.mb-3
+      div.col-sm-10.offset-sm-2
+        div.form-check
+          input#is_surface_mount.form-check-input(type="checkbox" name="is_surface_mount" value=1 checked= '1' == mounting_type.is_surface_mount)
+          label.col-sm-4.form-check-label(for=is_surface_mount) Is Surface Mount?
+
+    div.row.mb-3
+      div.col-sm-10.offset-sm-2
+        div.form-check
+          input#is_chassis_mount.form-check-input(type="checkbox" name="is_chassis_mount" value=1 checked= '1' == mounting_type.is_chassis_mount)
+          label.col-sm-4.form-check-label(for=is_chassis_mount) Is Chassis Mount?
       
     button.btn.btn-default.btn-primary(type="submit") Submit
 
