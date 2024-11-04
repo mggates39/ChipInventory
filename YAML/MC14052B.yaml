@@ -1,0 +1,66 @@
+type: IC
+subtype: Power
+name: MC14052B
+description: Multiplexer Switch ICs 3-18V DP4T Switch
+package: DIP
+pincount: 16
+family: power
+datasheet: https://www.mouser.com/datasheet/2/308/1/mc14051b_d-1192948.pdf
+aliases:
+  - CD4052
+pins:
+  - num: 1
+    sym: Y0
+    desc: Switch In/Out
+  - num: 2
+    sym: Y2
+    desc: Switch In/Out
+  - num: 3
+    sym: 'Y'
+    desc: Common Out/In
+  - num: 4
+    sym: Y3
+    desc: Switch In/Out
+  - num: 5
+    sym: y1
+    desc: Switch In/Out
+  - num: 6
+    sym: INH
+    desc: Inhibit (active high)
+  - num: 7
+    sym: V__EE
+    desc: Negative Supply Voltage
+  - num: 8
+    sym: V__SS
+    desc: Ground
+  - num: 9
+    sym: B
+    desc: Control Input
+  - num: 10
+    sym: A
+    desc: Control Input
+  - num: 11
+    sym: X3
+    desc: Switch In/Out
+  - num: 12
+    sym: X0
+    desc: Switch In/Out
+  - num: 13
+    sym: X
+    desc: Common Out/In
+  - num: 14
+    sym: X1
+    desc: Switch In/Out
+  - num: 15
+    sym: X2
+    desc: Switch In/Out
+  - num: 16
+    sym: V__DD
+    desc: DC Supply Voltage
+specs:
+  - param: Power Supply Voltage Range
+    val: 3.0 to 18
+    unit: V__DC
+  - param: Analog Voltage Range
+    val: V__DD – 3.0 ≥ V__SS ≥ V__EE
+    unit: V__DC

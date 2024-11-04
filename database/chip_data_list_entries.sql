@@ -34,7 +34,7 @@ CREATE TABLE `list_entries` (
   PRIMARY KEY (`id`),
   KEY `list_idx` (`list_id`),
   CONSTRAINT `list_ibfk_1` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `list_entries` (
 
 LOCK TABLES `list_entries` WRITE;
 /*!40000 ALTER TABLE `list_entries` DISABLE KEYS */;
-INSERT INTO `list_entries` VALUES (1,1,1,'pF','pico-farad',-12),(2,1,2,'nF','nano-farad',-9),(3,1,3,'&micro;F','micro-farad',-6),(4,1,4,'mF','milli-farad',-3),(5,1,5,'F','farad',0),(6,2,1,'&Omega;','Ohm',0),(7,2,2,'k&Omega;','Kilo-Ohm',3),(8,2,2,'M&Omega;','Mega-Ohm',6),(9,3,1,'Pending','Pending',0),(10,3,2,'Ordering','Ordering Parts',0),(11,3,3,'Ready','Ready to start',0),(12,3,4,'In Progress','In Progress',0),(13,3,5,'Completed','Completed',0),(14,3,6,'Canceled','No longer working',0),(15,3,0,'New','New Project',0),(16,4,1,'Red','Red',2),(17,4,2,'Amber','Amber',2),(18,4,3,'Green','Green',2),(19,4,4,'Blue','Blue',2),(20,4,6,'Red/Green','Red and Green',3),(21,4,5,'White','White',2),(22,4,7,'RGB','Multi',4),(23,5,1,'V','Volts',0),(24,5,2,'mV','milli-voltes',-3),(25,6,1,'Clear','Clear',0),(26,6,2,'Red','Red',0),(27,6,3,'Orange','Orange',0),(28,6,4,'Yellow','Yellow',0),(29,6,5,'Green','Green',0),(30,6,6,'Blue','Blue',0),(31,5,3,'&micro;V','micro-volt',-6),(32,7,1,'A','Amp',0),(33,7,2,'mA','milli-amp',-3),(34,7,3,'&micro;A','micro-amp',-6);
+INSERT INTO `list_entries` VALUES (1,1,1,'pF','pico-farad',-12),(2,1,2,'nF','nano-farad',-9),(3,1,3,'&micro;F','micro-farad',-6),(4,1,4,'mF','milli-farad',-3),(5,1,5,'F','farad',0),(6,2,1,'&Omega;','Ohm',0),(7,2,2,'k&Omega;','Kilo-Ohm',3),(8,2,2,'M&Omega;','Mega-Ohm',6),(9,3,1,'Pending','Pending',0),(10,3,2,'Ordering','Ordering Parts',0),(11,3,3,'Ready','Ready to start',0),(12,3,4,'In Progress','In Progress',0),(13,3,5,'Completed','Completed',0),(14,3,6,'Canceled','No longer working',0),(15,3,0,'New','New Project',0),(16,4,1,'Red','Red',2),(17,4,2,'Amber','Amber',2),(18,4,3,'Green','Green',2),(19,4,4,'Blue','Blue',2),(20,4,6,'Red/Green','Red and Green',3),(21,4,5,'White','White',2),(22,4,7,'RGB','Multi',4),(23,5,1,'V','Volts',0),(24,5,2,'mV','milli-voltes',-3),(25,6,1,'Clear','Clear',0),(26,6,2,'Red','Red',0),(27,6,3,'Orange','Orange',0),(28,6,4,'Yellow','Yellow',0),(29,6,5,'Green','Green',0),(30,6,6,'Blue','Blue',0),(31,5,3,'&micro;V','micro-volt',-6),(32,7,1,'A','Amp',0),(33,7,2,'mA','milli-amp',-3),(34,7,3,'&micro;A','micro-amp',-6),(35,8,1,'Hz','Hertz',0),(36,8,2,'kHz','Kilohertz',3),(37,8,3,'mHz','megahertz',6),(38,8,4,'gHz','gigahertz',9),(39,9,1,'&micro;W','micro-watt',-6),(40,9,2,'mW','milli-watt',-3),(41,9,3,'W','Watt',0),(42,9,4,'kW','kilo-watt',3),(43,9,5,'MW','mega-watt',6),(44,9,6,'GW','giga-watt',9),(45,10,1,'General','General',0),(46,10,2,'Switch','Switch',0),(47,10,3,'Audio','Audio',0),(48,10,4,'Reset','Reset',0);
 /*!40000 ALTER TABLE `list_entries` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-27  2:24:51
+-- Dump completed on 2024-11-03 22:10:30

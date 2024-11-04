@@ -1,0 +1,62 @@
+type: IC
+subtype: '7400'
+name: '74182'
+description: Look-Ahead Carry Generator
+package: DIP
+pincount: 16
+family: '7400'
+datasheet: https://www.ti.com/lit/ds/symlink/sn54s182.pdf
+aliases:
+  - SN54S182
+  - SN74S182
+pins:
+  - num: 1
+    sym: ~G~__1
+    desc: Carry Generate Input  (active low)
+  - num: 2
+    sym: ~P~__1
+    desc: Carry Propagate Input (active low)
+  - num: 3
+    sym: ~G~__0
+    desc: Carry Generate Input (active low)
+  - num: 4
+    sym: ~P~__0
+    desc: Carry Propagate Input (active low)
+  - num: 5
+    sym: ~G~__3
+    desc: Carry Generate Input  (active low)
+  - num: 6
+    sym: ~P~__3
+    desc: Carry Propagate Input (active low)
+  - num: 7
+    sym: ~P
+    desc: Carry Propagate Output
+  - num: 8
+    sym: GND
+    desc: Ground
+  - num: 9
+    sym: C__n+2
+    desc: Carry Output
+  - num: 10
+    sym: ~G
+    desc: Carry Generate Output
+  - num: 11
+    sym: C__n+y
+    desc: Carry Output
+  - num: 12
+    sym: C__n+x
+    desc: Carry Output
+  - num: 13
+    sym: C__n
+    desc: Carry Input
+  - num: 14
+    sym: ~G~__2
+    desc: Carry Generate Input (active low)
+  - num: 15
+    sym: ~P~__2
+    desc: Carry Propagate Input (active low)
+  - num: 16
+    sym: V__CC
+    desc: Supply Voltage
+notes:
+  - Directly compatible for use with SN54LS181/SN74LS181, SN54LS281/SN74LS281, SN54LS381/SN74LS381, SN54LS481/SN74LS481

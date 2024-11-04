@@ -1,0 +1,129 @@
+type: IC
+subtype: MPU
+name: '6502'
+description: 8 Bit Microprocessor
+package: DIP
+pincount: 40
+family: MPU
+datasheet: https://www.princeton.edu/~mae412/HANDOUTS/Datasheets/6502.pdf
+pins:
+  - num: 1
+    sym: V__SS
+    desc: Ground
+  - num: 2
+    sym: RDY
+    desc: Ready
+  - num: 3
+    sym: Phi__1
+    desc: Clock Phase 1 Out
+  - num: 4
+    sym: ~IRQ
+    desc: Interrupt Request (active low)
+  - num: 5
+    sym: NC
+    desc: No Connection
+  - num: 6
+    sym: ~NMI
+    desc: Non-Maskable Interrupt (active low)
+  - num: 7
+    sym: SYNC
+    desc: Synchronize
+  - num: 8
+    sym: V__CC
+    desc: Power Supply
+  - num: 9
+    sym: A__0
+    desc: Address Bus
+  - num: 10
+    sym: A__1
+    desc: Address Bus
+  - num: 11
+    sym: A__2
+    desc: Address Bus
+  - num: 12
+    sym: A__3
+    desc: Address Bus
+  - num: 13
+    sym: A__4
+    desc: Address Bus
+  - num: 14
+    sym: A__5
+    desc: Address Bus
+  - num: 15
+    sym: A__6
+    desc: Address Bus
+  - num: 16
+    sym: A__7
+    desc: Address Bus
+  - num: 17
+    sym: A__8
+    desc: Address Bus
+  - num: 18
+    sym: A__9
+    desc: Address Bus
+  - num: 19
+    sym: A__10
+    desc: Address Bus
+  - num: 20
+    sym: A__11
+    desc: Address Bus
+  - num: 21
+    sym: V__SS
+    desc: Ground
+  - num: 22
+    sym: A__12
+    desc: Address Bus
+  - num: 23
+    sym: A__13
+    desc: Address Bus
+  - num: 24
+    sym: A__14
+    desc: Address Bus
+  - num: 25
+    sym: A__15
+    desc: Address Bus
+  - num: 26
+    sym: D__7
+    desc: Data Bus
+  - num: 27
+    sym: D__6
+    desc: Data Bus
+  - num: 28
+    sym: D__5
+    desc: Data Bus
+  - num: 29
+    sym: D__4
+    desc: Data Bus
+  - num: 30
+    sym: D__3
+    desc: Data Bus
+  - num: 31
+    sym: D__2
+    desc: Data Bus
+  - num: 32
+    sym: D__1
+    desc: Data Bus
+  - num: 33
+    sym: D__0
+    desc: Data Bus
+  - num: 34
+    sym: R/~W
+    desc: Read Write
+  - num: 35
+    sym: NC
+    desc: No Connection
+  - num: 36
+    sym: NC
+    desc: No Connection
+  - num: 37
+    sym: Phi__0
+    desc: Clock Phase 0 In
+  - num: 38
+    sym: ~SO
+    desc: Set Overflow (active low)
+  - num: 39
+    sym: Phi__2
+    desc: Clock Phase 2 Out
+  - num: 40
+    sym: ~RES
+    desc: Reset (active low)

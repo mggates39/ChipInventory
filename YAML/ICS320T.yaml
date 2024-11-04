@@ -1,0 +1,68 @@
+type: Socket
+subtype: Tin
+name: ICS-320-T
+description: IC SOCKET, DIP, 20P 2.54MM PITCH
+package: DIP
+pincount: 20
+datasheet: https://app.adam-tech.com/products/download/data_sheet/199582/ics-3xx-t-data-sheet.pdf
+pins:
+  - num: 1
+    sym: P
+    desc: Pin
+  - num: 2
+    sym: P
+    desc: Pin
+  - num: 3
+    sym: P
+    desc: Pin
+  - num: 4
+    sym: P
+    desc: Pin
+  - num: 5
+    sym: P
+    desc: Pin
+  - num: 6
+    sym: P
+    desc: Pin
+  - num: 7
+    sym: P
+    desc: Pin
+  - num: 8
+    sym: P
+    desc: Pin
+  - num: 9
+    sym: P
+    desc: Pin
+  - num: 10
+    sym: P
+    desc: Pin
+  - num: 11
+    sym: P
+    desc: Pin
+  - num: 12
+    sym: P
+    desc: Pin
+  - num: 13
+    sym: P
+    desc: Pin
+  - num: 14
+    sym: P
+    desc: Pin
+  - num: 15
+    sym: P
+    desc: Pin
+  - num: 16
+    sym: P
+    desc: Pin
+  - num: 17
+    sym: P
+    desc: Pin
+  - num: 18
+    sym: P
+    desc: Pin
+  - num: 19
+    sym: P
+    desc: Pin
+  - num: 20
+    sym: P
+    desc: Pin

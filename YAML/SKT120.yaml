@@ -1,0 +1,68 @@
+type: Jack
+subtype: Tin
+name: SKT 1-20
+description: '20PIN FEMALE HEADER '
+package: SIP
+pincount: 20
+datasheet: https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/693/4159_Web.pdf
+pins:
+  - num: 1
+    sym: P
+    desc: Pin
+  - num: 2
+    sym: P
+    desc: Pin
+  - num: 3
+    sym: P
+    desc: Pin
+  - num: 4
+    sym: P
+    desc: Pin
+  - num: 5
+    sym: P
+    desc: Pin
+  - num: 6
+    sym: P
+    desc: Pin
+  - num: 7
+    sym: P
+    desc: Pin
+  - num: 8
+    sym: P
+    desc: Pin
+  - num: 9
+    sym: P
+    desc: Pin
+  - num: 10
+    sym: P
+    desc: Pin
+  - num: 11
+    sym: P
+    desc: Pin
+  - num: 12
+    sym: P
+    desc: Pin
+  - num: 13
+    sym: P
+    desc: Pin
+  - num: 14
+    sym: P
+    desc: Pin
+  - num: 15
+    sym: P
+    desc: Pin
+  - num: 16
+    sym: P
+    desc: Pin
+  - num: 17
+    sym: P
+    desc: Pin
+  - num: 18
+    sym: P
+    desc: Pin
+  - num: 19
+    sym: P
+    desc: Pin
+  - num: 20
+    sym: P
+    desc: Pin

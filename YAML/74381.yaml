@@ -1,0 +1,77 @@
+type: IC
+subtype: '7400'
+name: '74381'
+description: 4-bit arithmetic logic unit/function generator
+package: DIP
+pincount: 20
+family: '7400'
+datasheet: https://archive.org/details/bitsavers_tidataBookVol2_45945352/page/n1087/mode/2up
+aliases:
+  - SN54LS381A
+  - SN54S381
+  - SN74LS381A
+  - SN74S381
+pins:
+  - num: 1
+    sym: A__1
+    desc: Word A Input
+  - num: 2
+    sym: B__1
+    desc: Word B Input
+  - num: 3
+    sym: A__0
+    desc: Word A Input
+  - num: 4
+    sym: B__0
+    desc: Word B Input
+  - num: 5
+    sym: S__0
+    desc: Function Select Input
+  - num: 6
+    sym: S__1
+    desc: Function Select Input
+  - num: 7
+    sym: S__2
+    desc: Function Select Input
+  - num: 8
+    sym: F__0
+    desc: Function Output
+  - num: 9
+    sym: F__1
+    desc: Function Output
+  - num: 10
+    sym: GND
+    desc: Ground
+  - num: 11
+    sym: F__2
+    desc: Function Output
+  - num: 12
+    sym: F__3
+    desc: Function Output
+  - num: 13
+    sym: ~G
+    desc: Carry Generate Output (active low)
+  - num: 14
+    sym: ~P
+    desc: Carry Propagate Output (active low)
+  - num: 15
+    sym: C__n
+    desc: Carry In
+  - num: 16
+    sym: B__3
+    desc: Word B Input
+  - num: 17
+    sym: A__3
+    desc: Word A Input
+  - num: 18
+    sym: B__2
+    desc: Word B Input
+  - num: 19
+    sym: A__2
+    desc: Word A Input
+  - num: 20
+    sym: V__CC
+    desc: Supply Voltage
+notes:
+  - Fully Parallel 4-Bit ALU's in 20-Pin Package for 0.300-Inch Row Spacing
+  - Ideally Suited for High-Density Economical Processors

@@ -1,0 +1,18 @@
+type: IC
+subtype: Power
+name: MCP120-270DI/TO
+description: IC SUPERVISOR 1 CHANNEL TO92-3
+package: TO-XX
+pincount: 3
+family: Supervisor
+datasheet: https://ww1.microchip.com/downloads/en/DeviceDoc/11184d.pdf
+pins:
+  - num: 1
+    sym: ~RST
+    desc: Reset (active low)
+  - num: 2
+    sym: V__DD
+    desc: Supply Voltage
+  - num: 3
+    sym: V__SS
+    desc: Ground

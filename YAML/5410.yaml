@@ -1,0 +1,72 @@
+type: IC
+subtype: '5400'
+name: '5410'
+description: Triple 3-Input Positive-NAND Gates
+package: PLCC
+pincount: 20
+family: '5400'
+datasheet: https://www.ti.com/lit/ds/symlink/sn54ls10-sp.pdf?ts=1727906225189
+aliases:
+  - 54LS10
+  - 54S10
+pins:
+  - num: 1
+    sym: NC
+    desc: No Connection
+  - num: 2
+    sym: 1A
+    desc: data input
+  - num: 3
+    sym: 1B
+    desc: data input
+  - num: 4
+    sym: 2A
+    desc: data input
+  - num: 5
+    sym: NC
+    desc: No Connection
+  - num: 6
+    sym: 2B
+    desc: data input
+  - num: 7
+    sym: NC
+    desc: No Connection
+  - num: 8
+    sym: 2C
+    desc: data input
+  - num: 9
+    sym: 2Y
+    desc: data output
+  - num: 10
+    sym: GND
+    desc: Ground
+  - num: 11
+    sym: NC
+    desc: No Connection
+  - num: 12
+    sym: 3Y
+    desc: data output
+  - num: 13
+    sym: 3A
+    desc: data input
+  - num: 14
+    sym: 3B
+    desc: data input
+  - num: 15
+    sym: NC
+    desc: No Connection
+  - num: 16
+    sym: 3C
+    desc: data input
+  - num: 17
+    sym: NC
+    desc: No Connection
+  - num: 18
+    sym: 1Y
+    desc: data output
+  - num: 19
+    sym: 1C
+    desc: data input
+  - num: 20
+    sym: V__CC
+    desc: Suply Voltage

@@ -1,0 +1,17 @@
+type: Plug
+subtype: Tin
+name: '61300311121'
+description: CONN HEADER VERT 3POS 2.54MM
+package: SIP
+pincount: 3
+datasheet: https://www.we-online.com/components/products/datasheet/61300311121.pdf
+pins:
+  - num: 1
+    sym: P
+    desc: Pin
+  - num: 2
+    sym: P
+    desc: Pin
+  - num: 3
+    sym: P
+    desc: Pin

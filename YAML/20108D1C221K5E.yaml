@@ -1,0 +1,37 @@
+type: CN
+subtype: Film
+name: 20108D1C221K5E
+description: CAP ARRAY 220PF 50V C0G 8-SIP
+package: SIP
+pincount: 8
+capacitance: 220
+units: pF
+working_voltage: 50
+tolerance: 20
+number_capacitors: 7
+datasheet: https://www.vishay.com/docs/31522/cs201.pdf
+pins:
+  - num: 1
+    sym: CM
+    desc: Common
+  - num: 2
+    sym: C1
+    desc: Capacitor 1
+  - num: 3
+    sym: C2
+    desc: Capacitor 2
+  - num: 4
+    sym: C3
+    desc: Capacitor 3
+  - num: 5
+    sym: C4
+    desc: Capacitor 4
+  - num: 6
+    sym: C5
+    desc: Capacitor 5
+  - num: 7
+    sym: C6
+    desc: Capacitor 6
+  - num: 8
+    sym: C7
+    desc: Capacitor 7

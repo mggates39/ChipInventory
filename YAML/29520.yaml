@@ -1,0 +1,83 @@
+type: IC
+subtype: '7400'
+name: '29520'
+description: IC 8BIT PIPELINE REG 24-DIP
+package: DIP
+pincount: 24
+family: '7400'
+datasheet: https://rocelec.widen.net/view/pdf/nflumrdieu/cy29fct520t.pdf?t.download=true&u=5oefqw
+aliases:
+  - 29FTC520
+pins:
+  - num: 1
+    sym: I__0
+    desc: Instruction Input
+  - num: 2
+    sym: I__1
+    desc: Instruction Input
+  - num: 3
+    sym: D__0
+    desc: Data Input
+  - num: 4
+    sym: D__1
+    desc: Data Input
+  - num: 5
+    sym: D__2
+    desc: Data Input
+  - num: 6
+    sym: D__3
+    desc: Data Input
+  - num: 7
+    sym: D__4
+    desc: Data Input
+  - num: 8
+    sym: D__5
+    desc: Data Input
+  - num: 9
+    sym: D__6
+    desc: Data Input
+  - num: 10
+    sym: D__7
+    desc: Data Input
+  - num: 11
+    sym: CLK
+    desc: Clock
+  - num: 12
+    sym: GND
+    desc: Ground
+  - num: 13
+    sym: ~OE
+    desc: Output Enable (active low)
+  - num: 14
+    sym: Y__7
+    desc: Data Output
+  - num: 15
+    sym: Y__6
+    desc: Data Output
+  - num: 16
+    sym: Y__5
+    desc: Data Output
+  - num: 17
+    sym: Y__4
+    desc: Data Output
+  - num: 18
+    sym: Y__3
+    desc: Data Output
+  - num: 19
+    sym: Y__2
+    desc: Data Output
+  - num: 20
+    sym: Y__1
+    desc: Data Output
+  - num: 21
+    sym: Y__0
+    desc: Data Output
+  - num: 22
+    sym: S__1
+    desc: Register Select
+  - num: 23
+    sym: S__0
+    desc: Register Select
+  - num: 24
+    sym: V__CC
+    desc: Supply Voltage

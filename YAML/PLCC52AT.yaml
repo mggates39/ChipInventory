@@ -1,0 +1,164 @@
+type: Socket
+subtype: Tin
+name: PLCC-52-AT
+description: PLCC 52P THROUGH HOLE
+package: PLCC
+pincount: 52
+datasheet: https://app.adam-tech.com/products/download/data_sheet/198231/plcc-52-at-data-sheet.pdf
+pins:
+  - num: 1
+    sym: P
+    desc: Pin
+  - num: 2
+    sym: P
+    desc: Pin
+  - num: 3
+    sym: P
+    desc: Pin
+  - num: 4
+    sym: P
+    desc: Pin
+  - num: 5
+    sym: P
+    desc: Pin
+  - num: 6
+    sym: P
+    desc: Pin
+  - num: 7
+    sym: P
+    desc: Pin
+  - num: 8
+    sym: P
+    desc: Pin
+  - num: 9
+    sym: P
+    desc: Pin
+  - num: 10
+    sym: P
+    desc: Pin
+  - num: 11
+    sym: P
+    desc: Pin
+  - num: 12
+    sym: P
+    desc: Pin
+  - num: 13
+    sym: P
+    desc: Pin
+  - num: 14
+    sym: P
+    desc: Pin
+  - num: 15
+    sym: P
+    desc: Pin
+  - num: 16
+    sym: P
+    desc: Pin
+  - num: 17
+    sym: P
+    desc: Pin
+  - num: 18
+    sym: P
+    desc: Pin
+  - num: 19
+    sym: P
+    desc: Pin
+  - num: 20
+    sym: P
+    desc: Pin
+  - num: 21
+    sym: P
+    desc: Pin
+  - num: 22
+    sym: P
+    desc: Pin
+  - num: 23
+    sym: P
+    desc: Pin
+  - num: 24
+    sym: P
+    desc: Pin
+  - num: 25
+    sym: P
+    desc: Pin
+  - num: 26
+    sym: P
+    desc: Pin
+  - num: 27
+    sym: P
+    desc: Pin
+  - num: 28
+    sym: P
+    desc: Pin
+  - num: 29
+    sym: P
+    desc: Pin
+  - num: 30
+    sym: P
+    desc: Pin
+  - num: 31
+    sym: P
+    desc: Pin
+  - num: 32
+    sym: P
+    desc: Pin
+  - num: 33
+    sym: P
+    desc: Pin
+  - num: 34
+    sym: P
+    desc: Pin
+  - num: 35
+    sym: P
+    desc: Pin
+  - num: 36
+    sym: P
+    desc: Pin
+  - num: 37
+    sym: P
+    desc: Pin
+  - num: 38
+    sym: P
+    desc: Pin
+  - num: 39
+    sym: P
+    desc: Pin
+  - num: 40
+    sym: P
+    desc: Pin
+  - num: 41
+    sym: P
+    desc: Pin
+  - num: 42
+    sym: P
+    desc: Pin
+  - num: 43
+    sym: P
+    desc: Pin
+  - num: 44
+    sym: P
+    desc: Pin
+  - num: 45
+    sym: P
+    desc: Pin
+  - num: 46
+    sym: P
+    desc: Pin
+  - num: 47
+    sym: P
+    desc: Pin
+  - num: 48
+    sym: P
+    desc: Pin
+  - num: 49
+    sym: P
+    desc: Pin
+  - num: 50
+    sym: P
+    desc: Pin
+  - num: 51
+    sym: P
+    desc: Pin
+  - num: 52
+    sym: P
+    desc: Pin

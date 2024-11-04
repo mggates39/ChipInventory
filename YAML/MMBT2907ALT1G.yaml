@@ -1,0 +1,22 @@
+type: Transistor
+subtype: BJT PNP
+name: MMBT2907ALT1G
+description: TRANS PNP 60V 0.6A SOT23-3
+package: SOT
+pincount: 3
+usage: General
+power_rating: 300
+power_units: mW
+threshold: 60
+threshold_units: V
+datasheet: https://www.onsemi.com/pdf/datasheet/mmbt2907alt1-d.pdf
+pins:
+  - num: 1
+    sym: B
+    desc: Base
+  - num: 2
+    sym: E
+    desc: Emitter
+  - num: 3
+    sym: C
+    desc: Collector

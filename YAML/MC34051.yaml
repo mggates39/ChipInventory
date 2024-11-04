@@ -1,0 +1,57 @@
+type: IC
+subtype: Driver
+name: MC34051
+description: Dual EIA-423 Transceiver (Unbalanced line)
+package: DIP
+pincount: 16
+family: Motorola
+datasheet: https://pdf.datasheetcatalog.com/datasheet_pdf/motorola/MC34050D_to_MC34051P.pdf
+pins:
+  - num: 1
+    sym: REC1 In -
+    desc: Receiver 1 In negative
+  - num: 2
+    sym: REC1 In +
+    desc: Receiver 1 In positive
+  - num: 3
+    sym: REC1 Out
+    desc: Receiver 1 Output
+  - num: 4
+    sym: DR1 EN
+    desc: Driver 1 Enable
+  - num: 5
+    sym: REC2 Out
+    desc: Receiver 2 Output
+  - num: 6
+    sym: REC2 In +
+    desc: Receiver 2 In positive
+  - num: 7
+    sym: REC2 In -
+    desc: Receiver 2In negative
+  - num: 8
+    sym: GND
+    desc: Ground
+  - num: 9
+    sym: DR2 In
+    desc: Driver 2 In
+  - num: 10
+    sym: DR2 Out
+    desc: Driver 2 Out
+  - num: 11
+    sym: ~DR2 Out
+    desc: Driver 2 Out Inverse
+  - num: 12
+    sym: DR2 EN
+    desc: Driver 2 Enable
+  - num: 13
+    sym: ~DR1 Out
+    desc: Driver 1 Output Inverse
+  - num: 14
+    sym: DR1 Out
+    desc: Driver 1 Output
+  - num: 15
+    sym: DR1 In
+    desc: Driver 1 Input
+  - num: 16
+    sym: V__CC
+    desc: Supply Voltage

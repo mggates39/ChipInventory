@@ -1,0 +1,50 @@
+type: Socket
+subtype: Tin
+name: 1-2199298-3
+description: CONN IC DIP SOCKET 14POS TIN
+package: DIP
+pincount: 14
+datasheet: https://www.te.com/usa-en/product-1-2199298-3.datasheet.pdf
+pins:
+  - num: 1
+    sym: P
+    desc: Pin
+  - num: 2
+    sym: P
+    desc: Pin
+  - num: 3
+    sym: P
+    desc: Pin
+  - num: 4
+    sym: P
+    desc: Pin
+  - num: 5
+    sym: P
+    desc: Pin
+  - num: 6
+    sym: P
+    desc: Pin
+  - num: 7
+    sym: P
+    desc: Pin
+  - num: 8
+    sym: P
+    desc: Pin
+  - num: 9
+    sym: P
+    desc: Pin
+  - num: 10
+    sym: P
+    desc: Pin
+  - num: 11
+    sym: P
+    desc: Pin
+  - num: 12
+    sym: P
+    desc: Pin
+  - num: 13
+    sym: P
+    desc: Pin
+  - num: 14
+    sym: P
+    desc: Pin

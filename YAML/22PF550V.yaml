@@ -1,0 +1,18 @@
+type: Cap
+subtype: Ceramic
+name: 22pF 5% 50V
+description: CAP CER 22PF 50V C0G RADIAL
+package: Radial
+pincount: 2
+capacitance: 22
+units: pF
+working_voltage: 50
+tolerance: 5
+datasheet: https://product.tdk.com/en/system/files/dam/doc/product/capacitor/ceramic/lead-mlcc/catalog/leadmlcc_halogenfree_fg_en.pdf
+pins:
+  - num: 1
+    sym: L
+    desc: Left Pin
+  - num: 2
+    sym: R
+    desc: Rigth Pin

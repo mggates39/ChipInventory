@@ -1,0 +1,20 @@
+type: Diode
+subtype: LED
+name: LED5RED
+description: LED RED CLEAR 5MM ROUND T/H
+package: Radial
+pincount: 2
+forward_voltage: 2.2
+forward_units: V
+reverse_voltage: 0
+reverse_units: V
+light_color: Red
+lens_color: Clear
+datasheet: https://drive.google.com/file/d/11PHNHIeFlBkQRFFpD2ygJvA7-o9qc3DV/view
+pins:
+  - num: 1
+    sym: A+
+    desc: Anode
+  - num: 2
+    sym: C-
+    desc: Cathode

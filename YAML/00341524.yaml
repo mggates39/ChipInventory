@@ -1,0 +1,18 @@
+type: Fuse
+subtype: Fast Blow
+name: '0034.1524'
+description: FUSE GLASS 6.3A 250VAC 5X20MM
+package: Clamp
+pincount: 2
+rating: 6.3
+rating_units: A
+voltage: 250
+voltage_units: V
+datasheet: https://www.schurter.com/en/datasheet/typ_FSF_5x20.pdf
+pins:
+  - num: 1
+    sym: P
+    desc: Pin
+  - num: 2
+    sym: P
+    desc: Pin

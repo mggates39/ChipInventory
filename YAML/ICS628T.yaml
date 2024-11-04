@@ -1,0 +1,92 @@
+type: Socket
+subtype: Tin
+name: ICS-628-T
+description: IC SOCKET, DIP, 28P 2.54MM PITCH
+package: DIP
+pincount: 28
+datasheet: https://app.adam-tech.com/products/download/data_sheet/199581/ics-6xx-t-data-sheet.pdf
+pins:
+  - num: 1
+    sym: P
+    desc: Pin
+  - num: 2
+    sym: P
+    desc: Pin
+  - num: 3
+    sym: P
+    desc: Pin
+  - num: 4
+    sym: P
+    desc: Pin
+  - num: 5
+    sym: P
+    desc: Pin
+  - num: 6
+    sym: P
+    desc: Pin
+  - num: 7
+    sym: P
+    desc: Pin
+  - num: 8
+    sym: P
+    desc: Pin
+  - num: 9
+    sym: P
+    desc: Pin
+  - num: 10
+    sym: P
+    desc: Pin
+  - num: 11
+    sym: P
+    desc: Pin
+  - num: 12
+    sym: P
+    desc: Pin
+  - num: 13
+    sym: P
+    desc: Pin
+  - num: 14
+    sym: P
+    desc: Pin
+  - num: 15
+    sym: P
+    desc: Pin
+  - num: 16
+    sym: P
+    desc: Pin
+  - num: 17
+    sym: P
+    desc: Pin
+  - num: 18
+    sym: P
+    desc: Pin
+  - num: 19
+    sym: P
+    desc: Pin
+  - num: 20
+    sym: P
+    desc: Pin
+  - num: 21
+    sym: P
+    desc: Pin
+  - num: 22
+    sym: P
+    desc: Pin
+  - num: 23
+    sym: P
+    desc: Pin
+  - num: 24
+    sym: P
+    desc: Pin
+  - num: 25
+    sym: P
+    desc: Pin
+  - num: 26
+    sym: P
+    desc: Pin
+  - num: 27
+    sym: P
+    desc: Pin
+  - num: 28
+    sym: P
+    desc: Pin
