@@ -1941,7 +1941,7 @@ async function getProjectItemsForProject(project_id) {
   const [rows] = await pool.query(`
     SELECT pi.*, c.name, c.description, i.full_number inventory_name
     FROM project_items pi
-    JOIN components c ON c.id = pi.component_id
+    LEFT JOIN components c ON c.id = pi.component_id
     LEFT JOIN inventory i ON i.id = pi.inventory_id
     WHERE pi.project_id = ?
     ORDER BY pi.number`, [project_id]);
@@ -1975,35 +1975,36 @@ async function getProjectItem(project_item_id) {
   const [rows] = await pool.query(`
     SELECT pi.*, c.name, c.description, i.full_number inventory_name
     FROM project_items pi
-    JOIN components c ON c.id = pi.component_id
+    LEFT JOIN components c ON c.id = pi.component_id
     LEFT JOIN inventory i ON i.id = pi.inventory_id
     WHERE pi.id = ?
     `, [project_item_id]);
     return rows[0];  
 }
 
-async function createProjectItem(project_id, number, component_id, qty_needed, inventory_id, qty_available, qty_to_order) {
+async function createProjectItem(project_id, number, part_number, component_id, qty_needed, inventory_id, qty_available, qty_to_order) {
   const [result] = await pool.query(`
     INSERT INTO project_items 
-      (project_id, number, component_id, qty_needed, inventory_id, qty_available, qty_to_order) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)`, 
-    [project_id, number, component_id, qty_needed, inventory_id, qty_available, qty_to_order])
+      (project_id, number, part_number, component_id, qty_needed, inventory_id, qty_available, qty_to_order) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, 
+    [project_id, number, part_number, component_id, qty_needed, inventory_id, qty_available, qty_to_order])
   const project_item_id = result.insertId
   return getProjectItem(project_item_id)
 }
 
-async function updateProjectItem(project_item_id, project_id, number, component_id, qty_needed, inventory_id, qty_available, qty_to_order) {
+async function updateProjectItem(project_item_id, project_id, number, part_number, component_id, qty_needed, inventory_id, qty_available, qty_to_order) {
   const [result] = await pool.query(`
     UPDATE project_items set 
       project_id = ?, 
       number = ?, 
+      part_number = ?, 
       component_id = ?, 
       qty_needed = ?, 
       inventory_id = ?, 
       qty_available = ?, 
       qty_to_order = ? 
     WHERE id =?`, 
-    [project_id, number, component_id, qty_needed, inventory_id, qty_available, qty_to_order, project_item_id])
+    [project_id, number, part_number, component_id, qty_needed, inventory_id, qty_available, qty_to_order, project_item_id])
   return getProjectItem(project_item_id)
 }
 

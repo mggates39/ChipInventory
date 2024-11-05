@@ -750,4 +750,14 @@ where ct.name = 'IC'
 -- and cp.component_id is null
 and cmp.name = '4N35M';
 
+select concat('const ', lower(replace(description, ' ', '_')), '_component_type_id  = ', id, ';') definition
+from component_types ct;
+
+alter table project_items modify column component_id int NULL;
+alter table project_items add column part_number varchar(32) null after number;
+
+select * from project_boms;
+select * from project_items where project_id = 1;
+
+
 

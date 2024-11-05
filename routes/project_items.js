@@ -22,7 +22,7 @@ router.get('/:id', async function(req, res, next) {
 router.post('/:id', async function( req, res, next) {
     const id = req.params.id;
     const project_id = req.body.project_id;
-    await updateProjectItem(id, project_id, req.body.number, req.body.component_id, req.body.qty_needed, 
+    await updateProjectItem(id, project_id, req.body.number, req.body.part_number, req.body.component_id, req.body.qty_needed, 
         req.body.inventory_id, req.body.qty_available, req.body.qty_to_order);
     res.redirect('/projects/'+project_id);
   })

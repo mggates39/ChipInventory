@@ -14,7 +14,9 @@ block content
     div.container
       div.row
         div.col-md-1
-          strong Number
+          strong #
+        div.col-md-1
+          strong Part
         div.col-md-2
           strong Name
         div.col-md-2
@@ -24,20 +26,18 @@ block content
         div.col-md-1
           strong Needed
         div.col-md-1
-          strong Available
-        div.col-md-1
-          strong To Order
+          strong Avail / Order
         div.col-md-2
           strong Action
       each n in project_items
         div.row 
           div.col-md-1=n.number
+          div.col-md-1=n.part_number
           div.col-md-2 !{n.name}
           div.col-md-2=n.description
           div.col-md-2=n.inventory_name
           div.col-md-1=n.qty_needed
-          div.col-md-1=n.qty_available
-          div.col-md-1=n.qty_to_order
+          div.col-md-1 #{n.qty_available} / #{n.qty_to_order}
           div.col-md-2
             button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#editProjectItemModal" id=n.id) Edit 
             |  
@@ -85,21 +85,25 @@ block content
             div.container-fluid
               div.row
                 div.col-md-2
-                  label( for="numbrt") Num
-                div.col-md-4
+                  label( for="number") Num
+                div.col-md-2
+                  label( for="part_number") Part #
+                div.col-md-3
                   label( for="component_id") Component
                 div.col-md-4
                   label( for="inventory_id") Inventory
-                div.col-md-2
+                div.col-md-3
                   label( for="qty_needed") Qty Needed
               div.row
                 div.col-md-2
                   input#number.form-control(type="text" placeholder="1,2,3..." name="number")
-                div.col-md-4
-                  select#component_id.form-control(type='select' placeholder='Select Component' name='component_id' required='true')
+                div.col-md-2
+                  input#part_number.form-control(type="text" placeholder="AH3345" name="part_number")
+                div.col-md-3
+                  select#component_id.form-control(type='select' placeholder='Select Component' name='component_id')
                     for component in component_list
                      option(value=component.id) #{component.name} - #{component.description}
-                div.col-md-4
+                div.col-md-3
                   select#inventory_id.form-control(type='select' placeholder='Select Inventory' name='inventory_id')
                     for inventory in inventory_list
                      option(value=inventory.id) #{inventory.chip_number} - #{inventory.full_number}
@@ -128,20 +132,24 @@ block content
               div.row
                 div.col-md-2
                   label( for="number") Num
-                div.col-md-4
+                div.col-md-2
+                  label( for="part_number") Part #
+                div.col-md-3
                   label( for="component_id") Component
-                div.col-md-4
+                div.col-md-3
                   label( for="inventory_id") Inventory
                 div.col-md-2
                   label( for="qty_needed") Qty Needed
               div.row
                 div.col-md-2
                   input#number.form-control(type="text" placeholder="1,2,3..." name="number")
-                div.col-md-4
+                div.col-md-2
+                  input#part_number.form-control(type="text" placeholder="AH3345" name="part_number")
+                div.col-md-3
                   select#component_id.form-control(type='select' placeholder='Select Component' name='component_id' required='true')
                     for component in component_list
                      option(value=component.id) #{component.name} - #{component.description}
-                div.col-md-4
+                div.col-md-3
                   select#inventory_id.form-control(type='select' placeholder='Select Inventory' name='inventory_id')
                     for inventory in inventory_list
                      option(value=inventory.id) #{inventory.chip_number} - #{inventory.full_number}
@@ -260,6 +268,7 @@ block scripts
       $("#edit #id").val(id);
       $.ajax({url: "/project_items/" + id, success: function(result){
         $("#edit #number").val(result.number);
+        $("#edit #part_number").val(result.part_number);
         $("#edit #component_id").val(result.component_id);
         $("#edit #inventory_id").val(result.inventory_id);
         $("#edit #qty_needed").val(result.qty_needed);
