@@ -106,8 +106,8 @@ router.post('/new', async function(req, res) {
   data['descr'] = descr;
 
   if (descr[req.body.pin_count-1]) {
-    const switch = await createSwitch(data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
-    switch_id = switch.component_id;
+    const switch_item = await createSwitch(data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+    switch_id = switch_item.component_id;
 
     for (var i = 0; i < req.body.pin_count; i++) {
       await createPin(switch_id, pin[i], sym[i], descr[i]);
@@ -120,7 +120,7 @@ router.post('/new', async function(req, res) {
       }
     }
 
-    res.redirect('/switchs/'+switch_id);
+    res.redirect('/switches/'+switch_id);
   } else {
     res.render('switch/new', {title: 'New Switch Definition', data: data, package_types: package_types, component_sub_types: component_sub_types});
   }
@@ -151,8 +151,8 @@ router.post('/:id', async function(req, res) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const switch = await updateSwitch(id, data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
-  switch_id = switch.component_id;
+  const switch_item = await updateSwitch(id, data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
+  switch_id = switch_item.component_id;
 
   for (var i = 0; i < req.body.pin_count; i++) {
     await updatePin(pin_id[i], switch_id, pin[i], sym[i], descr[i]);
@@ -167,13 +167,13 @@ router.post('/:id', async function(req, res) {
     }
   }
 
-  res.redirect('/switchs/'+id);
+  res.redirect('/switches/'+id);
 });
 
 /* GET switch detail page. */
 router.get('/:id', async function(req, res, next) {
     const id = req.params.id;
-    const switch = await getSwitch(id);
+    const switch_item = await getSwitch(id);
     const pins = await getPins(id);
     const dip_left_pins = await getDipLeftPins(id);
     const dip_right_pins = await getDipRightPins(id);
@@ -206,8 +206,8 @@ router.get('/:id', async function(req, res, next) {
     top_pins = [];
     bottom_pins = [];
 
-    if (switch.package == 'SIP') {
-      if (switch.pin_count > 12) {
+    if (switch_item.package == 'SIP') {
+      if (switch_item.pin_count > 12) {
         iswide = 'dpindiagramwide';
       }
       sip_pins.forEach(function(pin) {
@@ -219,8 +219,8 @@ router.get('/:id', async function(req, res, next) {
         layout_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
       });
   
-    } else if (switch.package == 'PLCC') {
-      if (switch.pin_count > 40) {
+    } else if (switch_item.package == 'PLCC') {
+      if (switch_item.pin_count > 40) {
         iswide = 'dpindiagramwide';
       }
       i = 0;
@@ -255,8 +255,8 @@ router.get('/:id', async function(req, res, next) {
         bottom_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
 
       });
-    } else if ((switch.package == 'QFN') || (switch.package == 'QFP')) {
-      if (switch.pin_count > 40) {
+    } else if ((switch_item.package == 'QFN') || (switch_item.package == 'QFP')) {
+      if (switch_item.pin_count > 40) {
         iswide = 'dpindiagramwide';
       }
       i = 0;
@@ -321,7 +321,7 @@ router.get('/:id', async function(req, res, next) {
       )
     })
 
-    res.render('switch/detail', { title: switch.chip_number + ' - ' + switch.description, data: switch, 
+    res.render('switch/detail', { title: switch_item.chip_number + ' - ' + switch_item.description, data: switch_item, 
       pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
       specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
 });
