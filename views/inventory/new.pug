@@ -10,7 +10,7 @@ block content
           option(value=component.id) #{component.name}
     div.row.mb-3
       label.col-sm-2.col-form-label(for="mfg_code_id") Manufacturer:
-      select#mfg_code_id.col-sm-2(type='select' placeholder='Select Manufacturer' name='mfg_code_id' )
+      select#mfg_code_id.col-sm-4(type='select' placeholder='Select Manufacturer' name='mfg_code_id' )
         for mfg in manufacturers
           option(value=mfg.id) #{mfg.display_name}
     div.row.mb-3
@@ -18,7 +18,7 @@ block content
       input#full_number.col-sm-2(type="text" placeholder="Enter actual number on the chip" name="full_number")
     div.row.mb-3
       label.col-sm-2.col-form-label( for="location_id") Location:
-      select#location_id.col-sm-2(type='select' placeholder='Select Component type' name='location_id')
+      select#location_id.col-sm-3(type='select' placeholder='Select Component type' name='location_id')
         option(value='') 
         for location in locations
           option(value=location.id) #{location.name}
