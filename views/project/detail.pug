@@ -74,7 +74,7 @@ block content
   
   //- Add Project Item Modal
   div#addProjectItemModal.modal.fade(tabindex="-1" aria-labelledby="addProjectItemModalLabel" aria-hidden="true")
-    div.modal-dialog.modal-dialog-scrollable
+    div.modal-dialog.modal-dialog-scrollable.modal-lg
       div.modal-content
         form#add(action="/projects/"+project.id+"/newitem" method="POST")
           div.modal-header
@@ -90,9 +90,9 @@ block content
                   label( for="part_number") Part #
                 div.col-md-3
                   label( for="component_id") Component
-                div.col-md-4
-                  label( for="inventory_id") Inventory
                 div.col-md-3
+                  label( for="inventory_id") Inventory
+                div.col-md-2
                   label( for="qty_needed") Qty Needed
               div.row
                 div.col-md-2
