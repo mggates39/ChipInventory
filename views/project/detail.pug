@@ -50,7 +50,11 @@ block content
       button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#addProjectBomModal") Add BOM
     else 
       button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#processProjectBommModal") Process BOM
-
+    | 
+    if project.to_order > 0
+      button.btn.btn-secondary(type="button") Generate Order
+    else
+      button.btn.btn-secondary(type="button") Generate Pick List
     br
   br
   

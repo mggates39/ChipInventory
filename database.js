@@ -1910,10 +1910,13 @@ async function getProjectList() {
 
 async function getProject(project_id) {
   const [rows] = await pool.query(`
-    SELECT p.*, le.name as status_value 
+    SELECT p.id, p.name, p.description, p.status_id, le.name as status_value, 
+		count(pi.id) num_items, sum(pi.qty_needed) needed, sum(pi.qty_available) available, sum(pi.qty_to_order) to_order 
     FROM projects p
-    JOIN list_entries le on le.id = p.status_id
+    JOIN list_entries le ON le.id = p.status_id
+    LEFT JOIN project_items pi ON pi.project_id = p.id
     WHERE p.id = ?
+    GROUP BY p.id, p.name, p.description, p.status_id, le.name
     `, [project_id]);
     return rows[0];  
 }
@@ -1967,7 +1970,7 @@ async function getProjectPicListForProject(project_id) {
     LEFT JOIN inventory i ON i.id = pi.inventory_id
     LEFT JOIN cte_connect_by ccb ON ccb.id =  i.location_id
     WHERE p.id = ?
-    ORDER BY pi.number`, [project_id]);
+    ORDER BY ccb.connect_by_path, pi.number`, [project_id]);
     return rows;
 }
 
