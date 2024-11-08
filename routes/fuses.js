@@ -4,7 +4,7 @@ const { getFuse, createFuse, updateFuse, getPins, createPin, updatePin,
   getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, 
   getComponentSubTypesForComponentType,
   getAliases, createAlias, deleteAliases, 
-  getPickListByName, getComponentType } = require('../database');
+  getPickListByName, getComponentType, getComponentTypeList } = require('../database');
 const {parse_symbol} = require('../utility');
 var router = express.Router();
 
@@ -203,6 +203,8 @@ router.get('/:id', async function(req, res, next) {
     const notes = await getNotes(id);
     const inventory = await getInventoryByComponentList(id);
     const aliases = await getAliases(id);
+    const component_types = await getComponentTypeList();
+    const component_type_id = fuse.component_type_id;
 
     fixed_pins = [];
     iswide = 'dpindiagram';
@@ -261,7 +263,8 @@ router.get('/:id', async function(req, res, next) {
 
     res.render('fuse/detail', { title: fuse.chip_number + ' - ' + fuse.description, data: fuse, 
       pins: fixed_pins, layout_pins: layout_pins, 
-      specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
+      specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory,
+      component_types: component_types, component_type_id: component_type_id });
 });
   
 module.exports = router;

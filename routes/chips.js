@@ -182,6 +182,8 @@ router.get('/:id', async function(req, res, next) {
     const notes = await getNotes(id);
     const inventory = await getInventoryByComponentList(id);
     const aliases = await getAliases(id);
+    const component_types = await getComponentTypeList();
+    const component_type_id = chip.component_type_id;
 
     fixed_pins = [];
     iswide = 'dpindiagram';
@@ -315,7 +317,8 @@ router.get('/:id', async function(req, res, next) {
 
     res.render('chip/detail', { title: chip.chip_number + ' - ' + chip.description, data: chip, 
       pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
-      specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
+      specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory,
+      component_types: component_types, component_type_id: component_type_id });
 });
 
 module.exports = router;

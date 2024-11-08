@@ -281,6 +281,25 @@ block content
   br
   button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#noteModal") Add notes
   br
+  br
+  div.searchdiv.form-inline
+    form.form-inline.searchbox(action='/components' method="GET")
+      div.form-check-inline
+        label( for="component_type_id") Component Type: &nbsp;
+        select.form-inline#component_type_id(type='select' placeholder='Select component type' name='component_type_id' required='true')
+          option(value=0) All Components
+          for component_type in component_types
+            option(value=component_type.id selected= component_type_id == component_type.id) #{component_type.description}
+        INPUT(type="search" placeholder="Search" aria-label="Search" NAME="q" VALUE=data.chip_number SIZE="20" MAXLENGTH="32")
+        div.form-check.form-check-inline
+          INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="p" id="part" checked=true) 
+          label.form-check-label(for="part") Part number
+        div.form-check.form-check-inline
+          INPUT.form-check-input(TYPE="radio" NAME="w" VALUE="k" id="keyword" checked=false) 
+          label.form-check-label(for="keyword") Keyword
+        INPUT.btn.btn-primary.mb-3(TYPE="submit" VALUE="Search")
+  
+
 
   //- Specification Modal
   div#specModal.modal.fade(tabindex="-1" aria-labelledby="specModalLabel" aria-hidden="true")

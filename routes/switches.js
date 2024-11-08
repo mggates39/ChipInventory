@@ -4,7 +4,7 @@ const { getSwitch, createSwitch, updateSwitch, getPins, createPin, updatePin,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
   getQuadLeftPins, getQuadRightPins, getQuadTopPins, getQuadBottomPins,
   getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, 
-  getComponentSubTypesForComponentType, getComponentType, 
+  getComponentSubTypesForComponentType, getComponentType, getComponentTypeList, 
   getAliases, createAlias, deleteAliases } = require('../database');
 const {parse_symbol} = require('../utility');
 var router = express.Router();
@@ -190,6 +190,8 @@ router.get('/:id', async function(req, res, next) {
     const notes = await getNotes(id);
     const inventory = await getInventoryByComponentList(id);
     const aliases = await getAliases(id);
+    const component_types = await getComponentTypeList();
+    const component_type_id = switch_item.component_type_id;
 
     fixed_pins = [];
     iswide = 'dpindiagram';
@@ -323,7 +325,8 @@ router.get('/:id', async function(req, res, next) {
 
     res.render('switch/detail', { title: switch_item.chip_number + ' - ' + switch_item.description, data: switch_item, 
       pins: fixed_pins, layout_pins: layout_pins, top_pins: top_pins, bottom_pins: bottom_pins,
-      specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
+      specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory,
+      component_types: component_types, component_type_id: component_type_id });
 });
   
 module.exports = router;
