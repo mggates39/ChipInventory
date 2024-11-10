@@ -74,6 +74,7 @@ projectsRouter.post('/:id/newitem/', async function(req, res, next) {
     // TODO: remove it from inventory quantity on hand
   } else {
     inventory_id = null;
+    qty_to_order = qty_needed;
   }
   await createProjectItem(id, req.body.number, req.body.part_number, req.body.component_id, qty_needed, inventory_id, qty_available, qty_to_order);
   res.redirect('/projects/'+id);

@@ -22,8 +22,26 @@ router.get('/:id', async function(req, res, next) {
 router.post('/:id', async function( req, res, next) {
     const id = req.params.id;
     const project_id = req.body.project_id;
-    await updateProjectItem(id, project_id, req.body.number, req.body.part_number, req.body.component_id, req.body.qty_needed, 
-        req.body.inventory_id, req.body.qty_available, req.body.qty_to_order);
+    var inventory_id = req.body.inventory_id;
+    const qty_needed = req.body.qty_needed;
+    var qty_available = req.body.qty_available;
+    var qty_to_order = req.body.qty_to_order;
+    if (inventory_id) {
+      const inv = await getInventory(inventory_id);
+      if (inv.quantity > qty_needed){
+        qty_available = qty_needed;
+      } else {
+        qty_available = inv.quantity;
+        qty_to_order = qty_needed - qty_available;
+      }
+      // TODO: remove it from inventory quantity on hand
+    } else {
+      inventory_id = null;
+      qty_to_order = qty_needed;
+    }
+  
+    await updateProjectItem(id, project_id, req.body.number, req.body.part_number, req.body.component_id, qty_needed, 
+        inventory_id, qty_available, qty_to_order);
     res.redirect('/projects/'+project_id);
   })
   

@@ -30,7 +30,7 @@ block content
         div.col-md-2
           strong Action
       each n in project_items
-        div.row 
+        div.row.mb-1.mt-1
           div.col-md-1=n.number
           div.col-md-1=n.part_number
           div.col-md-2 !{n.name}
@@ -150,7 +150,7 @@ block content
                 div.col-md-2
                   input#part_number.form-control(type="text" placeholder="AH3345" name="part_number")
                 div.col-md-3
-                  select#component_id.form-control(type='select' placeholder='Select Component' name='component_id' required='true')
+                  select#component_id.form-control(type='select' placeholder='Select Component' name='component_id')
                     for component in component_list
                      option(value=component.id) #{component.name} - #{component.description}
                 div.col-md-3
