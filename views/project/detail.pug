@@ -7,6 +7,25 @@ block content
   
   br
   a.btn.btn-primary(href="/projects/edit/"+project.id, role="button") Edit 
+  | 
+  if project.status_id == 9 || project.status_id == 15
+    button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#addProjectItemModal") Add Project Item
+    | 
+    if !project_bom.length
+      button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#addProjectBomModal") Add BOM
+    else 
+      button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#processProjectBommModal") Process BOM
+    | 
+    if project.to_order > 0
+      button.btn.btn-secondary(type="button") Generate Order
+    else if project.num_items
+      button.btn.btn-secondary(type="button") Generate Pick List
+  else if project.status_id == 10
+    button.btn.btn-secondary(type="button") Recieve Order
+  else if project.status_id == 11
+    button.btn.btn-secondary(type="button") Start Building
+  else if project.status_id == 12
+    button.btn.btn-secondary(type="button") Complete Project
   br
   br
   H6 Project Items
@@ -27,8 +46,9 @@ block content
           strong Needed
         div.col-md-1
           strong Avail / Order
-        div.col-md-2
-          strong Action
+        if project.status_id != 11 && project.status_id != 13 && project.status_id != 14
+          div.col-md-2
+            strong Action
       each n in project_items
         div.row.mb-1.mt-1
           div.col-md-1=n.number
@@ -38,24 +58,16 @@ block content
           div.col-md-2=n.inventory_name
           div.col-md-1=n.qty_needed
           div.col-md-1 #{n.qty_available} / #{n.qty_to_order}
-          div.col-md-2
-            button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#editProjectItemModal" id=n.id) Edit 
-            |  
-            a.btn.btn-secondary.btn-sm(href="/project_items/delete/"+n.id, role="button") Delete 
-  br
-  if project.status_id != 14
-    button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#addProjectItemModal") Add Project Item
-    | 
-    if !project_bom.length
-      button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#addProjectBomModal") Add BOM
-    else 
-      button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#processProjectBommModal") Process BOM
-    | 
-    if project.to_order > 0
-      button.btn.btn-secondary(type="button") Generate Order
-    else
-      button.btn.btn-secondary(type="button") Generate Pick List
-    br
+          if project.status_id != 11 && project.status_id != 13 && project.status_id != 14
+            if project.status_id == 12
+              div.col-md-2
+                a.btn.btn-secondary.btn-sm(href="/project_items/used/"+n.id, role="button") Used 
+            else
+              div.col-md-2
+                button.btn.btn-secondary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#editProjectItemModal" id=n.id) Edit 
+                |  
+                a.btn.btn-secondary.btn-sm(href="/project_items/delete/"+n.id, role="button") Delete 
+
   br
   
   // Upload Project BOM Modal
