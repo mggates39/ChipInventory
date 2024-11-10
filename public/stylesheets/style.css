@@ -46,6 +46,7 @@ body {
 
 .leftpinsym,
 .rightpinnum,
+.rightresistpinnum,
 .righttoppinnum,
 .rightbottompinnum {
   text-align: right;
@@ -53,6 +54,7 @@ body {
 
 .rightpinsym,
 .leftpinnum,
+.leftresistpinnum,
 .lefttoppinnum,
 .leftbottompinnum {
   text-align: left;
@@ -61,6 +63,12 @@ body {
 .leftpinnum,
 .rightpinnum {
   min-width: 50px;
+  padding: 5px;
+}
+
+.leftresistpinnum,
+.rightresistpinnum {
+  min-width: 20px;
   padding: 5px;
 }
 
@@ -76,11 +84,13 @@ body {
   border-right: 1px solid black;
 }
 
+.leftresistpinnum,
 .leftpinnum {
   border: 0;
   border-left: 1px solid black;
 }
 
+.rightresistpinnum,
 .rightpinnum {
   border: 0;
   border-right: 1px solid black;
@@ -164,52 +174,65 @@ html>body #dpindiagram {
 
 .resist_pink {
   background-color: #d8a0a6;
+  min-width: 8px;
 }
 
 resist_silver {
   background-color: silver;
+  min-width: 8px;
 }
 
 .resist_gold {
   background-color: gold;
+  min-width: 8px;
 }
 
 .resist_black {
   background-color: #0e0e10;
+  min-width: 8px;
 }
 
 .resist_brown {
   background-color: #7e4b26;
+  min-width: 8px;
 }
 
 .resist_red {
   background-color: #a72920;
+  min-width: 8px;
 }
 
 .resist_orange {
   background-color: #f67828;
+  min-width: 8px;
 }
 
 .resist_yellow {
   background-color: #f6b600;
+  min-width: 8px;
 }
 
 .resist_green {
   background-color: #61993b;
+  min-width: 8px;
 }
 
 .resist_blue {
-  background-color: #007cb0;
+  background-color: #001cb0;
+  min-width: 8px;
 }
 
 .resist_violet {
   background-color: #76689a;
+  min-width: 8px;
 }
 
 .resist_gray {
   color: #7a888e;
+  min-width: 8px;
 }
 
 .resist_white {
-  background-color:#e3d9c6; color:black
+  background-color:#e3d9c6; color:black;
+  min-width: 8px;
 }

@@ -47,189 +47,219 @@ block content
 
   div(id=iswide)
     table.pindiagram
-      if (data.package == 'SIP')
-        tr
-          th.lefttoppinnum &nbsp;
-          each n, index in layout_pins 
-            td.lefttoppinnum &nbsp;
-          th.righttoppinnum &nbsp;
-
-        tr
-          td.leftsipedge &nbsp;
-          each n, index in layout_pins 
-            td.leftbottompinnum #{n.pin}!{n.bull}
-          td.rightsipedge &nbsp;
-
-        tr
-          td.leftbottompinnum &nbsp;
-          each n, index in layout_pins 
-            td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
-          td.rightbottompinnum &nbsp;
-
-      else if ((data.package == 'SOT') || (data.package == 'TO-XX'))
-        tr
-          th.leftpinsym &nbsp;
-          th.lefttoppinnum &nbsp;
-          th.righttoppinnum &nbsp;
-          th.rightpinsym &nbsp;
-
-          tr
-            td.leftpinsym !{layout_pins[0].sym} &#9616;
-            td.leftpinnum #{layout_pins[0].pin} !{layout_pins[0].bull}
-            td.rightpinnum &nbsp;
-            td.rightpinsym &nbsp;
-
-          tr
-            td.leftpinsym &nbsp;
-            td.leftpinnum &nbsp;
-            td.rightpinnum #{layout_pins[2].pin} !{layout_pins[2].bull}
-            td.rightpinsym &#9612; !{layout_pins[2].sym}
-
-          tr
-            td.leftpinsym !{layout_pins[1].sym} &#9616;
-            td.leftpinnum #{layout_pins[1].pin} !{layout_pins[1].bull}
-            td.rightpinnum &nbsp;
-            td.rightpinsym &nbsp;
-
-        tr
-          td.leftpinsym &nbsp;
-          td.leftbottompinnum &nbsp;
-          td.rightbottompinnum &nbsp;
-          td.rightpinsym &nbsp;
-
-      else if (data.package == 'Radial')
-        tr
-          th.lefttoppinnum &nbsp;
-          th.lefttoppinnum &nbsp;
-          th.lefttoppinnum &nbsp;
-          th.lefttoppinnum &nbsp;
-          th.lefttoppinnum &nbsp;
-          th.lefttoppinnum &nbsp;
-          th.lefttoppinnum &nbsp;
-          th.righttoppinnum &nbsp;
-
-        tr
-          td.leftsipedge &nbsp;
-          each n, index in layout_pins 
-            td.leftbottompinnum #{n.pin}!{n.bull}
-            if (index == 0)
-              td.leftbottompinnum &nbsp;
-              td.leftbottompinnum &nbsp;
-              td.leftbottompinnum &nbsp;
-              td.leftbottompinnum &nbsp;
-          td.rightsipedge &nbsp;
-
-        tr
-          td.leftbottompinnum &nbsp;
-          each n, index in layout_pins 
-            td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
-            if (index == 0)
-              td.rightbottompinnum &nbsp;
-              td.rightbottompinnum &nbsp;
-              td.rightbottompinnum &nbsp;
-              td.rightbottompinnum &nbsp;
-          td.rightbottompinnum &nbsp;
-
-      else if (data.package == 'DIP')
-
-        tr
-          th.leftpinsym &nbsp;
-          th.lefttoppinnum &nbsp;
-          th.righttoppinnum &nbsp;
-          th.rightpinsym &nbsp;
-
-        each n, index in layout_pins
-          tr
-            if (n.left_sym)
-              td.leftpinsym !{n.left_sym} &#9616;
-            else 
-              td.leftpinsym &nbsp;
-            td.leftpinnum #{n.left_pin} !{n.bull}
-            td.rightpinnum #{n.right_pin}
-            if (n.right_sym)
-              td.rightpinsym &#9612; !{n.right_sym}
-            else
-              td.rightpinsym &nbsp;
-
-        tr
-          td.leftpinsym &nbsp;
-          td.leftbottompinnum &nbsp;
-          td.rightbottompinnum &nbsp;
-          td.rightpinsym &nbsp;
-
-      else if (data.package == 'Axial')
-        tr
-          th.leftpinsym &nbsp;
-          th.lefttoppinnum &nbsp;
-          th.righttoppinnum &nbsp;
-          th.rightpinsym &nbsp;
-
-        each n, index in layout_pins
-          tr
-            td.leftpinsym !{n.left_sym} &#9616;
-            td.leftpinnum #{n.left_pin} !{n.bull}
-            td.rightpinnum #{n.right_pin}
-            td.rightpinsym &#9612; !{n.right_sym}
-
-        tr
-          td.leftpinsym &nbsp;
-          td.leftbottompinnum &nbsp;
-          td.rightbottompinnum &nbsp;
-          td.rightpinsym &nbsp;
-
-      else
-
+      if (data.component_name == 'Resistor')
         tr
           th.leftpinsym &nbsp;
           th.lefttoppinnum &nbsp;
           each n, index in top_pins 
-            td.lefttoppinnum.toppinsym !{n.sym} &#9616;
+            th.lefttoppinnum &nbsp;
+            th.lefttoppinnum &nbsp;
           th.righttoppinnum &nbsp;
           th.rightpinsym &nbsp;
 
-        if (top_pins.length)
-          tr
-            td.leftpinsym &nbsp;
-            td.leftpinnum &nbsp;
-            each n, index in top_pins 
-              if (data.package == 'PLCC')
-                td #{n.pin} !{n.bull}
-              else 
-                td !{n.bull}#{n.pin}
-            td.rightpinnum &nbsp;
-            td.rightpinsym &nbsp;
-
         each n, index in layout_pins
           tr
-            if (n.left_sym)
-              td.leftpinsym !{n.left_sym} &#9616;
-            else 
-              td.leftpinsym &nbsp;
-            td.leftpinnum #{n.left_pin} !{n.bull}
-            for m, m_index in top_pins 
-              td.spacerpin &nbsp;
-            td.rightpinnum #{n.right_pin}
-            if (n.right_sym)
-              td.rightpinsym &#9612; !{n.right_sym}
-            else
-              td.rightpinsym &nbsp;
-
-        if (top_pins.length)
-          tr
-            td.leftpinsym &nbsp;
-            td.leftpinnum &nbsp;
-            each n, index in bottom_pins 
-              td.lefttoppinnum #{n.pin} !{n.bull}
-            td.rightpinnum &nbsp;
-            td.rightpinsym &nbsp;
+            td.leftpinsym &#9616;
+            td.leftresistpinnum &nbsp;
+            each tn, tindex in top_pins 
+              td(class="resist_"+tn) &nbsp;
+              td &nbsp;
+            td.rightresistpinnum &nbsp;
+            td.rightpinsym &#9612;
 
         tr
           td.leftpinsym &nbsp;
           td.leftbottompinnum &nbsp;
-          each n, index in bottom_pins 
-            td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
+          each n, index in top_pins 
+            td.leftbottompinnum &nbsp;
+            td.leftbottompinnum &nbsp;
           td.rightbottompinnum &nbsp;
           td.rightpinsym &nbsp;
+
+      else
+        if (data.package == 'SIP')
+          tr
+            th.lefttoppinnum &nbsp;
+            each n, index in layout_pins 
+              td.lefttoppinnum &nbsp;
+            th.righttoppinnum &nbsp;
+
+          tr
+            td.leftsipedge &nbsp;
+            each n, index in layout_pins 
+              td.leftbottompinnum #{n.pin}!{n.bull}
+            td.rightsipedge &nbsp;
+
+          tr
+            td.leftbottompinnum &nbsp;
+            each n, index in layout_pins 
+              td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
+            td.rightbottompinnum &nbsp;
+
+        else if ((data.package == 'SOT') || (data.package == 'TO-XX'))
+          tr
+            th.leftpinsym &nbsp;
+            th.lefttoppinnum &nbsp;
+            th.righttoppinnum &nbsp;
+            th.rightpinsym &nbsp;
+
+            tr
+              td.leftpinsym !{layout_pins[0].sym} &#9616;
+              td.leftpinnum #{layout_pins[0].pin} !{layout_pins[0].bull}
+              td.rightpinnum &nbsp;
+              td.rightpinsym &nbsp;
+
+            tr
+              td.leftpinsym &nbsp;
+              td.leftpinnum &nbsp;
+              td.rightpinnum #{layout_pins[2].pin} !{layout_pins[2].bull}
+              td.rightpinsym &#9612; !{layout_pins[2].sym}
+
+            tr
+              td.leftpinsym !{layout_pins[1].sym} &#9616;
+              td.leftpinnum #{layout_pins[1].pin} !{layout_pins[1].bull}
+              td.rightpinnum &nbsp;
+              td.rightpinsym &nbsp;
+
+          tr
+            td.leftpinsym &nbsp;
+            td.leftbottompinnum &nbsp;
+            td.rightbottompinnum &nbsp;
+            td.rightpinsym &nbsp;
+
+        else if (data.package == 'Radial')
+          tr
+            th.lefttoppinnum &nbsp;
+            th.lefttoppinnum &nbsp;
+            th.lefttoppinnum &nbsp;
+            th.lefttoppinnum &nbsp;
+            th.lefttoppinnum &nbsp;
+            th.lefttoppinnum &nbsp;
+            th.lefttoppinnum &nbsp;
+            th.righttoppinnum &nbsp;
+
+          tr
+            td.leftsipedge &nbsp;
+            each n, index in layout_pins 
+              td.leftbottompinnum #{n.pin}!{n.bull}
+              if (index == 0)
+                td.leftbottompinnum &nbsp;
+                td.leftbottompinnum &nbsp;
+                td.leftbottompinnum &nbsp;
+                td.leftbottompinnum &nbsp;
+            td.rightsipedge &nbsp;
+
+          tr
+            td.leftbottompinnum &nbsp;
+            each n, index in layout_pins 
+              td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
+              if (index == 0)
+                td.rightbottompinnum &nbsp;
+                td.rightbottompinnum &nbsp;
+                td.rightbottompinnum &nbsp;
+                td.rightbottompinnum &nbsp;
+            td.rightbottompinnum &nbsp;
+
+        else if (data.package == 'DIP')
+
+          tr
+            th.leftpinsym &nbsp;
+            th.lefttoppinnum &nbsp;
+            th.righttoppinnum &nbsp;
+            th.rightpinsym &nbsp;
+
+          each n, index in layout_pins
+            tr
+              if (n.left_sym)
+                td.leftpinsym !{n.left_sym} &#9616;
+              else 
+                td.leftpinsym &nbsp;
+              td.leftpinnum #{n.left_pin} !{n.bull}
+              td.rightpinnum #{n.right_pin}
+              if (n.right_sym)
+                td.rightpinsym &#9612; !{n.right_sym}
+              else
+                td.rightpinsym &nbsp;
+
+          tr
+            td.leftpinsym &nbsp;
+            td.leftbottompinnum &nbsp;
+            td.rightbottompinnum &nbsp;
+            td.rightpinsym &nbsp;
+
+        else if (data.package == 'Axial')
+          tr
+            th.leftpinsym &nbsp;
+            th.lefttoppinnum &nbsp;
+            th.righttoppinnum &nbsp;
+            th.rightpinsym &nbsp;
+
+          each n, index in layout_pins
+            tr
+              td.leftpinsym !{n.left_sym} &#9616;
+              td.leftpinnum #{n.left_pin} !{n.bull}
+              td.rightpinnum #{n.right_pin}
+              td.rightpinsym &#9612; !{n.right_sym}
+
+          tr
+            td.leftpinsym &nbsp;
+            td.leftbottompinnum &nbsp;
+            td.rightbottompinnum &nbsp;
+            td.rightpinsym &nbsp;
+
+        else
+
+          tr
+            th.leftpinsym &nbsp;
+            th.lefttoppinnum &nbsp;
+            each n, index in top_pins 
+              td.lefttoppinnum.toppinsym !{n.sym} &#9616;
+            th.righttoppinnum &nbsp;
+            th.rightpinsym &nbsp;
+
+          if (top_pins.length)
+            tr
+              td.leftpinsym &nbsp;
+              td.leftpinnum &nbsp;
+              each n, index in top_pins 
+                if (data.package == 'PLCC')
+                  td #{n.pin} !{n.bull}
+                else 
+                  td !{n.bull}#{n.pin}
+              td.rightpinnum &nbsp;
+              td.rightpinsym &nbsp;
+
+          each n, index in layout_pins
+            tr
+              if (n.left_sym)
+                td.leftpinsym !{n.left_sym} &#9616;
+              else 
+                td.leftpinsym &nbsp;
+              td.leftpinnum #{n.left_pin} !{n.bull}
+              for m, m_index in top_pins 
+                td.spacerpin &nbsp;
+              td.rightpinnum #{n.right_pin}
+              if (n.right_sym)
+                td.rightpinsym &#9612; !{n.right_sym}
+              else
+                td.rightpinsym &nbsp;
+
+          if (top_pins.length)
+            tr
+              td.leftpinsym &nbsp;
+              td.leftpinnum &nbsp;
+              each n, index in bottom_pins 
+                td.lefttoppinnum #{n.pin} !{n.bull}
+              td.rightpinnum &nbsp;
+              td.rightpinsym &nbsp;
+
+          tr
+            td.leftpinsym &nbsp;
+            td.leftbottompinnum &nbsp;
+            each n, index in bottom_pins 
+              td.rightbottompinnum.bottompinsym &#9612; !{n.sym}
+            td.rightbottompinnum &nbsp;
+            td.rightpinsym &nbsp;
 
   div#dpintable
     table.pintable
