@@ -786,3 +786,10 @@ WITH RECURSIVE cte_connect_by AS (
     LEFT JOIN project_items pi ON pi.project_id = p.id
     WHERE p.id = 1
     group by p.id, p.name, p.description, p.status_id, le.name;
+    
+    select c.name, c.description, resistance, unit_id, tolerance, power, le.description, le.modifier_value 
+    from resistors r
+    join components c on c.id = r.component_id
+    join list_entries le on le.id = r.unit_id;
+    
+    select * from list_entries;
