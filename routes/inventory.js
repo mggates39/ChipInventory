@@ -56,13 +56,18 @@ router.post('/new', async function(req, res) {
   var inv_id = 0;
   var new_qty = parseInt(data.quantity);
   var old_qty = 0;
+  var location_id = data.location_id;
+  if (location_id == '') {
+    location_id = null;
+  }
+
   const inv = await lookupInventory(data.chip_id, data.full_number, data.mfg_code_id);
   if (inv.length) {
     inv_id = inv[0].id;
     old_qty = parseInt(inv[0].quantity)
-    await updateInventory(inv_id, inv[0].component_id, inv[0].full_number, inv[0].mfg_code_id, (old_qty + new_qty), data.location_id)
+    await updateInventory(inv_id, inv[0].component_id, inv[0].full_number, inv[0].mfg_code_id, (old_qty + new_qty), location_id)
   } else {
-    const new_inv = await createInventory(data.chip_id, data.full_number, data.mfg_code_id, data.quantity, data.location_id);
+    const new_inv = await createInventory(data.chip_id, data.full_number, data.mfg_code_id, data.quantity, location_id);
     inv_id = new_inv.id;
   }
   const inv_date = await lookupInventoryDate(inv_id, data.date_code);
@@ -79,11 +84,11 @@ router.post('/new', async function(req, res) {
 router.post('/:id', async function(req, res) {
   const id = req.params.id;
   const data = req.body;
-  if (data.location_id == '') {
+  var location_id = data.location_id;
+  if (location_id == '') {
     location_id = null;
-  } else {
-    location_id = data.location_id;
   }
+
   await updateInventory(id, data.component_id, data.full_number, data.mfg_code_id, data.quantity, location_id);
   res.redirect('/inventory/'+id);
 });
