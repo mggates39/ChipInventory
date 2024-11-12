@@ -115,28 +115,50 @@ router.post('/new', async function(req, res) {
         descr.push(req.body["descr_"+i]);
     }
   } else {
-    if (data.component_sub_type_id == 54) {
-      // Bipoler
+    if (data.component_sub_type_id == 52) {
+      // BJT NPN
       pin.push(1);
-      sym.push('B');
-      descr.push('Base')
-      pin.push(2);
       sym.push('E');
       descr.push('Emitter')
+      pin.push(2);
+      sym.push('B');
+      descr.push('Base')
       pin.push(3);
       sym.push('C');
       descr.push('Collector')
-    } else {
-      // FET
+    } else if (data.component_sub_type_id == 54) {
+      // BJT PNP
       pin.push(1);
-      sym.push('G');
-      descr.push('Gate')
+      sym.push('C');
+      descr.push('Collector')
       pin.push(2);
+      sym.push('B');
+      descr.push('Base')
+      pin.push(3);
+      sym.push('E');
+      descr.push('Emitter')
+    } else if (data.component_sub_type_id == 52){
+      // FET N-Channel
+      pin.push(1);
       sym.push('S');
       descr.push('Source')
+      pin.push(2);
+      sym.push('G');
+      descr.push('Gate')
       pin.push(3);
       sym.push('D');
       descr.push('Drain')
+    } else if (data.component_sub_type_id == 55){
+      // FET P-Channel
+      pin.push(1);
+      sym.push('D');
+      descr.push('Drain')
+      pin.push(2);
+      sym.push('G');
+      descr.push('Gate')
+      pin.push(3);
+      sym.push('S');
+      descr.push('Source')
     }
   }
   data['pin'] = pin;
