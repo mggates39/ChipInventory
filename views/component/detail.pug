@@ -59,13 +59,13 @@ block content
 
         each n, index in layout_pins
           tr
-            td.leftpinsym &#9616;
+            td.leftpinsym !{n.left_sym} &#9616;
             td.leftresistpinnum &nbsp;
             each tn, tindex in top_pins 
               td(class="resist_"+tn) &nbsp;
               td &nbsp;
             td.rightresistpinnum &nbsp;
-            td.rightpinsym &#9612;
+            td.rightpinsym &#9612; !{n.right_sym}
 
         tr
           td.leftpinsym &nbsp;
