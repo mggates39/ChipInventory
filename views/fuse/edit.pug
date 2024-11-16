@@ -1,17 +1,17 @@
 extends ../component/edit
 
 block component_specific
-    div.form-group
-      label( for="rating") Rating:
-      div.input-group
-        input#rating.form-control(type="text" placeholder="Ex) 220, 1000" name="rating" value=data.rating)
-        select#rating_unit_id.form-control(type='select' placeholder='Select units' name='rating_unit_id' required='true')
-            for unit in rating_units
-                option(value=unit.id selected= data.rating_unit_id == unit.id) !{unit.name} - #{unit.description}
-    div.form-group
-      label( for="voltage") Voltage:
-      div.input-group
-        input#voltage.form-control(type="text" placeholder="Ex) 220, 1000" name="voltage" value=data.voltage)
-        select#voltage_unit_id.form-control(type='select' placeholder='Select units' name='voltage_unit_id' required='true')
-            for unit in voltage_units
-                option(value=unit.id selected= data.voltage_unit_id == unit.id) !{unit.name} - #{unit.description}
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="rating") Rating:
+      input#rating.col-sm-2(type="text" placeholder="Ex) 220, 1000" name="rating" value=data.rating)
+      | &nbsp;
+      select#rating_unit_id.col-sm-2(type='select' placeholder='Select units' name='rating_unit_id' required='true')
+          for unit in rating_units
+              option(value=unit.id selected= data.rating_unit_id == unit.id) !{unit.name} - #{unit.description}
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="voltage") Voltage:
+      input#voltage.col-sm-2(type="text" placeholder="Ex) 220, 1000" name="voltage" value=data.voltage)
+      | &nbsp;
+      select#voltage_unit_id.col-sm-2(type='select' placeholder='Select units' name='voltage_unit_id' required='true')
+          for unit in voltage_units
+              option(value=unit.id selected= data.voltage_unit_id == unit.id) !{unit.name} - #{unit.description}

@@ -1,19 +1,19 @@
 extends ../component/edit
 
 block component_specific
-    div.form-group
-      label( for="capacitance") Capacitance:
-      div.input-group
-        input#capacitance.form-control(type="text" placeholder="Ex) 220, 1000" name="capacitance" value=data.capacitance)
-        select#unit_id.form-control(type='select' placeholder='Select units' name='unit_id' required='true')
-            for unit in unit_list
-                option(value=unit.id selected= data.unit_id == unit.id) !{unit.name} - #{unit.description}
-    div.form-group
-      label( for="tolerance") Tolerance %:
-      input#tolerance.form-control(type="text" placeholder="Ex) 0.5. 1. 10 " name="tolerance" value=data.tolerance)
-    div.form-group
-      label( for="working_voltage") Working Voltage V:
-      input#working_voltage.form-control(type="text" placeholder="Ex) 0.25" name="working_voltage" value=data.working_voltage)
-    div.form-group
-      label( for="number_capacitors") Number or Capacitors:
-      input#number_capacitors.form-control(type="text" placeholder="Ex) 2,4, 8" name="number_capacitors" value=data.number_capacitors)
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="capacitance") Capacitance:
+      input#capacitance.col-sm-2(type="text" placeholder="Ex) 220, 1000" name="capacitance" value=data.capacitance)
+      | &nbsp;
+      select#unit_id.col-sm-2(type='select' placeholder='Select units' name='unit_id' required='true')
+          for unit in unit_list
+              option(value=unit.id selected= data.unit_id == unit.id) !{unit.name} - #{unit.description}
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="tolerance") Tolerance %:
+      input#tolerance.col-sm-2(type="text" placeholder="Ex) 0.5. 1. 10 " name="tolerance" value=data.tolerance)
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="working_voltage") Working Voltage V:
+      input#working_voltage.col-sm-2(type="text" placeholder="Ex) 0.25" name="working_voltage" value=data.working_voltage)
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="number_capacitors") Number or Capacitors:
+      input#number_capacitors.col-sm-2(type="text" placeholder="Ex) 2,4, 8" name="number_capacitors" value=data.number_capacitors)

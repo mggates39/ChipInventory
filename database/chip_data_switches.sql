@@ -38,6 +38,7 @@ CREATE TABLE `switches` (
 
 LOCK TABLES `switches` WRITE;
 /*!40000 ALTER TABLE `switches` DISABLE KEYS */;
+INSERT INTO `switches` VALUES (311,'https://www.te.com/usa-en/product-1825910-6.datasheet.pdf');
 /*!40000 ALTER TABLE `switches` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-03 22:10:28
+-- Dump completed on 2024-11-09 20:54:16

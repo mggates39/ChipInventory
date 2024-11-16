@@ -2,7 +2,7 @@ var express = require('express');
 const { getTransistor, createTransistor, updateTransistor, getPins, createPin, updatePin, 
   getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, 
-  getComponentSubTypesForComponentType, getComponentType, 
+  getComponentSubTypesForComponentType, getComponentType, getComponentTypeList, 
   getAliases, createAlias, deleteAliases, 
   getPickListByName} = require('../database');
 const {parse_symbol} = require('../utility');
@@ -115,28 +115,50 @@ router.post('/new', async function(req, res) {
         descr.push(req.body["descr_"+i]);
     }
   } else {
-    if (data.component_sub_type_id == 54) {
-      // Bipoler
+    if (data.component_sub_type_id == 52) {
+      // BJT NPN
       pin.push(1);
-      sym.push('B');
-      descr.push('Base')
-      pin.push(2);
       sym.push('E');
       descr.push('Emitter')
+      pin.push(2);
+      sym.push('B');
+      descr.push('Base')
       pin.push(3);
       sym.push('C');
       descr.push('Collector')
-    } else {
-      // FET
+    } else if (data.component_sub_type_id == 54) {
+      // BJT PNP
       pin.push(1);
-      sym.push('G');
-      descr.push('Gate')
+      sym.push('C');
+      descr.push('Collector')
       pin.push(2);
+      sym.push('B');
+      descr.push('Base')
+      pin.push(3);
+      sym.push('E');
+      descr.push('Emitter')
+    } else if (data.component_sub_type_id == 52){
+      // FET N-Channel
+      pin.push(1);
       sym.push('S');
       descr.push('Source')
+      pin.push(2);
+      sym.push('G');
+      descr.push('Gate')
       pin.push(3);
       sym.push('D');
       descr.push('Drain')
+    } else if (data.component_sub_type_id == 55){
+      // FET P-Channel
+      pin.push(1);
+      sym.push('D');
+      descr.push('Drain')
+      pin.push(2);
+      sym.push('G');
+      descr.push('Gate')
+      pin.push(3);
+      sym.push('S');
+      descr.push('Source')
     }
   }
   data['pin'] = pin;
@@ -229,6 +251,8 @@ router.get('/:id', async function(req, res, next) {
     const notes = await getNotes(id);
     const inventory = await getInventoryByComponentList(id);
     const aliases = await getAliases(id);
+    const component_types = await getComponentTypeList();
+    const component_type_id = transistor.component_type_id;
 
     fixed_pins = [];
     iswide = 'dpindiagram';
@@ -290,7 +314,8 @@ router.get('/:id', async function(req, res, next) {
 
     res.render('transistor/detail', { title: transistor.chip_number + ' - ' + transistor.description, data: transistor, 
       pins: fixed_pins, layout_pins: layout_pins,
-      specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory });
+      specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory,
+      component_types: component_types, component_type_id: component_type_id });
 });
   
 module.exports = router;

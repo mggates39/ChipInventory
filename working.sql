@@ -742,3 +742,54 @@ commit;
     
 select * from transistors;
 
+select cmp.*, cp.*
+from components cmp
+join component_types ct on ct.id = cmp.component_type_id
+left join chips cp on cp.component_id = cmp.id
+where ct.name = 'IC'
+-- and cp.component_id is null
+and cmp.name = '4N35M';
+
+select concat('const ', lower(replace(description, ' ', '_')), '_component_type_id  = ', id, ';') definition
+from component_types ct;
+
+select * from project_boms;
+select * from project_items where project_id = 1;
+
+
+update project_items set part_number = (select part_number from project_boms where project_boms.project_id = project_items.project_id and project_boms.number = project_items.number)
+where project_id = 1;
+
+WITH RECURSIVE cte_connect_by AS (
+      SELECT 1 AS level, cast(CONCAT('/', name) as char(4000)) AS connect_by_path, s.* 
+      FROM locations s WHERE id = 1
+      UNION ALL
+      SELECT level + 1 AS level, CONCAT(connect_by_path, '/', s.name) AS connect_by_path, s.* 
+      FROM cte_connect_by r 
+        INNER JOIN locations s ON  r.id = s.parent_location_id
+    )
+    SELECT p.name as project, pi.number, ct.name as type, c.name as component, i.full_number as part_number,
+      pi.qty_needed, ccb.connect_by_path
+    FROM projects p
+    JOIN project_items pi ON pi.project_id = p.id
+    JOIN components c ON c.id = pi.component_id
+    JOIN component_types ct ON ct.id = c.component_type_id
+    LEFT JOIN inventory i ON i.id = pi.inventory_id
+    LEFT JOIN cte_connect_by ccb ON ccb.id =  i.location_id
+    WHERE p.id = 1
+    ORDER BY ccb.connect_by_path, pi.number;
+    
+    SELECT p.id, p.name, p.description, p.status_id, le.name as status_value, 
+		count(pi.id) num_items, sum(pi.qty_needed) needed, sum(pi.qty_available) available, sum(pi.qty_to_order) to_order 
+    FROM projects p
+    JOIN list_entries le on le.id = p.status_id
+    LEFT JOIN project_items pi ON pi.project_id = p.id
+    WHERE p.id = 1
+    group by p.id, p.name, p.description, p.status_id, le.name;
+    
+    select c.name, c.description, resistance, unit_id, tolerance, power, le.description, le.modifier_value 
+    from resistors r
+    join components c on c.id = r.component_id
+    join list_entries le on le.id = r.unit_id;
+    
+    select * from list_entries;

@@ -74,8 +74,9 @@ projectsRouter.post('/:id/newitem/', async function(req, res, next) {
     // TODO: remove it from inventory quantity on hand
   } else {
     inventory_id = null;
+    qty_to_order = qty_needed;
   }
-  await createProjectItem(id, req.body.number, req.body.component_id, qty_needed, inventory_id, qty_available, qty_to_order);
+  await createProjectItem(id, req.body.number, req.body.part_number, req.body.component_id, qty_needed, inventory_id, qty_available, qty_to_order);
   res.redirect('/projects/'+id);
 });
 
@@ -101,8 +102,9 @@ projectsRouter.post('/:id/bomitem/', async function(req, res, next) {
     // TODO: remove it from inventory quantity on hand
   } else {
     inventory_id = null;
+    qty_to_order = qty_needed;
   }
-  await createProjectItem(project_id, req.body.number, component_id, qty_needed, inventory_id, qty_available, qty_to_order);
+  await createProjectItem(project_id, req.body.number, req.body.part_number, component_id, qty_needed, inventory_id, qty_available, qty_to_order);
   await updateProjectBomItem(project_bom_id, project_id, req.body.number, req.body.reference, qty_needed, req.body.part_number, 1);
   res.redirect('/projects/'+project_id);
 });

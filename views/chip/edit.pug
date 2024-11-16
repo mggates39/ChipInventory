@@ -1,6 +1,6 @@
 extends ../component/edit
 
 block component_specific
-    div.form-group
-      label( for="family") Family:
-      input#family.form-control(type="text" placeholder="Ex) 7400" name="family" value=data.family)
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="family") Family:
+      input#family.col-sm-2(type="text" placeholder="Ex) 7400" name="family" value=data.family)

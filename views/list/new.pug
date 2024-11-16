@@ -3,12 +3,12 @@ extends ../layout
 block content
   p Create new list definition
   form(action="/lists/new/" method="POST")
-    div.form-group
-      label(for="name") List Name:
-      input#name.form-control( type="text" placeholder="Ex) IC" name="name" value=list.name)
-    div.form-group
-      label(for="description") Description:
-      input#description.form-control( type="text" placeholder="Ex) Integrated Circuit" name="description" value=list.description)
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="name") List Name:
+      input#name.col-sm-2( type="text" placeholder="Ex) IC" name="name" value=list.name)
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="description") Description:
+      input#description.col-sm-4( type="text" placeholder="Ex) Integrated Circuit" name="description" value=list.description)
 
     button.btn.btn-default.btn-primary(type="submit") Submit
 

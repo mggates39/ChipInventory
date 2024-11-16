@@ -38,7 +38,7 @@ CREATE TABLE `connectors` (
 
 LOCK TABLES `connectors` WRITE;
 /*!40000 ALTER TABLE `connectors` DISABLE KEYS */;
-INSERT INTO `connectors` VALUES (293,'https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/693/4159_Web.pdf'),(294,'https://www.we-online.com/components/products/datasheet/6130xx11821.pdf'),(301,'https://www.we-online.com/components/products/datasheet/61300311121.pdf');
+INSERT INTO `connectors` VALUES (293,'https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/693/4159_Web.pdf'),(294,'https://www.we-online.com/components/products/datasheet/6130xx11821.pdf'),(301,'https://www.we-online.com/components/products/datasheet/61300311121.pdf'),(310,'https://cdn.amphenol-cs.com/media/wysiwyg/files/documentation/datasheet/inputoutput/io_usb_micro.pdf'),(312,'https://www.assmann-wsw.com/uploads/datasheets/ASS_4888_CO.pdf');
 /*!40000 ALTER TABLE `connectors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-03 22:10:30
+-- Dump completed on 2024-11-09 20:54:18

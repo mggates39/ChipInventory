@@ -1,27 +1,27 @@
 extends ../component/edit
 
 block component_specific
-    div.form-group
-      label( for="forward_voltage") Forward Voltage:
-      div.input-group
-        input#forward_voltage.form-control(type="text" placeholder="Ex) 220, 1000" name="forward_voltage" value=data.forward_voltage)
-        select#forward_unit_id.form-control(type='select' placeholder='Select units' name='forward_unit_id' )
-            for unit in unit_list
-                option(value=unit.id selected= data.forward_unit_id == unit.id) !{unit.name} - #{unit.description}
-    div.form-group
-      label( for="reverse_voltage") Reverse Voltage:
-      div.input-group
-        input#reverse_voltage.form-control(type="text" placeholder="Ex) 220, 1000" name="reverse_voltage" value=data.reverse_voltage)
-        select#freverse_unit_id.form-control(type='select' placeholder='Select units' name='reverse_unit_id')
-            for unit in unit_list
-                option(value=unit.id selected= data.freverse_unit_id == unit.id) !{unit.name} - #{unit.description}
-    div.form-group
-      label( for="light_color_id") Light Color:
-      select#light_color_id.form-control(type='select' placeholder='Select package type' name='light_color_id')
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="forward_voltage") Forward Voltage:
+      input#forward_voltage.col-sm-2(type="text" placeholder="Ex) 220, 1000" name="forward_voltage" value=data.forward_voltage)
+      | &nbsp;
+      select#forward_unit_id.col-sm-2(type='select' placeholder='Select units' name='forward_unit_id' )
+          for unit in unit_list
+              option(value=unit.id selected= data.forward_unit_id == unit.id) !{unit.name} - #{unit.description}
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="reverse_voltage") Reverse Voltage:
+      input#reverse_voltage.col-sm-2(type="text" placeholder="Ex) 220, 1000" name="reverse_voltage" value=data.reverse_voltage)
+      | &nbsp;
+      select#freverse_unit_id.col-sm-2(type='select' placeholder='Select units' name='reverse_unit_id')
+          for unit in unit_list
+              option(value=unit.id selected= data.freverse_unit_id == unit.id) !{unit.name} - #{unit.description}
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="light_color_id") Light Color:
+      select#light_color_id.col-sm-2(type='select' placeholder='Select package type' name='light_color_id')
         for light_color in light_colors
           option(value=light_color.id selected= data.light_color_id == light_color.id) #{light_color.name}
-    div.form-group
-      label( for="lens_color_id") Lens Color:
-      select#lens_color_id.form-control(type='select' placeholder='Select package type' name='lens_color_id')
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="lens_color_id") Lens Color:
+      select#lens_color_id.col-sm-2(type='select' placeholder='Select package type' name='lens_color_id')
         for lens_color in lens_colors
           option(value=lens_color.id selected= data.lens_color_id == lens_color.id) #{lens_color.name}

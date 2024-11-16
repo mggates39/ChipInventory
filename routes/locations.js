@@ -38,14 +38,22 @@ router.get('/edit/:id', async function(req, res, next) {
 })
 
 router.post('/new', async function( req, res, next) {
-  const location = await createLocation(req.body.parent_location_id, req.body.location_type_id, req.body.name, req.body.description);
+  var parent_location_id = req.body.parent_location_id;
+  if (parent_location_id == '') {
+    parent_location_id = null;
+  }
+  const location = await createLocation(parent_location_id, req.body.location_type_id, req.body.name, req.body.description);
   const id = location.id
   res.redirect('/locations/'+id);
 });
 
 router.post('/:id', async function( req, res, next) {
   const id = req.params.id;
-  await updateLocation(id, req.body.parent_location_id, req.body.location_type_id, req.body.name, req.body.description);
+  var parent_location_id = req.body.parent_location_id;
+  if (parent_location_id == '') {
+    parent_location_id = null;
+  }
+  await updateLocation(id, parent_location_id, req.body.location_type_id, req.body.name, req.body.description);
   res.redirect('/locations/'+id);
 })
 

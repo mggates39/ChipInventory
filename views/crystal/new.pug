@@ -1,10 +1,10 @@
 extends ../component/new
 
 block component_specific
-    div.form-group
-      label( for="frequency") Frequency:
-      div.input-group
-        input#frequency.form-control(type="text" placeholder="Ex) 32.0524" name="frequency" value=data.frequency)
-        select#unit_id.form-control(type='select' placeholder='Select units' name='unit_id' required='true')
-            for unit in unit_list
-                option(value=unit.id selected= data.unit_id == unit.id) !{unit.name} - #{unit.description}
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="frequency") Frequency:
+      input#frequency.col-sm-2(type="text" placeholder="Ex) 32.0524" name="frequency" value=data.frequency)
+      | &nbsp;
+      select#unit_id.col-sm-2(type='select' placeholder='Select units' name='unit_id' required='true')
+          for unit in unit_list
+              option(value=unit.id selected= data.unit_id == unit.id) !{unit.name} - #{unit.description}

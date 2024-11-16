@@ -3,20 +3,20 @@ extends ../layout
 block content
   p Enter the new location detais
   form(action="/locations/new" method="POST")
-    div.form-group
-      label(for="name") Location:
-      input#name.form-control( type="text" placeholder="Ex) Office, Basement" name="name" value=location.name)
-    div.form-group
-      label( for="description") Description:
-      input#description.form-control(type="text" placeholder="Ex) Upstairs office" name="description" value=location.description)
-    div.form-group
-      label( for="location_type_id") Location Type:
-      select#location_type_id.form-control(type='select' placeholder='Select location type' name='location_type_id' required='true')
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="name") Location:
+      input#name.col-sm-2( type="text" placeholder="Ex) Office, Basement" name="name" value=location.name)
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="description") Description:
+      input#description.col-sm-4(type="text" placeholder="Ex) Upstairs office" name="description" value=location.description)
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="location_type_id") Location Type:
+      select#location_type_id.col-sm-2(type='select' placeholder='Select location type' name='location_type_id' required='true')
         for location_type in location_types
           option(value=location_type.id selected= location.location_type_id == location_type.id) #{location_type.name}
-    div.form-group
-      label( for="parent_location_id") Parent Location:
-      select#parent_location_id.form-control(type='select' placeholder='Select parent location' name='parent_location_id')
+    div.row.mb-3
+      label.col-sm-2.col-form-label( for="parent_location_id") Parent Location:
+      select#parent_location_id.col-sm-2(type='select' placeholder='Select parent location' name='parent_location_id')
         option(value='') 
         for parent_location in parent_locations
           option(value=parent_location.id selected= location.parent_location_id == parent_location.id) #{parent_location.name}

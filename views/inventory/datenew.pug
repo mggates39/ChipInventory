@@ -4,12 +4,12 @@ block content
   h3 #{inventory.mfg_code} (#{inventory.name})
   p Enter the new date code
   form(action="/inventory/"+inventory.id+"/newdate" method="POST")
-    div.form-group
-      label(for="date_code") Date Code:
-      input#date_code.form-control(type="text" placeholder="Ex) 9315" name="date_code")
-    div.form-group
-      label(for="quantity") Quantity:
-      input#quantity.form-control(type="text" placeholder="Enter quantity to be added" name="quantity")
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="date_code") Date Code:
+      input#date_code.col-sm-2(type="text" placeholder="Ex) 9315" name="date_code")
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="quantity") Quantity:
+      input#quantity.col-sm-2(type="text" placeholder="Enter quantity to be added" name="quantity")
     br
     button.btn.btn-default.btn-primary(type="submit") Submit
 

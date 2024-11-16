@@ -35,7 +35,7 @@ CREATE TABLE `locations` (
   KEY `location_type_idx` (`location_type_id`),
   CONSTRAINT `location_type_idfk` FOREIGN KEY (`location_type_id`) REFERENCES `location_types` (`id`),
   CONSTRAINT `parent_location_idfk` FOREIGN KEY (`parent_location_id`) REFERENCES `locations` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `locations` (
 
 LOCK TABLES `locations` WRITE;
 /*!40000 ALTER TABLE `locations` DISABLE KEYS */;
-INSERT INTO `locations` VALUES (1,NULL,6,'Home','39 Begonia Lane'),(2,1,1,'Office','Upstairs Office'),(3,2,2,'Bookshelf 1','First bookshelf by the door'),(4,5,10,'Small Chip Tray','Small Chip Tray'),(5,2,11,'Elephant Basket','Elephant Basket'),(6,1,1,'Lab','Basement Lab'),(7,5,12,'Digikey Bag','Digikey Bag'),(8,5,4,'Archgon Box','Archgon Box'),(9,2,8,'Printer Stand','Printer Stand'),(10,2,2,'Bookshelf 2','Bookshelf by the window'),(11,2,2,'Bookshelf 3','Bookshelf in the corner'),(12,2,3,'Blue Tub','Blue plastic tub'),(13,2,3,'Silver Tub 1','Silver Plastic Tub'),(14,2,3,'Silver Tub 2','Silver Plastic Tub'),(15,2,3,'Silver Tub 3','Silver Plastic Tub');
+INSERT INTO `locations` VALUES (1,NULL,6,'Home','39 Begonia Lane'),(2,1,1,'Office','Upstairs Office'),(3,2,2,'Bookshelf 1','First bookshelf by the door'),(4,5,10,'Small Chip Tray','Small Chip Tray'),(5,2,11,'Elephant Basket','Elephant Basket'),(6,1,1,'Lab','Basement Lab'),(7,5,12,'Digikey Bag','Digikey Bag'),(8,5,4,'Archgon Box','Archgon Box'),(9,2,8,'Printer Stand','Printer Stand'),(10,2,2,'Bookshelf 2','Bookshelf by the window'),(11,2,2,'Bookshelf 3','Bookshelf in the corner'),(12,2,3,'Blue Tub','Blue plastic tub'),(13,2,3,'Silver Tub 1','Silver Plastic Tub'),(14,2,3,'Silver Tub 2','Silver Plastic Tub'),(15,2,3,'Silver Tub 3','Silver Plastic Tub'),(16,11,4,'UN-3481 Box','All the pill bottles with chips in them');
 /*!40000 ALTER TABLE `locations` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-03 22:10:29
+-- Dump completed on 2024-11-09 20:54:17
