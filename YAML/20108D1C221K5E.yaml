@@ -12,7 +12,7 @@ number_capacitors: 7
 datasheet: https://www.vishay.com/docs/31522/cs201.pdf
 pins:
   - num: 1
-    sym: CM
+    sym: CMN
     desc: Common
   - num: 2
     sym: C1

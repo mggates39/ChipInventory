@@ -1,0 +1,19 @@
+type: Switch
+subtype: Momentary
+name: 1825910-6
+description: SWITCH TACTILE SPST-NO 0.05A 24V
+package: THD
+pincount: 4
+pins:
+  - num: 1
+    sym: P
+    desc: Pin
+  - num: 2
+    sym: P
+    desc: Pin
+  - num: 3
+    sym: P
+    desc: Pin
+  - num: 4
+    sym: P
+    desc: Pin

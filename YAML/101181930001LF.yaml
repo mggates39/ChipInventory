@@ -1,0 +1,23 @@
+type: Jack
+subtype: Tin
+name: 10118193-0001LF
+description: CONN RCPT USB2.0 MICRO B SMD R/A
+package: SMD
+pincount: 5
+datasheet: https://cdn.amphenol-cs.com/media/wysiwyg/files/documentation/datasheet/inputoutput/io_usb_micro.pdf
+pins:
+  - num: 1
+    sym: P
+    desc: Pin
+  - num: 2
+    sym: P
+    desc: Pin
+  - num: 3
+    sym: P
+    desc: Pin
+  - num: 4
+    sym: P
+    desc: Pin
+  - num: 5
+    sym: P
+    desc: Pin
