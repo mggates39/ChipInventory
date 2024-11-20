@@ -1,0 +1,22 @@
+type: Transistor
+subtype: BJT NPN
+name: PN2222
+description: TRANS NPN 30V 0.6A TO92
+package: SOT
+pincount: 3
+usage: General
+power_rating: 625
+power_units: mW
+threshold: 30
+threshold_units: V
+datasheet: https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/4849/DS_488_PN2222.pdf
+pins:
+  - num: 1
+    sym: E
+    desc: Emitter
+  - num: 2
+    sym: B
+    desc: Base
+  - num: 3
+    sym: C
+    desc: Collector

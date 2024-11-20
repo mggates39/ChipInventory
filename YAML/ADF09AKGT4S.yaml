@@ -1,0 +1,35 @@
+type: Jack
+subtype: Gold
+name: A-DF 09 A/KG-T4S
+description: CONN D-SUB RCPT 9POS R/A SLDR
+package: THD
+pincount: 9
+datasheet: https://www.assmann-wsw.com/uploads/datasheets/ASS_4888_CO.pdf
+pins:
+  - num: 1
+    sym: P
+    desc: Pin
+  - num: 2
+    sym: P
+    desc: Pin
+  - num: 3
+    sym: P
+    desc: Pin
+  - num: 4
+    sym: P
+    desc: Pin
+  - num: 5
+    sym: P
+    desc: Pin
+  - num: 6
+    sym: P
+    desc: Pin
+  - num: 7
+    sym: P
+    desc: Pin
+  - num: 8
+    sym: P
+    desc: Pin
+  - num: 9
+    sym: P
+    desc: Pin
