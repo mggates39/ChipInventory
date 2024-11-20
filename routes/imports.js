@@ -6,7 +6,7 @@ const path = require('path');
 const { searchComponents, createChip, updateChip, createCapacitor, updateCapacitor, createCapacitorNetwork, updateCapacitorNetwork,
     createResistor, updateResistor, createResistorNetwork, updateResistorNetwork, createDiode, updateDiode, createFuse, updateFuse,
     createSocket, updateSocket, createConnector, updateConnector, createCrystal, updateCrystal, createTransistor, updateTransistor, 
-    lookupComponentType, lookupPickListEntryByName,
+    lookupComponentType, lookupPickListEntryByName, 
     createPin, createAlias, createNote, createSpec, deleteComponentRelated, lookupPackageType, lookupComponentSubType } = require('../database');
   
 // Read in a given file from the upload directory
@@ -19,7 +19,15 @@ async function get_file(file_name) {
         return '';
     }
 }
-
+async function get_files_in_directory(dir) {
+    try {
+      const files = await fs.readdir(dir);
+      return files;
+    } catch (err) {
+      console.error('Error reading directory:', err);
+    }
+  }
+  
 async function createNewComponent(component_name, data, package_type, component_type, component_sub_type) {
     var component_id = 0;
     if (component_type.name == 'IC') {
@@ -183,7 +191,7 @@ async function import_component(name, data) {
         chip_number = data.name;
     }
     const components = await searchComponents(chip_number, 'p', component_type_id);
-
+ 
     if (components[0]) {
         component_id = components[0].id;
         await deleteComponentRelated(component_id);
@@ -232,6 +240,30 @@ async function import_component(name, data) {
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
+    const data = {
+        name: '',
+        yaml_file: ''
+    };
+    res.render('import/file_import', { title: 'Import', data: data});
+  });
+
+/* GET load all the files in the YAML folder */
+router.get('/all', async function(req, res, next) {
+    var dirname = './YAML/';
+
+    files = await get_files_in_directory(dirname);
+    files.forEach(async (file) => {
+        const name = path.parse(file).name;
+        var data = await get_file(dirname + file);
+        try {
+            const doc = yaml.load(data);
+            [table_name, component_id] = await import_component(name, doc);
+            console.log(file + ' loaded as '+table_name+' - '+component_id);
+          } catch (e) {
+            console.log(e);
+          }
+    });
+
     const data = {
         name: '',
         yaml_file: ''
