@@ -792,4 +792,11 @@ WITH RECURSIVE cte_connect_by AS (
     join components c on c.id = r.component_id
     join list_entries le on le.id = r.unit_id;
     
-    select * from list_entries;
+    select * from list_entries
+    where list_id = 3;
+    
+select * from component_sub_types;
+SELECT ct.id, ct.name, ct.description, ct.table_name
+    FROM component_types ct
+    WHERE ct.name = 'IC';
+select * from components order by pin_count;
