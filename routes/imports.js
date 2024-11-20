@@ -28,68 +28,68 @@ async function createNewComponent(component_name, data, package_type, component_
 
     } else if (component_type.name == 'Cap') {
         const capUnit = await lookupPickListEntryByName('Capacitance', data.units);
-        const capacitor = await createCapacitor(component_name, package_type.id, component_sub_type.id, data.description, data.pin_count, 
+        const capacitor = await createCapacitor(component_name, package_type.id, component_sub_type.id, data.description, data.pincount, 
             data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data.datasheet);
         component_id = capacitor.component_id;
 
     } else if (component_type.name == 'CN') {
         const capUnit = await lookupPickListEntryByName('Capacitance', data.units);
-        const capacitor = await createCapacitorNetwork(component_name, package_type.id, component_sub_type.id, data.description, data.pin_count, 
+        const capacitor = await createCapacitorNetwork(component_name, package_type.id, component_sub_type.id, data.description, data.pincount, 
             data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data/number_capacitors, data.datasheet);
         component_id = capacitor.component_id;
 
     } else if (component_type.name == 'Res') {
         const resUnit = await lookupPickListEntryByName('Resistance', data.units);
-        const resistor = await createResistor(component_name, package_type.id, component_sub_type_.d, data.description, data.pin_count, 
+        const resistor = await createResistor(component_name, package_type.id, component_sub_type.id, data.description, data.pincount, 
             data.resistance, resUnit.id, data.tolerance, data.power, data.datasheet);
             component_id = resistor.component_id;
 
-    } else if (component_type.name == 'Res') {
+    } else if (component_type.name == 'RN') {
         const resUnit = await lookupPickListEntryByName('Resistance', data.units);
-        const resistor = await createResistorNetwork(component_name, package_type.id, component_sub_type_.d, data.description, data.pin_count, 
+        const resistor = await createResistorNetwork(component_name, package_type.id, component_sub_type.id, data.description, data.pincount, 
             data.resistance, resUnit.id, data.tolerance, data.power, data.number_resistors, data.datasheet);
             component_id = resistor.component_id;
 
-    } else if (component_type.name = "Diode") {
+    } else if (component_type.name == "Diode") {
         const fvUnits = await lookupPickListEntryByName('Voltages', data.forward_units);
         const rvUnits = await lookupPickListEntryByName('Voltages', data.reverse_units);
         const lightColor = await lookupPickListEntryByName('LEDColor', data.light_color);
         const lensColor = await lookupPickListEntryByName('LensColor', data.lens_color);
-        const diode = await createDiode(component_name, data.pin_count, package_type.id, component_sub_type.id, data.description, 
+        const diode = await createDiode(component_name, data.pincount, package_type.id, component_sub_type.id, data.description, 
             data.forward_voltage, fvUnits.id, data.reverse_voltage, rvUnits.id, lightColor.id, lensColor.id, data.datasheet);
         component_id = diode.component_id;
       
-    } else if (component_type.name = "Fuse") {
+    } else if (component_type.name == "Fuse") {
         const ratingUnits = await lookupPickListEntryByName('FuseRating', data.rating_units);
         const voltages = await lookupPickListEntryByName('Voltages', data.voltage_units);
-        const fuse = await createFuse(component_name, data.pin_count, package_type.id, component_sub_type.id, 
-            data.rating, ratingUnits,id, data.voltage, voltages.id, data.datasheet, data.description);
+        const fuse = await createFuse(component_name, data.pincount, package_type.id, component_sub_type.id, 
+            data.rating, ratingUnits.id, data.voltage, voltages.id, data.datasheet, data.description);
         component_id = fuse.component_id;
       
-    } else if (component_type.name = "Socket") {
-        const socket = await createSocket(component_name, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+    } else if (component_type.name == "Socket") {
+        const socket = await createSocket(component_name, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
         component_id = socket.component_id;
                 
-    } else if (component_type.name = "Jack") {
-        const jack = await createConnector(component_type.id, component_name, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+    } else if (component_type.name == "Jack") {
+        const jack = await createConnector(component_type.id, component_name, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
         component_id = jack.component_id;
                 
-    } else if (component_type.name = "Plug") {
-        const plug = await createConnector(component_type.id, component_name, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+    } else if (component_type.name == "Plug") {
+        const plug = await createConnector(component_type.id, component_name, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
         component_id = plug.component_id;
                 
-    } else if (component_type.name = "Xtal") {
+    } else if (component_type.name == "Xtal") {
         const units = await lookupPickListEntryByName('Frequency', data.units);
-        const crystal = createCrystal(component_name, data.frequency, units.id, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
-        component_id = crystal.compnent_id;
+        const crystal = createCrystal(component_name, data.frequency, units.id, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        component_id = crystal.component_id;
 
     } else if (component_type.name == "Transistor") {
         const usage = await lookupPickListEntryByName('TransistorUsage', data.usage);
         const power_units = await lookupPickListEntryByName('Power', data.power_units);
         const threshold_units = await lookupPickListEntryByName('Voltages', data.threshold_units);
-        const transistor = await createTransistor(component_name, data.description, data.pin_count, package_type.id, component_sub_type.id, 
+        const transistor = await createTransistor(component_name, data.description, data.pincount, package_type.id, component_sub_type.id, 
             usage.id, data.power_rating, power_units.id, data.threshold, threshold_units.id, data.datasheet);
-        component_id = transistor.compnent_id;
+        component_id = transistor.component_id;
 
     }
     return component_id;
@@ -101,22 +101,22 @@ async function updateExistingComponent(component_id, component_name, data, packa
         
     } else if (component_type.name == 'Cap') {
         const capUnit = await lookupPickListEntryByName('Capacitance', data.units);
-        await updateCapacitor(component_id, component_name, package_type.id, component_sub_type.id, data.description, data.pin_count, 
+        await updateCapacitor(component_id, component_name, package_type.id, component_sub_type.id, data.description, data.pincount, 
             data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data.datasheet);
 
     } else if (component_type.name == 'Cap') {
         const capUnit = await lookupPickListEntryByName('Capacitance', data.units);
-        await updateCapacitorNetwork(component_id, component_name, package_type.id, component_sub_type.id, data.description, data.pin_count, 
+        await updateCapacitorNetwork(component_id, component_name, package_type.id, component_sub_type.id, data.description, data.pincount, 
             data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data.number_capacitors, data.datasheet);
 
     } else if (component_type.name == 'Res') {
         const resUnit = await lookupPickListEntryByName('Resistance', data.units);
-        await updateResistor(component_id, component_name, package_type.id, component_sub_type_.d, data.description, data.pin_count, 
+        await updateResistor(component_id, component_name, package_type.id, component_sub_type.id, data.description, data.pincount, 
             data.resistance, resUnit.id, data.tolerance, data.power, data.datasheet);
 
-    } else if (component_type.name == 'Res') {
+    } else if (component_type.name == 'RN') {
         const resUnit = await lookupPickListEntryByName('Resistance', data.units);
-        await updateResistorNetwork(component_id, component_name, package_type.id, component_sub_type_.d, data.description, data.pin_count, 
+        await updateResistorNetwork(component_id, component_name, package_type.id, component_sub_type.id, data.description, data.pincount, 
             data.resistance, resUnit.id, data.tolerance, data.power, data.number_resistors, data.datasheet);
 
     } else if (component_type.name == "Diode") {
@@ -124,33 +124,33 @@ async function updateExistingComponent(component_id, component_name, data, packa
         const rvUnits = await lookupPickListEntryByName('Voltages', data.reverse_units);
         const lightColor = await lookupPickListEntryByName('LEDColor', data.light_color);
         const lensColor = await lookupPickListEntryByName('LensColor', data.lens_color);
-        await updateDiode(component_id, component_name, data.pin_count, package_type.id, component_sub_type.id, data.description, 
+        await updateDiode(component_id, component_name, data.pincount, package_type.id, component_sub_type.id, data.description, 
             data.forward_voltage, fvUnits.id, data.reverse_voltage, rvUnits.id, lightColor.id, lensColor.id, data.datasheet);
 
     } else if (component_type.name == "Fuse") {
         const ratingUnits = await lookupPickListEntryByName('FuseRating', data.rating_units);
         const voltages = await lookupPickListEntryByName('Voltages', data.voltage_units);
-        await updateFuse(component_id, component_name, data.pin_count, package_type.id, component_sub_type.id, 
-            data.rating, ratingUnits,id, data.voltage, voltages.id, data.datasheet, data.description);
+        await updateFuse(component_id, component_name, data.pincount, package_type.id, component_sub_type.id, 
+            data.rating, ratingUnits.id, data.voltage, voltages.id, data.datasheet, data.description);
 
     } else if (component_type.name == "Socket") {
-        await updateSocket(component_id, component_name, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        await updateSocket(component_id, component_name, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
                 
     } else if (component_type.name == "Jack") {
-        await updateConnector(component_id, component_type.id, component_name, data.pin_count, package_typeiid, component_sub_type.id, data.datasheet, data.description);
+        await updateConnector(component_id, component_type.id, component_name, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
                 
     } else if (component_type.name == "Plug") {
-        await updateConnector(component_id, component_type.id, component_name, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        await updateConnector(component_id, component_type.id, component_name, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
 
-    } else if (component_type.name == "Crystal") {
+    } else if (component_type.name == "Xtal") {
         const units = await lookupPickListEntryByName('Frequency', data.units);
-        await updateCrystal(component_id, component_name, data.frequency, units.id, data.pin_count, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        await updateCrystal(component_id, component_name, data.frequency, units.id, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
 
     } else if (component_type.name == "Transistor") {
         const usage = await lookupPickListEntryByName('TransistorUsage', data.usage);
         const power_units = await lookupPickListEntryByName('Power', data.power_units);
         const threshold_units = await lookupPickListEntryByName('Voltages', data.threshold_units);
-        await updateTransistor(component_id, component_name, data.description, data.pin_count, package_type.id, component_sub_type.id, 
+        await updateTransistor(component_id, component_name, data.description, data.pincount, package_type.id, component_sub_type.id, 
             usage.id, data.power_rating, power_units.id, data.threshold, threshold_units.id, data.datasheet);
 
     }
@@ -176,15 +176,15 @@ async function import_component(name, data) {
         component_sub_type = await lookupComponentSubType(component_type_id, data.family);
     }
 
-    const components = await searchComponents(name, 'p', component_type_id);
     var component_id = 0;
     var chip_number = name;
 
     if (data.name) {
         chip_number = data.name;
     }
+    const components = await searchComponents(chip_number, 'p', component_type_id);
 
-    if (components) {
+    if (components[0]) {
         component_id = components[0].id;
         await deleteComponentRelated(component_id);
         await updateExistingComponent(component_id, chip_number, data, package_type, component_type, component_sub_type);
@@ -195,9 +195,6 @@ async function import_component(name, data) {
     var pins = data.pins;
     for (const pin of pins) {
         var symbol = pin.sym;
-        if (symbol == '') {
-            symbol = null;
-        }
         await createPin(component_id, pin.num, symbol, pin.desc);
     }
 

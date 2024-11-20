@@ -233,7 +233,7 @@ async function createCrystal(chip_number, frequency, unit_id, pin_count, package
   const component_id = await createComponent(chip_number, component_type_id, package_type_id, component_sub_type_id, description, pin_count);
   await pool.query(`
       INSERT INTO crystals (component_id, frequency, unit_id, datasheet)
-      VALUES (?, ?, ?)
+      VALUES (?, ?, ?, ?)
       `, [component_id, frequency, unit_id, datasheet])
   return getCrystal(component_id)
 }
@@ -1452,9 +1452,9 @@ async function getComponentSubTypesForComponentType(component_type_id) {
     return rows;
 }
 
-async function lookupComponentype(component_type_name) {
+async function lookupComponentType(component_type_name) {
   const [rows] = await pool.query(`
-    SELECT ct.id, ct.name, ct.description
+    SELECT ct.id, ct.name, ct.description, ct.table_name
     FROM component_types ct
     WHERE ct.name = ?
     `, [component_type_name])
@@ -2102,7 +2102,7 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getComponentSubTypesForComponentType, createCompnentSubType, getComponentSubType, updateComponentSubType, deleteComponentSubType,
   getMountingTypeList, getMountingType, getMountingTypePlain, getMountingTypes, getPackageTypesForMountingType, 
   updateMountingType, createMountingType, getInventoryByLocationList,
-  getPackageTypeList, getPackageType, updatePackageType, createPackageType, lookupPackageType, lookupComponentype, lookupComponentSubType,
+  getPackageTypeList, getPackageType, updatePackageType, createPackageType, lookupPackageType, lookupComponentType, lookupComponentSubType,
   getPackageTypesForComponentType, getSelectedPackageTypesForComponentType,
   getComponentTypesForPackageType, getSelectedComponentTypesForPackageType,
   getLocationTypeList, getLocationType, createLocationType, updateLocationType, deleteLocationType,
