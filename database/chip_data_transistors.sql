@@ -4,7 +4,7 @@ USE `chip_data`;
 --
 -- Host: 127.0.0.1    Database: chip_data
 -- ------------------------------------------------------
--- Server version	8.0.39-0ubuntu0.22.04.1
+-- Server version	8.0.40-0ubuntu0.24.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -43,7 +43,7 @@ CREATE TABLE `transistors` (
 
 LOCK TABLES `transistors` WRITE;
 /*!40000 ALTER TABLE `transistors` DISABLE KEYS */;
-INSERT INTO `transistors` VALUES (308,45,300.000,40,60.000,23,'https://www.onsemi.com/pdf/datasheet/mmbt2907alt1-d.pdf'),(309,45,500.000,40,60.000,23,'https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/5337/SOT232N70S702K.pdf');
+INSERT INTO `transistors` VALUES (308,45,300.000,40,60.000,23,'https://www.onsemi.com/pdf/datasheet/mmbt2907alt1-d.pdf'),(309,45,500.000,40,60.000,23,'https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/5337/SOT232N70S702K.pdf'),(313,45,625.000,40,30.000,23,'https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/4849/DS_488_PN2222.pdf');
 /*!40000 ALTER TABLE `transistors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-09 20:54:17
+-- Dump completed on 2024-11-19 11:53:06
