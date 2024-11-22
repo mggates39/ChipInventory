@@ -14,22 +14,22 @@ const pool = mysql.createPool({
 // Index page queries
 async function getSystemData() {
   const [rows] = await pool.query(`select 
-      (select count(*) from aliases) aliases,
-      (select count(*) from components) definitions,
-      (select sum(quantity) from inventory) on_hand,
+      coalesce((select count(*) from aliases), 0) aliases,
+      coalesce((select count(*) from components), 0) definitions,
+      coalesce((select sum(quantity) from inventory), 0) on_hand,
       (select count(*) from (select distinct component_id from inventory) a) used_components,
-      (select SUBSTRING(min(centcode), 3) from (select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode from inventory_dates where date_code REGEXP '^[0-9]+$') A) min_date,
-      (select SUBSTRING(max(centcode), 3) from (select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode from inventory_dates where date_code REGEXP '^[0-9]+$') A) max_date,
-      (select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') old_min_date,
-      (select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$') old_max_date,
+      coalesce((select SUBSTRING(min(centcode), 3) from (select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode from inventory_dates where date_code REGEXP '^[0-9]+$') A), '0000') min_date,
+      coalesce((select SUBSTRING(max(centcode), 3) from (select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode from inventory_dates where date_code REGEXP '^[0-9]+$') A), '0000') max_date,
+      coalesce((select min(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$'), '0000') old_min_date,
+      coalesce((select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$'), '0000') old_max_date,
       (select count(*) from manufacturer) mfgs,
       (select count(*) from mfg_codes) codes,
       (select count(*) from locations where parent_location_id is null) main_locations,
       (select count(*) from locations where parent_location_id is not null) child_locations,
       (select count(*) from projects) number_projects,
-      (select sum(qty_needed) from project_items) project_needed,
-      (select sum(qty_available) from project_items) project_available,
-      (select sum(qty_needed)-sum(qty_available) from project_items) project_missing
+      coalesce((select sum(qty_needed) from project_items), 0) project_needed,
+      coalesce((select sum(qty_available) from project_items), 0) project_available,
+      coalesce((select sum(qty_needed)-sum(qty_available) from project_items), 0) project_missing
     `)
   return rows[0]
 }
