@@ -6,6 +6,7 @@ const path = require('path');
 const { searchComponents, createChip, updateChip, createCapacitor, updateCapacitor, createCapacitorNetwork, updateCapacitorNetwork,
     createResistor, updateResistor, createResistorNetwork, updateResistorNetwork, createDiode, updateDiode, createFuse, updateFuse,
     createSocket, updateSocket, createConnector, updateConnector, createCrystal, updateCrystal, createTransistor, updateTransistor, 
+    createSwitch, updateSwitch, createWire, updateWire, 
     lookupComponentType, lookupPickListEntryByName, 
     createPin, createAlias, createNote, createSpec, deleteComponentRelated, lookupPackageType, lookupComponentSubType } = require('../database');
   
@@ -43,7 +44,7 @@ async function createNewComponent(component_name, data, package_type, component_
     } else if (component_type.name == 'CN') {
         const capUnit = await lookupPickListEntryByName('Capacitance', data.units);
         const capacitor = await createCapacitorNetwork(component_name, package_type.id, component_sub_type.id, data.description, data.pincount, 
-            data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data/number_capacitors, data.datasheet);
+            data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data.number_capacitors, data.datasheet);
         component_id = capacitor.component_id;
 
     } else if (component_type.name == 'Res') {
@@ -88,7 +89,7 @@ async function createNewComponent(component_name, data, package_type, component_
                 
     } else if (component_type.name == "Xtal") {
         const units = await lookupPickListEntryByName('Frequency', data.units);
-        const crystal = createCrystal(component_name, data.frequency, units.id, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        const crystal = await createCrystal(component_name, data.frequency, units.id, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
         component_id = crystal.component_id;
 
     } else if (component_type.name == "Transistor") {
@@ -99,6 +100,16 @@ async function createNewComponent(component_name, data, package_type, component_
             usage.id, data.power_rating, power_units.id, data.threshold, threshold_units.id, data.datasheet);
         component_id = transistor.component_id;
 
+    } else if (component_type.name == "Switch") {
+        const switch_object = await createSwitch(component_name, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        component_id = switch_object.component_id;
+                
+    } else if (component_type.name == "Wire") {
+        const wire = await createWire(component_name, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
+        component_id = wire.component_id;
+                
+    } else {
+        console.log('Unknown component type: ' + component_type.name );
     }
     return component_id;
 }
@@ -112,7 +123,7 @@ async function updateExistingComponent(component_id, component_name, data, packa
         await updateCapacitor(component_id, component_name, package_type.id, component_sub_type.id, data.description, data.pincount, 
             data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data.datasheet);
 
-    } else if (component_type.name == 'Cap') {
+    } else if (component_type.name == 'CN') {
         const capUnit = await lookupPickListEntryByName('Capacitance', data.units);
         await updateCapacitorNetwork(component_id, component_name, package_type.id, component_sub_type.id, data.description, data.pincount, 
             data.capacitance, capUnit.id, data.working_voltage, data.tolerance, data.number_capacitors, data.datasheet);
@@ -161,6 +172,14 @@ async function updateExistingComponent(component_id, component_name, data, packa
         await updateTransistor(component_id, component_name, data.description, data.pincount, package_type.id, component_sub_type.id, 
             usage.id, data.power_rating, power_units.id, data.threshold, threshold_units.id, data.datasheet);
 
+    } else if (component_type.name == "Switch") {
+        await updateSwitch(component_name, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
+                
+    } else if (component_type.name == "Wire") {
+        await updateWire(component_name, data.pincount, package_type.id, component_sub_type.id, data.datasheet, data.description);
+                
+    } else {
+        console.log('Unknown component type: ' + component_type.name );
     }
 }
 
@@ -261,6 +280,7 @@ router.get('/all', async function(req, res, next) {
             console.log(file + ' loaded as '+table_name+' - '+component_id);
           } catch (e) {
             console.log(e);
+            console.log('For File: ' + file);
           }
     });
 
