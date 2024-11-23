@@ -800,3 +800,9 @@ SELECT ct.id, ct.name, ct.description, ct.table_name
     FROM component_types ct
     WHERE ct.name = 'IC';
 select * from components order by pin_count;
+
+select * from component_types;
+
+select component_type_id, package_type_id
+from component_packages
+order by component_type_id, package_type_id;
