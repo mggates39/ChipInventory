@@ -175,8 +175,8 @@ VALUES
     (5,1,5,'F','farad',0),
     (6,2,1,'&Omega;','Ohm',0),
     (7,2,2,'k&Omega;','Kilo-Ohm',3),
-    (8,2,2,'M&Omega;','Mega-Ohm',6),(
-    9,3,1,'Pending','Pending',0),
+    (8,2,2,'M&Omega;','Mega-Ohm',6),
+    (9,3,1,'Pending','Pending',0),
     (10,3,2,'Ordering','Ordering Parts',0),
     (11,3,3,'Ready','Ready to start',0),
     (12,3,4,'In Progress','In Progress',0),
