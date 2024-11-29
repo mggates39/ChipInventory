@@ -322,6 +322,7 @@ CREATE TABLE `projects` (
     `name` varchar(32) NOT NULL,
     `description` varchar(64) NOT NULL,
     `status_id` int NOT NULL,
+    `quantity_to_build` int not null default 1,
     PRIMARY KEY (`id`),
     KEY `project_status_idx` (`status_id`),
     CONSTRAINT `project_status_ibfk` FOREIGN KEY (`status_id`) REFERENCES `list_entries`(`id`)

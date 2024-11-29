@@ -18,7 +18,8 @@ projectsRouter.get('/new', async function(req, res, next) {
   const data = {
     name: '',
     description: '',
-    status_id: 15
+    status_id: 15,
+    quantity_to_build: 1
   };
   const status_list = await getPickListByName('ProjectStatus');
   res.render('project/new', {title: 'Project', project: data, status_list: status_list});
@@ -45,7 +46,7 @@ projectsRouter.get('/edit/:id', async function(req, res, next) {
 })
 
 projectsRouter.post('/new', async function( req, res, next) {
-  const project = await createProject(req.body.name, req.body.description, req.body.status_id);
+  const project = await createProject(req.body.name, req.body.description, req.body.status_id, req.body.quantity_to_build);
   const id = project.id
   res.redirect('/projects/'+id);
 });
@@ -53,7 +54,7 @@ projectsRouter.post('/new', async function( req, res, next) {
 /* POST existing item update */
 projectsRouter.post('/:id', async function( req, res, next) {
   const id = req.params.id;
-  await updateProject(id, req.body.name, req.body.description, req.body.status_id);
+  await updateProject(id, req.body.name, req.body.description, req.body.status_id, req.body.quantity_to_build);
   res.redirect('/projects/'+id);
 })
 

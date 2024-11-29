@@ -10,6 +10,9 @@ block content
       label.col-sm-2.col-form-label(for="description") Description:
       input#description.col-sm-4( type="text" placeholder="Ex) Fun time circuit" name="description" value=project.description)
     div.row.mb-3
+      label.col-sm-2.col-form-label(for="quantity_to_build") Quantity to Build:
+      input#description.col-sm-4( type="text" placeholder="Ex) 1" name="quantity_to_build" value=project.quantity_to_build)
+    div.row.mb-3
       label.col-sm-2.col-form-label(for="") Status:
       select#status_id.col-sm-2(type='select' placeholder='Select Component type' name='status_id' required='true')
         for status in status_list

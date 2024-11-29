@@ -1898,20 +1898,20 @@ async function deleteListEntry(list_entry_id) {
 
 async function getProjectList() {
   const [rows] = await pool.query(`
-    SELECT p.id, p.name, p.description, le.name as status_value, count(pi.id) num_items, 
+    SELECT p.id, p.name, p.description, p.quantity_to_build, le.name as status_value, count(pi.id) num_items, 
       sum(qty_needed) needed, sum(qty_available) available, sum(qty_to_order) on_order,
       (sum(qty_needed) - sum(qty_available)) unavailable
     FROM projects p 
     JOIN list_entries le on le.id = p.status_id
     LEFT JOIN project_items pi on pi.project_id = p.id
-    GROUP BY  p.id, p.name, p.description, le.name 
+    GROUP BY  p.id, p.name, p.description, p.quantity_to_build, le.name 
     ORDER BY p.name`);
   return rows;
 }
 
 async function getProject(project_id) {
   const [rows] = await pool.query(`
-    SELECT p.id, p.name, p.description, p.status_id, le.name as status_value, 
+    SELECT p.id, p.name, p.description, p.status_id, p.quantity_to_build, le.name as status_value, 
 		count(pi.id) num_items, sum(pi.qty_needed) needed, sum(pi.qty_available) available, sum(pi.qty_to_order) to_order 
     FROM projects p
     JOIN list_entries le ON le.id = p.status_id
@@ -1922,16 +1922,16 @@ async function getProject(project_id) {
     return rows[0];  
 }
 
-async function createProject(name, description, status_id) {
-  const [result] = await pool.query("INSERT INTO projects (name, description, status_id) VALUES (?, ?, ?)", 
-    [name, description, status_id])
+async function createProject(name, description, status_id, quantity_to_build) {
+  const [result] = await pool.query("INSERT INTO projects (name, description, status_id, quantity_to_build) VALUES (?, ?, ?, ?)", 
+    [name, description, status_id, quantity_to_build])
   const project_id = result.insertId
   return getProject(project_id)
 }
 
-async function updateProject(project_id, name, description, status_id) {
-  const [result] = await pool.query("UPDATE projects set name = ?, description = ?, status_id = ? WHERE id =?", 
-    [name, description, status_id, project_id])
+async function updateProject(project_id, name, description, status_id, quantity_to_build) {
+  const [result] = await pool.query("UPDATE projects SET name = ?, description = ?, status_id = ?, quantity_to_build = ? WHERE id =?", 
+    [name, description, status_id, quantity_to_build, project_id])
   return getProject(project_id)
 }
 
@@ -1952,7 +1952,7 @@ async function getProjectItemsForProject(project_id) {
     return rows;
 }
 
-async function getProjectPicListForProject(project_id) {
+async function getProjectPicKListForProject(project_id) {
   const [rows] = await pool.query(`
     WITH RECURSIVE cte_connect_by AS (
       SELECT 1 AS level, cast(CONCAT('/', name) as char(4000)) AS connect_by_path, s.* 
@@ -2112,6 +2112,6 @@ module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInvento
   getListEntriesForList, getListEntry, createListEntry, updateListEntry, deleteListEntry, lookupPickListEntryByName,
   getProjectList, getProject, createProject, updateProject, deleteProject,
   getProjectItemsForProject, getProjectItem, createProjectItem, updateProjectItem, deleteProjectItem,
-  getProjectBomItemsForProject, getUnprocessedProjectBomItemsForProject, getProjectPicListForProject,
+  getProjectBomItemsForProject, getUnprocessedProjectBomItemsForProject, getProjectPicKListForProject,
   getProjectBomItem, createProjectBomItem, updateProjectBomItem, deleteProjectBomItem }
 

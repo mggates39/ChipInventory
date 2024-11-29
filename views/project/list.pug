@@ -6,6 +6,7 @@ block content
     tr
       th Name
       th Description
+      th Qty Build
       th Status 
       th Number Items 
       th Qty Desired 
@@ -18,6 +19,7 @@ block content
         td 
           a(href="/projects/"+n.id) #{n.name}
         td= n.description
+        td= n.quantity_to_build
         td= n.status_value
         td= n.num_items
         td= n.needed
