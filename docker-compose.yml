@@ -13,8 +13,8 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - "./sql/schema.sql:/docker-entrypoint-initdb.d/1.sql"
-      - "./scripts/data_load.sql:/docker-entrypoint-initdb.d/2.sql"
-      - "./scripts/user.sql:/docker-entrypoint-initdb.d/3.sql"
+      - "./sql/data_load.sql:/docker-entrypoint-initdb.d/2.sql"
+      - "./sql/user.sql:/docker-entrypoint-initdb.d/3.sql"
       - mysql-data:/var/lib/mysql
 
     networks:
