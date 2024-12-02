@@ -33,7 +33,7 @@ block content
   div#project_items 
     div.container
       div.row
-        div.col-md-1
+        div.col-sm-1
           strong #
         div.col-md-1
           strong Part
@@ -44,20 +44,20 @@ block content
         div.col-md-2
           strong Inventory
         div.col-md-1
-          strong Needed
+          strong Need / Total
         div.col-md-1
           strong Avail / Order
         if project.status_id != 11 && project.status_id != 13 && project.status_id != 14
           div.col-md-2
             strong Action
       each n in project_items
-        div.row.mb-1.mt-1
+        div.row.mb-1.sm-1
           div.col-md-1=n.number
           div.col-md-1=n.part_number
           div.col-md-2 !{n.name}
           div.col-md-2=n.description
           div.col-md-2=n.inventory_name
-          div.col-md-1=n.qty_needed
+          div.col-md-1 #{n.qty_needed} / #{n.total_qty}
           div.col-md-1 #{n.qty_available} / #{n.qty_to_order}
           if project.status_id != 11 && project.status_id != 13 && project.status_id != 14
             if project.status_id == 12

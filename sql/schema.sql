@@ -335,6 +335,7 @@ CREATE TABLE `project_items` (
     `part_number` varchar(32) NULL,
     `component_id` int NULL,
     `qty_needed` int NOT NULL,
+    `total_qty` int NULL,
     `inventory_id` int NULL,
     `qty_available` int NULL,
     `qty_to_order` int NULL,
