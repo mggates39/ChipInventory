@@ -806,3 +806,12 @@ select * from component_types;
 select component_type_id, package_type_id
 from component_packages
 order by component_type_id, package_type_id;
+
+-- 
+-- Add project qty to build support
+--
+-- alter table projects add column `quantity_to_build` int NOT NULL DEFAULT '1' after `description`;
+-- alter table project_items add column `total_qty` int NULL after `qty_needed`;
+-- update project_items set total_qty = qty_needed where 1=1;
+-- commit;
+
