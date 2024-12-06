@@ -28,9 +28,9 @@ async function getSystemData() {
       (select count(*) from locations where parent_location_id is null) main_locations,
       (select count(*) from locations where parent_location_id is not null) child_locations,
       (select count(*) from projects) number_projects,
-      coalesce((select sum(qty_needed) from project_items), 0) project_needed,
+      coalesce((select sum(total_qty) from project_items), 0) project_needed,
       coalesce((select sum(qty_available) from project_items), 0) project_available,
-      coalesce((select sum(qty_needed)-sum(qty_available) from project_items), 0) project_missing
+      coalesce((select sum(total_qty)-sum(qty_available) from project_items), 0) project_missing
     `)
   return rows[0]
 }
@@ -1900,7 +1900,7 @@ async function getProjectList() {
   const [rows] = await pool.query(`
     SELECT p.id, p.name, p.description, p.quantity_to_build, le.name as status_value, count(pi.id) num_items, 
       sum(qty_needed) needed, sum(qty_available) available, sum(qty_to_order) on_order,
-      (sum(qty_needed) - sum(qty_available)) unavailable
+      sum(total_qty) total_needed, (sum(total_qty) - sum(qty_available)) unavailable
     FROM projects p 
     JOIN list_entries le on le.id = p.status_id
     LEFT JOIN project_items pi on pi.project_id = p.id
@@ -1912,7 +1912,7 @@ async function getProjectList() {
 async function getProject(project_id) {
   const [rows] = await pool.query(`
     SELECT p.id, p.name, p.description, p.status_id, p.quantity_to_build, le.name as status_value, 
-		count(pi.id) num_items, sum(pi.qty_needed) needed, sum(pi.qty_available) available, sum(pi.qty_to_order) to_order 
+		count(pi.id) num_items, sum(pi.qty_needed) needed, sum(pi.total_qty) total_needed, sum(pi.qty_available) available, sum(pi.qty_to_order) to_order 
     FROM projects p
     JOIN list_entries le ON le.id = p.status_id
     LEFT JOIN project_items pi ON pi.project_id = p.id
@@ -1986,17 +1986,17 @@ async function getProjectItem(project_item_id) {
     return rows[0];  
 }
 
-async function createProjectItem(project_id, number, part_number, component_id, qty_needed, inventory_id, qty_available, qty_to_order) {
+async function createProjectItem(project_id, number, part_number, component_id, qty_needed, total_qty, inventory_id, qty_available, qty_to_order) {
   const [result] = await pool.query(`
     INSERT INTO project_items 
-      (project_id, number, part_number, component_id, qty_needed, inventory_id, qty_available, qty_to_order) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, 
-    [project_id, number, part_number, component_id, qty_needed, inventory_id, qty_available, qty_to_order])
+      (project_id, number, part_number, component_id, qty_needed, total_qty, inventory_id, qty_available, qty_to_order) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+    [project_id, number, part_number, component_id, qty_needed, total_qty, inventory_id, qty_available, qty_to_order])
   const project_item_id = result.insertId
   return getProjectItem(project_item_id)
 }
 
-async function updateProjectItem(project_item_id, project_id, number, part_number, component_id, qty_needed, inventory_id, qty_available, qty_to_order) {
+async function updateProjectItem(project_item_id, project_id, number, part_number, component_id, qty_needed, total_qty, inventory_id, qty_available, qty_to_order) {
   const [result] = await pool.query(`
     UPDATE project_items set 
       project_id = ?, 
@@ -2004,11 +2004,12 @@ async function updateProjectItem(project_item_id, project_id, number, part_numbe
       part_number = ?, 
       component_id = ?, 
       qty_needed = ?, 
+      total_qty = ?, 
       inventory_id = ?, 
       qty_available = ?, 
       qty_to_order = ? 
     WHERE id =?`, 
-    [project_id, number, part_number, component_id, qty_needed, inventory_id, qty_available, qty_to_order, project_item_id])
+    [project_id, number, part_number, component_id, qty_needed, total_qty, inventory_id, qty_available, qty_to_order, project_item_id])
   return getProjectItem(project_item_id)
 }
 
