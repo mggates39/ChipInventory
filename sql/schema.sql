@@ -296,8 +296,11 @@ CREATE TABLE `inventory` (
   `component_id` int NOT NULL,
   `mfg_code_id` int NOT NULL,
   `full_number` varchar(64) NOT NULL,
+  `quantity_on_hand` int NOT NULL,
+  `quantity_allocated` int NOT NULL,
+  `quantity_available` int NOT NULL,
+  `quantity_on_order` int NOT NULL,
   `location_id` int NULL,
-  `quantity` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `component_idx` (`component_id`),
   KEY `mfg_code_idx` (`mfg_code_id`),
@@ -375,7 +378,7 @@ SELECT
     `cmp`.`pin_count` AS `pin_count`,
     `cmp`.`description` AS `description`,
     (SELECT 
-            SUM(`i`.`quantity`)
+            SUM(`i`.`quantity_on_hand`)
         FROM
             `inventory` `i`
         WHERE
@@ -413,7 +416,10 @@ SELECT
 	i.id, 
     cmp.id as component_id, 
     i.full_number, 
-    i.quantity, 
+    i.quantity_on_hand, 
+    i.quantity_allocated,
+    i.quantity_available,
+    i.quantity_on_order,
 	cmp.name as chip_number, 
     cmp.description, 
     ct.id as component_type_id,

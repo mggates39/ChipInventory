@@ -29,7 +29,10 @@ block content
       th Type
       th Description
       th Manufacturer
-      th Quantity
+      th On Hand
+      th Allocated
+      th Available 
+      th On Order
       th Location
 
     each n in inventory
@@ -41,7 +44,10 @@ block content
         td= n.type
         td= n.description
         td= n.mfg_code+' ('+n.mfg_name+')'
-        td= n.quantity
+        td= n.quantity_on_hand 
+        td= n.quantity_allocated
+        td= n.quantity_available 
+        td= n.quantity_on_order
         td= n.location
 
     if inventory.length == 0

@@ -23,8 +23,17 @@ block content
         for location in locations
           option(value=location.id selected= data.location_id == location.id) #{location.name}
     div.row.mb-3
-      label.col-sm-2.col-form-label(for="quantity") Quantity:
-      input#quantity.col-sm-2(type="text" placeholder="Enter quantity to be added" name="quantity" value=data.quantity)
+      label.col-sm-2.col-form-label(for="quantity_on_hand") Quantity On Hand:
+      input#quantity_on_hand.col-sm-2(type="text" placeholder="Enter quantity to be added" name="quantity_on_hand" value=data.quantity_on_hand)
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="quantity_allocated") Quantity Allocated:
+      input#quantity_allocated.col-sm-2(type="text" placeholder="Enter quantity to be added" name="quantity_allocated" value=data.quantity_allocated)
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="quantity_available") Quantity Available:
+      input#quantity_available.col-sm-2(type="text" placeholder="Enter quantity to be added" name="quantity_available" value=data.quantity_available)
+    div.row.mb-3
+      label.col-sm-2.col-form-label(for="quantity_on_order") Quantity On Order:
+      input#quantity_on_order.col-sm-2(type="text" placeholder="Enter quantity to be added" name="quantity_on_order" value=data.quantity_on_order)
     br
     button.btn.btn-default.btn-primary(type="submit") Submit
 

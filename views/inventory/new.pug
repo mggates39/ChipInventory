@@ -4,10 +4,10 @@ block content
   p Enter the new component inventory
   form(action="/inventory/new/" method="POST")
     div.row.mb-3
-      label.col-sm-2.col-form-label(for="chip_id") Base Chip Number:
-      select#chip_id.col-sm-2(type='select' placeholder='Select chip' name='chip_id' required='true')
+      label.col-sm-2.col-form-label(for="chip_id") Base Component:
+      select#chip_id.col-sm-2(type='select' placeholder='Select component' name='chip_id' required='true')
         for component in components
-          option(value=component.id) #{component.name}
+          option(value=component.id) #{component.chip_number}
     div.row.mb-3
       label.col-sm-2.col-form-label(for="mfg_code_id") Manufacturer:
       select#mfg_code_id.col-sm-4(type='select' placeholder='Select Manufacturer' name='mfg_code_id' )

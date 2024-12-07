@@ -30,10 +30,10 @@ router.post('/:id', async function( req, res, next) {
     var qty_to_order = req.body.qty_to_order;
     if (inventory_id) {
       const inv = await getInventory(inventory_id);
-      if (inv.quantity > total_qty){
+      if (inv.quantity_available > total_qty){
         qty_available = total_qty;
       } else {
-        qty_available = inv.quantity;
+        qty_available = inv.quantity_available;
         qty_to_order = total_qty - qty_available;
       }
       // TODO: remove it from inventory quantity on hand

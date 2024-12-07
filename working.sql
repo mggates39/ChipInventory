@@ -807,6 +807,7 @@ select component_type_id, package_type_id
 from component_packages
 order by component_type_id, package_type_id;
 
+select * from project_items;
 -- 
 -- Add project qty to build support
 --
@@ -815,3 +816,21 @@ order by component_type_id, package_type_id;
 -- update project_items set total_qty = qty_needed where 1=1;
 -- commit;
 
+-- 
+-- Alter invetory add quantity related columns
+--
+-- ALTER TABLE inventory CHANGE quantity quantity_on_hand int NOT NULL;
+-- ALTER TABLE inventory ADD COLUMN `quantity_allocated` int NOT NULL after quantity_on_hand;
+-- ALTER TABLE inventory ADD COLUMN `quantity_available` int NOT NULL after quantity_allocated;
+-- ALTER TABLE inventory ADD COLUMN `quantity_on_order` int NOT NULL after quantity_available;
+--   
+-- UPDATE inventory SET quantity_allocated = 0, quantity_available = quantity_on_hand,  quantity_on_order = 0
+-- WHERE 1=1;
+-- UPDATE inventory SET quantity_allocated = coalesce((select sum(qty_available) from project_items where inventory_id = inventory.id), 0) WHERE 1=1;
+-- update inventory set quantity_available = quantity_on_hand - quantity_allocated WHERE 1=1;
+-- UPDATE inventory SET quantity_on_order = coalesce((select sum(qty_to_order) from project_items where inventory_id = inventory.id), 0) WHERE 1=1;
+-- commit;
+
+select * from inventory;
+
+select * from project_items;

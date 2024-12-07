@@ -6,6 +6,11 @@ block content
    a(href="/chips/"+inventory.component_id) #{inventory.chip_number}
   p #[strong Manufacture:] #{inventory.mfg_code + ' (' + inventory.name + ')'}
   p #[strong Location:] #{inventory.location}
+  p #[strong Quantity] 
+  p #[strong On Hane:] #{inventory.quantity_on_hand}
+  p #[strong Allocated:] #{inventory.quantity_allocated}
+  p #[strong Available:] #{inventory.quantity_available}
+  p #[strong On Order:] #{inventory.quantity_on_prder}
 
   a.btn.btn-primary(href="/inventory/edit/" + inventory.id, role="button") Edit
   table
@@ -20,7 +25,7 @@ block content
 
     tr
       td Total
-      td= inventory.quantity
+      td= inventory.quantity_on_hand
 
   a.btn.btn-secondary(href="/inventory/" + inventory.id + "/newdate", role="button") Add Date Code
 

@@ -17,7 +17,7 @@ async function getSystemData() {
   const [rows] = await pool.query(`select 
       coalesce((select count(*) from aliases), 0) aliases,
       coalesce((select count(*) from components), 0) definitions,
-      coalesce((select sum(quantity) from inventory), 0) on_hand,
+      coalesce((select sum(quantity_on_hand) from inventory), 0) on_hand,
       (select count(*) from (select distinct component_id from inventory) a) used_components,
       coalesce((select SUBSTRING(min(centcode), 3) from (select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode from inventory_dates where date_code REGEXP '^[0-9]+$') A), '0000') min_date,
       coalesce((select SUBSTRING(max(centcode), 3) from (select  case when date_code < '6000' then date_code + 200000 else date_code + 190000 end centcode from inventory_dates where date_code REGEXP '^[0-9]+$') A), '0000') max_date,
@@ -59,7 +59,7 @@ async function getAliasCounts() {
 
 async function getInventoryCounts() {
   const [rows] = await pool.query(`
-    select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, ct.id, table_name, count(c.id) ni, sum(i.quantity) quantity
+    select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, ct.id, table_name, count(c.id) ni, sum(i.quantity_on_hand) quantity
     from component_types ct
     join components c on ct.id = c.component_type_id
     join inventory i on i.component_id = c.id
@@ -1085,7 +1085,7 @@ async function searchInventory(query, type, component_type_id) {
 
 async function getInventoryList() {
   const [rows] = await pool.query(`
-    select inventory.id, inventory.component_id, full_number, quantity, cmp.name as chip_number, cmp.description, 
+    select inventory.id, inventory.component_id, full_number, quantity_on_hand, cmp.name as chip_number, cmp.description, 
     l.name location, mfg_code, manufacturer.name 
     from inventory
     join components cmp on cmp.id = inventory.component_id
@@ -1097,7 +1097,7 @@ async function getInventoryList() {
 }
 
 async function getInventoryByComponentList(component_id) {
-  const [rows] = await pool.query(`select i.id, component_id, i.full_number, i.quantity, cmp.name as chip_number, l.name loacation, mfg_code, manufacturer.name   
+  const [rows] = await pool.query(`select i.id, component_id, i.full_number, i.quantity_on_hand, cmp.name as chip_number, l.name loacation, mfg_code, manufacturer.name   
     from inventory i
     join components cmp on cmp.id = i.component_id
     join mfg_codes on mfg_codes.id = i.mfg_code_id
@@ -1110,7 +1110,7 @@ async function getInventoryByComponentList(component_id) {
 
 async function getInventoryByLocationList(location_id) {
   const [rows] = await pool.query(`
-    SELECT i.id, component_id, i.full_number, i.mfg_code_id, i.quantity, cmp.name as chip_number, cmp.description, i.location_id, l.name loacation, mfg_code, manufacturer.name 
+    SELECT i.id, component_id, i.full_number, i.mfg_code_id, i.quantity_on_hand, cmp.name as chip_number, cmp.description, i.location_id, l.name loacation, mfg_code, manufacturer.name 
     from inventory i
     join components cmp on cmp.id = i.component_id
     join mfg_codes on mfg_codes.id = i.mfg_code_id
@@ -1133,7 +1133,8 @@ async function lookupInventory(component_id, full_number, mfg_code_id) {
 
 async function getInventory(inventory_id) {
   const [rows] = await pool.query(`
-  SELECT i.id, component_id, i.full_number, i.mfg_code_id, i.quantity, cmp.name as chip_number, cmp.description, i.location_id, l.name location, mfg_code, manufacturer.name 
+  SELECT i.id, component_id, i.full_number, i.mfg_code_id, i.quantity_on_hand, i.quantity_allocated, i.quantity_available, i.quantity_on_order, 
+    cmp.name as chip_number, cmp.description, i.location_id, l.name location, mfg_code, manufacturer.name 
     from inventory i
     join components cmp on cmp.id = i.component_id
     join mfg_codes on mfg_codes.id = i.mfg_code_id
@@ -1144,25 +1145,28 @@ async function getInventory(inventory_id) {
   return rows[0]
 }
 
-async function createInventory(component_id, full_chip_number, mfg_code_id, quantity, location_id) {
+async function createInventory(component_id, full_chip_number, mfg_code_id, quantity_on_hand, quantity_allocated, quantity_available, quantity_on_order, location_id) {
   const [result] = await pool.query(`
-    INSERT INTO inventory (component_id, full_number, mfg_code_id, quantity, location_id)
-    VALUES (?, ?, ?, ?, ?)
-    `, [component_id, full_chip_number, mfg_code_id, quantity, location_id])
+    INSERT INTO inventory (component_id, full_number, mfg_code_id, quantity_on_hand, quantity_allocated, quantity_available, quantity_on_order, location_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `, [component_id, full_chip_number, mfg_code_id, quantity_on_hand, quantity_allocated, quantity_available, quantity_on_order, location_id])
   const inventory_id = result.insertId;
   return getInventory(inventory_id)
 }
 
-async function updateInventory(inventory_id, component_id, full_chip_number, mfg_code_id, quantity, location_id) {
+async function updateInventory(inventory_id, component_id, full_chip_number, mfg_code_id, quantity_on_hand, quantity_allocated, quantity_available, quantity_on_order, location_id) {
   const [result] = await pool.query(`
     UPDATE inventory SET
       component_id = ?, 
       full_number = ?, 
       mfg_code_id = ?, 
-      quantity = ?,
+      quantity_on_hand = ?, 
+      quantity_allocated = ?, 
+      quantity_available = ?, 
+      quantity_on_order = ?,
       location_id = ?
     WHERE id = ?
-    `, [component_id, full_chip_number, mfg_code_id, quantity, location_id, inventory_id])
+    `, [component_id, full_chip_number, mfg_code_id, quantity_on_hand, quantity_allocated, quantity_available, quantity_on_order, location_id, inventory_id])
   return getInventory(inventory_id);  
 }
 
@@ -1575,7 +1579,7 @@ async function deleteLocationType(location_type_id) {
 async function getLocationList() {
   const [rows] = await pool.query(`
     SELECT ol.*, pl.name as parent_location , lt.name as location_type, 
-	    (select sum(quantity) from inventory where inventory.location_id = ol.id) num_items,
+	    (select sum(quantity_on_hand) from inventory where inventory.location_id = ol.id) num_items,
       (select sum(1) from locations cl where cl.parent_location_id = ol.id) num_child_locations
     FROM locations ol
     LEFT JOIN locations pl on pl.id = ol.parent_location_id
@@ -1587,7 +1591,7 @@ async function getLocationList() {
 async function getChildLocationList(location_id) {
   const [rows] = await pool.query(`
     SELECT ol.*, lt.name as location_type, 
- 	    (select sum(quantity) from inventory where inventory.location_id = ol.id) num_items,
+ 	    (select sum(quantity_on_hand) from inventory where inventory.location_id = ol.id) num_items,
       (select sum(1) from locations cl where cl.parent_location_id = ol.id) num_child_locations
     FROM locations ol
     LEFT JOIN location_types lt on lt.id = ol.location_type_id
