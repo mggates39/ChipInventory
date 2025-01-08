@@ -4,6 +4,9 @@ var dotenv = require('dotenv');
 // Create the database connection pool from the config
 dotenv.config()
 
+// Update this with every database schema change
+const expectedDatabaseVersion = 2;
+
 const pool = mysql.createPool({
   host: process.env.MYSQL_HOST,
   port: process.env.MYSQL_LOCAL_PORT,
@@ -33,6 +36,54 @@ async function getSystemData() {
       coalesce((select sum(total_qty)-sum(qty_available) from project_items), 0) project_missing
     `)
   return rows[0]
+}
+
+async function updateSchema_1() {
+  await pool.query('CREATE TABLE schema_version(version int DEAULT 1)');
+  await pool.query('INSTERT INTO schema_version(version) VALUES (1)');
+}
+
+async function updateSchema_2() {
+  // Add project qty to build support
+  await pool.query('ALTER TABLE projects ADD COLUMN quantity_to_build int NOT NULL DEFAULT 1 after description');
+  await pool.query('ALTER TABLE project_items ADD COLUMN total_qty int NULL after qty_needed');
+  await pool.query('UPDATE project_items SET total_qty = qty_needed where 1=1');
+
+  // Alter invetory add quantity related columns
+  await pool.query('ALTER TABLE inventory CHANGE quantity quantity_on_hand int NOT NULL');
+  await pool.query('ALTER TABLE inventory ADD COLUMN quantity_allocated int NOT NULL after quantity_on_hand');
+  await pool.query('ALTER TABLE inventory ADD COLUMN quantity_available int NOT NULL after quntity_allocated');
+  await pool.query('ALTER TABLE inventory ADD COLUMN quantity_on_order int NOT NULL after quantity_available');
+  await pool.query('UPDATE inventory SET quantity_allocated = 0, quantity_available = quantity_on_hand,  quantity_on_order = 0 WHERE 1=1');
+  await pool.query('UPDATE inventory SET quantity_allocated = coalesce((select sum(qty_available) from project_items where inventory_id = inventory.id), 0) WHERE 1=1');
+  await pool.query('UPDATE inventory SET quantity_available = quantity_on_hand - quantity_allocated WHERE 1=1');
+  await pool.query('UPDATE inventory SET quantity_on_order = COALESCE((SELECT SUM(qty_to_order) FROM project_items WHERE inventory_id = inventory.id), 0) WHERE 1=1');
+
+  await pool.query('UPDATE schema_version SET version = 2 WHERE 1 = 1')
+}
+
+async function checkDatabaseSchemaVersion() {
+  var currentVersion = 0;
+  const [db_exist] = await pool.query(`select count(*) ni from information_schema.TABLES
+WHERE (TABLE_SCHEMA = ?) AND (TABLE_NAME = 'schema_version')`, [process.env.MYSQL_DATABASE])
+  if (db_exist[0].ni == 0) {
+    currentVersion = 0;
+  } else {
+    const [rows] = await pool.query('select version from schema_version')
+    currentVersion = rows[0].version;
+  }
+  if (currentVersion != expectedDatabaseVersion) {
+    console.log('Database needs updating from ' + currentVersion + ' to ' + expectedDatabaseVersion);
+    if (currentVersion < 1) {
+      await updateSchema_1();
+    }
+    if (currentVersion < 2) {
+      await updateSchema_2();
+    }
+    
+  } else {
+    console.log('database schema good ' + currentVersion)
+  }
 }
 
 async function getComponentCounts() {
@@ -2078,7 +2129,7 @@ async function deleteProjectBomItem(project_bom_id) {
 
 
 
-module.exports = { getSystemData, getAliasCounts, getComponentCounts, getInventoryCounts, getComponent, getComponentList, 
+module.exports = { checkDatabaseSchemaVersion, getSystemData, getAliasCounts, getComponentCounts, getInventoryCounts, getComponent, getComponentList, 
   searchComponents, getChip, createChip, updateChip, deleteChip, getPins, deleteComponentRelated, getComponentListByType, 
   createPin, updatePin, getDipLeftPins, getDipRightPins, getSipPins,
   getPllcLeftPins, getPllcRightPins, getPllcTopPins, getPllcBottomPins,
