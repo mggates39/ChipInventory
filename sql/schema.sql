@@ -3,6 +3,11 @@ DROP DATABASE chip_data;
 CREATE DATABASE chip_data;
 USE chip_data;
 
+CREATE TABLE `schema_version`(
+  version int DEFAULT 1);
+
+INSERT INTO schema_version (version) VALUES (2);
+
 CREATE TABLE `mounting_types` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
