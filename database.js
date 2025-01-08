@@ -39,8 +39,8 @@ async function getSystemData() {
 }
 
 async function updateSchema_1() {
-  await pool.query('CREATE TABLE schema_version(version int DEAULT 1)');
-  await pool.query('INSTERT INTO schema_version(version) VALUES (1)');
+  await pool.query('CREATE TABLE schema_version(version int DEFAULT 1)');
+  await pool.query('INSERT INTO schema_version (version) VALUES (1)');
 }
 
 async function updateSchema_2() {
@@ -52,7 +52,7 @@ async function updateSchema_2() {
   // Alter invetory add quantity related columns
   await pool.query('ALTER TABLE inventory CHANGE quantity quantity_on_hand int NOT NULL');
   await pool.query('ALTER TABLE inventory ADD COLUMN quantity_allocated int NOT NULL after quantity_on_hand');
-  await pool.query('ALTER TABLE inventory ADD COLUMN quantity_available int NOT NULL after quntity_allocated');
+  await pool.query('ALTER TABLE inventory ADD COLUMN quantity_available int NOT NULL after quantity_allocated');
   await pool.query('ALTER TABLE inventory ADD COLUMN quantity_on_order int NOT NULL after quantity_available');
   await pool.query('UPDATE inventory SET quantity_allocated = 0, quantity_available = quantity_on_hand,  quantity_on_order = 0 WHERE 1=1');
   await pool.query('UPDATE inventory SET quantity_allocated = coalesce((select sum(qty_available) from project_items where inventory_id = inventory.id), 0) WHERE 1=1');
