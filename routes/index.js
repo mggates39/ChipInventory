@@ -4,11 +4,11 @@ const {getSystemData, getComponentCounts, getAliasCounts, getInventoryCounts, ch
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
+  await checkDatabaseSchemaVersion();
   const data = await getSystemData();
   const counts = await getComponentCounts();
   const aliases = await getAliasCounts();
   const inventory = await getInventoryCounts();
-  await checkDatabaseSchemaVersion();
 
   res.render('index', { title: 'Lab Management System', data: data, counts: counts, aliases: aliases, inventory: inventory });
 });
