@@ -1185,9 +1185,10 @@ async function lookupInventory(component_id, full_number, mfg_code_id) {
 async function getInventory(inventory_id) {
   const [rows] = await pool.query(`
   SELECT i.id, component_id, i.full_number, i.mfg_code_id, i.quantity_on_hand, i.quantity_allocated, i.quantity_available, i.quantity_on_order, 
-    cmp.name as chip_number, cmp.description, i.location_id, l.name location, mfg_code, manufacturer.name 
+    cmp.name as chip_number, cmp.description, i.location_id, l.name location, mfg_code, manufacturer.name, ct.table_name 
     from inventory i
     join components cmp on cmp.id = i.component_id
+    join component_types ct on ct.id = cmp.component_type_id
     join mfg_codes on mfg_codes.id = i.mfg_code_id
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
     left join locations l on l.id = i.location_id

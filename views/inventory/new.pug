@@ -7,7 +7,7 @@ block content
       label.col-sm-2.col-form-label(for="chip_id") Base Component:
       select#chip_id.col-sm-2(type='select' placeholder='Select component' name='chip_id' required='true')
         for component in components
-          option(value=component.id) #{component.chip_number}
+          option(value=component.id) #{component.name}
     div.row.mb-3
       label.col-sm-2.col-form-label(for="mfg_code_id") Manufacturer:
       select#mfg_code_id.col-sm-4(type='select' placeholder='Select Manufacturer' name='mfg_code_id' )
