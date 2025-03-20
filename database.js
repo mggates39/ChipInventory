@@ -38,12 +38,12 @@ async function getSystemData() {
   return rows[0]
 }
 
-async function updateSchema_1() {
+async function updateToSchema_1() {
   await pool.query('CREATE TABLE schema_version(version int DEFAULT 1)');
   await pool.query('INSERT INTO schema_version (version) VALUES (1)');
 }
 
-async function updateSchema_2() {
+async function updateToSchema_2() {
   // Add project qty to build support
   await pool.query('ALTER TABLE projects ADD COLUMN quantity_to_build int NOT NULL DEFAULT 1 after description');
   await pool.query('ALTER TABLE project_items ADD COLUMN total_qty int NULL after qty_needed');
@@ -75,10 +75,12 @@ WHERE (TABLE_SCHEMA = ?) AND (TABLE_NAME = 'schema_version')`, [process.env.MYSQ
   if (currentVersion != expectedDatabaseVersion) {
     console.log('Database needs updating from ' + currentVersion + ' to ' + expectedDatabaseVersion);
     if (currentVersion < 1) {
-      await updateSchema_1();
+      await updateToSchema_1();
+      currentVersion = 1;
     }
     if (currentVersion < 2) {
-      await updateSchema_2();
+      await updateToSchema_2();
+      currentVersion = 2;
     }
     
   } else {
