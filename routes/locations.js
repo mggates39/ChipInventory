@@ -8,8 +8,21 @@ router.get('/', async function(req, res, next) {
   res.render('location/list', { title: 'Locations', locations: data });
 });
 
-// GET new location type page
-router.get('/new', async function(req, res, next) {
+// GET new child location page
+router.get('/new/:parent_id', async function(req, res, next) {
+  var parent_id = req.params.parent_id;
+  const data = {name: '',
+    description: '',
+    location_type_id: '',
+    parent_location_id: parent_id
+  };
+  const location_types = await getLocationTypeList();
+  const parent_locations = await getLocationList();
+  res.render('location/new', {title: 'Location', location: data, location_types: location_types, parent_locations: parent_locations});
+})
+
+// GET new location page
+router.get('/new/', async function(req, res, next) {
   const data = {name: '',
     description: '',
     location_type_id: '',
