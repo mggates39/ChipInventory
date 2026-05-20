@@ -1,6 +1,6 @@
 type: IC
 subtype: Power
-name: MCP120-270DI/TO
+name: MCP100-270DI/TO
 description: IC SUPERVISOR 1 CHANNEL TO92-3
 package: TO-XX
 pincount: 3
