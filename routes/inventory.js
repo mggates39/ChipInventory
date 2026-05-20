@@ -1,7 +1,7 @@
 var express = require('express');
 const { searchInventory, getInventory, getInventoryDates, searchComponents, getManufacturerCodes, getComponent, getComponentTypeList,
   lookupInventory, createInventory, updateInventory, createInventoryDate, updateInventoryDate, lookupInventoryDate, 
-  getLocationList} = require('../database');
+  getLocationList, getLocation} = require('../database');
 var router = express.Router();
 
 /* GET Inventory list page. */
@@ -34,6 +34,14 @@ router.get('/edit/:id', async function(req, res, next) {
   const component = await getComponent(data.component_id);
   const locations = await getLocationList();
   res.render('inventory/edit', {title: 'Edit Component Inventory', data: data, manufacturers: manufacturers, components: [component], locations: locations});
+});
+
+router.get('/new/location/:location_id', async function(req, res, next) {
+  const location_id = req.params.location_id;
+  const manufacturers = await getManufacturerCodes();
+  const components = await searchComponents('', '', 0);
+  const location = await getLocation(location_id);
+  res.render('inventory/new', {title: 'Add to Component Inventory', manufacturers: manufacturers, components: components, locations: [location]});
 });
 
 router.get('/new/:component_id', async function(req, res, next) {
