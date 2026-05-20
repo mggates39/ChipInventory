@@ -48,7 +48,8 @@ block content
         td= n.quantity_allocated
         td= n.quantity_available 
         td= n.quantity_on_order
-        td= n.location
+        td
+          a(href="/locations/"+n.location_id) #{n.location}
 
     if inventory.length == 0
       tr

@@ -431,6 +431,7 @@ SELECT
     ct.description as type,
     ct.table_name, 
     l.name as location, 
+    l.id as location_id,
     mfg_code, 
     manufacturer.name as mfg_name 
 FROM inventory i
