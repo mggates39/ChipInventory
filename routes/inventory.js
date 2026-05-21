@@ -117,8 +117,9 @@ router.post('/:id/newdate', async function(req, res, next) {
   var new_qty = parseInt(data.quantity);
   var old_qty = 0;
   const inv = await getInventory(inv_id);
-  old_qty = parseInt(inv.quantity)
-  await updateInventory(inv_id, inv.component_id, inv.full_number, inv.mfg_code_id, (old_qty + new_qty))
+  var old_qty_oh = parseInt(inv.quantity_on_hand);
+  var old_qty_av = parseInt(inv.quantity_available);
+  await updateInventory(inv_id, inv.component_id, inv.full_number, inv.mfg_code_id, (old_qty_oh + new_qty), inv.quantity_allocated, (old_qty_av + new_qty), inv.quantity_on_order, inv.location_id);
   const inv_date = await lookupInventoryDate(inv_id, data.date_code);
   if (inv_date.length) {
     old_qty = parseInt(inv_date[0].quantity)
