@@ -1,0 +1,15 @@
+type: Wire
+subtype: F/F
+name: QPC02SXGN-RC
+description: CONN JUMPER SHORTING 100 GOLD
+package: Axial
+pincount: 2
+aliases:
+  - S9337-ND
+pins:
+  - num: 1
+    sym: P
+    desc: Pin
+  - num: 2
+    sym: P
+    desc: Pin

@@ -1,0 +1,18 @@
+type: Cap
+subtype: Ceramic
+name: 0.1uF  50V
+description: CAP CER 0.1UF 50V Z5U RADIAL
+package: Radial
+pincount: 2
+capacitance: 0
+units: '&micro;F'
+working_voltage: 50
+tolerance: 20
+datasheet: https://yageogroup.com/content/datasheet/asset/file/KEM_C1051_GOLDMAX_Z5U
+pins:
+  - num: 1
+    sym: L
+    desc: Left Pin
+  - num: 2
+    sym: R
+    desc: Rigth Pin
