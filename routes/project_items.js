@@ -12,14 +12,14 @@ router.get('/delete/:id', async function(req, res) {
   })
   
 // GET project item data
-router.get('/:id', async function(req, res, next) {
+router.get('/:id', async function(req, res) {
     const id = req.params.id;
     const data = await getProjectItem(id);
     res.send(data);
   });
 
 /* POST existing project item update */
-router.post('/:id', async function( req, res, next) {
+router.post('/:id', async function( req, res) {
     const id = req.params.id;
     const project_id = req.body.project_id;
     const project = await getProject(project_id);

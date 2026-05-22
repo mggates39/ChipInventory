@@ -4,13 +4,13 @@ const { getPackageTypeList, getPackageType, getMountingTypeList, updatePackageTy
     getComponentTypesForPackageType, getSelectedComponentTypesForPackageType} = require('../database');
 
 /* GET list page. */
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res) {
     const data = await getPackageTypeList();
     res.render('package_type/list', { title: 'Package Types', package_types: data });
 });
 
 /* GET new item page */
-router.get('/new', async function(req, res, next) {
+router.get('/new', async function(req, res) {
     const data = {name: '',
         description: '',
         mounting_type_id: ''
@@ -21,7 +21,7 @@ router.get('/new', async function(req, res, next) {
   });
   
 /* GET item page */
-router.get('/:id', async function(req, res, nest) {
+router.get('/:id', async function(req, res) {
     const id = req.params.id;
     const data = await getPackageType(id);
     const comps = await getComponentTypesForPackageType(id);
@@ -29,7 +29,7 @@ router.get('/:id', async function(req, res, nest) {
 });
 
 /* GET Edit item page */
-router.get('/edit/:id', async function(req, res, next) {
+router.get('/edit/:id', async function(req, res) {
     const id = req.params.id;
     const data = await getPackageType(id);
     const comps = await getSelectedComponentTypesForPackageType(id);
@@ -37,13 +37,13 @@ router.get('/edit/:id', async function(req, res, next) {
     res.render('package_type/edit', {title: 'Package Type', package_type: data, component_types: comps, mounting_types: mounts});
   })
   
-router.post('/new', async function( req, res, next) {
+router.post('/new', async function( req, res) {
     const package_type = await createPackageType(req.body.name, req.body.description, req.body.mounting_type_id, req.body.component_type_selection)
     const id = package_type.id
     res.redirect('/package_types/'+id);
   });
 
-router.post('/:id', async function( req, res, next) {
+router.post('/:id', async function( req, res) {
     const id = req.params.id;
     await updatePackageType(id, req.body.name, req.body.description, req.body.mounting_type_id, req.body.component_type_selection)
     res.redirect('/package_types/'+id);

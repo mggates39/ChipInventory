@@ -12,14 +12,14 @@ router.get('/delete/:id', async function(req, res) {
   })
   
 // GET list entry data
-router.get('/:id', async function(req, res, next) {
+router.get('/:id', async function(req, res) {
     const id = req.params.id;
     const data = await getListEntry(id);
     res.send(data);
   });
 
 /* POST existing list entry update */
-router.post('/:id', async function( req, res, next) {
+router.post('/:id', async function( req, res) {
     const id = req.params.id;
     const list_id = req.body.list_id;
     await updateListEntry(id, list_id, req.body.sequence, req.body.name, req.body.description, req.body.modifier_value)

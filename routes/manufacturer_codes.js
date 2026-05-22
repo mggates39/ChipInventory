@@ -12,14 +12,14 @@ router.get('/delete/:id', async function(req, res) {
   })
   
 // GET manufacturer code data
-router.get('/:id', async function(req, res, next) {
+router.get('/:id', async function(req, res) {
     const id = req.params.id;
     const data = await getManufacturerCode(id);
     res.send(data);
   });
 
 /* POST existing manufacturer item update */
-router.post('/:id', async function( req, res, next) {
+router.post('/:id', async function( req, res) {
     const id = req.params.id;
     const manufacturer_id = req.body.manufacturer_id;
     await updateManufacturerCode(id, manufacturer_id, req.body.code);

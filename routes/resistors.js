@@ -79,14 +79,14 @@ function getResistorBands(resistance, unit_modifier, tolerance) {
 
 
 /* GET new item page */
-router.get('/new', async function(req, res, next) {
+router.get('/new', async function(req, res) {
   const component_type_id = 4;
   const component_type = await getComponentType(component_type_id);
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
   const unit_list = await getPickListByName('Resistance');
 
-  data = {chip_number: '',
+  var data = {chip_number: '',
     aliases: '',
     package_type_id: '',
     pin_count: 2,
@@ -120,7 +120,7 @@ router.get('/new', async function(req, res, next) {
 });
   
 /* GET item page */
-router.get('/:id', async function(req, res, nest) {
+router.get('/:id', async function(req, res) {
   const id = req.params.id;
   const data = await getResistor(id);
   const pins = await getPins(id);
@@ -134,8 +134,8 @@ router.get('/:id', async function(req, res, nest) {
   const component_type_id = data.component_type_id;
   const units = await getListEntry(data.unit_id);
 
-  fixed_pins = [];
-  iswide = 'dpindiagram';
+  var fixed_pins = [];
+  var iswide = 'dpindiagram';
   pins.forEach(function(pin) {
     if (pin.pin_description.length > 100) {
        iswide = 'dpindiagramwide';
@@ -145,9 +145,10 @@ router.get('/:id', async function(req, res, nest) {
     )
   });
 
-  layout_pins = [];
-  bands = getResistorBands(data.resistance, units.modifier_value, data.tolerance) ;
-  i = 0;
+  var layout_pins = [];
+  var bands = getResistorBands(data.resistance, units.modifier_value, data.tolerance) ;
+  var bull;
+  var i = 0;
   dip_left_pins.forEach(function(pin) {
     if (pin.pin_number == 1) {
       bull = '&nbsp;&#9679;'
@@ -161,14 +162,14 @@ router.get('/:id', async function(req, res, nest) {
     i++;
   });
 
-  clean_specs = [];
+  var clean_specs = [];
   specs.forEach(function(spec) {
     clean_specs.push(
       {id: spec.id, parameter: parse_symbol(spec.parameter), unit: parse_symbol(spec.unit), value: parse_symbol(spec.value)}
     )
   })
   
-  clean_notes = [];
+  var clean_notes = [];
   notes.forEach(function(note) {
     clean_notes.push(
       {id: note.id, note: parse_symbol(note.note)}
@@ -182,7 +183,7 @@ router.get('/:id', async function(req, res, nest) {
 });
 
 /* GET Edit item page */
-router.get('/edit/:id', async function(req, res, next) {
+router.get('/edit/:id', async function(req, res) {
   const resistor_id = req.params.id;
   const data = await getResistor(resistor_id);
   const pins = await getPins(resistor_id);
@@ -191,8 +192,8 @@ router.get('/edit/:id', async function(req, res, next) {
   const component_sub_types = await getComponentSubTypesForComponentType(4);
   const unit_list = await getPickListByName('Resistance');
 
-  aliasList = "";
-  sep = "";
+  var aliasList = "";
+  var sep = "";
   aliases.forEach(function(alias) {
     aliasList += (sep + alias.alias_chip_number);
     sep = ", ";
@@ -220,14 +221,14 @@ router.get('/edit/:id', async function(req, res, next) {
     component_sub_types: component_sub_types, unit_list: unit_list});
 })
   
-router.post('/new', async function( req, res, next) {
+router.post('/new', async function( req, res) {
   const component_type_id = 4;
   const component_type = await getComponentType(component_type_id);
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
   const unit_list = await getPickListByName('Resistance');
 
-  data = {chip_number: req.body.chip_number,
+  var data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     resistance: req.body.resistance,
     unit_id: req.body.unit_id, 
@@ -258,13 +259,13 @@ router.post('/new', async function( req, res, next) {
     
     const resistor = await createResistor(data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, 
       data.resistance, data.unit_id, data.tolerance, data.power, data.datasheet);
-    resistor_id = resistor.component_id;
+    var resistor_id = resistor.component_id;
 
-    for (var i = 0; i < req.body.pin_count; i++) {
+    for (i = 0; i < req.body.pin_count; i++) {
       await createPin(resistor_id, pin[i], sym[i], descr[i]);
     }
 
-    aliases = data.aliases.split(',');
+    var aliases = data.aliases.split(',');
     for( const alias of aliases) {
       if (alias.length > 0) {
         await createAlias(resistor_id, alias.trim());
@@ -278,9 +279,9 @@ router.post('/new', async function( req, res, next) {
   }
 });
 
-router.post('/:id', async function( req, res, next) {
+router.post('/:id', async function( req, res) {
   const id = req.params.id;
-  data = {chip_number: req.body.chip_number,
+  var data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     resistance: req.body.resistance,
     unit_id: req.body.unit_id, 
@@ -309,15 +310,15 @@ router.post('/:id', async function( req, res, next) {
 
   const resistor = await updateResistor(id, data.chip_number, data.package_type_id, data.component_sub_type_id, data.description, data.pin_count, 
     data.resistance, data.unit_id, data.tolerance, data.power, data.datasheet);
-  resistor_id =resistor.component_id;
+  var resistor_id =resistor.component_id;
 
-  for (var i = 0; i < req.body.pin_count; i++) {
+  for (i = 0; i < req.body.pin_count; i++) {
     await updatePin(pin_id[i], resistor_id, pin[i], sym[i], descr[i]);
   }
 
   await deleteAliases(resistor_id);
 
-  aliases = data.aliases.split(',');
+  var aliases = data.aliases.split(',');
   for( const alias of aliases) {
     if (alias.length > 0) {
       await createAlias(resistor_id, alias.trim());

@@ -5,7 +5,7 @@ const { searchInventory, getInventory, getInventoryDates, searchComponents, getM
 var router = express.Router();
 
 /* GET Inventory list page. */
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res) {
   const search_query = req.query.q;
   const search_type = req.query.w;
   var component_type_id = req.query.component_type_id;
@@ -27,7 +27,7 @@ router.get('/', async function(req, res, next) {
     component_types: component_types, component_type_id: component_type_id});
 });
 
-router.get('/edit/:id', async function(req, res, next) {
+router.get('/edit/:id', async function(req, res) {
   const id = req.params.id;
   const data = await getInventory(id);
   const manufacturers = await getManufacturerCodes();
@@ -36,7 +36,7 @@ router.get('/edit/:id', async function(req, res, next) {
   res.render('inventory/edit', {title: 'Edit Component Inventory', data: data, manufacturers: manufacturers, components: [component], locations: locations});
 });
 
-router.get('/new/location/:location_id', async function(req, res, next) {
+router.get('/new/location/:location_id', async function(req, res) {
   const location_id = req.params.location_id;
   const manufacturers = await getManufacturerCodes();
   const components = await searchComponents('', '', 0);
@@ -44,7 +44,7 @@ router.get('/new/location/:location_id', async function(req, res, next) {
   res.render('inventory/new', {title: 'Add to Component Inventory', manufacturers: manufacturers, components: components, locations: [location]});
 });
 
-router.get('/new/:component_id', async function(req, res, next) {
+router.get('/new/:component_id', async function(req, res) {
   const component_id = req.params.component_id;
   const manufacturers = await getManufacturerCodes();
   const component = await getComponent(component_id);
@@ -52,7 +52,7 @@ router.get('/new/:component_id', async function(req, res, next) {
   res.render('inventory/new', {title: 'Add to Component Inventory', manufacturers: manufacturers, components: [component], locations: locations});
 });
 
-router.get('/new', async function(req, res, next) {
+router.get('/new', async function(req, res) {
   const manufacturers = await getManufacturerCodes();
   const components = await searchComponents('', '', 0);
   const locations = await getLocationList();
@@ -61,9 +61,9 @@ router.get('/new', async function(req, res, next) {
 
 router.post('/new', async function(req, res) {
   const data = req.body;
-  var inv_id = 0;
+  var inv_id;
+  var old_qty;
   var new_qty = parseInt(data.quantity);
-  var old_qty = 0;
   var location_id = data.location_id;
   if (location_id == '') {
     location_id = null;
@@ -105,17 +105,17 @@ router.post('/:id', async function(req, res) {
   res.redirect('/inventory/'+id);
 });
 
-router.get('/:id/newdate', async function(req, res, next) {
+router.get('/:id/newdate', async function(req, res) {
   const id = req.params.id;
   const inventory = await getInventory(id);
   res.render('inventory/datenew', { title: inventory.full_number, inventory: inventory });
 });
 
-router.post('/:id/newdate', async function(req, res, next) {
+router.post('/:id/newdate', async function(req, res) {
   const inv_id = req.params.id;
   const data = req.body;
   var new_qty = parseInt(data.quantity);
-  var old_qty = 0;
+  var old_qty;
   const inv = await getInventory(inv_id);
   var old_qty_oh = parseInt(inv.quantity_on_hand);
   var old_qty_av = parseInt(inv.quantity_available);
@@ -131,7 +131,7 @@ router.post('/:id/newdate', async function(req, res, next) {
   res.redirect('/inventory/'+inv_id);
 });
 
-router.get('/:id', async function(req, res, next) {
+router.get('/:id', async function(req, res) {
   const id = req.params.id;
   const inventory = await getInventory(id);
   const inventory_dates = await getInventoryDates(id);

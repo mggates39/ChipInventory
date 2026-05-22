@@ -3,13 +3,13 @@ var router = express.Router();
 const {getLocationList, getLocation, createLocation, updateLocation, getLocationTypeList, getChildLocationList, getInventoryByLocationList} = require('../database');
 
 /* GET home page. */
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res) {
   const data = await getLocationList();
   res.render('location/list', { title: 'Locations', locations: data });
 });
 
 // GET new child location page
-router.get('/new/:parent_id', async function(req, res, next) {
+router.get('/new/:parent_id', async function(req, res) {
   var parent_id = req.params.parent_id;
   const data = {name: '',
     description: '',
@@ -22,7 +22,7 @@ router.get('/new/:parent_id', async function(req, res, next) {
 })
 
 // GET new location page
-router.get('/new/', async function(req, res, next) {
+router.get('/new/', async function(req, res) {
   const data = {name: '',
     description: '',
     location_type_id: '',
@@ -34,7 +34,7 @@ router.get('/new/', async function(req, res, next) {
 })
 
 /* GET item page */
-router.get('/:id', async function(req, res, next) {
+router.get('/:id', async function(req, res) {
   const id = req.params.id;
   const data = await getLocation(id);
   const child_locations = await getChildLocationList(id);
@@ -42,7 +42,7 @@ router.get('/:id', async function(req, res, next) {
   res.render('location/detail', {title: 'Location', location: data, child_locations: child_locations, inventories: inventories});
 });
 
-router.get('/edit/:id', async function(req, res, next) {
+router.get('/edit/:id', async function(req, res) {
   const id = req.params.id;
   const data = await getLocation(id);
   const location_types = await getLocationTypeList();
@@ -50,7 +50,7 @@ router.get('/edit/:id', async function(req, res, next) {
   res.render('location/edit', {title: 'Location', location: data, location_types: location_types, parent_locations: parent_locations});
 })
 
-router.post('/new', async function( req, res, next) {
+router.post('/new', async function( req, res) {
   var parent_location_id = req.body.parent_location_id;
   if (parent_location_id == '') {
     parent_location_id = null;
@@ -60,7 +60,7 @@ router.post('/new', async function( req, res, next) {
   res.redirect('/locations/'+id);
 });
 
-router.post('/:id', async function( req, res, next) {
+router.post('/:id', async function( req, res) {
   const id = req.params.id;
   var parent_location_id = req.body.parent_location_id;
   if (parent_location_id == '') {
