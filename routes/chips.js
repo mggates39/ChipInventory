@@ -10,7 +10,7 @@ const { getChip, createChip, updateChip, getPins, createPin, updatePin,
 const {parse_symbol} = require('../utility');
 var router = express.Router();
 
-router.get('/edit/:id', async function(req,res,next) {
+router.get('/edit/:id', async function(req, res) {
   const chip_id = req.params.id;
 
   const data = await getChip(chip_id);
@@ -19,8 +19,8 @@ router.get('/edit/:id', async function(req,res,next) {
   const package_types = await getPackageTypesForComponentType(1);
   const component_sub_types = await getComponentSubTypesForComponentType(1);
 
-  aliasList = "";
-  sep = "";
+  var aliasList = "";
+  var sep = "";
   aliases.forEach(function(alias) {
     aliasList += (sep + alias.alias_chip_number);
     sep = ", ";
@@ -48,10 +48,10 @@ router.get('/edit/:id', async function(req,res,next) {
 })
 
 /* GET new chip entry page */
-router.get('/new', async function(req, res, next) {
+router.get('/new', async function(req, res) {
   const component_type_id = 1;
   const component_type = await getComponentType(component_type_id);
-  data = {chip_number: '',
+  var data = {chip_number: '',
     aliases: '',
     family: '',
     package_type_id: '',
@@ -71,7 +71,7 @@ router.get('/new', async function(req, res, next) {
 router.post('/new', async function(req, res) {
   const component_type_id = 1;
   const component_type = await getComponentType(component_type_id);
-  data = {chip_number: req.body.chip_number,
+  var data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     family: req.body.family,
     package_type_id: req.body.package_type_id,
@@ -98,13 +98,13 @@ router.post('/new', async function(req, res) {
 
   if (descr[req.body.pin_count-1]) {
     const chip = await createChip(data.chip_number, data.family, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
-    chip_id = chip.component_id;
+    var chip_id = chip.component_id;
 
-    for (var i = 0; i < req.body.pin_count; i++) {
+    for (i = 0; i < req.body.pin_count; i++) {
       await createPin(chip_id, pin[i], sym[i], descr[i]);
     }
 
-    aliases = data.aliases.split(',');
+    var aliases = data.aliases.split(',');
     for( const alias of aliases) {
       if (alias.length > 0) {
         await createAlias(chip_id, alias.trim());
@@ -119,7 +119,7 @@ router.post('/new', async function(req, res) {
 
 router.post('/:id', async function(req, res) {
   const id = req.params.id;
-  data = {chip_number: req.body.chip_number,
+  var data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     family: req.body.family,
     package_type_id: req.body.package_type_id,
@@ -144,15 +144,15 @@ router.post('/:id', async function(req, res) {
   data['descr'] = descr;
 
   const chip = await updateChip(id, data.chip_number, data.family, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
-  chip_id = chip.component_id;
+  var chip_id = chip.component_id;
 
-  for (var i = 0; i < req.body.pin_count; i++) {
+  for (i = 0; i < req.body.pin_count; i++) {
     await updatePin(pin_id[i], chip_id, pin[i], sym[i], descr[i]);
   }
 
   await deleteAliases(chip_id);
 
-  aliases = data.aliases.split(',');
+  var aliases = data.aliases.split(',');
   for( const alias of aliases) {
     if (alias.length > 0) {
       await createAlias(chip_id, alias.trim());
@@ -163,7 +163,7 @@ router.post('/:id', async function(req, res) {
 });
 
 /* GET chip detail page. */
-router.get('/:id', async function(req, res, next) {
+router.get('/:id', async function(req, res) {
     const id = req.params.id;
     const chip = await getChip(id);
     const pins = await getPins(id);
@@ -185,8 +185,8 @@ router.get('/:id', async function(req, res, next) {
     const component_types = await getComponentTypeList();
     const component_type_id = chip.component_type_id;
 
-    fixed_pins = [];
-    iswide = 'dpindiagram';
+    var fixed_pins = [];
+    var iswide = 'dpindiagram';
     pins.forEach(function(pin) {
       if (pin.pin_description.length > 100) {
          iswide = 'dpindiagramwide';
@@ -196,9 +196,11 @@ router.get('/:id', async function(req, res, next) {
       )
     });
 
-    layout_pins = [];
-    top_pins = [];
-    bottom_pins = [];
+    var layout_pins = [];
+    var top_pins = [];
+    var bottom_pins = [];
+    var bull;
+    var i;
 
     if ((chip.package == 'SIP') || (chip.package == 'TO-XX')) {
       if (chip.pin_count > 12) {
@@ -301,14 +303,14 @@ router.get('/:id', async function(req, res, next) {
       });
     }
 
-    clean_specs = [];
+    var clean_specs = [];
     specs.forEach(function(spec) {
       clean_specs.push(
         {id: spec.id, parameter: parse_symbol(spec.parameter), unit: parse_symbol(spec.unit), value: parse_symbol(spec.value)}
       )
     })
 
-    clean_notes = [];
+    var clean_notes = [];
     notes.forEach(function(note) {
       clean_notes.push(
         {id: note.id, note: parse_symbol(note.note)}

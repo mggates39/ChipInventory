@@ -203,7 +203,7 @@ async function import_component(name, data) {
         component_sub_type = await lookupComponentSubType(component_type_id, data.family);
     }
 
-    var component_id = 0;
+    var component_id;
     var chip_number = name;
 
     if (data.name) {
@@ -225,7 +225,7 @@ async function import_component(name, data) {
         await createPin(component_id, pin.num, symbol, pin.desc);
     }
 
-    aliases = data.aliases;
+    var aliases = data.aliases;
     if (typeof(aliases) == 'object') {
         for( const alias of aliases) {
             if (alias.length > 0) {
@@ -234,18 +234,18 @@ async function import_component(name, data) {
         }
     }
 
-    notes = data.notes;
+    var notes = data.notes;
     if (typeof(notes) == 'object') {
         for( const note of notes) {
             await createNote(component_id, note.trim());
         }
     }
 
-    specs = data.specs;
+    var specs = data.specs;
     if (typeof(specs) == 'object') {
         for( const spec of specs) {
             var values = spec.val;
-            var value_list = '';
+            var value_list;
             if (typeof(values) == 'object') {
                 value_list = values.join('<br />')
             } else {
@@ -258,7 +258,7 @@ async function import_component(name, data) {
 }
 
 /* GET home page. */
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res) {
     const data = {
         name: '',
         yaml_file: ''
@@ -267,13 +267,15 @@ router.get('/', async function(req, res, next) {
   });
 
 /* GET load all the files in the YAML folder */
-router.get('/all', async function(req, res, next) {
+router.get('/all', async function(req, res) {
     var dirname = './YAML/';
 
-    files = await get_files_in_directory(dirname);
+    var files = await get_files_in_directory(dirname);
     files.forEach(async (file) => {
         const name = path.parse(file).name;
         var data = await get_file(dirname + file);
+        var table_name;
+        var component_id;
         try {
             const doc = yaml.load(data);
             [table_name, component_id] = await import_component(name, doc);
@@ -292,7 +294,7 @@ router.get('/all', async function(req, res, next) {
   });
 
 /* GET home page with a file name to load. */
-router.get('/:file_name', async function(req, res, next) {
+router.get('/:file_name', async function(req, res) {
     const filename = req.params.file_name;
     var file = await get_file("./upload/" + filename);
     const name = path.parse(filename).name;
@@ -303,9 +305,11 @@ router.get('/:file_name', async function(req, res, next) {
     res.render('import/file_import', { title: 'Import', data: data});
   });
 
-router.post('/new', async function(req, res, next) {
+router.post('/new', async function(req, res) {
     const data = req.body.yaml_file;
     const name = req.body.name;
+        var table_name;
+        var component_id;
     try {
         const doc = yaml.load(data);
         [table_name, component_id] = await import_component(name, doc);

@@ -1,5 +1,6 @@
 var mysql = require('mysql2');
 var dotenv = require('dotenv');
+// var process = require('NodeJS.Process')
 
 // Create the database connection pool from the config
 dotenv.config()
@@ -63,7 +64,7 @@ async function updateToSchema_2() {
 }
 
 async function checkDatabaseSchemaVersion() {
-  var currentVersion = 0;
+  var currentVersion;
   const [db_exist] = await pool.query(`select count(*) ni from information_schema.TABLES
 WHERE (TABLE_SCHEMA = ?) AND (TABLE_NAME = 'schema_version')`, [process.env.MYSQL_DATABASE])
   if (db_exist[0].ni == 0) {
@@ -81,6 +82,9 @@ WHERE (TABLE_SCHEMA = ?) AND (TABLE_NAME = 'schema_version')`, [process.env.MYSQ
     if (currentVersion < 2) {
       await updateToSchema_2();
       currentVersion = 2;
+    }
+    if(currentVersion < 3) {
+      // Future Versions here
     }
     
   } else {
@@ -125,7 +129,8 @@ async function getInventoryCounts() {
 // Component related queries
 async function searchComponents(query, type, component_type_id) {
   if (query) {
-    value = ['%' + query + '%', component_type_id]
+    var value = ['%' + query + '%', component_type_id]
+    var sql;
     if (component_type_id == 0) {
       if (type == 'p') {
         sql = "SELECT * FROM component_search WHERE chip_number LIKE ? ORDER BY chip_number, description";
@@ -905,7 +910,7 @@ async function createPin(component_id, pin_number, pin_symbol, pin_description) 
 }
 
 async function updatePin(pin_id, component_id, pin_number, pin_symbol, pin_description) {
-  const [result] = await pool.query(`
+  await pool.query(`
   UPDATE pins SET
     component_id = ?, 
     pin_number = ?, 
@@ -1086,7 +1091,8 @@ async function getNotes(component_id) {
 // Inventory related queries
 async function searchInventory(query, type, component_type_id) {
   if (query) {
-    value = ['%' + query + '%', component_type_id]
+    var value = ['%' + query + '%', component_type_id];
+    var sql;
     if (component_type_id == 0) {
       if (type == 'p') {
         sql = `select * from inventory_search
@@ -1209,7 +1215,7 @@ async function createInventory(component_id, full_chip_number, mfg_code_id, quan
 }
 
 async function updateInventory(inventory_id, component_id, full_chip_number, mfg_code_id, quantity_on_hand, quantity_allocated, quantity_available, quantity_on_order, location_id) {
-  const [result] = await pool.query(`
+  await pool.query(`
     UPDATE inventory SET
       component_id = ?, 
       full_number = ?, 
@@ -1263,7 +1269,7 @@ async function createInventoryDate(inventory_id, date_code, quantity) {
 }
 
 async function updateInventoryDate(inventory_date_id, inventory_id, date_code, quantity) {
-  const [result] = await pool.query(`
+  await pool.query(`
     UPDATE inventory_dates SET
       inventory_id = ?, 
       date_code = ?, 
@@ -1325,6 +1331,7 @@ async function getManufacturerList() {
 }
 
 async function searchManufacturers(query, type) {
+  var value;
   var sql = `select m.id, m.name, 
     (select group_concat( ' ', mfg_code) from mfg_codes mc where mc.manufacturer_id = m.id) mfg_codes
     from manufacturer m`;
@@ -1357,7 +1364,7 @@ async function createManufacturer(manufacturer_name) {
 }
 
 async function updateManufacturer(manufacturer_id, manufacturer_name) {
-  const [result] = await pool.query(`
+  await pool.query(`
     UPDATE manufacturer
       SET name = ?
     WHERE id = ?
@@ -1375,7 +1382,7 @@ async function createManufacturerCode(manufacturer_id, code) {
 }
 
 async function updateManufacturerCode(manufacturer_code_id, manufacturer_id, code) {
-  const [result] = await pool.query(`
+  await pool.query(`
     UPDATE mfg_codes SET
       manufacturer_id = ?, 
       mfg_code = ?
@@ -1390,16 +1397,15 @@ async function deleteManufacturerCode(manufacturer_code_id) {
 }
 
 async function createSpec(component_id, parameter, value, units) {
-  const [result] = await pool.query(`
+  await pool.query(`
   INSERT INTO specs (component_id, parameter, value, unit)
   VALUES (?, ?, ?, ?)
   `, [component_id, parameter, value, units])
-  const id = result.insertId
   return getChip(component_id)
 }
 
 async function deleteSpec(spec_id) {
-  const [result] = await pool.query("DELETE FROM specs WHERE id = ?", [spec_id])
+  await pool.query("DELETE FROM specs WHERE id = ?", [spec_id])
   return true
 }
 
@@ -1409,7 +1415,7 @@ async function getSpec(spec_id) {
 }
 
 async function updateSpec(spec_id, component_id, parameter, value, units) {
-  const [result] = await pool.query(`
+  await pool.query(`
   UPDATE specs SET
     component_id = ?, 
     parameter = ?, 
@@ -1417,21 +1423,19 @@ async function updateSpec(spec_id, component_id, parameter, value, units) {
     unit = ?)
   WHERE id = ?
   `, [component_id, parameter, value, units, spec_id])
-  const id = result.insertId
   return getChip(component_id)
 }
 
 async function createNote(component_id, note) {
-  const [result] = await pool.query(`
+  await pool.query(`
   INSERT INTO notes (component_id, note)
   VALUES (?, ?)
   `, [component_id, note])
-  const id = result.insertId
   return getChip(component_id)
 }
 
 async function deleteNote(note_id) {
-  const [result] = await pool.query("DELETE FROM notes WHERE id = ?", [note_id])
+  await pool.query("DELETE FROM notes WHERE id = ?", [note_id])
   return true
 }
 
@@ -1441,7 +1445,7 @@ async function getNote(note_id) {
 }
 
 async function updateNote(note_id, component_id, note) {
-  const [result] = await pool.query(`
+  await pool.query(`
     UPDATE notes SET 
       component_id = ?, 
       note = ?
@@ -1458,7 +1462,7 @@ async function createAlias(component_id, alias_number) {
 }
 
 async function deleteAliases(component_id) {
-  const [result] = await pool.query("DELETE FROM aliases WHERE component_id = ?", [component_id])
+  await pool.query("DELETE FROM aliases WHERE component_id = ?", [component_id])
   return true
 }
 
@@ -1539,7 +1543,7 @@ async function setComponentPackageTypes( component_type_id, package_types) {
       await pool.query(insertSql, [component_type_id, package_type_id]);
     }; 
   } else if (typeof(package_types) == 'string') {
-      package_type_id = package_types;
+      var package_type_id = package_types;
       await pool.query(insertSql, [component_type_id, package_type_id]);
   }
 }
@@ -1557,7 +1561,7 @@ async function createComponentType(name, description, symbol, table_name, packag
 }
 
 async function updateComponentType(component_type_id, name, description, symbol, table_name, package_types) {
-  const [result] = await pool.query(`
+  await pool.query(`
     UPDATE component_types SET
       name = ?,
       description = ?, 
@@ -1588,13 +1592,13 @@ async function createCompnentSubType(component_type_id, name, description) {
 }
 
 async function updateComponentSubType(component_sub_type_id, component_type_id, name, description) {
-  const [result] = await pool.query("UPDATE component_sub_types set component_type_id = ?, name = ?, description = ? WHERE id =?", 
+  await pool.query("UPDATE component_sub_types set component_type_id = ?, name = ?, description = ? WHERE id =?", 
     [component_type_id, name, description, component_sub_type_id])
   return getComponentSubType(component_sub_type_id)
 }
 
 async function deleteComponentSubType(companent_sub_type_id) {
-  const [result] = await pool.query("DELETE FROM component_sub_types WHERE id = ?", [companent_sub_type_id])
+  await pool.query("DELETE FROM component_sub_types WHERE id = ?", [companent_sub_type_id])
   return true
 }
 
@@ -1620,13 +1624,13 @@ async function createLocationType(name, description, tag) {
 }
 
 async function updateLocationType(location_type_id, name, description, tag) {
-  const [result] = await pool.query("UPDATE location_types set name = ?, description = ?, tag = ? WHERE id =?", 
+  await pool.query("UPDATE location_types set name = ?, description = ?, tag = ? WHERE id =?", 
     [name, description, tag, location_type_id])
   return getLocationType(location_type_id)
 }
 
 async function deleteLocationType(location_type_id) {
-  const [result] = await pool.query("DELETE FROM location_types WHERE id = ?", [location_type_id])
+  await pool.query("DELETE FROM location_types WHERE id = ?", [location_type_id])
   return true
 }
 
@@ -1673,7 +1677,7 @@ async function createLocation(parent_location_id, location_type_id, name, descri
 }
 
 async function updateLocation(location_id, parent_location_id, location_type_id, name, description) {
-  const [result] = await pool.query(`UPDATE locations SET
+  await pool.query(`UPDATE locations SET
     parent_location_id = ?, 
     location_type_id = ?, 
     name = ?, 
@@ -1684,7 +1688,7 @@ async function updateLocation(location_id, parent_location_id, location_type_id,
 }
 
 async function deleteLocation(location_id) {
-  const [result] = await pool.query("DELETE FROM locations WHERE id = ?", [location_id])
+  await pool.query("DELETE FROM locations WHERE id = ?", [location_id])
   return true
 }
 
@@ -1719,7 +1723,7 @@ async function getMountingTypePlain(mounting_type_id) {
 }
 
 async function updateMountingType(mounting_type_id, name, is_through_hole, is_surface_mount, is_chassis_mount) {
-  const [result] = await pool.query(`
+  await pool.query(`
     UPDATE mounting_types SET
       name = ?, 
       is_through_hole = ?, 
@@ -1781,7 +1785,7 @@ async function setPackageComponentTypes( package_type_id, component_types) {
       await pool.query(insertSql, [component_type_id, package_type_id]);
     }; 
   } else if (typeof(component_types) == 'string') {
-      component_type_id = component_types;
+      var component_type_id = component_types;
       await pool.query(insertSql, [component_type_id, package_type_id]);
   };
 }
@@ -1797,7 +1801,7 @@ async function createPackageType(name, description, mounting_type_id, component_
 }
 
 async function updatePackageType(package_type_id, name, description, mounting_type_id, component_types) {
-  const [result] = await pool.query(`
+  await pool.query(`
      UPDATE package_types SET
       name = ?, 
       description = ?, 
@@ -1905,7 +1909,7 @@ async function createList(name, description) {
 }
 
 async function updateList(list_id, name, description) {
-  const [result] = await pool.query("UPDATE lists set name = ?, description = ? WHERE id =?", 
+  await pool.query("UPDATE lists set name = ?, description = ? WHERE id =?", 
     [name, description, list_id])
   return getList(list_id)
 }
@@ -1938,7 +1942,7 @@ async function createListEntry(list_id, sequence, name, description, modifier_va
 }
 
 async function updateListEntry(list_entry_id, list_id, sequence, name, description, modifier_value) {
-  const [result] = await pool.query(`UPDATE list_entries SET 
+  await pool.query(`UPDATE list_entries SET 
       list_id = ?,
       sequence = ?,
       name = ?, 
@@ -1950,7 +1954,7 @@ async function updateListEntry(list_entry_id, list_id, sequence, name, descripti
 }
 
 async function deleteListEntry(list_entry_id) {
-  const [result] = await pool.query("DELETE FROM list_entries WHERE id = ?", [list_entry_id])
+  await pool.query("DELETE FROM list_entries WHERE id = ?", [list_entry_id])
   return true;
 }
 
@@ -1988,7 +1992,7 @@ async function createProject(name, description, status_id, quantity_to_build) {
 }
 
 async function updateProject(project_id, name, description, status_id, quantity_to_build) {
-  const [result] = await pool.query("UPDATE projects SET name = ?, description = ?, status_id = ?, quantity_to_build = ? WHERE id =?", 
+  await pool.query("UPDATE projects SET name = ?, description = ?, status_id = ?, quantity_to_build = ? WHERE id =?", 
     [name, description, status_id, quantity_to_build, project_id])
   return getProject(project_id)
 }
@@ -2055,7 +2059,7 @@ async function createProjectItem(project_id, number, part_number, component_id, 
 }
 
 async function updateProjectItem(project_item_id, project_id, number, part_number, component_id, qty_needed, total_qty, inventory_id, qty_available, qty_to_order) {
-  const [result] = await pool.query(`
+  await pool.query(`
     UPDATE project_items set 
       project_id = ?, 
       number = ?, 
@@ -2112,7 +2116,7 @@ async function createProjectBomItem(project_id, number, reference, quantity, par
 }
 
 async function updateProjectBomItem(project_bom_id, project_id, number, reference, quantity, part_number, processed) {
-  const [result] = await pool.query(`
+  await pool.query(`
     UPDATE project_boms set 
       project_id = ?, 
       number = ?, 

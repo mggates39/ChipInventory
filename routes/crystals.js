@@ -7,7 +7,7 @@ const { getCrystal, getPins, getDipLeftPins, getDipRightPins, getSipPins,
 const {parse_symbol} = require('../utility');
 
 /* GET new item page */
-router.get('/new', async function(req, res, next) {
+router.get('/new', async function(req, res) {
   const component_type_id = 10;
   const component_type = await getComponentType(component_type_id);
   const package_types = await getPackageTypesForComponentType(component_type_id);
@@ -15,7 +15,7 @@ router.get('/new', async function(req, res, next) {
   const units = await getPickListByName('Frequency');
   const kilohertz_id = 37;
 
-  data = {chip_number: '',
+  var data = {chip_number: '',
     aliases: '',
     frequency: '',
     unit_id: kilohertz_id,
@@ -33,7 +33,7 @@ router.get('/new', async function(req, res, next) {
 });
   
 /* GET item page */
-router.get('/:id', async function(req, res, nest) {
+router.get('/:id', async function(req, res) {
     const id = req.params.id;
     const data = await getCrystal(id);
     const pins = await getPins(id);
@@ -47,8 +47,8 @@ router.get('/:id', async function(req, res, nest) {
     const component_types = await getComponentTypeList();
     const component_type_id = data.component_type_id;
 
-    fixed_pins = [];
-    iswide = 'dpindiagram';
+    var fixed_pins = [];
+    var iswide = 'dpindiagram';
     pins.forEach(function(pin) {
       if (pin.pin_description.length > 100) {
          iswide = 'dpindiagramwide';
@@ -58,7 +58,9 @@ router.get('/:id', async function(req, res, nest) {
       )
     });
 
-    layout_pins = [];
+    var layout_pins = [];
+    var bull;
+    var i;
 
     if (data.package == 'Radial') {
       sip_pins.forEach(function(pin) {
@@ -86,14 +88,14 @@ router.get('/:id', async function(req, res, nest) {
       });
     }
     
-    clean_specs = [];
+    var clean_specs = [];
     specs.forEach(function(spec) {
       clean_specs.push(
         {id: spec.id, parameter: parse_symbol(spec.parameter), unit: parse_symbol(spec.unit), value: parse_symbol(spec.value)}
       )
     })
   
-    clean_notes = [];
+    var clean_notes = [];
     notes.forEach(function(note) {
       clean_notes.push(
         {id: note.id, note: parse_symbol(note.note)}
@@ -107,7 +109,7 @@ router.get('/:id', async function(req, res, nest) {
 });
 
 /* GET Edit item page */
-router.get('/edit/:id', async function(req, res, next) {
+router.get('/edit/:id', async function(req, res) {
     const crystal_id = req.params.id;
     const data = await getCrystal(crystal_id);
     const pins = await getPins(crystal_id);
@@ -116,8 +118,8 @@ router.get('/edit/:id', async function(req, res, next) {
     const component_sub_types = await getComponentSubTypesForComponentType(10);
     const units = await getPickListByName('Frequency');
   
-    aliasList = "";
-    sep = "";
+    var aliasList = "";
+    var sep = "";
     aliases.forEach(function(alias) {
       aliasList += (sep + alias.alias_chip_number);
       sep = ", ";
@@ -145,14 +147,14 @@ router.get('/edit/:id', async function(req, res, next) {
       component_sub_types: component_sub_types, unit_list: units});
 });
   
-router.post('/new', async function( req, res, next) {
+router.post('/new', async function( req, res) {
   const component_type_id = 10;
   const component_type = await getComponentType(component_type_id);
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
   const units = await getPickListByName('Frequency');
 
-  data = {chip_number: req.body.chip_number,
+  var data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     frequency: req.body.frequency,
     unit_id: req.body.unit_id, 
@@ -179,13 +181,13 @@ router.post('/new', async function( req, res, next) {
 
   if (descr[req.body.pin_count-1]) {
     const crystal = await createCrystal(data.chip_number, data.frequency, data.unit_id, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
-    crystal_id = crystal.component_id;
+    var crystal_id = crystal.component_id;
 
-    for (var i = 0; i < req.body.pin_count; i++) {
+    for (i = 0; i < req.body.pin_count; i++) {
       await createPin(crystal_id, pin[i], sym[i], descr[i]);
     }
 
-    aliases = data.aliases.split(',');
+    var aliases = data.aliases.split(',');
     for( const alias of aliases) {
       if (alias.length > 0) {
         await createAlias(crystal_id, alias.trim());
@@ -199,9 +201,9 @@ router.post('/new', async function( req, res, next) {
   }
 });
 
-router.post('/:id', async function( req, res, next) {
+router.post('/:id', async function( req, res) {
   const id = req.params.id;
-  data = {chip_number: req.body.chip_number,
+  var data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     frequency: req.body.frequency,
     unit_id: req.body.unit_id, 
@@ -227,15 +229,15 @@ router.post('/:id', async function( req, res, next) {
   data['descr'] = descr;
 
   const crystal = await updateCrystal(id, data.chip_number, data.frequency, data.unit_id, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
-  crystal_id =crystal.component_id;
+  var crystal_id =crystal.component_id;
 
-  for (var i = 0; i < req.body.pin_count; i++) {
+  for (i = 0; i < req.body.pin_count; i++) {
     await updatePin(pin_id[i], crystal_id, pin[i], sym[i], descr[i]);
   }
 
   await deleteAliases(crystal_id);
 
-  aliases = data.aliases.split(',');
+  var aliases = data.aliases.split(',');
   for( const alias of aliases) {
     if (alias.length > 0) {
       await createAlias(crystal_id, alias.trim());

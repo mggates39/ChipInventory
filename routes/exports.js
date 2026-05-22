@@ -18,7 +18,7 @@ async function export_chip(component_id) {
 
     let file_name = "/files/" + chip_number.toUpperCase().replace(/[^0-9a-z]/gi, '') + ".yaml";
 
-    component_data = {
+    var component_data = {
         type: component.type,
         subtype: component.sub_type,
         name: component.name,
@@ -126,29 +126,30 @@ async function export_chip(component_id) {
     }
 
     if (aliases.length) {
-        alias_list = [];
+        var alias_list = [];
         for(const alias of aliases) {
             alias_list.push(alias.alias_chip_number)
         }
         component_data['aliases'] = alias_list;
     }
 
-    pin_list = [];
+    var pin_list = [];
     for (const pin of pins) {
         pin_list.push({num: pin.pin_number, sym: pin.pin_symbol, desc: pin.pin_description})
     }
     component_data['pins'] = pin_list;
 
     if (notes.length) {
-        note_list = []
+        var note_list = []
         for (const note of notes) {
             note_list.push(note.note);
         }
         component_data['notes'] = note_list;
     }
 
+    var  value;
     if (specs.length) {
-        spec_list = [];
+        var spec_list = [];
         for( const spec of specs) {
             if (spec.value.includes("<br />")) {
                 value = spec.value.split('<br />');
@@ -160,13 +161,13 @@ async function export_chip(component_id) {
         component_data['specs'] = spec_list
     }
 
-    yaml_data = yaml.dump(component_data, {lineWidth: -1, flowLevel: 3});
+    var yaml_data = yaml.dump(component_data, {lineWidth: -1, flowLevel: 3});
     await fs.writeFile("./public/"+file_name, yaml_data);
     return [file_name, chip_number, yaml_data];
 }
 
 /* GET home page. */
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res) {
     const component_type_id = 0;
     const chips = await searchComponents('', 'p', component_type_id);
     const component_types = await getComponentTypeList();
@@ -182,7 +183,7 @@ router.get('/', async function(req, res, next) {
 });
 
 /* GET all export. */
-router.get('/all', async function(req, res, next) {
+router.get('/all', async function(req, res) {
     var component_type_id = req.query.component_type_id;
     if (typeof component_type_id == 'undefined') {
         component_type_id = 0;
@@ -191,7 +192,7 @@ router.get('/all', async function(req, res, next) {
     const chips = await searchComponents('', 'p', component_type_id);
     const component_types = await getComponentTypeList();
 
-    for( chip of chips) {
+    for( var chip of chips) {
         await export_chip(chip.id);
     }
 
@@ -205,7 +206,7 @@ router.get('/all', async function(req, res, next) {
     res.render('export/file_export', { title: 'Export selected component', data: data, chips: chips, component_types: component_types});
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/', async function(req, res) {
     const component_type_id = req.body.component_type_id;
     const chips = await searchComponents('', 'p', component_type_id);
     const component_types = await getComponentTypeList();

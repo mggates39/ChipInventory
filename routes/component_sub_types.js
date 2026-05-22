@@ -12,14 +12,14 @@ router.get('/deletesubtype/:id', async function(req, res) {
   })
   
 // GET sub type data
-router.get('/:id', async function(req, res, next) {
+router.get('/:id', async function(req, res) {
     const id = req.params.id;
     const data = await getComponentSubType(id);
     res.send(data);
   });
 
 /* POST existing sub type update */
-router.post('/:id', async function( req, res, next) {
+router.post('/:id', async function( req, res) {
     const id = req.params.id;
     const component_type_id = req.body.component_type_id;
     await updateComponentSubType(id, component_type_id, req.body.name, req.body.description)

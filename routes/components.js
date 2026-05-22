@@ -3,7 +3,7 @@ const { searchComponents, getComponentTypeList, getComponentType, getComponent, 
 var router = express.Router();
 
 /* GET component list page. */
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res) {
   const search_query = req.query.q;
   const search_type = req.query.w;
   var component_type_id = req.query.component_type_id;
@@ -25,13 +25,13 @@ router.get('/', async function(req, res, next) {
     component_types: component_types, component_type_id: component_type_id });
 });
 
-router.post('/new/', async function(req, res, next) {
+router.post('/new/', async function(req, res) {
   const component_type_id = req.body.new_component;
   const comonent_type = await getComponentType(component_type_id);
   res.redirect("/"+comonent_type.table_name+"/new");
 });
 
-router.get('/:id', async function(req, res, next) {
+router.get('/:id', async function(req, res) {
   const id = req.params.id;
   const component = await getComponent(id);
   res.redirect("/"+component.table_name+"/"+id);
@@ -61,7 +61,7 @@ router.post('/:id/newnote', async function(req, res) {
 /* Add one or more aliases to the selected chip */
 router.post('/:id/newalias', async function(req, res) {
   const chip_id = req.params.id;
-  aliases = req.body.alias.split(',');
+  var aliases = req.body.alias.split(',');
   for( const alias of aliases) {
     if (alias.length > 0) {
       await createAlias(chip_id, alias.trim());
