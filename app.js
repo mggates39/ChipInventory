@@ -87,7 +87,7 @@ app.use('/transistors', transistorRouter);
 app.use('/wires', wireRouter);
 
 // Set up a route for BOM file uploads
-app.post("/projects/:id/upload", async function (req, res, next) {
+app.post("/projects/:id/upload", async function (req, res) {
   // Use Multer middleware to handle file upload
   upload(req, res, async function (err) {
       if (err) {
@@ -103,7 +103,7 @@ app.post("/projects/:id/upload", async function (req, res, next) {
 });
 
 // Set up a route for YAML file uploads
-app.post("/imports/upload", async function(req, res, next) {
+app.post("/imports/upload", async function(req, res) {
   // Use Multer middleware to handle file upload
   upload(req, res, async function (err) {
     if (err) {
@@ -122,7 +122,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

@@ -26,7 +26,6 @@ function parse_symbol(symbol)
     
     if (seen == 2) {
       newsym += '</sub>';
-      seen = 0;
   ``}
   } else {
     newsym = symbol;

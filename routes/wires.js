@@ -9,7 +9,7 @@ const { getWire, createWire, updateWire, getPins, createPin, updatePin,
 const {parse_symbol} = require('../utility');
 var router = express.Router();
 
-router.get('/edit/:id', async function(req,res,next) {
+router.get('/edit/:id', async function(req, res) {
   const wire_id = req.params.id;
   const component_type_id = 15;
 
@@ -19,8 +19,8 @@ router.get('/edit/:id', async function(req,res,next) {
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
 
-  aliasList = "";
-  sep = "";
+  var aliasList = "";
+  var sep = "";
   aliases.forEach(function(alias) {
     aliasList += (sep + alias.alias_chip_number);
     sep = ", ";
@@ -48,13 +48,13 @@ router.get('/edit/:id', async function(req,res,next) {
 })
 
 /* GET new wire entry page */
-router.get('/new', async function(req, res, next) {
+router.get('/new', async function(req, res) {
   const component_type_id = 15;
   const component_type = await getComponentType(component_type_id);
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
 
-   data = {chip_number: '',
+  var data = {chip_number: '',
     aliases: '',
     package_type_id: '',
     component_sub_type_id: '',
@@ -74,7 +74,10 @@ router.post('/new', async function(req, res) {
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
 
-  data = {chip_number: req.body.chip_number,
+  var wire_id;
+  var aliases;
+  
+  var data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
@@ -95,7 +98,7 @@ router.post('/new', async function(req, res) {
         descr.push(req.body["descr_"+i]);
     }
   } else {
-    for (var i = 0; i < req.body.pin_count; i++) {
+    for (i = 0; i < req.body.pin_count; i++) {
         pin.push(i+1);
         sym.push("P");
         descr.push("Pin");
@@ -109,7 +112,7 @@ router.post('/new', async function(req, res) {
     const wire = await createWire(data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
     wire_id = wire.component_id;
 
-    for (var i = 0; i < req.body.pin_count; i++) {
+    for (i = 0; i < req.body.pin_count; i++) {
       await createPin(wire_id, pin[i], sym[i], descr[i]);
     }
 
@@ -128,7 +131,7 @@ router.post('/new', async function(req, res) {
 
 router.post('/:id', async function(req, res) {
   const id = req.params.id;
-  data = {chip_number: req.body.chip_number,
+  var data = {chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
@@ -140,6 +143,9 @@ router.post('/:id', async function(req, res) {
   var pin=[];
   var sym = [];
   var descr = [];
+  var wire_id;
+  var aliases;
+  
   for (var i = 0; i < req.body.pin_count; i++) {
     pin_id.push(req.body["pin_id_"+i]);
     pin.push(req.body["pin_"+i]);
@@ -154,7 +160,7 @@ router.post('/:id', async function(req, res) {
   const wire = await updateWire(id, data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.datasheet, data.description);
   wire_id = wire.component_id;
 
-  for (var i = 0; i < req.body.pin_count; i++) {
+  for (i = 0; i < req.body.pin_count; i++) {
     await updatePin(pin_id[i], wire_id, pin[i], sym[i], descr[i]);
   }
 
@@ -171,7 +177,7 @@ router.post('/:id', async function(req, res) {
 });
 
 /* GET wire detail page. */
-router.get('/:id', async function(req, res, next) {
+router.get('/:id', async function(req, res) {
     const id = req.params.id;
     const wire = await getWire(id);
     const pins = await getPins(id);
@@ -193,8 +199,8 @@ router.get('/:id', async function(req, res, next) {
     const component_types = await getComponentTypeList();
     const component_type_id = wire.component_type_id;
 
-    fixed_pins = [];
-    iswide = 'dpindiagram';
+    var fixed_pins = [];
+    var iswide = 'dpindiagram';
     pins.forEach(function(pin) {
       if (pin.pin_description.length > 100) {
          iswide = 'dpindiagramwide';
@@ -204,9 +210,11 @@ router.get('/:id', async function(req, res, next) {
       )
     });
 
-    layout_pins = [];
-    top_pins = [];
-    bottom_pins = [];
+    var layout_pins = [];
+    var top_pins = [];
+    var bottom_pins = [];
+    var bull = '';
+    var i = 0;
 
     if (wire.package == 'SIP') {
       if (wire.pin_count > 12) {
@@ -309,14 +317,14 @@ router.get('/:id', async function(req, res, next) {
       });
     }
 
-    clean_specs = [];
+    var clean_specs = [];
     specs.forEach(function(spec) {
       clean_specs.push(
         {id: spec.id, parameter: parse_symbol(spec.parameter), unit: parse_symbol(spec.unit), value: parse_symbol(spec.value)}
       )
     })
   
-    clean_notes = [];
+    var clean_notes = [];
     notes.forEach(function(note) {
       clean_notes.push(
         {id: note.id, note: parse_symbol(note.note)}
