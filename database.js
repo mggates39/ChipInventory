@@ -123,7 +123,8 @@ WHERE (TABLE_SCHEMA = ?) AND (TABLE_NAME = 'schema_version')`,
 
 async function getComponentCounts() {
   const [rows] = await pool.query(`
-    select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, 
+    select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end plural_description, 
+      ct.description,
       ct.id, table_name, count(cmp.id) ni
     from component_types ct
     join components cmp on ct.id = cmp.component_type_id
@@ -134,7 +135,7 @@ async function getComponentCounts() {
 
 async function getAliasCounts() {
   const [rows] = await pool.query(`
-    select concat(ct.description, ' Aliases') description, ct.id, table_name, count(c.id) ni
+    select concat(ct.description, ' Aliases') plural_description, concat(ct.description, ' Alias') description, ct.id, table_name, count(c.id) ni
     from component_types ct
     join components c on ct.id = c.component_type_id
     join aliases a on a.component_id = c.id
@@ -145,7 +146,9 @@ async function getAliasCounts() {
 
 async function getInventoryCounts() {
   const [rows] = await pool.query(`
-    select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end description, ct.id, table_name, count(c.id) ni, sum(i.quantity_on_hand) quantity
+    select case when ct.description = 'Switch' then concat(ct.description, 'es') else concat(ct.description, 's') end plural_description, 
+      ct.description,
+      ct.id, table_name, count(c.id) ni, sum(i.quantity_on_hand) quantity
     from component_types ct
     join components c on ct.id = c.component_type_id
     join inventory i on i.component_id = c.id

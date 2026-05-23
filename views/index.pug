@@ -11,11 +11,17 @@ block content
           p.card-title Component Definitions: #{data.definitions}
           for count in counts
             p.card-text 
-              a(href="/components?component_type_id="+ count.id + "&q=&w=p" target="_blank") #{count.description}:
+              if count.ni == 1
+                a(href="/components?component_type_id="+ count.id + "&q=&w=p" target="_blank") #{count.description}:
+              else
+                a(href="/components?component_type_id="+ count.id + "&q=&w=p" target="_blank") #{count.plural_description}:
               =count.ni
           for alias in aliases
             p.card-text 
-              a(href="/components?component_type_id="+ alias.id + "&q=see&w=k" target="_blank") #{alias.description}:
+              if alias.ni == 1
+                a(href="/components?component_type_id="+ alias.id + "&q=see&w=k" target="_blank") #{alias.description}:
+              else 
+                a(href="/components?component_type_id="+ alias.id + "&q=see&w=k" target="_blank") #{alias.plural_description}:
               =alias.ni
 
     div.col-sm-3 
@@ -25,7 +31,10 @@ block content
           p.card-title Components On Hand: #{data.on_hand}
           for item in inventory
             p.card-text #{item.quantity} from #{item.ni} 
-             a(href="/inventory?component_type_id="+ item.id + "&q=&w=p" target="_blank") #{item.description}
+             if item.ni == 1
+              a(href="/inventory?component_type_id="+ item.id + "&q=&w=p" target="_blank") #{item.description}
+             else
+              a(href="/inventory?component_type_id="+ item.id + "&q=&w=p" target="_blank") #{item.plural_description}
 
     div.col-sm-3 
       div.card.text-center.border-dark.mb-3(style="max-width: 18rem;")
