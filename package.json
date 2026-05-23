@@ -11,7 +11,7 @@
     "dev": "npx nodemon ./bin/www",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"./**/*.{js,ts}\""
+    "format":  "prettier --write \"**/*.{js,ts,html,css,md,json}\"",
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
