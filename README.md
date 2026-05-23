@@ -86,6 +86,19 @@ MYSQL_USER='chip_app'
 MYSQL_PASSWORD='password'
 MYSQL_DATABASE='chip_data'
 ```
+### Run the linter 
+You can run eslinter on the code base with this command
+```
+npm run lint
+```
+There should not be any messages from the initial code base.  If you make changes be sure to check it again.  At some point I will set up a CI hook to run the linter before commit.
+
+### Run the prettier formatter 
+You can run prettier on the code base with this command
+```
+npm run format
+```
+
 ### Load the initial data
 The easiest way is to use MySQL Workbench and import the data from the project's database folder into the chip_data database.  The workbench handles creating all the schmas and loading the data while managing all of the foreign key relationships.
 
