@@ -20,7 +20,7 @@ var resistorRouter = require('./routes/resistors');
 var resistorNetworkRouter = require('./routes/resistor_networks');
 var socketRouter = require('./routes/sockets');
 var inventoryRouter = require('./routes/inventory');
-var {projectsRouter, loadBomIntoDatabase} = require('./routes/projects');
+var { projectsRouter, loadBomIntoDatabase } = require('./routes/projects');
 var projectItemsRouter = require('./routes/project_items');
 var manufacturerRouter = require('./routes/manufacturer');
 var manufacturerCodesRouter = require('./routes/manufacturer_codes');
@@ -87,42 +87,42 @@ app.use('/transistors', transistorRouter);
 app.use('/wires', wireRouter);
 
 // Set up a route for BOM file uploads
-app.post("/projects/:id/upload", async function (req, res) {
+app.post('/projects/:id/upload', async function (req, res) {
   // Use Multer middleware to handle file upload
   upload(req, res, async function (err) {
-      if (err) {
-          // Handle errors during file upload
-          res.send(err);
-      } else {
-          // Success message after a successful upload
-          const project_id = req.params.id;
-          await loadBomIntoDatabase(project_id, req.file.originalname);
-          res.redirect('/projects/'+project_id);
-      }
+    if (err) {
+      // Handle errors during file upload
+      res.send(err);
+    } else {
+      // Success message after a successful upload
+      const project_id = req.params.id;
+      await loadBomIntoDatabase(project_id, req.file.originalname);
+      res.redirect('/projects/' + project_id);
+    }
   });
 });
 
 // Set up a route for YAML file uploads
-app.post("/imports/upload", async function(req, res) {
+app.post('/imports/upload', async function (req, res) {
   // Use Multer middleware to handle file upload
   upload(req, res, async function (err) {
     if (err) {
-        // Handle errors during file upload
-        res.send(err);
+      // Handle errors during file upload
+      res.send(err);
     } else {
-        // Success message after a successful upload
-        res.redirect('/imports/'+req.file.originalname);
+      // Success message after a successful upload
+      res.redirect('/imports/' + req.file.originalname);
     }
   });
 });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res) {
+app.use(function (err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

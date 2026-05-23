@@ -1,9 +1,16 @@
 var express = require('express');
 var router = express.Router();
-const {createManufacturer, updateManufacturer, getManufacturer, searchManufacturers, getManufacturerCodesForMfg, createManufacturerCode} = require('../database');
+const {
+  createManufacturer,
+  updateManufacturer,
+  getManufacturer,
+  searchManufacturers,
+  getManufacturerCodesForMfg,
+  createManufacturerCode,
+} = require('../database');
 
 /* GET home page. */
-router.get('/', async function(req, res) {
+router.get('/', async function (req, res) {
   const search_query = req.query.q;
   const search_type = req.query.w;
   var mfg_search = true;
@@ -14,47 +21,57 @@ router.get('/', async function(req, res) {
     code_search = true;
     search_by = 'c';
   }
-  
+
   const data = await searchManufacturers(search_query, search_by);
-  res.render('manufacturer/list', { title: 'Manufacturers', manufacturers: data, searched: search_query, mfg_search: mfg_search, code_search: code_search });
+  res.render('manufacturer/list', {
+    title: 'Manufacturers',
+    manufacturers: data,
+    searched: search_query,
+    mfg_search: mfg_search,
+    code_search: code_search,
+  });
 });
 
-router.get('/new/', async function(req, res) {
+router.get('/new/', async function (req, res) {
   const data = {
-    name: ''
+    name: '',
   };
-  res.render('manufacturer/new', {title: 'New Manufacturer', data: data});
+  res.render('manufacturer/new', { title: 'New Manufacturer', data: data });
 });
 
-router.get('/:id', async function(req, res) {
-    const id = req.params.id;
-    const mfg = await getManufacturer(id);
-    const codes = await getManufacturerCodesForMfg(id);
-    res.render('manufacturer/detail', { title: 'Manufacturer Codes', mfg: mfg, codes: codes });
+router.get('/:id', async function (req, res) {
+  const id = req.params.id;
+  const mfg = await getManufacturer(id);
+  const codes = await getManufacturerCodesForMfg(id);
+  res.render('manufacturer/detail', {
+    title: 'Manufacturer Codes',
+    mfg: mfg,
+    codes: codes,
+  });
 });
 
-router.get('/edit/:id', async function(req, res) {
+router.get('/edit/:id', async function (req, res) {
   const id = req.params.id;
   const data = await getManufacturer(id);
-  res.render('manufacturer/edit', {title: 'Edit Manufacturer', data: data});
-})
-
-router.post('/new', async function(req, res) {
-  const manufacturer = await createManufacturer(req.body.name);
-  const id = manufacturer.id
-  res.redirect('/manufacturers/'+id);
+  res.render('manufacturer/edit', { title: 'Edit Manufacturer', data: data });
 });
 
-router.post('/:id/newcode', async function( req, res) {
+router.post('/new', async function (req, res) {
+  const manufacturer = await createManufacturer(req.body.name);
+  const id = manufacturer.id;
+  res.redirect('/manufacturers/' + id);
+});
+
+router.post('/:id/newcode', async function (req, res) {
   const id = req.params.id;
   await createManufacturerCode(id, req.body.code);
-  res.redirect('/manufacturers/'+id);
-})
+  res.redirect('/manufacturers/' + id);
+});
 
-router.post('/:id', async function( req, res) {
+router.post('/:id', async function (req, res) {
   const id = req.params.id;
   await updateManufacturer(id, req.body.name);
-  res.redirect('/manufacturers/'+id);
-})
+  res.redirect('/manufacturers/' + id);
+});
 
 module.exports = router;

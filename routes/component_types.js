@@ -1,59 +1,96 @@
 var express = require('express');
 var router = express.Router();
-const { createComponentType, updateComponentType, getComponentTypeList, getComponentType, createCompnentSubType,
-  getPackageTypesForComponentType, getSelectedPackageTypesForComponentType, getComponentSubTypesForComponentType} = require('../database');
+const {
+  createComponentType,
+  updateComponentType,
+  getComponentTypeList,
+  getComponentType,
+  createCompnentSubType,
+  getPackageTypesForComponentType,
+  getSelectedPackageTypesForComponentType,
+  getComponentSubTypesForComponentType,
+} = require('../database');
 
 /* GET home page. */
-router.get('/', async function(req, res) {
+router.get('/', async function (req, res) {
   const data = await getComponentTypeList();
-  res.render('component_type/list', { title: 'Component Types', component_types: data });
+  res.render('component_type/list', {
+    title: 'Component Types',
+    component_types: data,
+  });
 });
 
-router.get('/new', async function(req, res) {
+router.get('/new', async function (req, res) {
   const data = {
     name: '',
     description: '',
     symbol: '',
-    table_name: ''
+    table_name: '',
   };
   const packs = await getSelectedPackageTypesForComponentType(0);
-  res.render('component_type/new', {title: 'Component Type', component_type: data, package_types: packs});
+  res.render('component_type/new', {
+    title: 'Component Type',
+    component_type: data,
+    package_types: packs,
+  });
 });
 
 /* GET item page */
-router.get('/:id', async function(req, res) {
+router.get('/:id', async function (req, res) {
   const id = req.params.id;
   const data = await getComponentType(id);
   const packs = await getPackageTypesForComponentType(id);
   const component_sub_types = await getComponentSubTypesForComponentType(id);
-  res.render('component_type/detail', {title: 'Component Type', component_type: data, package_types: packs, component_sub_types: component_sub_types});
+  res.render('component_type/detail', {
+    title: 'Component Type',
+    component_type: data,
+    package_types: packs,
+    component_sub_types: component_sub_types,
+  });
 });
 
 /* GET Edit item page */
-router.get('/edit/:id', async function(req, res) {
+router.get('/edit/:id', async function (req, res) {
   const id = req.params.id;
   const data = await getComponentType(id);
   const packs = await getSelectedPackageTypesForComponentType(id);
-  res.render('component_type/edit', {title: 'Component Type', component_type: data, package_types: packs});
-})
+  res.render('component_type/edit', {
+    title: 'Component Type',
+    component_type: data,
+    package_types: packs,
+  });
+});
 
-router.post('/new', async function( req, res) {
-  const component_type = await createComponentType(req.body.name, req.body.description, req.body.symbol, req.body.table_name, req.body.package_type_selection)
-  const id = component_type.id
-  res.redirect('/component_types/'+id);
+router.post('/new', async function (req, res) {
+  const component_type = await createComponentType(
+    req.body.name,
+    req.body.description,
+    req.body.symbol,
+    req.body.table_name,
+    req.body.package_type_selection,
+  );
+  const id = component_type.id;
+  res.redirect('/component_types/' + id);
 });
 
 /* POST existing item update */
-router.post('/:id', async function( req, res) {
+router.post('/:id', async function (req, res) {
   const id = req.params.id;
-  await updateComponentType(id, req.body.name, req.body.description, req.body.symbol, req.body.table_name, req.body.package_type_selection)
-  res.redirect('/component_types/'+id);
-})
+  await updateComponentType(
+    id,
+    req.body.name,
+    req.body.description,
+    req.body.symbol,
+    req.body.table_name,
+    req.body.package_type_selection,
+  );
+  res.redirect('/component_types/' + id);
+});
 
-router.post('/:id/newsubtype/', async function(req, res) {
+router.post('/:id/newsubtype/', async function (req, res) {
   const id = req.params.id;
   await createCompnentSubType(id, req.body.name, req.body.description);
-  res.redirect('/component_types/'+id);
+  res.redirect('/component_types/' + id);
 });
 
 module.exports = router;

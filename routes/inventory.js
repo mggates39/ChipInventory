@@ -1,11 +1,25 @@
 var express = require('express');
-const { searchInventory, getInventory, getInventoryDates, searchComponents, getManufacturerCodes, getComponent, getComponentTypeList,
-  lookupInventory, createInventory, updateInventory, createInventoryDate, updateInventoryDate, lookupInventoryDate, 
-  getLocationList, getLocation} = require('../database');
+const {
+  searchInventory,
+  getInventory,
+  getInventoryDates,
+  searchComponents,
+  getManufacturerCodes,
+  getComponent,
+  getComponentTypeList,
+  lookupInventory,
+  createInventory,
+  updateInventory,
+  createInventoryDate,
+  updateInventoryDate,
+  lookupInventoryDate,
+  getLocationList,
+  getLocation,
+} = require('../database');
 var router = express.Router();
 
 /* GET Inventory list page. */
-router.get('/', async function(req, res) {
+router.get('/', async function (req, res) {
   const search_query = req.query.q;
   const search_type = req.query.w;
   var component_type_id = req.query.component_type_id;
@@ -20,46 +34,78 @@ router.get('/', async function(req, res) {
   if (typeof component_type_id == 'undefined') {
     component_type_id = 0;
   }
-  
-  const inventory = await searchInventory(search_query, search_by, component_type_id);
+
+  const inventory = await searchInventory(
+    search_query,
+    search_by,
+    component_type_id,
+  );
   const component_types = await getComponentTypeList();
-  res.render('inventory/list', { title: 'Component Inventory', inventory: inventory, searched: search_query, part_search: part_search, key_search: key_search, 
-    component_types: component_types, component_type_id: component_type_id});
+  res.render('inventory/list', {
+    title: 'Component Inventory',
+    inventory: inventory,
+    searched: search_query,
+    part_search: part_search,
+    key_search: key_search,
+    component_types: component_types,
+    component_type_id: component_type_id,
+  });
 });
 
-router.get('/edit/:id', async function(req, res) {
+router.get('/edit/:id', async function (req, res) {
   const id = req.params.id;
   const data = await getInventory(id);
   const manufacturers = await getManufacturerCodes();
   const component = await getComponent(data.component_id);
   const locations = await getLocationList();
-  res.render('inventory/edit', {title: 'Edit Component Inventory', data: data, manufacturers: manufacturers, components: [component], locations: locations});
+  res.render('inventory/edit', {
+    title: 'Edit Component Inventory',
+    data: data,
+    manufacturers: manufacturers,
+    components: [component],
+    locations: locations,
+  });
 });
 
-router.get('/new/location/:location_id', async function(req, res) {
+router.get('/new/location/:location_id', async function (req, res) {
   const location_id = req.params.location_id;
   const manufacturers = await getManufacturerCodes();
   const components = await searchComponents('', '', 0);
   const location = await getLocation(location_id);
-  res.render('inventory/new', {title: 'Add to Component Inventory', manufacturers: manufacturers, components: components, locations: [location]});
+  res.render('inventory/new', {
+    title: 'Add to Component Inventory',
+    manufacturers: manufacturers,
+    components: components,
+    locations: [location],
+  });
 });
 
-router.get('/new/:component_id', async function(req, res) {
+router.get('/new/:component_id', async function (req, res) {
   const component_id = req.params.component_id;
   const manufacturers = await getManufacturerCodes();
   const component = await getComponent(component_id);
   const locations = await getLocationList();
-  res.render('inventory/new', {title: 'Add to Component Inventory', manufacturers: manufacturers, components: [component], locations: locations});
+  res.render('inventory/new', {
+    title: 'Add to Component Inventory',
+    manufacturers: manufacturers,
+    components: [component],
+    locations: locations,
+  });
 });
 
-router.get('/new', async function(req, res) {
+router.get('/new', async function (req, res) {
   const manufacturers = await getManufacturerCodes();
   const components = await searchComponents('', '', 0);
   const locations = await getLocationList();
-  res.render('inventory/new', {title: 'Add to Component Inventory', manufacturers: manufacturers, components: components, locations: locations});
+  res.render('inventory/new', {
+    title: 'Add to Component Inventory',
+    manufacturers: manufacturers,
+    components: components,
+    locations: locations,
+  });
 });
 
-router.post('/new', async function(req, res) {
+router.post('/new', async function (req, res) {
   const data = req.body;
   var inv_id;
   var old_qty;
@@ -69,31 +115,56 @@ router.post('/new', async function(req, res) {
     location_id = null;
   }
 
-  const inv = await lookupInventory(data.chip_id, data.full_number, data.mfg_code_id);
+  const inv = await lookupInventory(
+    data.chip_id,
+    data.full_number,
+    data.mfg_code_id,
+  );
   if (inv.length) {
     inv_id = inv[0].id;
-    old_qty = parseInt(inv[0].quantity)
-    await updateInventory(inv_id, inv[0].component_id, inv[0].full_number, inv[0].mfg_code_id, (old_qty + new_qty), location_id)
+    old_qty = parseInt(inv[0].quantity);
+    await updateInventory(
+      inv_id,
+      inv[0].component_id,
+      inv[0].full_number,
+      inv[0].mfg_code_id,
+      old_qty + new_qty,
+      location_id,
+    );
   } else {
     var quantity_on_hand = data.quantity;
     var quantity_allocated = 0;
     var quantity_available = data.quantity;
     var quantity_on_order = 0;
-    const new_inv = await createInventory(data.chip_id, data.full_number, data.mfg_code_id, quantity_on_hand, quantity_allocated, quantity_available, quantity_on_order, location_id);
+    const new_inv = await createInventory(
+      data.chip_id,
+      data.full_number,
+      data.mfg_code_id,
+      quantity_on_hand,
+      quantity_allocated,
+      quantity_available,
+      quantity_on_order,
+      location_id,
+    );
     inv_id = new_inv.id;
   }
   const inv_date = await lookupInventoryDate(inv_id, data.date_code);
   if (inv_date.length) {
-    old_qty = parseInt(inv_date[0].quantity)
-    await updateInventoryDate(inv_date[0].id, inv_date[0].inventory_id, inv_date[0].date_code, (old_qty + new_qty))
+    old_qty = parseInt(inv_date[0].quantity);
+    await updateInventoryDate(
+      inv_date[0].id,
+      inv_date[0].inventory_id,
+      inv_date[0].date_code,
+      old_qty + new_qty,
+    );
   } else {
-    await createInventoryDate(inv_id, data.date_code, data.quantity) 
+    await createInventoryDate(inv_id, data.date_code, data.quantity);
   }
 
-  res.redirect('/inventory/'+inv_id);
+  res.redirect('/inventory/' + inv_id);
 });
 
-router.post('/:id', async function(req, res) {
+router.post('/:id', async function (req, res) {
   const id = req.params.id;
   const data = req.body;
   var location_id = data.location_id;
@@ -101,17 +172,30 @@ router.post('/:id', async function(req, res) {
     location_id = null;
   }
 
-  await updateInventory(id, data.component_id, data.full_number, data.mfg_code_id, data.quantity_on_hand, data.quantity_allocated, data.quantity_available, data.quantity_on_order, location_id);
-  res.redirect('/inventory/'+id);
+  await updateInventory(
+    id,
+    data.component_id,
+    data.full_number,
+    data.mfg_code_id,
+    data.quantity_on_hand,
+    data.quantity_allocated,
+    data.quantity_available,
+    data.quantity_on_order,
+    location_id,
+  );
+  res.redirect('/inventory/' + id);
 });
 
-router.get('/:id/newdate', async function(req, res) {
+router.get('/:id/newdate', async function (req, res) {
   const id = req.params.id;
   const inventory = await getInventory(id);
-  res.render('inventory/datenew', { title: inventory.full_number, inventory: inventory });
+  res.render('inventory/datenew', {
+    title: inventory.full_number,
+    inventory: inventory,
+  });
 });
 
-router.post('/:id/newdate', async function(req, res) {
+router.post('/:id/newdate', async function (req, res) {
   const inv_id = req.params.id;
   const data = req.body;
   var new_qty = parseInt(data.quantity);
@@ -119,23 +203,42 @@ router.post('/:id/newdate', async function(req, res) {
   const inv = await getInventory(inv_id);
   var old_qty_oh = parseInt(inv.quantity_on_hand);
   var old_qty_av = parseInt(inv.quantity_available);
-  await updateInventory(inv_id, inv.component_id, inv.full_number, inv.mfg_code_id, (old_qty_oh + new_qty), inv.quantity_allocated, (old_qty_av + new_qty), inv.quantity_on_order, inv.location_id);
+  await updateInventory(
+    inv_id,
+    inv.component_id,
+    inv.full_number,
+    inv.mfg_code_id,
+    old_qty_oh + new_qty,
+    inv.quantity_allocated,
+    old_qty_av + new_qty,
+    inv.quantity_on_order,
+    inv.location_id,
+  );
   const inv_date = await lookupInventoryDate(inv_id, data.date_code);
   if (inv_date.length) {
-    old_qty = parseInt(inv_date[0].quantity)
-    await updateInventoryDate(inv_date[0].id, inv_date[0].inventory_id, inv_date[0].date_code, (old_qty + new_qty))
+    old_qty = parseInt(inv_date[0].quantity);
+    await updateInventoryDate(
+      inv_date[0].id,
+      inv_date[0].inventory_id,
+      inv_date[0].date_code,
+      old_qty + new_qty,
+    );
   } else {
-    await createInventoryDate(inv_id, data.date_code, data.quantity) 
+    await createInventoryDate(inv_id, data.date_code, data.quantity);
   }
 
-  res.redirect('/inventory/'+inv_id);
+  res.redirect('/inventory/' + inv_id);
 });
 
-router.get('/:id', async function(req, res) {
+router.get('/:id', async function (req, res) {
   const id = req.params.id;
   const inventory = await getInventory(id);
   const inventory_dates = await getInventoryDates(id);
-  res.render('inventory/detail', { title: inventory.full_number, inventory: inventory, inventory_dates: inventory_dates });
+  res.render('inventory/detail', {
+    title: inventory.full_number,
+    inventory: inventory,
+    inventory_dates: inventory_dates,
+  });
 });
 
 module.exports = router;

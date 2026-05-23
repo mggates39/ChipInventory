@@ -3,28 +3,32 @@ const path = require('path');
 
 // Set up storage for uploaded files
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     cb(null, 'upload/');
   },
-  filename: function(req, file, cb){
+  filename: function (req, file, cb) {
     cb(null, file.originalname);
-  }
+  },
 });
 
 // Create the multer instance
-const upload = multer({ 
-    storage: storage,
-    fileFilter: function (req, file, cb) {
-        const filetypes = /csv|yaml|yml /;
-        const mimetype = filetypes.test(file.mimetype);
-        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+const upload = multer({
+  storage: storage,
+  fileFilter: function (req, file, cb) {
+    const filetypes = /csv|yaml|yml /;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(
+      path.extname(file.originalname).toLowerCase(),
+    );
 
-        if (mimetype && extname) {
-            return cb(null, true);
-        }
-
-        cb("Error: File upload only supports the following filetypes - " + filetypes);
+    if (mimetype && extname) {
+      return cb(null, true);
     }
- }).single('file');
+
+    cb(
+      'Error: File upload only supports the following filetypes - ' + filetypes,
+    );
+  },
+}).single('file');
 
 module.exports = upload;

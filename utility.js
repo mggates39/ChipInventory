@@ -1,14 +1,12 @@
-
-function parse_symbol(symbol)
-{
+function parse_symbol(symbol) {
   // Bail if string is empty
   if (!symbol) {
     return symbol;
   }
   // process __ for subscripts
   let newsym = '';
-  if (symbol.includes('__')){
-    let seen = 0
+  if (symbol.includes('__')) {
+    let seen = 0;
     for (let i = 0; i < symbol.length; i++) {
       if (symbol[i] == '_') {
         seen++;
@@ -20,28 +18,29 @@ function parse_symbol(symbol)
         seen = 0;
         newsym += symbol[i];
       } else {
-        newsym += symbol[i]
+        newsym += symbol[i];
       }
     }
-    
+
     if (seen == 2) {
       newsym += '</sub>';
-  ``}
+      ``;
+    }
   } else {
     newsym = symbol;
   }
 
   // Process ~ for negation
   if (newsym.includes('~')) {
-    let negsym = ''
-    let found = false
+    let negsym = '';
+    let found = false;
     for (let i = 0; i < newsym.length; i++) {
       if (newsym[i] == '~') {
         found = !found;
         if (found) {
-          negsym += "<span class='neg'>"
+          negsym += "<span class='neg'>";
         } else {
-          negsym += '</span>'
+          negsym += '</span>';
         }
       } else if ((newsym[i] == ' ' || newsym[i] == '/') && found) {
         negsym += '</span>';
@@ -52,23 +51,22 @@ function parse_symbol(symbol)
       }
     }
     if (found) {
-      negsym += "</span>";
+      negsym += '</span>';
     }
     newsym = negsym;
   }
-  return newsym
+  return newsym;
 }
 
-function combine_aliases(aliases)
-{
-  var aliasList = "";
-  var sep = "";
-  aliases.forEach(function(alias) {
-    aliasList += (sep + alias.alias_chip_number);
-    sep = ", ";
-  })
-  
+function combine_aliases(aliases) {
+  var aliasList = '';
+  var sep = '';
+  aliases.forEach(function (alias) {
+    aliasList += sep + alias.alias_chip_number;
+    sep = ', ';
+  });
+
   return aliasList;
 }
 
-module.exports = { parse_symbol, combine_aliases};
+module.exports = { parse_symbol, combine_aliases };

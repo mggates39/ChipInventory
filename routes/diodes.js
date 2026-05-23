@@ -1,22 +1,43 @@
 var express = require('express');
 var router = express.Router();
-const {  getDiode, getPins, getDipLeftPins, getDipRightPins, getSipPins,
-  getSpecs, getNotes, getAliases, createAlias, deleteAliases, createDiode, updateDiode, createPin, updatePin,
-  getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType,
-  getPickListByName, getComponentType, getComponentTypeList } = require('../database');
-const {parse_symbol, combine_aliases} = require('../utility');
+const {
+  getDiode,
+  getPins,
+  getDipLeftPins,
+  getDipRightPins,
+  getSipPins,
+  getSpecs,
+  getNotes,
+  getAliases,
+  createAlias,
+  deleteAliases,
+  createDiode,
+  updateDiode,
+  createPin,
+  updatePin,
+  getInventoryByComponentList,
+  getPackageTypesForComponentType,
+  getComponentSubTypesForComponentType,
+  getPickListByName,
+  getComponentType,
+  getComponentTypeList,
+} = require('../database');
+const { parse_symbol, combine_aliases } = require('../utility');
 
 /* GET new item page */
-router.get('/new', async function(req, res) {
+router.get('/new', async function (req, res) {
   const component_type_id = 6;
   const component_type = await getComponentType(component_type_id);
-  const package_types = await getPackageTypesForComponentType(component_type_id);
-  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const package_types =
+    await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types =
+    await getComponentSubTypesForComponentType(component_type_id);
   const unit_list = await getPickListByName('Voltages');
   const light_colors = await getPickListByName('LEDColor');
   const lens_colors = await getPickListByName('LensColor');
 
-  var data = {chip_number: '',
+  var data = {
+    chip_number: '',
     aliases: '',
     package_type_id: '',
     pin_count: '',
@@ -33,12 +54,19 @@ router.get('/new', async function(req, res) {
     table_name: component_type.table_name,
   };
 
-  res.render('diode/new', {title: 'New Diode Definition', data: data, package_types: package_types, 
-    component_sub_types: component_sub_types, unit_list: unit_list, light_colors: light_colors, lens_colors: lens_colors});
+  res.render('diode/new', {
+    title: 'New Diode Definition',
+    data: data,
+    package_types: package_types,
+    component_sub_types: component_sub_types,
+    unit_list: unit_list,
+    light_colors: light_colors,
+    lens_colors: lens_colors,
+  });
 });
-  
+
 /* GET item page */
-router.get('/:id', async function(req, res) {
+router.get('/:id', async function (req, res) {
   const id = req.params.id;
   const data = await getDiode(id);
   const pins = await getPins(id);
@@ -54,13 +82,16 @@ router.get('/:id', async function(req, res) {
 
   var fixed_pins = [];
   var iswide = 'dpindiagram';
-  pins.forEach(function(pin) {
+  pins.forEach(function (pin) {
     if (pin.pin_description.length > 100) {
-       iswide = 'dpindiagramwide';
+      iswide = 'dpindiagramwide';
     }
-    fixed_pins.push(
-      {pin_number: pin.pin_number, pin_symbol: parse_symbol(pin.pin_symbol), pin_description: pin.pin_description, iswide: iswide}
-    )
+    fixed_pins.push({
+      pin_number: pin.pin_number,
+      pin_symbol: parse_symbol(pin.pin_symbol),
+      pin_description: pin.pin_description,
+      iswide: iswide,
+    });
   });
 
   var layout_pins = [];
@@ -68,71 +99,88 @@ router.get('/:id', async function(req, res) {
   var i;
 
   if (data.package == 'Radial') {
-    sip_pins.forEach(function(pin) {
+    sip_pins.forEach(function (pin) {
       if (pin.pin_number == 1) {
-        bull = '&nbsp;&#9679;'
+        bull = '&nbsp;&#9679;';
       } else {
-        bull = ''
+        bull = '';
       }
-      layout_pins.push({'pin': pin.pin_number, 'bull': bull, 'sym': parse_symbol(pin.pin_symbol)});
+      layout_pins.push({
+        pin: pin.pin_number,
+        bull: bull,
+        sym: parse_symbol(pin.pin_symbol),
+      });
     });
-  
   } else {
     i = 0;
-    dip_left_pins.forEach(function(pin) {
+    dip_left_pins.forEach(function (pin) {
       if (pin.pin_number == 1) {
-        bull = '&nbsp;&#9679;'
+        bull = '&nbsp;&#9679;';
       } else {
-        bull = ''
+        bull = '';
       }
-      layout_pins.push(
-        {'left_pin': pin.pin_number, 'bull': bull, 'right_pin': dip_right_pins[i].pin_number, 
-        'left_sym': parse_symbol(pin.pin_symbol), 'right_sym': parse_symbol(dip_right_pins[i].pin_symbol),
+      layout_pins.push({
+        left_pin: pin.pin_number,
+        bull: bull,
+        right_pin: dip_right_pins[i].pin_number,
+        left_sym: parse_symbol(pin.pin_symbol),
+        right_sym: parse_symbol(dip_right_pins[i].pin_symbol),
       });
       i++;
     });
   }
 
   var clean_specs = [];
-  specs.forEach(function(spec) {
-    clean_specs.push(
-      {id: spec.id, parameter: parse_symbol(spec.parameter), unit: parse_symbol(spec.unit), value: parse_symbol(spec.value)}
-    )
-  })
-  
-  var clean_notes = [];
-  notes.forEach(function(note) {
-    clean_notes.push(
-      {id: note.id, note: parse_symbol(note.note)}
-    )
-  })
+  specs.forEach(function (spec) {
+    clean_specs.push({
+      id: spec.id,
+      parameter: parse_symbol(spec.parameter),
+      unit: parse_symbol(spec.unit),
+      value: parse_symbol(spec.value),
+    });
+  });
 
-  res.render('diode/detail', { title: data.chip_number + ' - ' + data.description, data: data, 
-    pins: fixed_pins, layout_pins: layout_pins, 
-    specs: clean_specs, notes: clean_notes, aliases: aliases, inventory: inventory,
-    component_types: component_types, component_type_id: component_type_id });
+  var clean_notes = [];
+  notes.forEach(function (note) {
+    clean_notes.push({ id: note.id, note: parse_symbol(note.note) });
+  });
+
+  res.render('diode/detail', {
+    title: data.chip_number + ' - ' + data.description,
+    data: data,
+    pins: fixed_pins,
+    layout_pins: layout_pins,
+    specs: clean_specs,
+    notes: clean_notes,
+    aliases: aliases,
+    inventory: inventory,
+    component_types: component_types,
+    component_type_id: component_type_id,
+  });
 });
 
 /* GET Edit item page */
-router.get('/edit/:id', async function(req, res) {
+router.get('/edit/:id', async function (req, res) {
   const component_type_id = 6;
   const diode_id = req.params.id;
   const data = await getDiode(diode_id);
   const pins = await getPins(diode_id);
   const aliases = await getAliases(diode_id);
-  const package_types = await getPackageTypesForComponentType(component_type_id);
-  const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
+  const package_types =
+    await getPackageTypesForComponentType(component_type_id);
+  const component_sub_types =
+    await getComponentSubTypesForComponentType(component_type_id);
   const unit_list = await getPickListByName('Voltages');
   const light_colors = await getPickListByName('LEDColor');
   const lens_colors = await getPickListByName('LensColor');
 
   data['aliases'] = combine_aliases(aliases);
 
-  var pin_id=[];
-  var pin_num=[];
+  var pin_id = [];
+  var pin_num = [];
   var sym = [];
   var descr = [];
-  pins.forEach(function(pin) {
+  pins.forEach(function (pin) {
     pin_id.push(pin.id);
     pin_num.push(pin.pin_number);
     sym.push(pin.pin_symbol);
@@ -144,11 +192,18 @@ router.get('/edit/:id', async function(req, res) {
   data['sym'] = sym;
   data['descr'] = descr;
 
-  res.render('diode/edit', {title: 'Edit Diode Definition', data: data, package_types: package_types, 
-    component_sub_types: component_sub_types, unit_list: unit_list, light_colors: light_colors, lens_colors: lens_colors});
-})
-  
-router.post('/new', async function( req, res) {
+  res.render('diode/edit', {
+    title: 'Edit Diode Definition',
+    data: data,
+    package_types: package_types,
+    component_sub_types: component_sub_types,
+    unit_list: unit_list,
+    light_colors: light_colors,
+    lens_colors: lens_colors,
+  });
+});
+
+router.post('/new', async function (req, res) {
   const component_type_id = 6;
   const component_type = await getComponentType(component_type_id);
   const package_types = await getPackageTypesForComponentType(6);
@@ -157,7 +212,8 @@ router.post('/new', async function( req, res) {
   const light_colors = await getPickListByName('LEDColor');
   const lens_colors = await getPickListByName('LensColor');
 
-  var data = {chip_number: req.body.chip_number,
+  var data = {
+    chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
@@ -172,23 +228,23 @@ router.post('/new', async function( req, res) {
     description: req.body.description,
     component_name: component_type.decscription,
     table_name: component_type.table_name,
-  }
+  };
 
   let pin_count = 2;
-  light_colors.forEach(function(color) {
+  light_colors.forEach(function (color) {
     if (color.id == data.light_color_id) {
       pin_count = color.modifier_value;
     }
-  })
+  });
 
-  var pin=[];
+  var pin = [];
   var sym = [];
   var descr = [];
-  if (req.body["pin_0"] == '1') {
+  if (req.body['pin_0'] == '1') {
     for (var i = 0; i < req.body.pin_count; i++) {
-        pin.push(req.body["pin_"+i]);
-        sym.push(req.body["sym_"+i]);
-        descr.push(req.body["descr_"+i]);
+      pin.push(req.body['pin_' + i]);
+      sym.push(req.body['sym_' + i]);
+      descr.push(req.body['descr_' + i]);
     }
   } else {
     data.pin_count = pin_count;
@@ -200,14 +256,26 @@ router.post('/new', async function( req, res) {
       sym.push('C-');
       descr.push('Cathode');
     }
-  }     
+  }
 
   data['pin'] = pin;
   data['sym'] = sym;
   data['descr'] = descr;
-  if (descr[req.body.pin_count-1]) {
-    const diode = await createDiode(data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.description, 
-      data.forward_voltage, data.forward_unit_id, data.reverse_voltage, data.reverse_unit_id, data.light_color_id, data.lens_color_id, data.datasheet);
+  if (descr[req.body.pin_count - 1]) {
+    const diode = await createDiode(
+      data.chip_number,
+      data.pin_count,
+      data.package_type_id,
+      data.component_sub_type_id,
+      data.description,
+      data.forward_voltage,
+      data.forward_unit_id,
+      data.reverse_voltage,
+      data.reverse_unit_id,
+      data.light_color_id,
+      data.lens_color_id,
+      data.datasheet,
+    );
     var diode_id = diode.component_id;
 
     for (i = 0; i < req.body.pin_count; i++) {
@@ -215,22 +283,30 @@ router.post('/new', async function( req, res) {
     }
 
     var aliases = data.aliases.split(',');
-    for( const alias of aliases) {
+    for (const alias of aliases) {
       if (alias.length > 0) {
         await createAlias(diode_id, alias.trim());
       }
     }
 
-    res.redirect('/diodes/'+diode_id);
+    res.redirect('/diodes/' + diode_id);
   } else {
-      res.render('diode/new', {title: 'New Diode Definition', data: data, package_types: package_types, 
-        component_sub_types: component_sub_types, unit_list: unit_list, light_colors: light_colors, lens_colors: lens_colors});
-    }
+    res.render('diode/new', {
+      title: 'New Diode Definition',
+      data: data,
+      package_types: package_types,
+      component_sub_types: component_sub_types,
+      unit_list: unit_list,
+      light_colors: light_colors,
+      lens_colors: lens_colors,
+    });
+  }
 });
 
-router.post('/:id', async function( req, res) {
+router.post('/:id', async function (req, res) {
   const id = req.params.id;
-  var data = {chip_number: req.body.chip_number,
+  var data = {
+    chip_number: req.body.chip_number,
     aliases: req.body.aliases,
     package_type_id: req.body.package_type_id,
     component_sub_type_id: req.body.component_sub_type_id,
@@ -243,26 +319,39 @@ router.post('/:id', async function( req, res) {
     lens_color_id: req.body.lens_color_id,
     datasheet: req.body.datasheet,
     description: req.body.description,
-  }
+  };
 
-  var pin_id=[];
-  var pin=[];
+  var pin_id = [];
+  var pin = [];
   var sym = [];
   var descr = [];
   for (var i = 0; i < req.body.pin_count; i++) {
-    pin_id.push(req.body["pin_id_"+i]);
-    pin.push(req.body["pin_"+i]);
-    sym.push(req.body["sym_"+i]);
-    descr.push(req.body["descr_"+i]);
+    pin_id.push(req.body['pin_id_' + i]);
+    pin.push(req.body['pin_' + i]);
+    sym.push(req.body['sym_' + i]);
+    descr.push(req.body['descr_' + i]);
   }
   data['pin_id'] = pin_id;
   data['pin'] = pin;
   data['sym'] = sym;
   data['descr'] = descr;
 
-  const diode = await updateDiode(id, data.chip_number, data.pin_count, data.package_type_id, data.component_sub_type_id, data.description, 
-    data.forward_voltage, data.forward_unit_id, data.reverse_voltage, data.reverse_unit_id, data.light_color_id, data.lens_color_id, data.datasheet);
-  var diode_id =diode.component_id;
+  const diode = await updateDiode(
+    id,
+    data.chip_number,
+    data.pin_count,
+    data.package_type_id,
+    data.component_sub_type_id,
+    data.description,
+    data.forward_voltage,
+    data.forward_unit_id,
+    data.reverse_voltage,
+    data.reverse_unit_id,
+    data.light_color_id,
+    data.lens_color_id,
+    data.datasheet,
+  );
+  var diode_id = diode.component_id;
 
   for (i = 0; i < req.body.pin_count; i++) {
     await updatePin(pin_id[i], diode_id, pin[i], sym[i], descr[i]);
@@ -271,13 +360,13 @@ router.post('/:id', async function( req, res) {
   await deleteAliases(diode_id);
 
   var aliases = data.aliases.split(',');
-  for( const alias of aliases) {
+  for (const alias of aliases) {
     if (alias.length > 0) {
       await createAlias(diode_id, alias.trim());
     }
   }
 
-  res.redirect('/diodes/'+id);
-})
-  
+  res.redirect('/diodes/' + id);
+});
+
 module.exports = router;
