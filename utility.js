@@ -59,4 +59,16 @@ function parse_symbol(symbol)
   return newsym
 }
 
-module.exports = { parse_symbol};
+function combine_aliases(aliases)
+{
+  var aliasList = "";
+  var sep = "";
+  aliases.forEach(function(alias) {
+    aliasList += (sep + alias.alias_chip_number);
+    sep = ", ";
+  })
+  
+  return aliasList;
+}
+
+module.exports = { parse_symbol, combine_aliases};

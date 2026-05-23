@@ -4,7 +4,7 @@ const {  getCapacitor, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createCapacitor, updateCapacitor, createPin, updatePin,
   getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType,
   getPickListByName, getComponentType, getComponentTypeList} = require('../database');
-const {parse_symbol} = require('../utility');
+const {parse_symbol, combine_aliases} = require('../utility');
 
 /* GET new item page */
 router.get('/new', async function(req, res) {
@@ -60,6 +60,8 @@ router.get('/:id', async function(req, res) {
   const aliases = await getAliases(id);
   const component_types = await getComponentTypeList();
   const component_type_id = data.component_type_id;
+
+  data['aliases'] = combine_aliases(aliases);
 
   var fixed_pins = [];
   var iswide = 'dpindiagram';

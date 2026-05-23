@@ -6,7 +6,7 @@ const { getConnector, createConnector, updateConnector, getPins, createPin, upda
   getSpecs, getNotes, getInventoryByComponentList, getPackageTypesForComponentType, 
   getComponentSubTypesForComponentType, getComponentType, getComponentTypeList, 
   getAliases, createAlias, deleteAliases } = require('../database');
-const {parse_symbol} = require('../utility');
+const {parse_symbol, combine_aliases} = require('../utility');
 var router = express.Router();
 
 router.get('/edit/:id', async function(req,res) {
@@ -19,14 +19,7 @@ router.get('/edit/:id', async function(req,res) {
   const package_types = await getPackageTypesForComponentType(component_type_id);
   const component_sub_types = await getComponentSubTypesForComponentType(component_type_id);
 
-  var aliasList = "";
-  var sep = "";
-  aliases.forEach(function(alias) {
-    aliasList += (sep + alias.alias_chip_number);
-    sep = ", ";
-  })
-  
-  data['aliases'] = aliasList;
+  data['aliases'] = combine_aliases(aliases);
 
   var pin_id=[];
   var pin_num=[];

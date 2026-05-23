@@ -4,7 +4,7 @@ const {  getDiode, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createDiode, updateDiode, createPin, updatePin,
   getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType,
   getPickListByName, getComponentType, getComponentTypeList } = require('../database');
-const {parse_symbol} = require('../utility');
+const {parse_symbol, combine_aliases} = require('../utility');
 
 /* GET new item page */
 router.get('/new', async function(req, res) {
@@ -126,14 +126,7 @@ router.get('/edit/:id', async function(req, res) {
   const light_colors = await getPickListByName('LEDColor');
   const lens_colors = await getPickListByName('LensColor');
 
-  var aliasList = "";
-  var sep = "";
-  aliases.forEach(function(alias) {
-    aliasList += (sep + alias.alias_chip_number);
-    sep = ", ";
-  })
-  
-  data['aliases'] = aliasList;
+  data['aliases'] = combine_aliases(aliases);
 
   var pin_id=[];
   var pin_num=[];

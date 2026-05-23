@@ -4,7 +4,7 @@ const {  getResistor, getPins, getDipLeftPins, getDipRightPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createResistor, updateResistor, createPin, updatePin,
   getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType,
   getPickListByName, getListEntry, getComponentType, getComponentTypeList } = require('../database');
-const {parse_symbol} = require('../utility');
+const {parse_symbol, combine_aliases} = require('../utility');
 
 function getResistorBands(resistance, unit_modifier, tolerance) {
   const colorCodes = [
@@ -192,14 +192,7 @@ router.get('/edit/:id', async function(req, res) {
   const component_sub_types = await getComponentSubTypesForComponentType(4);
   const unit_list = await getPickListByName('Resistance');
 
-  var aliasList = "";
-  var sep = "";
-  aliases.forEach(function(alias) {
-    aliasList += (sep + alias.alias_chip_number);
-    sep = ", ";
-  })
-  
-  data['aliases'] = aliasList;
+  data['aliases'] = combine_aliases(aliases);
 
   var pin_id=[];
   var pin_num=[];

@@ -4,7 +4,7 @@ const {getResistorNetwork, getPins, getDipLeftPins, getDipRightPins, getSipPins,
   getSpecs, getNotes, getAliases, createAlias, deleteAliases, createResistorNetwork, updateResistorNetwork, createPin, updatePin,
   getInventoryByComponentList, getPackageTypesForComponentType, getComponentSubTypesForComponentType, 
   getPickListByName, getComponentType, getComponentTypeList} = require('../database');
-const {parse_symbol} = require('../utility');
+const {parse_symbol, combine_aliases} = require('../utility');
 
 /* GET new item page */
 router.get('/new', async function(req, res) {
@@ -124,14 +124,7 @@ router.get('/edit/:id', async function(req, res) {
   const component_sub_types = await getComponentSubTypesForComponentType(5);
   const unit_list = await getPickListByName('Resistance');
 
-  var aliasList = "";
-  var sep = "";
-  aliases.forEach(function(alias) {
-    aliasList += (sep + alias.alias_chip_number);
-    sep = ", ";
-  })
-  
-  data['aliases'] = aliasList;
+  data['aliases'] = combine_aliases(aliases);
 
   var pin_id=[];
   var pin_num=[];

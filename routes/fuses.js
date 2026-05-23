@@ -5,7 +5,7 @@ const { getFuse, createFuse, updateFuse, getPins, createPin, updatePin,
   getComponentSubTypesForComponentType,
   getAliases, createAlias, deleteAliases, 
   getPickListByName, getComponentType, getComponentTypeList } = require('../database');
-const {parse_symbol} = require('../utility');
+const {parse_symbol, combine_aliases} = require('../utility');
 var router = express.Router();
 
 router.get('/edit/:id', async function(req, res) {
@@ -19,14 +19,7 @@ router.get('/edit/:id', async function(req, res) {
   const rating_units = await getPickListByName('FuseRating');
   const voltage_units = await getPickListByName('Voltages');
 
-  var aliasList = "";
-  var sep = "";
-  aliases.forEach(function(alias) {
-    aliasList += (sep + alias.alias_chip_number);
-    sep = ", ";
-  })
-  
-  data['aliases'] = aliasList;
+  data['aliases'] = combine_aliases(aliases);
 
   var pin_id=[];
   var pin_num=[];
