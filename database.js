@@ -31,6 +31,7 @@ async function getSystemData() {
       coalesce((select max(date_code) from inventory_dates where date_code REGEXP '^[0-9]+$'), '0000') old_max_date,
       (select count(*) from manufacturer) mfgs,
       (select count(*) from mfg_codes) codes,
+      (select count(distinct mfg_code_id) AS unique_count FROM inventory) used_mfgs,
       (select count(*) from locations where parent_location_id is null) main_locations,
       (select count(*) from locations where parent_location_id is not null) child_locations,
       (select count(*) from projects) number_projects,
