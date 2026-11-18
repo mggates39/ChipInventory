@@ -5,7 +5,7 @@ description: Universal asynchronous receiver-transmitter with FIFOs
 package: DIP
 pincount: 40
 family: uart
-datasheet: http://www.national.com/ds/PC/PC16550D.pdf
+datasheet: https://www.ti.com/lit/gpn/TL16C550C
 aliases:
   - 16C550
 pins:
