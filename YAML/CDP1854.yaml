@@ -1,0 +1,129 @@
+type: IC
+subtype: UART
+name: CDP1854
+description: CDP1854 UART
+package: DIP
+pincount: 40
+family: CDP
+datasheet: http://www.cosmacelf.com/publications/data-sheets/cdp1854.pdf
+pins:
+  - num: 1
+    sym: V__DD
+    desc: 'Positive Power Supply '
+  - num: 2
+    sym: MODE
+    desc: Operating Mode Select - Mode 0 (Low) / Mode 1 (High)
+  - num: 3
+    sym: V__SS
+    desc: System Ground
+  - num: 4
+    sym: RRD
+    desc: Receiver Register Disable
+  - num: 5
+    sym: RBR__1
+    desc: Receiver Buffer Register bit 1
+  - num: 6
+    sym: RBR__2
+    desc: Receiver Buffer Register bit 2
+  - num: 7
+    sym: RBR__3
+    desc: Receiver Buffer Register bit 3
+  - num: 8
+    sym: RBR__4
+    desc: Receiver Buffer Register bit 4
+  - num: 9
+    sym: RBR__5
+    desc: Receiver Buffer Register bit 5
+  - num: 10
+    sym: RBR__6
+    desc: Receiver Buffer Register bit 6
+  - num: 11
+    sym: RBR__7
+    desc: Receiver Buffer Register bit 7
+  - num: 12
+    sym: RBR__8
+    desc: Receiver Buffer Register bit 8
+  - num: 13
+    sym: PE / CTS)
+    desc: Parity Error (Mode 0) / Clear To Send (Mode 1)
+  - num: 14
+    sym: FE
+    desc: Framing Error
+  - num: 15
+    sym: OE
+    desc: Overrun Error
+  - num: 16
+    sym: SFD / RSEL
+    desc: Status Flag Disable (Mode 0) / Register Select (Mode 1)
+  - num: 17
+    sym: RRC / TPB
+    desc: Receiver Register Clock (Mode 0) / Timing Pulse B (Mode 1)
+  - num: 18
+    sym: DRR / DA
+    desc: Data Received Reset (Mode 0) / Data Available (Mode 1)
+  - num: 19
+    sym: DR
+    desc: 'Data Received '
+  - num: 20
+    sym: RSI
+    desc: Receiver Serial Input
+  - num: 21
+    sym: MR / CLEAR
+    desc: Master Reset (Mode 0) / CLEAR (Mode 1)
+  - num: 22
+    sym: THRL / CS1
+    desc: Transmitter Holding Register Load (Mode 0) / Chip Select 1) (Mode 1)
+  - num: 23
+    sym: THRE
+    desc: Transmitter Holding Register Empty
+  - num: 24
+    sym: TRE / RTS
+    desc: Transmitter Register Empty (Mode 0) / Request to Send (Mode 1)
+  - num: 25
+    sym: TRO
+    desc: Transmitter Serial Output
+  - num: 26
+    sym: TBR__1 / BUS0
+    desc: Transmitter Buffer Register bit 1 (Mode 0) / bidirectional data line 0 (Mode 1)
+  - num: 27
+    sym: TBR__2 / BUS1
+    desc: Transmitter Buffer Register bit 2 (Mode 0) / bidirectional data line 1 (Mode 1)
+  - num: 28
+    sym: TBR__3 / BUS2
+    desc: Transmitter Buffer Register bit 3 (Mode 0) / bidirectional data line 2 (Mode 1)
+  - num: 29
+    sym: TBR__4 / BUS3
+    desc: Transmitter Buffer Register bit 4 (Mode 0) / bidirectional data line 3 (Mode 1)
+  - num: 30
+    sym: TBR__5 / BUS4
+    desc: Transmitter Buffer Register bit 5 (Mode 0) / bidirectional data line 4 (Mode 1)
+  - num: 31
+    sym: TBR__6
+    desc: Transmitter Buffer Register bit 6
+  - num: 32
+    sym: TBR__7
+    desc: Transmitter Buffer Register bit 7
+  - num: 33
+    sym: TBR__8
+    desc: Transmitter Buffer Register bit 8
+  - num: 34
+    sym: CRL / CS2
+    desc: Control Register Load (Mode 0) / Chip Select 2 (Mode 1)
+  - num: 35
+    sym: PI / MWR
+    desc: Parity Inhibit (Mode 0) / Memory Write (Mode 1)
+  - num: 36
+    sym: SBS / MRD
+    desc: Stop Bit Select (Mode 0) / Memory Read (Mode 1)
+  - num: 37
+    sym: WLS2 / BUS7
+    desc: Word Length Select 2 (Mode 0) / bidirectional data line 7 (Mode 1)
+  - num: 38
+    sym: WLS1 / BUS6
+    desc: Word Length Select 1 (Mode 0) / bidirectional data line 6 (Mode 1)
+  - num: 39
+    sym: EPE / BUS5
+    desc: Even Parity Enable (Mode 0) / bidirectional data line 5 (Mode 1)
+  - num: 40
+    sym: TRC
+    desc: Transmit Register Clock

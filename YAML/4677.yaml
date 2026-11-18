@@ -1,0 +1,33 @@
+type: IC
+subtype: Memory
+name: '4677'
+description: IC ESP-PSRAM64H 64MBIT 133MHZ
+package: SOIC
+pincount: 8
+family: PSRAM
+datasheet: https://cdn-shop.adafruit.com/product-files/4677/4677_esp-psram64_esp-psram64h_datasheet_en.pdf
+pins:
+  - num: 1
+    sym: ~CE
+    desc: Chip Select Enable
+  - num: 2
+    sym: SO/SIO__1
+    desc: SIO Pin 1 / Serial Output
+  - num: 3
+    sym: SIO__2
+    desc: SIO Pin 2
+  - num: 4
+    sym: V__SS
+    desc: Ground
+  - num: 5
+    sym: SI/SIO__0
+    desc: SIO Pin 0 / Serial Input
+  - num: 6
+    sym: SCLK
+    desc: Clock Signal
+  - num: 7
+    sym: SIO__3
+    desc: SIO Pin 3
+  - num: 8
+    sym: V__CC
+    desc: Supply Voltage

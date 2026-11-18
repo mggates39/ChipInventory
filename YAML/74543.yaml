@@ -1,0 +1,83 @@
+type: IC
+subtype: '7400'
+name: '74543'
+description: Octal Latched Transceiver with 3-State Outputs.
+package: DIP
+pincount: 24
+family: '7400'
+datasheet: https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/2873/74F543_Rev2004.pdf
+aliases:
+  - 74F546N
+pins:
+  - num: 1
+    sym: ~LEBA
+    desc: B-to-A Latch Enable input
+  - num: 2
+    sym: ~OEBA
+    desc: 'B-to-A Output Enable input '
+  - num: 3
+    sym: A__0
+    desc: Port A Bit 0 I/O
+  - num: 4
+    sym: A__1
+    desc: Port A Bit 1 I/O
+  - num: 5
+    sym: A__2
+    desc: Port A Bit 2 I/O
+  - num: 6
+    sym: A__3
+    desc: Port A Bit 3 I/O
+  - num: 7
+    sym: A__4
+    desc: Port A Bit 4 I/O
+  - num: 8
+    sym: A__5
+    desc: Port A Bit 5 I/O
+  - num: 9
+    sym: A__6
+    desc: Port A Bit 6 I/O
+  - num: 10
+    sym: A__7
+    desc: Port A Bit 7 I/O
+  - num: 11
+    sym: ~EAB
+    desc: A-to-B Enable input
+  - num: 12
+    sym: GND
+    desc: Ground
+  - num: 13
+    sym: ~OEAB
+    desc: A-to-B Output Enable input
+  - num: 14
+    sym: ~LEAB
+    desc: A-to-B Latch Enable input (Active LOW)
+  - num: 15
+    sym: B__7
+    desc: Port B Bit 7 I/O
+  - num: 16
+    sym: B__6
+    desc: Port B Bit 6 I/O
+  - num: 17
+    sym: B__5
+    desc: Port B Bit 5 I/O
+  - num: 18
+    sym: B__4
+    desc: Port B Bit 4 I/O
+  - num: 19
+    sym: B__3
+    desc: Port B Bit 3 I/O
+  - num: 20
+    sym: B__2
+    desc: Port B Bit 2 I/O
+  - num: 21
+    sym: B__1
+    desc: Port B Bit 1 I/O
+  - num: 22
+    sym: B__0
+    desc: Port B Bit 0 I/O
+  - num: 23
+    sym: ~EAB
+    desc: 'A-to-B Enable input '
+  - num: 24
+    sym: V__CC
+    desc: Supply Voltage

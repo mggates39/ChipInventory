@@ -1,0 +1,51 @@
+type: IC
+subtype: '7400'
+name: '7451'
+description: AND/OR/INVERT Gate Configurable 2 Circuit 8 Input
+package: DIP
+pincount: 14
+family: '7400'
+datasheet: https://rocelec.widen.net/view/pdf/7ca7jjqvit/FAIRS01732-1.pdf?t.download=true&u=5oefqw
+pins:
+  - num: 1
+    sym: A__1
+    desc: A Input 1
+  - num: 2
+    sym: A__2
+    desc: A Input 2
+  - num: 3
+    sym: B__2
+    desc: B Input 2
+  - num: 4
+    sym: C__2
+    desc: C Input 2
+  - num: 5
+    sym: D__2
+    desc: DInput 2
+  - num: 6
+    sym: Y__2
+    desc: Output 2
+  - num: 7
+    sym: GND
+    desc: Ground
+  - num: 8
+    sym: Y__1
+    desc: Output 1
+  - num: 9
+    sym: C__1
+    desc: C Input 1
+  - num: 10
+    sym: D__1
+    desc: D Input 1
+  - num: 11
+    sym: NC
+    desc: No External Connection
+  - num: 12
+    sym: NC
+    desc: No External Connection
+  - num: 13
+    sym: B__1
+    desc: B Input 1
+  - num: 14
+    sym: V__CC
+    desc: Supply Voltage

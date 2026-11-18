@@ -1,0 +1,81 @@
+type: IC
+subtype: '7400'
+name: '29827'
+description: Buffer, Non-Inverting 1 Element 10 Bit per Element
+package: DIP
+pincount: 24
+family: Buffer
+datasheet: https://rocelec.widen.net/view/pdf/fzbmlxqcu1/AMDIS02171-1.pdf?t.download=true&u=5oefqw
+pins:
+  - num: 1
+    sym: ~OE1
+    desc: Output Enable 1
+  - num: 2
+    sym: D__0
+    desc: Input Data
+  - num: 3
+    sym: D__1
+    desc: Input Data
+  - num: 4
+    sym: D__2
+    desc: Input Data
+  - num: 5
+    sym: D__3
+    desc: Input Data
+  - num: 6
+    sym: D__4
+    desc: Input Data
+  - num: 7
+    sym: D__5
+    desc: Input Data
+  - num: 8
+    sym: D__6
+    desc: Input Data
+  - num: 9
+    sym: D__7
+    desc: Input Data
+  - num: 10
+    sym: D__8
+    desc: Input Data
+  - num: 11
+    sym: D__9
+    desc: Input Data
+  - num: 12
+    sym: V__SS
+    desc: Ground
+  - num: 13
+    sym: ~OE2
+    desc: Output Enable 2
+  - num: 14
+    sym: Y__9
+    desc: Output Data
+  - num: 15
+    sym: Y__8
+    desc: Output Data
+  - num: 16
+    sym: Y__7
+    desc: Output Data
+  - num: 17
+    sym: Y__6
+    desc: Output Data
+  - num: 18
+    sym: Y__5
+    desc: Output Data
+  - num: 19
+    sym: Y__4
+    desc: Output Data
+  - num: 20
+    sym: Y__3
+    desc: Output Data
+  - num: 21
+    sym: Y__2
+    desc: Output Data
+  - num: 22
+    sym: Y__1
+    desc: Output Data
+  - num: 23
+    sym: Y__0
+    desc: Output Data
+  - num: 24
+    sym: V__CC
+    desc: Supply Voltage
