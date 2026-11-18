@@ -2188,7 +2188,7 @@ async function getInventoryByLocationList(location_id) {
     join manufacturer on manufacturer.id = mfg_codes.manufacturer_id
     left join locations l on l.id = i.location_id
     where i.location_id = ?
-    order by full_number`,
+    order by cmp.name, full_number`,
     [location_id],
   );
   return rows;
