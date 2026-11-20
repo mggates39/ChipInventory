@@ -1,28 +1,29 @@
 type: IC
 subtype: Power
-name: MC14051B
+name: '14051'
 description: Multiplexer Switch ICs 3-18V SP8T Switch
 package: DIP
 pincount: 16
 family: power
 datasheet: https://www.mouser.com/datasheet/2/308/1/mc14051b_d-1192948.pdf
 aliases:
-  - CD4051
+  - CD14051
+  - MC14051
 pins:
   - num: 1
-    sym: X4
+    sym: X__4
     desc: Switch In/Out
   - num: 2
-    sym: X8
+    sym: X__8
     desc: Switch In/Out
   - num: 3
     sym: X
     desc: Common Out/In
   - num: 4
-    sym: X7
+    sym: X__7
     desc: Switch In/Out
   - num: 5
-    sym: X5
+    sym: X__5
     desc: Switch In/Out
   - num: 6
     sym: INH
@@ -43,16 +44,16 @@ pins:
     sym: A
     desc: Control Input
   - num: 12
-    sym: X3
+    sym: X__3
     desc: Switch In/Out
   - num: 13
-    sym: X0
+    sym: X__0
     desc: Switch In/Out
   - num: 14
-    sym: X1
+    sym: X__1
     desc: Switch In/Out
   - num: 15
-    sym: X2
+    sym: X__2
     desc: Switch In/Out
   - num: 16
     sym: V__DD

@@ -1,11 +1,13 @@
 type: IC
 subtype: '7400'
-name: MC14174B
+name: '14174'
 description: Hex Type D Flip-Flop
 package: DIP
 pincount: 16
 family: '7400'
 datasheet: https://www.mouser.com/datasheet/2/308/1/MC14174B_D-2315634.pdf
+aliases:
+  - MC14174B
 pins:
   - num: 1
     sym: R
