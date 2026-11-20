@@ -5,7 +5,9 @@ description: 4 by 4 register file; 3-state
 package: DIP
 pincount: 16
 family: '7400'
-datasheet: http://www.standardics.nxp.com/products/hc/datasheet/74hc670.74hct670.pdf
+datasheet: https://www.jameco.com/Jameco/Products/ProdDS/47976.pdf
+aliases:
+  - 74LS670PC
 pins:
   - num: 1
     sym: D__1

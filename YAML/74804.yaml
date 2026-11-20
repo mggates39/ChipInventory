@@ -1,0 +1,72 @@
+type: IC
+subtype: '7400'
+name: '74804'
+description: Hex 2 Input NAND Driver
+package: DIP
+pincount: 20
+family: Buffer
+datasheet: https://www.ti.com/lit/ds/sdas022c/sdas022c.pdf
+aliases:
+  - SN54AS804BN
+  - SN74AS804BN
+pins:
+  - num: 1
+    sym: A__1
+    desc: Input A
+  - num: 2
+    sym: B__1
+    desc: Input B
+  - num: 3
+    sym: Y__1
+    desc: Output Y
+  - num: 4
+    sym: A__2
+    desc: Input A
+  - num: 5
+    sym: B__2
+    desc: Input B
+  - num: 6
+    sym: Y__2
+    desc: Output Y
+  - num: 7
+    sym: A__3
+    desc: Input A
+  - num: 8
+    sym: B__3
+    desc: Input B
+  - num: 9
+    sym: Y__3
+    desc: Output Y
+  - num: 10
+    sym: V__SS
+    desc: Ground
+  - num: 11
+    sym: Y__4
+    desc: Output Y
+  - num: 12
+    sym: A__4
+    desc: Input A
+  - num: 13
+    sym: B__4
+    desc: Input B
+  - num: 14
+    sym: Y__5
+    desc: Output Y
+  - num: 15
+    sym: A__5
+    desc: Input A
+  - num: 16
+    sym: B__5
+    desc: Input B
+  - num: 17
+    sym: Y__6
+    desc: Output Y
+  - num: 18
+    sym: A__6
+    desc: Input A
+  - num: 19
+    sym: B__6
+    desc: Input B
+  - num: 20
+    sym: V__CC
+    desc: Supply Voltage

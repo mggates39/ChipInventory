@@ -1,0 +1,89 @@
+type: IC
+subtype: '7400'
+name: '74648'
+description: OCTAL BUS TRANSCEIVERS AND REGISTERS WITH 3-STATE OUTPUTS
+package: DIP
+pincount: 24
+family: Buffer
+datasheet: https://www.ti.com/lit/ds/symlink/sn74als648a.pdf
+aliases:
+  - SN54ALS646
+  - SN54ALS648
+  - SN54AS646
+  - SN74ALS646A
+  - SN74ALS648A
+  - SN74AS646
+  - SN74AS648
+pins:
+  - num: 1
+    sym: CLKAB
+    desc: Clock A to B
+  - num: 2
+    sym: SAB
+    desc: Select A to B
+  - num: 3
+    sym: DIR
+    desc: Direction Control Low B to A, High A to B
+  - num: 4
+    sym: A__1
+    desc: Data Bus A
+  - num: 5
+    sym: A__2
+    desc: Data Bus A
+  - num: 6
+    sym: A__3
+    desc: Data Bus A
+  - num: 7
+    sym: A__4
+    desc: Data Bus A
+  - num: 8
+    sym: A__5
+    desc: Data Bus A
+  - num: 9
+    sym: A__6
+    desc: Data Bus A
+  - num: 10
+    sym: A__7
+    desc: Data Bus A
+  - num: 11
+    sym: A__8
+    desc: Data Bus A
+  - num: 12
+    sym: V__SS
+    desc: Ground
+  - num: 13
+    sym: B__8
+    desc: Data Bus B
+  - num: 14
+    sym: B__7
+    desc: Data Bus B
+  - num: 15
+    sym: B__6
+    desc: Data Bus B
+  - num: 16
+    sym: B__5
+    desc: Data Bus B
+  - num: 17
+    sym: B__4
+    desc: Data Bus B
+  - num: 18
+    sym: B__3
+    desc: Data Bus B
+  - num: 19
+    sym: B__2
+    desc: Data Bus B
+  - num: 20
+    sym: B__1
+    desc: Data Bus B
+  - num: 21
+    sym: ~OE
+    desc: Output Enable
+  - num: 22
+    sym: SBA
+    desc: Select B to A
+  - num: 23
+    sym: CLKBA
+    desc: Clock B to A
+  - num: 24
+    sym: V__CC
+    desc: Supply Voltage

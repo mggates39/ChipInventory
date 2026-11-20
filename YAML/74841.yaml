@@ -1,0 +1,89 @@
+type: IC
+subtype: Driver
+name: '74841'
+description: 10-BIT BUS INTERFACE D-TYPE LATCHES WITH 3-STATE OUTPUTS
+package: DIP
+pincount: 24
+family: Buffer
+datasheet: https://rocelec.widen.net/view/pdf/bapeoit7yh/TXIIS06009-1.pdf?t.download=true&u=5oefqw
+aliases:
+  - SN54ALS841
+  - SN54AS841
+  - SN54ALS842
+  - SN54AS842 SN74ALS841
+  - SN74AS841
+  - SN74ALS842
+  - SN74AS842
+pins:
+  - num: 1
+    sym: ~OC
+    desc: Output Control
+  - num: 2
+    sym: D__1
+    desc: Input Data Bit
+  - num: 3
+    sym: D__2
+    desc: Input Data Bit
+  - num: 4
+    sym: D__3
+    desc: Input Data Bit
+  - num: 5
+    sym: D__4
+    desc: Input Data Bit
+  - num: 6
+    sym: D__5
+    desc: Input Data Bit
+  - num: 7
+    sym: D__6
+    desc: Input Data Bit
+  - num: 8
+    sym: D__7
+    desc: Input Data Bit
+  - num: 9
+    sym: D__8
+    desc: Input Data Bit
+  - num: 10
+    sym: D__9
+    desc: Input Data Bit
+  - num: 11
+    sym: D__10
+    desc: Input Data Bit
+  - num: 12
+    sym: V__SS
+    desc: Ground
+  - num: 13
+    sym: c
+    desc: Clear
+  - num: 14
+    sym: Q__10
+    desc: Output Data Bit
+  - num: 15
+    sym: Q__9
+    desc: Output Data Bit
+  - num: 16
+    sym: Q__8
+    desc: Output Data Bit
+  - num: 17
+    sym: Q__7
+    desc: Output Data Bit
+  - num: 18
+    sym: Q__6
+    desc: Output Data Bit
+  - num: 19
+    sym: Q__5
+    desc: Output Data Bit
+  - num: 20
+    sym: Q__4
+    desc: Output Data Bit
+  - num: 21
+    sym: Q__3
+    desc: Output Data Bit
+  - num: 22
+    sym: Q__2
+    desc: Output Data Bit
+  - num: 23
+    sym: Q__1
+    desc: Output Data Bit
+  - num: 24
+    sym: V__CC
+    desc: Supply Voltage
