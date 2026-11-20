@@ -834,3 +834,7 @@ select * from project_items;
 select * from inventory;
 
 select * from project_items;
+
+select c.id, c.name, ic.datasheet from components c join chips ic on ic.component_id = c.id where ic.datasheet like '%standardics%' or ic.datasheet like '%maxim-ic%' or ic.datasheet like '%national.com%';
+
+
