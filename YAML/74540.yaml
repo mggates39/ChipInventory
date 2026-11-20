@@ -1,5 +1,5 @@
 type: IC
-subtype: '7400'
+subtype: Driver
 name: '74540'
 description: Octal buffer/line driver; 3-state; inverting
 package: DIP

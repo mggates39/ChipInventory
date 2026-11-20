@@ -1,5 +1,5 @@
 type: IC
-subtype: '7400'
+subtype: Transceiver
 name: '74648'
 description: OCTAL BUS TRANSCEIVERS AND REGISTERS WITH 3-STATE OUTPUTS
 package: DIP

@@ -1,5 +1,5 @@
 type: IC
-subtype: '7400'
+subtype: Transceiver
 name: '74652'
 description: Octal bus transceiver/register; 3-state
 package: DIP

@@ -1,5 +1,5 @@
 type: IC
-subtype: '7400'
+subtype: Driver
 name: '74804'
 description: Hex 2 Input NAND Driver
 package: DIP

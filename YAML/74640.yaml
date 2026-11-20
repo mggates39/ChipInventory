@@ -1,5 +1,5 @@
 type: IC
-subtype: '7400'
+subtype: Transceiver
 name: '74640'
 description: Octal bus transceiver; 3-state; inverting
 package: DIP

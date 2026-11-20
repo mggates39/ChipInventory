@@ -1,5 +1,5 @@
 type: IC
-subtype: '7400'
+subtype: Driver
 name: '74543'
 description: Octal Latched Transceiver with 3-State Outputs.
 package: DIP
