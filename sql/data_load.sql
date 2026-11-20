@@ -129,7 +129,8 @@ VALUES
     (77,9,'Momentary','Momentary'),
     (78,9,'Slide','Slide'),
     (79,9,'Toggle','Toggle'),
-    (80,9,'Rotary','Rotary');
+    (80,9,'Rotary','Rotary'),
+    (81,1,'Transceiver','Bus Transceivers');
 commit;
 
 INSERT INTO component_packages (component_type_id, package_type_id)
@@ -247,7 +248,7 @@ VALUES
     (136,'Zetex'),(137,'Zilog'),(138,'Signetics Corporation (NPX)'),(139,'Würth Elektronik'),(140,'Stackpole Electronics Inc'),
     (141,'Bourns Inc'),(142,'KYOCERA AVX'),(143,'KEMET'),(144,'TDK Corporation'),(145,'Adam Tech'),(146,'TE Connectivity AMP Connectors'),
     (147,'On Shore Technology Inc.'),(148,'AdaFruit Industries LLC'),(149,'Amphenol ICC'),(150,'TE Connectivity ALCOSWITCH Switches'),
-    (151,'Assmann WSW Components');
+    (151,'Assmann WSW Components'),(152,'Creeled'),(153,'Sullins Connector Solutions'),(154,'STMicroelectronics');
 commit;
 
 INSERT INTO mfg_codes (id, manufacturer_id, mfg_code) 
@@ -297,7 +298,8 @@ VALUES
     (449,129,'MACH'),(450,129,'PALCE'),(451,130,'VT'),(452,131,'VA'),(453,131,'VC'),(454,132,'PSD'),(455,133,'WD'),(456,134,'X'),(457,135,'U'),(458,135,'UD'),
     (459,136,'ZH'),(460,136,'ZLDO'),(461,136,'ZM'),(462,136,'ZMR'),(463,136,'ZR'),(464,136,'ZRA'),(465,136,'ZRB'),(466,136,'ZREF'),(467,136,'ZRT'),(468,136,'ZSD'),
     (469,136,'ZSM'),(470,137,'Z'),(471,138,'S'),(472,139,'WE'),(473,140,'SPE'),(474,141,'BI'),(475,142,'KA'),(476,143,'KE'),(477,144,'TDK'),(478,145,'AT'),
-    (479,146,'AMP'),(480,147,'OST'),(481,148,'ADF'),(483,123,'CD'),(484,149,'FCI'),(485,150,'ALC'),(486,151,'AWSW'),(487,82,'2N');
+    (479,146,'AMP'),(480,147,'OST'),(481,148,'ADF'),(483,123,'CD'),(484,149,'FCI'),(485,150,'ALC'),(486,151,'AWSW'),(487,82,'2N'),(488,152,'CRE'),(489,153,'SCS'),
+    (490,100,'LH'),(491,7,'AD'),(492,154,'ST'),(493,75,'CD'),(494,7,'SN');
 commit;
 
 INSERT INTO location_types (id, name, description, tag) 
